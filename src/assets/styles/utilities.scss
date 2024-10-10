@@ -1,0 +1,115 @@
+.u-center-text {
+  text-align: center !important;
+}
+.u-left-text {
+  text-align: left !important;
+}
+.u-right-text {
+  text-align: right !important;
+}
+
+.u-full-width {
+  width: 100%;
+}
+
+.u-margin-x-auto {
+  margin: 0 auto !important;
+}
+.u-margin-bottom-small {
+  margin-bottom: 1.5rem !important;
+}
+.u-margin-bottom-medium {
+  margin-bottom: 3rem !important;
+
+  @include respond(tab-port) {
+    margin-bottom: 2rem !important;
+  }
+}
+
+.u-margin-bottom-big {
+  margin-bottom: 8rem !important;
+
+  @include respond(tab-port) {
+    margin-bottom: 5rem !important;
+  }
+}
+
+.u-margin-top-big {
+  margin-top: 8rem !important;
+}
+.u-margin-top-huge {
+  margin-top: 10rem !important;
+}
+
+// Colors
+.u-color-primary {
+  color: $color-primary !important;
+}
+.u-color-secondary {
+  color: $color-secondary !important;
+}
+.u-color-danger {
+  color: $color-danger !important;
+}
+.u-color-title {
+  color: $color-title !important;
+}
+.u-color-body {
+  color: $color-body !important;
+}
+
+// Font Weights
+.u-font-weight-bold {
+  font-weight: bold !important;
+}
+.u-font-weight-500 {
+  font-weight: 500 !important;
+}
+
+// Font Sizes
+.u-font-size-54 {
+  font-size: 5.4rem !important;
+}
+.u-font-size-40 {
+  font-size: 4rem !important;
+}
+.u-font-size-32 {
+  font-size: 3.2rem !important;
+}
+.u-font-size-24 {
+  font-size: 2.4rem !important;
+}
+.u-font-size-18 {
+  font-size: 1.8rem !important;
+}
+.u-font-size-16 {
+  font-size: 1.6rem !important;
+}
+.u-font-size-14 {
+  font-size: 1.4rem !important;
+}
+.u-font-size-12 {
+  font-size: 1.2rem !important;
+}
+.u-font-size-10 {
+  font-size: 1rem !important;
+}
+.u-font-size-8 {
+  font-size: 0.8rem !important;
+}
+
+// Responsive Utilities
+.hidden-on-mobile {
+  display: inherit;
+}
+.visible-on-mobile {
+  display: none;
+}
+@include respond(phone) {
+  .visible-on-mobile {
+    display: inherit;
+  }
+  .hidden-on-mobile {
+    display: none;
+  }
+}

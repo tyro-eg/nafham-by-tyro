@@ -1,0 +1,39 @@
+@import '../../../assets/styles/variables.scss';
+@import '../../../assets/styles/mixins.scss';
+
+.registered {
+  .confirmation {
+    padding: 14rem 3rem 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    .back_to_home {
+      font-weight: 600;
+      font-size: 1.6rem;
+      line-height: 24px;
+      a {
+        color: $color-body;
+        &:hover {
+          color: $color-primary;
+        }
+      }
+    }
+    .email {
+      margin-bottom: 3.2rem;
+    }
+    .first {
+      color: $color-title;
+      margin-bottom: 1.6rem;
+      font-weight: 700;
+      font-size: 2.8rem;
+      line-height: 40px;
+    }
+    .check {
+      color: $color-body;
+      font-weight: 400;
+      font-size: 1.8rem;
+      line-height: 32px;
+    }
+  }
+}

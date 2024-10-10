@@ -1,0 +1,56 @@
+@import '../../../../assets/styles/variables.scss';
+@import '../../../../assets/styles/mixins.scss';
+
+.profile-missing-info-banner {
+  width: 100%;
+  padding: 12px 50px 24px;
+  background-color: $color-danger;
+  position: relative;
+  color: #fff;
+  margin-bottom: 17px;
+  border-radius: 4px;
+
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  flex-direction: column;
+
+  svg {
+    font-size: 3rem;
+    display: flex;
+    align-self: center;
+    margin-bottom: 0.8rem;
+  }
+  h4 {
+    color: #ffffff;
+    font-size: 1.8rem;
+    font-weight: bold;
+    line-height: 2.8rem;
+    margin-bottom: 1rem;
+    display: inline-block;
+  }
+  p {
+    color: #ffffff;
+    font-size: 1.4rem;
+    line-height: 2.2rem;
+    margin-bottom: 2rem;
+  }
+  ul {
+    list-style-position: inside;
+    list-style: disc;
+    li {
+      color: #ffffff;
+      font-size: 1.4rem;
+      line-height: 2.2rem;
+      padding-left: 0;
+      margin-left: 1.8rem;
+      &.bold {
+        font-weight: bold;
+      }
+    }
+  }
+
+  @include respond(phone) {
+    padding: 2rem;
+  }
+}

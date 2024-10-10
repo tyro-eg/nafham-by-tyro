@@ -1,0 +1,180 @@
+@import '../../../assets/styles/variables.scss';
+@import '../../../assets/styles/mixins.scss';
+
+.available-packages {
+  margin-bottom: 6.2rem;
+  @include respond(phone) {
+    margin-bottom: 3.2rem;
+  }
+
+  &__title {
+    color: $color-title;
+    font-weight: 700;
+    font-size: 2.8rem;
+    line-height: 120%;
+    margin-bottom: 3.2rem;
+
+    @include respond(phone) {
+      font-weight: 600;
+      font-size: 1.8rem;
+      margin-bottom: 1.8rem;
+    }
+  }
+
+  .field-container {
+    padding: 4.6rem 3.2rem;
+    background-color: $color-white;
+    border-radius: 0.8rem;
+    margin-bottom: 3.4rem;
+    .select-field {
+      width: 100%;
+      .MuiInputBase-root {
+        font-weight: 500;
+        font-size: 1.6rem;
+        line-height: 150%;
+        color: $color-body;
+        height: 6.4rem;
+        background: #f1f3f8;
+        @include respond(phone) {
+          font-size: 1.4rem;
+        }
+      }
+
+      .MuiOutlinedInput-input {
+        padding: 18.5px 14px;
+      }
+    }
+  }
+
+  &__radio-container {
+    padding: 4.2rem;
+    background-color: $color-white;
+    border-radius: 0.8rem;
+    .MuiFormControl-root {
+      width: 100%;
+    }
+    .radio-wrapper {
+      .MuiRadio-root {
+        position: absolute;
+        bottom: 12px;
+        right: 50%;
+      }
+
+      .MuiTypography-body1 {
+        display: flex;
+        justify-content: center;
+      }
+
+      .profile-package {
+        width: 27rem;
+        height: 29rem;
+        padding: 3.2rem 2.4rem;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: space-between;
+        border: 1px solid #eaeef1;
+        border-radius: 26px;
+
+        &__rate {
+          color: $color-primary;
+          font-weight: 700;
+          font-size: 3.6rem;
+          line-height: 46px;
+          margin-bottom: 1rem;
+
+          &-perHour {
+            font-weight: 400;
+            font-size: 17px;
+            line-height: 23px;
+          }
+        }
+
+        &__minutes {
+          color: $color-body;
+          font-weight: 700;
+          font-size: 2.8rem;
+          line-height: 38px;
+        }
+
+        &__save {
+          margin-bottom: 1rem;
+          display: flex;
+          align-items: center;
+          font-weight: 500;
+          font-size: 1.5rem;
+          line-height: 20px;
+          color: $color-body;
+
+          svg {
+            width: 2rem;
+            height: 2rem;
+          }
+
+          &-title {
+            padding: 0 0.5rem;
+          }
+        }
+
+        &__action {
+          background-color: $color-primary;
+          color: $color-white;
+          width: 23.2rem;
+          border-radius: 2.4rem;
+          padding: 1rem 0;
+          align-self: center;
+          text-align: center;
+          font-weight: 500;
+          font-size: 1.6rem;
+          line-height: 150%;
+        }
+      }
+
+      .popular {
+        background-color: $color-primary;
+        border: none;
+        padding-top: 1.2rem;
+
+        .profile-package {
+          &__badge {
+            font-weight: 700;
+            font-size: 1rem;
+            line-height: 14px;
+            padding: 0.8rem 1.6rem;
+            background-color: #f4b73f;
+            color: white;
+            border-radius: 2.4rem;
+            align-self: flex-end;
+          }
+
+          &__rate {
+            color: $color-white;
+            margin-top: -2.5rem;
+          }
+
+          &__minutes {
+            color: $color-white;
+          }
+
+          &__save {
+            color: $color-white;
+
+            svg {
+              fill: #f4b73f;
+            }
+          }
+
+          &__action {
+            background-color: $color-white;
+            color: $color-primary;
+          }
+        }
+      }
+      &.popular_theme {
+        .MuiRadio-root {
+          color: rgba(0, 0, 0, 0.54) !important;
+        }
+      }
+    }
+  }
+}

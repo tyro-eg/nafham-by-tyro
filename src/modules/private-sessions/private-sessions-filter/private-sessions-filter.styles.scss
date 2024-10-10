@@ -1,0 +1,242 @@
+@import '../../../assets/styles/variables.scss';
+@import '../../../assets/styles/mixins.scss';
+
+.home-filter {
+  position: fixed;
+  background-color: #fffffff7;
+  z-index: 100;
+  width: 100%;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid #eee;
+
+  @media only screen and (max-width: $breakpoint-xmd) {
+    margin-top: 3rem;
+  }
+
+  @include respond(phone) {
+    margin-top: 0;
+  }
+
+  &__container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 14px 0 6px;
+    @media only screen and (max-width: $breakpoint-xmd) {
+      flex-wrap: wrap;
+      max-width: 94vw;
+      margin: auto;
+    }
+
+    .hidden {
+      overflow: hidden;
+      height: 0;
+      opacity: 0;
+      transition: all 0.5s ease-in-out;
+    }
+
+    .visible {
+      overflow: visible;
+      opacity: 1;
+      height: unset;
+      transform: translateY(0);
+    }
+  }
+
+  &__dropdown-container {
+    display: flex;
+    @media only screen and (max-width: $breakpoint-xmd) {
+      order: 3;
+      width: 100%;
+    }
+  }
+
+  &__dropdown-group {
+    display: flex;
+    margin: 0 !important;
+
+    @media only screen and (max-width: $breakpoint-xmd) {
+      justify-content: space-between;
+      margin-top: 2rem !important;
+      width: 100%;
+      &:not(:last-child) {
+        margin-right: auto !important;
+        &.rtl {
+          margin-right: 0 !important;
+          margin-left: auto !important;
+        }
+      }
+    }
+    @include respond(phone) {
+      flex-direction: column;
+    }
+  }
+
+  &__field {
+    width: 16rem;
+    margin-right: 3rem;
+
+    .MuiOutlinedInput-input {
+      padding: 11.7px 14px;
+    }
+    .MuiSelect-icon {
+      top: calc(50% - 7px);
+    }
+    .MuiSelect-select {
+      color: $color-secondary;
+    }
+    .MuiSelect-select.Mui-disabled {
+      background-color: $color-grey-light-2;
+      color: $color-disabled;
+    }
+    .MuiSelect-select:focus {
+      background-color: unset;
+    }
+    .MuiInputLabel-formControl {
+      top: -7px;
+    }
+    .MuiInputLabel-outlined.MuiInputLabel-shrink {
+      top: 0;
+    }
+
+    &.rtl {
+      margin-left: 1rem;
+      margin-right: 0;
+    }
+
+    @media only screen and (max-width: $breakpoint-xmd) {
+      margin-right: 0;
+      width: 48%;
+      &.rtl {
+        margin-left: 0;
+      }
+    }
+
+    @include respond(phone) {
+      width: 100%;
+      margin-bottom: 2rem;
+    }
+
+    &--search {
+      position: relative;
+      width: 100%;
+      margin-left: auto;
+      font-size: $default-font-size;
+
+      &.rtl {
+        margin-right: auto;
+        margin-left: 0;
+      }
+
+      @media only screen and (max-width: $breakpoint-xmd) {
+        order: 1;
+        margin-left: 0;
+        margin-right: auto;
+        width: calc(100% - 10rem);
+
+        &.rtl {
+          margin-left: auto;
+          margin-right: 0;
+        }
+      }
+
+      @include respond(phone) {
+        margin-right: auto;
+      }
+
+      input {
+        padding: 8px 12px 8px 36px;
+        border: 1px solid $color-grey-light-2;
+        border-radius: 4px;
+        background-color: $color-white;
+        height: 4rem;
+        width: 100%;
+        @include respond(tab-port) {
+          width: 100%;
+          min-width: 100%;
+        }
+        &::placeholder {
+          color: $color-grey-light-5;
+        }
+
+        &.rtl {
+          padding: 8px 36px 8px 12px;
+        }
+      }
+
+      button {
+        position: absolute;
+        left: -10px;
+        top: 10px;
+        border: none;
+        background-color: transparent;
+        padding: 0.2rem 0.5rem;
+        &:hover {
+          background-color: transparent;
+        }
+
+        &.rtl {
+          left: unset;
+          right: -10px;
+        }
+      }
+    }
+
+    &--filter {
+      display: none;
+      width: 9.5rem;
+      position: relative;
+      border-radius: 0.4rem;
+      overflow: hidden;
+      .active {
+        color: white;
+        background-color: $color-primary !important;
+      }
+      @media only screen and (max-width: $breakpoint-xmd) {
+        display: initial;
+        order: 2;
+      }
+
+      @include respond(phone) {
+        display: initial;
+      }
+
+      button {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: $color-grey-light-5;
+        border: 1px solid $color-grey-light-2;
+        border-radius: 4px;
+        background-color: $color-grey-light-1;
+        padding: 8px 12px 8px;
+        &.rtl {
+          flex-direction: row-reverse;
+          .MuiButton-startIcon {
+            margin-right: -4px;
+            margin-left: 8px;
+          }
+        }
+      }
+    }
+  }
+
+  &__filter-list {
+    display: none;
+    width: 100%;
+    margin-bottom: 2rem;
+    @include respond(phone) {
+      display: inline-block;
+    }
+    div:first-of-type {
+      margin-bottom: 0;
+    }
+
+    .home-filter__field {
+      &.one,
+      &.three {
+        margin-bottom: 1rem;
+      }
+    }
+  }
+}

@@ -1,0 +1,1080 @@
+{
+  "HEADER": {
+    "BANNER_UNCONFIRMED": {
+      "TEXT1": "Your email",
+      "TEXT2": "has not been confirmed.",
+      "ACTION": "Resend Confirmation Email"
+    },
+    "TOP": {
+      "LOGIN": "Login",
+      "REGISTER": "Register",
+      "TRANSLATE": "العربية",
+      "FREE_TRIAL": "Free Trial",
+      "CONTACT_US": "Contact Us"
+    },
+    "USER": {
+      "PROFILE": "My Profile",
+      "SETTINGS": "Account Settings",
+      "REDEEM": "Redeem",
+      "LOGOUT": "Logout"
+    }
+  },
+  "NAVIGATION": {
+    "HOME": "Home",
+    "FIND_INSTRUCTOR": "Private Sessions",
+    "COURSES": "Group Sessions",
+    "CONTACT": "Contact",
+    "BLOG": "Blog",
+    "IELTS": "IELTS",
+    "ACT": "ACT",
+    "SESSIONS": "My Sessions",
+    "TERMS": "Terms & Conditions",
+    "FUNDS": "Add Funds"
+  },
+  "CARDS": {
+    "FREE_ASSESMENT": {
+      "TITLE": "Do not know your language level?",
+      "LABEL": "Free Assessment",
+      "BODY": "Take our free online assessment! In less than 15 minutes, you can know what your English level is with the help of our hand-picked expert instructors"
+    },
+    "FREE_TRIAL": {
+      "TITLE": "Free Trial Session",
+      "LABEL": "Schedule Now",
+      "BODY": "A 30-minute session, free of charge it's an excellent way to learn how to use Nafham"
+    }
+  },
+  "MODALS": {
+    "ACTIONS": {
+      "CANCEL": "Cancel",
+      "OK": "OK",
+      "SAVE": "Save"
+    },
+    "PERMISSION_DENIED": {
+      "TITLE1": "Please, You Must Give Permission to at Least the Microphone to Continue.",
+      "TITLE2": "We recommend Google Chrome for compatibility reasons",
+      "STEP1": "1 - To change your browser settings, go to the address bar and click on the lock icon to the left of the website address.",
+      "STEP2": "2 - Camera: Click on the dialog box and choose Allow.",
+      "STEP3": "3 - Microphone: Click on the dialog box and choose Allow.",
+      "STEP4": "4 - When finished, click the X in the upper right corner to close the dialog box then reload the page.",
+      "BUTTON": "Reload"
+    },
+    "NO_DEVICES": {
+      "DESCRIPTION": "It look like there is a problem in your microphone and/or camera please use another device.",
+      "BUTTON": "Return to My Session"
+    },
+    "USED_DEVICES": {
+      "DESCRIPTION": "The camera or microphone is already in use by another app, close it and try again.",
+      "BUTTON": "Try again"
+    }
+  },
+  "LANDING": {
+    "HEAD": {
+      "TITLE": "Personalized online learning",
+      "HIDDEN_TITLE": "English course online",
+      "META": {
+        "KEYWORDS": "English course online -  Ielts course  - Ielts exam - SAT   Home Page",
+        "DESCRIPTION": "English course online with tyro app start now to learn English through one to one sessions and also group sessions you can start with General, IELTS,or SAT"
+      }
+    },
+    "BLOCK1": {
+      "TITLE1": "Learn through",
+      "TITLEGREEN": "Live",
+      "TITLE2": "online sessions",
+      "DESCRIPTION": "Select, Schedule & Book your online sessions and enjoy a unique learning experience with many of our top-notch professional instructors.",
+      "ACTION": "Book a free session now",
+      "FEATURED": "FEATURED IN"
+    },
+    "BLOCK2": {
+      "TITLE": "What We Offer",
+      "DESCRIPTION": "We provide all that you need to learn and improve your skills in various languages and get you prepared to score high grades in exams successfully.",
+      "LANGUAGES": {
+        "ENGLISH": {
+          "TITLE": "English",
+          "DESCRIPTION": "Improve your English skills with the best English professionals in all aspects: writing, reading, conversations and more."
+        },
+        "FRENCH": {
+          "TITLE": "French",
+          "DESCRIPTION": "Now you can quickly learn French both written and spoken with the best professional French teaching instructors."
+        },
+        "GERMAN": {
+          "TITLE": "German",
+          "DESCRIPTION": "Learning German was never easier! With our german instructors, you can learn both basics and high level."
+        },
+        "IELTS": {
+          "TITLE": "IELTS",
+          "DESCRIPTION": "Get prepared to qualify for the test. And score the grade you desire with the help of our professors."
+        }
+      }
+    },
+    "BLOCK3": {
+      "TITLE": "Unlimited Access To 100+ Instructors",
+      "DESCRIPTION": "Choosing the best qualified instructors took us a lot of time and effort, to offer you the best quality learning experience with satisfying results.",
+      "ACTION": "Explore more instructors",
+      "ITEM1": {
+        "TITLE": "Top Qualified teachers",
+        "DESCRIPTION": "We have 100+ professional teachers in different curriculums, to provide you the best online learning experience. We do a rigorous application process to accept our instructors to teach, we look for the best of the best.",
+        "BUTTON": "Book Free Trial Now"
+      },
+      "ITEM2": {
+        "TITLE": "Select your timing",
+        "DESCRIPTION": "Book your session anywhere with your preferred teacher and arrange your own schedule. With our robust scheduling software, you can schedule all of your sessions within only minutes!"
+      },
+      "ITEM3": {
+        "TITLE": "Attend Private and Group Sessions",
+        "DESCRIPTION": "Whether you prefer attending private or group sessions, we’ve got you covered! With us, You can choose your own way of attending a session. We focus on personalizing the learning experience for every student we have."
+      },
+      "ITEM4": {
+        "TITLE": "Interactive session Experience",
+        "DESCRIPTION": "Communicate online through interactive classes and share your learning experience. With our interactive software, students are able to audio/video chat, text/draw on the whiteboard, and text chat with the instructor. Our interactive whiteboard allows for students to share their documents real time with the instructor, solve equations and more!",
+        "BUTTON": "Book Free Trial Now"
+      }
+    },
+    "BLOCK4": {
+      "TITLE": "Improve Your Language Skills in 3 Easy Steps",
+      "ITEM1": {
+        "TITLE": "Choose the best instructor based on your needs",
+        "DESCRIPTION": "We provide you with a wide selection of professional instructors in different fields, to offer you the best learning experience."
+      },
+      "ITEM2": {
+        "TITLE": "Schedule your session based on your availability using a clear and easy process",
+        "DESCRIPTION": "Book your session easily with the instructor you prefer and adjust the schedule to your suitable free time."
+      },
+      "ITEM3": {
+        "TITLE": "Start your Live sessions and feel confident about your language skills day by day",
+        "DESCRIPTION": "Start your session anywhere and interact with your instructor and get the best online learning experience."
+      }
+    },
+    "BLOCK5": {
+      "TITLE": "live group courses for a more interactive learning environment.",
+      "DESCRIPTION": "Our live group courses will help you communicate and share your learning experience with others in an easy, affordable way.",
+      "ACTION": "Explore More Courses"
+    },
+    "BLOCK6": {
+      "TITLE": "Are your language skills not good? It's okay we got your back",
+      "DESCRIPTION": "If you are not sure about your language skills, get an evaluation for your level from our instructors as well as feedback on how to improve your skills in a free session.",
+      "ACTION": "Book a free session now"
+    },
+    "BLOCK7": {
+      "TITLE": "How it works",
+      "DESCRIPTION": "Choose the best instructor based on your needs, Schedule your sessions on your preferred dates, and enjoy a unique learning experience.",
+      "ITEM1": {
+        "TITLE": "Choose the best instructor based on your needs",
+        "DESCRIPTION": "We provide you with the best teachers for every curriculum."
+      },
+      "ITEM2": {
+        "TITLE": "Schedule your sessions on your preferred dates",
+        "DESCRIPTION": "You can choose your best timing for every session."
+      },
+      "ITEM3": {
+        "TITLE": "Start a unique learning experience",
+        "DESCRIPTION": "Enjoy communicating online through interactive sessions."
+      }
+    },
+    "BLOCK8": {
+      "TITLE": "Real Stories from Real Students",
+      "DESCRIPTION": "Get inspired by these stories",
+      "ITEM1": {
+        "DESCRIPTION": "They are professionals and I learned a lot of grammars and Linguistics which helped me to improve my language, Many thanks for Mr. Ahmed Hossam .",
+        "TITLE": "Mizo Koki",
+        "DATE": "Oct 12, 2019"
+      },
+      "ITEM2": {
+        "DESCRIPTION": "My experience was with teacher Bendetta ,she is one of the best teachers in Tyro ,she is very talented teacher and have a simple,clear and exciting way in teaching her students and she is friendly💙",
+        "TITLE": "Yasser Nawaya",
+        "DATE": "Nov 18, 2019"
+      },
+      "ITEM3": {
+        "DESCRIPTION": "Through my experience with Tyro, the truth is that I highly recommend it to anyone who wants to learn a language in an easy way and at any time that suits him.",
+        "TITLE": "Omar",
+        "DATE": "Dec 30, 2020"
+      }
+    },
+    "TESTIMONIAL": "Some special words from our students about us"
+  },
+  "ENGLISH_COURSE": {
+    "BLOCK1": {
+      "TITLE": "Speak English like a ",
+      "TITLEGREEN": "native",
+      "DESCRIPTION": "Get fluent faster with video chat lessons from an experienced English speaking teacher. We'll customize your lesson based on your interests.",
+      "ITEM1": {
+        "TITLE": "Pay Per Hour",
+        "DESCRIPTION": "According to your work, studies and lifestyle, you will just pay for the exact number of hours you need."
+      },
+      "ITEM2": {
+        "TITLE": "Expert Teachers",
+        "DESCRIPTION": "With fully interactive teachers who were previously trained on advantages of the online sessions "
+      },
+      "ITEM3": {
+        "TITLE": "Learn From Anywhere",
+        "DESCRIPTION": "It doesn't matter whether you are on your phone or laptop, indoor or outdoor as long as you're ready you can have the session from anywhere"
+      },
+      "FEATURED": "FEATURED IN"
+    },
+    "SCROLL": "SCROLL FOR MORE",
+    "BLOCK2": {
+      "TITLE": "We Provide The Best Personalized Online Learning Experience in These Fields",
+      "DESCRIPTION": "We provide all that you need to learn and improve your skills in english language and get you prepared to score high grades in exams successfully.",
+      "LANGUAGES": {
+        "GENERAL_ENGLISH": {
+          "TITLE": "General English",
+          "DESCRIPTION": "Enhance your abilities in all the English Aspects starting from the vocabulary to the translation, writing and reading "
+        },
+        "BUSINESS_ENGLISH": {
+          "TITLE": "Business English",
+          "DESCRIPTION": "Improve your Work Terminologies and language you use when you're holding up meetings and Conferences at work"
+        },
+        "CONVERSATIONAL_ENGLISH": {
+          "TITLE": "Conversational English",
+          "DESCRIPTION": "Speak the native language you want whether it was British or American, you can have it all"
+        },
+        "IELTS": {
+          "TITLE": "IELTS",
+          "DESCRIPTION": "Get prepared to qualify for the test. And score the grade you desire with the help of our professors."
+        }
+      }
+    },
+    "BLOCK3": {
+      "TITLE": "Latest news and blog",
+      "ACTION": "See more"
+    },
+    "BLOCK4": {
+      "TITLE": "Improve Your Language Skills in 3 Easy Steps",
+      "ITEM1": {
+        "TITLE": "Choose the best instructor based on your needs",
+        "DESCRIPTION": "We provide you with a wide selection of professional instructors in different fields, to offer you the best learning experience."
+      },
+      "ITEM2": {
+        "TITLE": "Schedule your session based on your availability using a clear and easy process",
+        "DESCRIPTION": "Book your session easily with the instructor you prefer and adjust the schedule to your suitable free time."
+      },
+      "ITEM3": {
+        "TITLE": "Start your Live sessions and feel confident about your language skills day by day",
+        "DESCRIPTION": "Start your session anywhere and interact with your instructor and get the best online learning experience."
+      }
+    },
+    "BLOCK5": {
+      "TITLE": "We also provide live group courses for a more interactive learning environment.",
+      "DESCRIPTION": "Our live group courses will help you communicate and share your learning experience with others in an easy, affordable way.",
+      "ACTION": "Explore More Instructors"
+    },
+    "BLOCK6": {
+      "TITLE": "Your language skills are not good? it's okay we got your back",
+      "DESCRIPTION": "If you are not sure about your language skills, now you can get an evaluation for your level from our instructors and how to improve your skills in a free session. ",
+      "ACTION": "Book a free session now"
+    },
+    "TESTIMONIAL": "Some special words for our students about us"
+  },
+  "HOME": {
+    "HEAD": {
+      "TITLE": "English course online now is more easier with qualified English teacher",
+      "HIDDEN_TITLE": "English course online",
+      "META": {
+        "KEYWORDS": "English teacher - English course - course online - English course online",
+        "DESCRIPTION": "English course online is the best way to save time and make it easy for your to learn with interpersonal English teacher it's fun to learn"
+      }
+    },
+    "BANNER": {
+      "TITLE1": "Nafham also provides",
+      "TITLE2": "Group Sessions",
+      "DESCRIPTION": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation",
+      "ACTION": "Go to Group Sessions"
+    }
+  },
+  "COURSES": {
+    "HEAD": {
+      "TITLE": "Find easily your English course online with tyro app",
+      "HIDDEN_TITLE": "English course online",
+      "META": {
+        "KEYWORDS": "English course - English course online",
+        "DESCRIPTION": "It's more easier than you think to get your english course online, book now your free trial and start to enjoy your first one with tyro app"
+      }
+    },
+    "BANNER": {
+      "TITLE1": "Nafham also provides",
+      "TITLE2": "Private Sessions",
+      "DESCRIPTION": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation",
+      "ACTION": "Book Free Trail"
+    },
+    "CALENDAR": {
+      "TITLE": "Availability"
+    },
+    "COURSE_DETAILS": {
+      "FIRST_CARD": {
+        "TITLE": "Course Price",
+        "LABELS": {
+          "PURCHASED": "Joined",
+          "NOT_PURCHASED": "Join Course Now"
+        }
+      },
+      "SECOND_CARD": {
+        "TITLE": "Do not know your language level ?",
+        "LABEL": "Free Assessment",
+        "BODY": "Take our free online assessment! In less than 15 minutes, you can know what your English level is with the help of our hand-picked expert instructors."
+      }
+    },
+    "COURSE_INFO": {
+      "COURSE_DESCRIPTION": "Course Description",
+      "COURSE_CONTENT": "Course Content",
+      "BY": "By ",
+      "SECTION": "Section"
+    },
+    "COURSE_DESCRIPTION": {
+      "LANGUAGE_LEVEL": "Language Level",
+      "COURSE_DURATION": "Course Duration",
+      "HOURS": "hours",
+      "HOURS_PER_LESSON": "hours per lesson",
+      "NUMBER_OF_STUDENTS": "Number of students",
+      "INSTRUCOR_COURSE": "Instructor Name"
+    },
+    "COURSE_INSTRUCTOR": {
+      "INSTRUCTOR": "Instructor",
+      "ABOUT_ME": "About Me",
+      "READ_MORE": "See more"
+    },
+    "COURSE_REVIEWS": {
+      "REVIEWS": "Reviews"
+    },
+    "COURSE_LIST": {
+      "FIRST_CARD": {
+        "TITLE": "The schedule does not suit you!",
+        "LABEL": "Find an Instructor",
+        "BODY": "Try our one to one private sessions with the same instructor and get a flexible scheduling time"
+      },
+      "NO_RESULTS": {
+        "FIRST_P": "Sorry, We Couldn't Find",
+        "SECOND_P": "Any Results For you",
+        "THIRD_P": "Any Results For"
+      },
+      "COURSE_ITEM_1": {
+        "TITLE": "Webinars Sessions",
+        "DESCRIPTION": "For an hour or two have the Webinar Free Experience with Tyro by the help of our expert tutors, and get the best results."
+      },
+      "COURSE_ITEM_2": {
+        "TITLE": "Crash Courses",
+        "DESCRIPTION": "Don’t know what course you exactly need? Check your level and enroll in our specified-level-skills courses that track your level and modify the course according to your need."
+      },
+      "COURSE_ITEM_3": {
+        "TITLE": "Group Courses",
+        "DESCRIPTION": "Excellent-selected instructors chosen for your online group experience with the luxury of recording your session and changing the instructor, Choose now the best bit course that meets your needs and criteria."
+      },
+      "COURSE": "Course",
+      "COURSES": "Courses",
+      "VIEW_ALL": "View all",
+      "COURSE_ALREADY_PURCHASED": "Course Already Purchased"
+    },
+    "COURSE_CARD": {
+      "EGP": "EGP",
+      "LANGUAGE_LEVEL": "Language Level",
+      "COURSE_DURATION": "Course Duration",
+      "HOURS": "hours",
+      "HOURS_PER_LESSON": "hours per lesson",
+      "LESSON_DURATION": "Lesson Duration",
+      "REVIEWS": "reviews",
+      "COURSE_BTN": {
+        "PURCHASED": "Joined",
+        "NOT_PURCHASED": "Join Course"
+      },
+      "VIEW_COURSE": "View Course",
+      "VIEW_SESSION": "View Session",
+      "FREE": "Free",
+      "START_DATE": "Start Date",
+      "TBA": "TBA",
+      "PRICE": "Price: "
+    },
+    "COURSE_FILTER": {
+      "SEARCH_PLACEHOLDER": "Search...",
+      "FILTERS": "Filters",
+      "CATEGORY": {
+        "PLACEHOLDER": "Category",
+        "OPTIONS": {
+          "ALL": "All",
+          "ENGLISH": "English",
+          "LANGUAGES": "Languages",
+          "EXAM_PREPARATION": "Exam preparation"
+        }
+      },
+      "FIELD": {
+        "PLACEHOLDER": "Field",
+        "OPTIONS": {
+          "ALL": "All",
+          "ENGLISH": "English",
+          "SPANISH": "Spanish",
+          "GERMAN": "German"
+        }
+      },
+      "DAY": {
+        "PLACEHOLDER": "Day",
+        "OPTIONS": {
+          "ALL": "All",
+          "SUNDAY": "Sunday",
+          "MONDAY": "Monday",
+          "TUESDAY": "Tuesday",
+          "WEDNESDAY": "Wednesday",
+          "THURSDAY": "Thursday",
+          "SATURDAY": "Saturday"
+        }
+      },
+      "TIME": {
+        "PLACEHOLDER": "Time",
+        "OPTIONS": {
+          "ALL": "All",
+          "6_8": "06 - 08 PM",
+          "8_10": "08 - 10 PM",
+          "10_12": "10 - 12 PM"
+        }
+      },
+      "LANGUAGE_LEVEL": {
+        "PLACEHOLDER": "Language Level",
+        "OPTIONS": {
+          "ALL": "All",
+          "A1": "A1",
+          "A2": "A2",
+          "B1": "B1"
+        }
+      }
+    }
+  },
+  "PROFILE": {
+    "ABOUT_INSTRUCTOR": "About Me",
+    "INSTRUCTOR_AVAILABILITY": "Instructor Availability",
+    "REVIEWS": "reviews",
+    "READ_MORE": "Read More",
+    "SHOW_MORE": "Show More",
+    "PACKAGES": {
+      "TITLE": "Available Packages",
+      "DESCRIPTION": "Select the package duration that suits your needs.",
+      "MINUTE_TRIAL": "Min Trial",
+      "HOUR": "Hour",
+      "PER_HOUR": "/hour",
+      "HOURS": "Hours",
+      "SAVE": "Save",
+      "OR": "Or",
+      "CUSTOMIZE": "Customize your Package",
+      "BOOK_NOW": "Book Now",
+      "CHOOSE": "Choose",
+      "WEEKLY": "WEEKLY",
+      "MONTHLY": "MONTHLY",
+      "TWO_MONTHS": "TWO MONTHS",
+      "THREE_MONTHS": "THREE MONTHS",
+      "MOST_POPULAR": "MOST POPULAR"
+    },
+    "STUDENTMODAL": {
+      "UNSCHEDULEDHOURS1": "You have",
+      "UNSCHEDULEDHOURS2": "unscheduled hours with this instructor",
+      "BODYMESS1": "This calendar is for view only",
+      "BODYMESS2": "You can schedule your hours through my sessions page OR You can book more hours through packages checkout",
+      "ACTIONS": {
+        "MYSESSIONS": "Go To My Sessions",
+        "CHECKOUT": "Checkout"
+      }
+    },
+    "EDITPROFILE": {
+      "MISSING_INFORMATION": {
+        "TITLE": "Your profile is missing some important information",
+        "DESCRIPTION": "Completing your profile would help making it more professional. Make sure to complete the missing information to help students choose the best suitable instructor that fits their needs. And by default, it serves a better learning process and student-instructor communication.",
+        "AVAILABILITY": "No Availability Set in Calendar",
+        "PICTURE": "Missing Profile Picture",
+        "ABOUT": "Missing About Information",
+        "VIDEO": "Missing Video"
+      },
+      "ABOUTME": {
+        "READMORE": "Read more",
+        "READLESS": "Read less"
+      },
+      "VIDEO": {
+        "EDITTEXT": {
+          "TITLE": "No Uploads",
+          "BODY": "Uploading your introduction video makes you more professional and more likely will be selected by higher numbers of students",
+          "BUTTON": "Upload Video"
+        },
+        "EDITMODAL": {
+          "TITLE": "Please upload your video on Youtube then copy the full URL here!"
+        }
+      },
+      "IMG": {
+        "EDITMODAL": {
+          "TITLE": "Upload your profile picture",
+          "UPLOAD": "Choose File"
+        }
+      },
+      "EDITACTION": {
+        "SAVE&UPDATE": "Save and Update",
+        "EDITYOURPROFILE": "Edit your profile"
+      },
+      "STATISTICS": {
+        "RATE": "Rate",
+        "REVIEWS": "Reviews",
+        "ACTIVE_HOURS": "Active Hours",
+        "NUMBER_OF_STUDENTS": "Number of Students"
+      },
+      "FIELDS": {
+        "CURRICULUMS": "Curriculums",
+        "SUBJECTS": "Subjects",
+        "CATEGORY": "Category"
+      }
+    }
+  },
+  "CALENDAR": {
+    "WIZARD": {
+      "BOOKING_FREE_TRIAL_SESSION": "BOOKING A FREE TRIAL SESSION",
+      "FREE_TRIAL_ALREADY_BOOKED": "You can claim trial sessions only once per tutor.",
+      "CHOOSE_FIELD": "CHOOSE FIELD",
+      "SCHEDULE_SESSION": "SCHEDULE YOUR SESSION",
+      "ACTIONS": {
+        "BACK": "Back",
+        "SCHEDULE": "Schedule"
+      },
+      "LEGEND": {
+        "AVAILABLE": "Available",
+        "NOT_AVAILABLE": "Not Available",
+        "BOOKED": "Booked",
+        "BUSY": "Busy",
+        "OLDSESSION": "Old Session"
+      },
+      "MESSAGES": {
+        "WARNING": {
+          "TITLE": "Warning",
+          "BODY1": "This time slot is already booked up by another student, please try to select another available time slot for your session",
+          "BODY2": "This time slot is already booked by you with another instructor, please try to select another available time slot for your session"
+        }
+      }
+    },
+    "MYSESSION": {
+      "HEADER": {
+        "SCHEDULE": "Schedule Your Session",
+        "RESCHEDULE": "Reschedule Your Session",
+        "TIMEZONE1": "All times listed are in your local",
+        "TIMEZONE2": "timezones"
+      },
+      "ACTIONS": {
+        "CLOSE": "Close",
+        "SCHEDULE": "Schedule",
+        "RESCHEDULE": "Reschedule"
+      },
+      "LEGEND": {
+        "AVAILABLE": "Available",
+        "NOT_AVAILABLE": "Not Available",
+        "RESERVED": "Reserved",
+        "BUSY": "Busy",
+        "OLDSESSION": "Old Session"
+      },
+      "MESSAGES": {
+        "UNSCHEDULEDHOURS1": "You have",
+        "UNSCHEDULEDHOURS2": "unscheduled hours",
+        "WARNING": {
+          "TITLE": "Warning",
+          "FOURHOURS": "You cannot schedule a session within 4 hours from current time",
+          "ALREADYRESERVEDSTUDENT": "This session is already reserved by another student, please select another one",
+          "ALREADYRESERVEDINSTRUCTOR": "You have another session at this time with another instructor!",
+          "NOHOURSAVAILABLE": "You don't have enough hours to schedule another session"
+        }
+      },
+      "SPINNER": {
+        "SCHEDULING": "Scheduling..."
+      }
+    },
+    "PROFILE": {
+      "HEADER": {
+        "SCHEDULE": "Schedule Your Session",
+        "RESCHEDULE": "Reschedule Your Session",
+        "TIMEZONE1": "All times listed are in your local",
+        "TIMEZONE2": "timezones"
+      },
+      "LEGEND": {
+        "AVAILABLE": "Available",
+        "NOT_AVAILABLE": "Not Available",
+        "RESERVED": "Reserved",
+        "BUSY": "Busy",
+        "OLDSESSION": "Old Session"
+      },
+      "EDITPROFILE": {
+        "UPDATEAVAILABILITY": "Update my current availability for the next 3 weeks",
+        "EDITPROFILELABEL": "Edit Profile"
+      },
+      "MESSAGES": {
+        "UNSCHEDULEDHOURS1": "You have",
+        "UNSCHEDULEDHOURS2": "unscheduled hours",
+        "WARNING": {
+          "TITLE": "Warning",
+          "FOURHOURS": "You cannot schedule a session within 4 hours from current time",
+          "ALREADYRESERVEDSTUDENT": "You cannot deselect this time slot from your schedule because you have an upcoming scheduled session at this time",
+          "ALREADYRESERVEDINSTRUCTOR": "You cannot deselect this time slot from your schedule because you have an upcoming scheduled session at this time",
+          "NOHOURSAVAILABLE": "You don't have enough hours to schedule another session"
+        }
+      },
+      "SPINNER": {
+        "SCHEDULING": "Scheduling..."
+      }
+    },
+    "SUCCESSMODAL": {
+      "MESSAGE": "Your session has been booked successfully",
+      "OK": "Ok"
+    },
+    "BUTTONS": {
+      "TODAY": "today",
+      "MONTH": "month",
+      "WEEK": "week",
+      "DAY": "day"
+    }
+  },
+  "MYSESSIONS": {
+    "NO_SESSIONS_TITLE": "No Sessions Scheduled",
+    "NO_SESSIONS_SUBTITLE": "You have no scheduled lessons, Select a teacher to get started.",
+    "NO_SESSIONS_ACTION": "Schedule a Session",
+    "TABS": {
+      "SESSIONS": "Sessions",
+      "UNSCHEDULED": "Unscheduled",
+      "RATE": "Rate"
+    },
+    "FILTERS": {
+      "ALL": "All",
+      "SESSIONTYPE": "Session Type",
+      "1TO1SESSION": "1-1 Private Session",
+      "GROUPSESSION": "Group Session",
+      "FREETRIALSESSION": "Free Trial Session",
+      "SESSIONSTATE": "Session State",
+      "SESSIONDATE": "Session Date",
+      "MISSEDSESSIONS": "Missed Sessions",
+      "COMPLETEDSESSIONS": "Completed Sessions",
+      "LIVESESSIONS": "Live Sessions",
+      "UPCOMINGSESSIONS": "Upcoming Sessions",
+      "LIVE/UPCOMINGSESSIONS": "Live/Upcoming Sessions",
+      "THISWEEKSESSIONS": "This Week's Sessions",
+      "TODAYSESSIONS": "Today's Sessions",
+      "NEXTWEEKSESSIONS": "Next Week's Sessions",
+      "LASTWEEKSESSIONS": "Last Week's Sessions",
+      "SEARCH": "Search"
+    },
+    "MAIN": {
+      "LIST": "List",
+      "CALENDAR": "Calendar",
+      "DOWNLOADS": "Downloads",
+      "1TO1SESSION": "1-1 Private Session",
+      "GROUPSESSION": "Group Session",
+      "FREETRIALSESSION": "Free Trial Session",
+      "CARD": {
+        "NAME": "Instructor Name",
+        "NAME2": "Student Name",
+        "DETAILS": "Session Details",
+        "COURSE": "Course Name",
+        "DURATION": "Duration",
+        "DATE": "Session Date",
+        "TIME": "Session Time",
+        "TYPE": "Session Type",
+        "SUBJECT": "Subject",
+        "CANCEL": "Cancel",
+        "RESCHEDULE": "Reschedule",
+        "WILLGOLIVE": "Session will go live in",
+        "END": "End the Session",
+        "GOTO": "Join session",
+        "COMPLETED": "Session Completed",
+        "MISSED": "Session Missed",
+        "CANCELLED": "Session Cancelled",
+        "DOWNLOAD": "Download",
+        "MINUTE": "minute"
+      },
+      "CANCELMODAL": {
+        "TITLE": "Want to cancel a session?",
+        "DESCRIPTION": "Are you sure you want to cancel this session?",
+        "YES": "Yes",
+        "NO": "No"
+      },
+      "ENDMODAL": {
+        "TITLE": "Want to end the session?",
+        "DESCRIPTION": "Are you sure you want to end this session?",
+        "YES": "Yes",
+        "NO": "No"
+      },
+      "DOWNLOADMODAL": {
+        "TITLE": "Session Download Links",
+        "DOWNLOAD_BTN": "Download",
+        "NO_DOWNLOAD_LINKS": "There is no Available Download Links Right Now!",
+        "VIDEO_NAME": "Part",
+        "LOADING": "Loading..."
+      }
+    },
+    "OVERVIEW": {
+      "TITLE": "Sessions Overview",
+      "UPCOMING": "Upcoming Sessions",
+      "UNSCHEDULED": "Unscheduled Hours",
+      "PREVIOUS": "Previous Sessions"
+    },
+    "SCHEDULE": {
+      "TITLE": "Schedule Your Sessions",
+      "DESCRIPTION": "Select from your instructors list the one you want to schedule your session with.",
+      "CARD": {
+        "UNSCHEDULED": "Unscheduled Hours",
+        "SCHEDULE": "Schedule Now"
+      }
+    },
+    "RATE": {
+      "TITLE": "Rate your Previous Sessions",
+      "GIVEFEEDBACK": "Give Feedback",
+      "RATE": "Rate the session",
+      "FEEDBACK": {
+        "TITLE": "Session Feedback",
+        "STUDENTTITLE": "Rate your experience on tyro",
+        "SUBTITLE": "Your feedback helps us to improve our service! we'll be happy to know your opinoin for the session",
+        "EXPERIENCE": "Describe your experience ( optional )",
+        "START": "Session Start Time",
+        "END": "Session End Time",
+        "WHOATTENDED": "Students who attended the session",
+        "RATEDESCRIPTION": "On a scale of 1 to 5, please rate his willingness to learn, and state your reasoning.",
+        "GOAL": "Student learning goal",
+        "GOALDESCRIPTION": "How was the students learning progress within the last month? What areas did he/she improved in most? And what aspects need further improvement?",
+        "AREAOFIMPROVEMENT": "Areas of improvement",
+        "AREAOFIMPROVEMENTDESCRIPTION": "What are you plans to work on the student’s weaknesses and further improve their language level? If they have a low willingness to learn, how do you plan to encourage them and increase their engagement?",
+        "NOTES": "Instructor's Notes (Optional)",
+        "TYROFEEDBACK": "Feedback on Tyro (Optional)",
+        "SUBMIT": "Submit",
+        "CANCEL": "Cancel",
+        "THANKYOU": "Thank You",
+        "THANKYOU2": "Your rating submitted successfully. Thank you for your cooperation with us"
+      }
+    }
+  },
+  "DIRECTORY": {
+    "HEAD": {
+      "TITLE": "English course online now is more easier with qualified English teacher",
+      "META": {
+        "KEYWORDS": "english teacher - english course - course online - english course online",
+        "DESCRIPTION": "English course online is the best way to save time and make it easy for your to learn with interpersonal English teacher it's fun to learn"
+      }
+    },
+    "NEW": "New",
+    "NOREVIEWS": "No Reviews Yet",
+    "HOURLYRATE": "Hourly Rate",
+    "BOOKNOW": "Book Now",
+    "FREETRIAL": "Book Free Trial",
+    "COURSEAD": {
+      "TITLE": "We Also Provide Group Courses",
+      "SUBTITLE": "Prefer learning in a group? We got you covered! We provide group courses with a maximum of 8 students so the instructor could focus with every student in the session. View our courses for more details regarding our group courses.",
+      "ACTION": "View our group courses"
+    },
+    "MOBILEAPP": {
+      "TITLE": "Continue Learning From Anywhere",
+      "SUBTITLE": "Join the fast-paced learning journey and complete your sessions on the go from anywhere by downloading our new app for Android & iOS."
+    },
+    "SHOWMORE": "SHOW MORE",
+    "LOADING": "Loading more Instructors"
+  },
+  "LOGIN": {
+    "LOGIN_TITLE": "Login to complete the scheduling process",
+    "LOGIN_TITLE_1": "Login to complete the joining process",
+    "LOGIN_SUBTITLE": "Welcome back",
+    "FACEBOOK_LOGIN": "Login with facebook",
+    "LOGIN_EMAIL": "Email Address",
+    "LOGIN_EMAIL_INPUT_PLACEHOLDER": "Enter your email",
+    "LOGIN_PASSWORD": "Password",
+    "LOGIN_PASSWORD_INPUT_PLACEHOLDER": "Enter your password",
+    "LOGIN_SUBMIT_BTN": "Sign in",
+    "LOGIN_INVALID_EMAIL_PASSWORD": "Invalid Email or password.",
+    "FORGET_PASSWORD": "Forgot password?",
+    "REMEMBER_ME": "Remember me",
+    "NO_ACCOUNT": "Don't have an account yet?",
+    "REGISTER": "Create an account",
+    "OR": "or Sign In with",
+    "ERROR": "Unable to login, please check your email and password and try again",
+    "TERMS": "By clicking sign in you agree to our ",
+    "TERMS_GREEN": "Terms and Conditions",
+    "MAIN": {
+      "TITLE": "Welcome Back !",
+      "SUBTITLE": "Enter your details below."
+    },
+    "TAB": {
+      "STUDENT": "Student",
+      "INSTRUCTOR": "Instructor"
+    }
+  },
+  "REGISTER": {
+    "REGISTER_TITLE": "Register to complete the scheduling process",
+    "REGISTER_TITLE_1": "Register to complete the joining process",
+    "REGISTER_TITLE_ENGLISH_COURSE": "Sign-Up to get a free Trial Session now!",
+    "REGISTER_SUBTITLE": "Create an account",
+    "FACEBOOK_REGISTER": "Login with facebook",
+    "REGISTER_FIRST_NAME_INPUT_PLACEHOLDER": "Enter your First name",
+    "REGISTER_FIRST_NAME": "First Name",
+    "REGISTER_LAST_NAME_INPUT_PLACEHOLDER": "Enter your Last name",
+    "REGISTER_LAST_NAME": "Last Name",
+    "REGISTER_EMAIL_INPUT_PLACEHOLDER": "Enter your Email",
+    "REGISTER_EMAIL": "Email",
+    "REGISTER_PASSWORD_INPUT_PLACEHOLDER": "Enter your Password",
+    "REGISTER_PASSWORD": "Password",
+    "REGISTER_PASSWORD_CONFIRM_INPUT_PLACEHOLDER": "Enter your Confirm Password",
+    "REGISTER_PASSWORD_CONFIRM": "Confirm Password",
+    "REGISTER_PHONE_NUMBER_INPUT_PLACEHOLDER": "Enter your Phone number",
+    "REGISTER_PHONE_NUMBER": "Phone Number",
+    "REGISTER_PHONE_NUMBER_CODE_VALIDATION": "Phone Number is invalid.",
+    "REGISTER_GENDER": "Gender",
+    "REGISTER_GENDER_MALE": "Male",
+    "REGISTER_GENDER_FEMALE": "Female",
+    "REGISTER_GENDER_OTHER": "Other",
+    "REGISTER_SUBMIT_BTN": "Sign up",
+    "ALREADY_USER": "Already have an account? ",
+    "LOGIN_BTN": "Sign in Now",
+    "OR": "or Sign up with",
+    "TERMS": "By clicking sign up you agree to our ",
+    "TERMS_GREEN": "Terms and Conditions",
+    "TERMS_ERORR": "Please accept terms and conditions to continue",
+    "FREE_TRIAL": "Get Your Free Trial",
+    "MAIN": {
+      "TITLE": "Welcome  👋",
+      "SUBTITLE": "Enter your details below."
+    }
+  },
+  "REGISTERED": {
+    "TITLE": "Thanks for signing up!",
+    "TEXT": "Please Check your Email for a comfirmation link",
+    "BACK_HOME": "Back Home"
+  },
+  "FORGET_PASSWORD": {
+    "TITLE": "Forgot Password",
+    "DESCRIPTION1": "Please enter your email address.",
+    "DESCRIPTION2": "You will receive a link to create a new password via email.",
+    "FORM": {
+      "LABEL": "Email",
+      "EMAIL_PLACEHOLDER": "Email address..",
+      "RESET_PASSWORD_BTN": "Submit"
+    }
+  },
+  "RESET_PASSWORD": {
+    "TITLE": "Reset your Password",
+    "SUB_TITLE": "Please enter your new password",
+    "FORM": {
+      "PASSWORD_INPUT_PLACEHOLDER": "Password..",
+      "PASSWORD_LABEL": "Password",
+      "PASSWORD_CONFIRM_INPUT_PLACEHOLDER": "Confirm Password..",
+      "PASSWORD_CONFIRM_LABEL": "Confirm Password"
+    },
+    "UPDATE_BTN": "Update Password"
+  },
+  "ACCOUNT_SETTINGS": {
+    "TITLE": "Account settings",
+    "CONTACT_DETAILS_FORM": {
+      "TITLE": "Contact Details",
+      "FIRST_NAME_PLACEHOLDER": "First name",
+      "LAST_NAME_PLACEHOLDER": "Last name",
+      "EMAIL_PLACEHOLDER": "Email",
+      "PHONE_PLACEHOLDER": "Phone",
+      "SUBMIT_BTN": "Save",
+      "CANCEL": "Cancel"
+    },
+    "CHANGE_PASSWORD_FORM": {
+      "TITLE": "Change your Password",
+      "CURRENT": "Current Password",
+      "NEW_PASSWORD": "New Password",
+      "VERIFY_PASSWORD": "Verify Password",
+      "CHANGE_PASSWORD_BTN": "Save",
+      "CANCEL": "Cancel"
+    },
+    "SUCCESSFULLY_UPDATED": "Well done! You successfully updated your profile.",
+    "SOMETHING_WENT_WRONG": "Sorry There's something went wrong, please try again later",
+    "PASSWORD_UPDATED": "Well done! You successfully updated your password.",
+    "EDIT": "Edit"
+  },
+  "CONFIRM_PAGE": {
+    "TITLE": "Your account has been confirmed ",
+    "TEXT": "Welcome to Tyro! Your go-to marketplace to find qualified instructors. For info on how to book your first session, click here.",
+    "START_LEARNING_BTN": "Start Learning"
+  },
+  "SUCCESS_MODAL": {
+    "CLOSE": "Close",
+    "MY_SESSION": "Go to my sessions"
+  },
+  "SESSION_VIDEO": {
+    "LOADING": "Loading session data",
+    "LEAVE": "Leave",
+    "RECONNECT": "You connection is not stable, We are trying to reconnect again!",
+    "DISCONNECTED": "You left the session",
+    "CHAT_TITLE": "Session Chat",
+    "MUTE_ALL": "Mute All",
+    "UNMUTE_ALL": "Unmute All",
+    "PARTICIPANTS": "Participants",
+    "ATTENDING_STUDENTS": "Attending students",
+    "DUPLICATED_USER": "Session was resumed from another tab/browser. Please continue your session or enter again from here.",
+    "CREATE_BOARD": "Click Here To Create The Board",
+    "RELOAD": "Reload To Check The Board",
+    "PLEASE_WAIT": "Please Wait Until The Board Created",
+    "SUBSCRIBER": {
+      "VIDEO_QUALITY_DISABLED": "video is disabled due to poor internet quality",
+      "VIDEO_QUALITY_ENABLED": "video is enabled again",
+      "VIDEO_PUBLISHED_DISABLED": "disabled his video streaming",
+      "VIDEO_PUBLISHED_ENABLED": "enabled his video streaming",
+      "CONNECTED": "enter session",
+      "DISCONNECTED_FROM_INTERNET": "leave session due to connection problem"
+    }
+  },
+  "SESSION_NETWORK_TEST": {
+    "TITLE": "Test Session Network Connectivity & Quality",
+    "TESTING": "Testing Session Network Connectivity & Quality, This May Take A While, Please Wait...",
+    "SUCCESS_TEST": "Your Test Finished Successfully You Can Continue To Session Now.",
+    "SUCCESS_MODAL_TEST": "Your Hardware and Network Test Finished Successfully.",
+    "VIDEO": "Video",
+    "AUDIO": "Audio",
+    "VIDEO_NOT_SUPPORTED": "Video - Device issue",
+    "AUDIO_NOT_SUPPORTED": "Audio - Device issue",
+    "VIDEO_DESCRIPTION": "Move something in view of the camera to check that it is working.",
+    "AUDIO_DESCRIPTION": "Say something in the microphone to check that it is working.",
+    "AUDIO_ONLY_SESSION": "Audio Only Session",
+    "AUDIO_ISSUE_TOOLTIP": "You either didn't give permission to microphone or your device microphone not supported in the web browser.",
+    "VIDEO_ISSUE_TOOLTIP": "You either didn't give permission to camera or your device camera not supported in the web browser.",
+    "BROWSER": {
+      "COMPATIBILITY": "Browser Compatibility",
+      "NOT_SUPPORTED": "Your browser is not supported.",
+      "CHROME": "Chrome is supported.",
+      "FIREFOX": "Firefox is supported.",
+      "OPERA": "Opera is supported.",
+      "SAFARI": "Safari is supported.",
+      "EDGE": "Edge is supported.",
+      "IE": "Internet Explorer is supported.",
+      "OTHER": "Your Browser is supported."
+    },
+    "ACTIONS": {
+      "TEST_NETWORK": "Test Network",
+      "CONTINUE_TO_SESSION": "Continue To Session"
+    },
+    "RESULT_CARD": {
+      "TEST_RESULTS": "Test Results",
+      "EXPECTED_CALL_QUALITY": "Expected Call Quality",
+      "HARDWARE_SOFTWARE": "Hardware & Software Setup",
+      "CAPTURE_VIDEO": "Video capture device successfully found.",
+      "CAPTURE_AUDIO": "Audio capture device successfully found.",
+      "VIDEO_QUALITY": "Video Quality: ",
+      "AUDIO_QUALITY": "Audio Quality: ",
+      "VIDEO_PACKET_LOSS": "Video Packet loss: ",
+      "AUDIO_PACKET_LOSS": "Audio Packet loss: ",
+      "VIDEO_BITRATE": "Video Bitrate: ",
+      "AUDIO_BITRATE": "Audio Bitrate: ",
+      "KBPS": "kbps",
+      "EXCELLENT": "(Excellent)",
+      "GOOD": "(Good)",
+      "FAIR": "(Fair)",
+      "POOR": "(Poor)",
+      "BAD": "(Bad)"
+    },
+    "ERRORS": {
+      "INIT_PUBLISHER_ERROR": "Please Grant Access To Camera And Microphone",
+      "UNSUPPORTED_BROWSER": "This Is An Unsupported Browser, Please Try Another Browser",
+      "NETWORK_ERROR": "There Is A Network Error, Please Try Again Later",
+      "NO_CAMERA_OR_MICROPHONE": "There Is No Available Camera Or Microphone In Your Device",
+      "UNKNOWN_ERROR": "An Error Happened While Testing Your Network Connectivity & Quality"
+    }
+  },
+  "GENEREL": {
+    "REQUIRED": "Required",
+    "INVALID_EMAIL": "Enter valid email",
+    "INVALID_PHONE_NUMBER": "Invalid phone number",
+    "EMPTY_SPACE": "Please remove empty spaces",
+    "PASSWORD_CONFIRMATION_ERROR": "Confirmation doesn't match your password!",
+    "SHORT_PASSWORD": "is too short (minimum is 8 characters)",
+    "FIRST_NAME_BLANK": "First name can't be blank!",
+    "LAST_NAME_BLANK": "Last name can't be blank!",
+    "EGP": "EGP",
+    "SAR": "SAR",
+    "USD": "USD",
+    "EGP_PER_HOUR": "EGP / Hour",
+    "SAR_PER_HOUR": "SAR / Hour",
+    "USD_PER_HOUR": "USD / Hour",
+    "HOURS": "hours",
+    "PACKAGE": "package"
+  },
+  "CHECKOUT": {
+    "TITLE": "CHECKOUT",
+    "SUBTITLE": {
+      "COURSE": "so close, to join the course",
+      "PRIVATE": "so close, to start your learning journey"
+    },
+    "PACKAGES": {
+      "TITLE1": "Choose your subject",
+      "TITLE2": "Available Packages"
+    },
+    "PAYMENT_DETAILS": {
+      "TITLE": "Payment Details"
+    },
+    "RECEIPT": {
+      "TITLE": "Summary",
+      "TABLE": {
+        "DESCRIPTION": "DESCRIPTION",
+        "AMOUNT": "AMOUNT",
+        "SUBTOTAL": "SUBTOTAL",
+        "DISCOUNT_CODE": "DISCOUNT CODE",
+        "TOTAL": "TOTAL"
+      }
+    },
+    "DISCOUNT": {
+      "FORM": {
+        "LABEL": "Promo Code",
+        "APPLIED": "Applied",
+        "APPLY": "Apply",
+        "INVALID": "Invalid",
+        "USED": "Already used",
+        "DISCOUNT_CODE": "Discount code"
+      }
+    },
+    "PAYMENT": {
+      "TITLE": "Payment Method",
+      "METHODS": {
+        "CREDIT_CARD": "Credit/Debit Card",
+        "FAWRY": "Fawry Pay",
+        "VODAFONE": "Vodafone Cash"
+      },
+      "ACTION": "Purchase Now",
+      "FREE": "Join for free"
+    },
+    "MODALS": {
+      "SUCCESS": {
+        "TITLE": "You have successfully joined to",
+        "TITLE_1_TO_1": "Payment Successful!",
+        "MESSAGE": "Thank you for using our service. You can always find your upcoming sessions in \"My Sessions\" Page.",
+        "ADDITIONAL_MESSAGE": "check your email address for transaction details",
+        "BUTTON": "Go to my sessions"
+      },
+      "DECLINE": {
+        "TITLE": "Payment Declined!",
+        "MESSAGE": "We are unable to process your online payment from the credit card provided. Please resubmit your payment using another credit card or use another payment method.",
+        "BUTTON": "Go to private sessions"
+      },
+      "COMPLETE_REGISTER": {
+        "TITLE": "Registration Completed!",
+        "MESSAGE": "Thank you for registering with us. You will receive a verification email in your inbox to verify your account.",
+        "BUTTON": "Close"
+      },
+      "TRIAL_SUCCESS": {
+        "TITLE": "Your trial session has been scheduled successfully",
+        "MESSAGE": "Thank you for using our service. You can always find your upcoming sessions in \"My Sessions\" Page.",
+        "BUTTON": "Go to my sessions"
+      }
+    }
+  },
+  "CONTACT_US": {
+    "TITLE": "Get in touch",
+    "TEXT": "We’re friendly and available to chat. Reach out to us anytime and we’ll do the best we can to help you!",
+    "FORM": {
+      "TITLE": "Shoot us a message",
+      "NAME_PLACEHOLDER": "Name..",
+      "EMAIL_PLACEHOLDER": "Email address..",
+      "PHONE_PLACEHOLDER": "Phone number..",
+      "COMPANY_PLACEHOLDER": "Organization/School..",
+      "PROBLEM_PLACEHOLDER": "Tell us whats on your mind, we're open to any discussion..",
+      "SEND_BTN": "SEND"
+    },
+    "CONTACT_US_INFO": {
+      "TITLE": "Contact information",
+      "ADDRESS": "Building 6, Sad Al Aly Street, Sarayat Maadi"
+    },
+    "ALERT_MSG": "Your message has been sent, Thank You for getting in touch!",
+    "SOMETHING_WENT_WRONG_MSG": "Your message has not been sent, Please try again!",
+    "UNAUTHORIZED_MSG": "Sorry, You must login first!"
+  },
+  "INSTRUCTOR_MODAL": {
+    "TITLE": "BOOK A FREE TRIAL SESSION",
+    "SUBTITLE": "Select an instructor you'd like to take the free trial session with"
+  },
+  "404": {
+    "NOT_FOUND": "Ooops! The page you are looking for could not be found 🚧 ☹️",
+    "BACK_HOME": "Back Home"
+  },
+  "NO_INTERNET": {
+    "TITLE": "You are offline. Check your internet connection."
+  }
+}

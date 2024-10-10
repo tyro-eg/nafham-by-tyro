@@ -1,0 +1,208 @@
+@import '../../../../assets/styles/variables.scss';
+@import '../../../../assets/styles/mixins.scss';
+
+.profile-calendar {
+  display: flex;
+  font-size: 14px;
+  background-color: $color-white;
+  border-radius: 0.5rem;
+  width: 100%;
+
+  &__container {
+    flex-grow: 1;
+    position: relative;
+    &:hover .calendar__hover {
+      z-index: 30;
+      opacity: 1;
+    }
+    .calendar {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      &__legend {
+        display: flex;
+        flex-wrap: wrap;
+
+        @include respond(tab-port) {
+          order: 3;
+          margin: 1rem 1rem 0;
+        }
+
+        @include respond(phone) {
+          order: 3;
+          justify-content: center;
+
+          margin: 1rem;
+        }
+
+        &.rtl {
+          margin-right: 1rem;
+          margin-left: 0;
+        }
+
+        [class^='calendar__legend'] {
+          display: flex;
+          align-items: center;
+
+          .title {
+            font-size: 1rem;
+          }
+
+          .color {
+            height: 1.5rem;
+            width: 1.5rem;
+
+            border-radius: 2px;
+
+            margin-right: 5px;
+
+            &.rtl {
+              margin-left: 5px;
+              margin-right: 0;
+            }
+          }
+        }
+
+        [class^='calendar__legend']:not(:last-child) {
+          margin-right: 1rem;
+
+          &.rtl {
+            margin-left: 1rem;
+            margin-right: 0;
+          }
+        }
+
+        &--available .color {
+          background: $color-primary;
+        }
+        &--not__available .color {
+          background: $color-not-available;
+        }
+        &--booked .color {
+          background: $color-booked;
+        }
+        &--busy .color {
+          background: $color-busy;
+        }
+        &--old-session .color {
+          background: $color-old-session;
+        }
+      }
+      &__timezone {
+        text-align: right;
+        line-height: 18px;
+        order: 2;
+
+        @include respond(phone) {
+          width: 100%;
+          text-align: center;
+          margin-top: 1rem;
+        }
+        p {
+          font-size: 1.2rem;
+        }
+      }
+      @include respond(phone) {
+        justify-content: center;
+      }
+    }
+
+    .fc {
+      @include respond(phone) {
+        table {
+          font-size: 1.2rem;
+        }
+      }
+    }
+    .fc-day-today {
+      background-color: #ffffff !important;
+    }
+
+    .fc-header-toolbar {
+      margin-bottom: 0.5rem;
+
+      .fc-toolbar-chunk {
+        .fc-button-group {
+          .fc-button-primary {
+            background-color: $color-primary;
+            border-color: $color-white;
+            &:focus {
+              box-shadow: none;
+            }
+          }
+          .fc-button-active {
+            background-color: #41b7dc;
+            &:focus {
+              box-shadow: none;
+            }
+          }
+        }
+        .fc-today-button {
+          background-color: $color-primary;
+          border-color: $color-white;
+          &:focus {
+            box-shadow: none;
+          }
+        }
+        .fc-today-button:disabled {
+          cursor: default;
+        }
+        @include respond(phone) {
+          .fc-toolbar-title {
+            display: none;
+          }
+        }
+      }
+    }
+
+    .fc-direction-ltr .fc-timegrid-slot-label-frame {
+      text-align: start;
+    }
+    .fc .fc-timegrid-slot {
+      height: 2em;
+    }
+    .fc-timegrid-col-events {
+      margin: 0;
+      text-align: center;
+      .fc-timegrid-event {
+        margin: 0;
+        border-radius: 0.6rem;
+      }
+    }
+  }
+  .calendar__hover {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba($color: $color-black, $alpha: 0.8);
+    transition: all 0.35s ease-in-out;
+    z-index: -10;
+    opacity: 0;
+    border-radius: 4px;
+
+    &.hide {
+      opacity: 0 !important;
+      z-index: -1 !important;
+    }
+
+    &--btn {
+      min-width: 14rem;
+      z-index: 20;
+      height: 4rem;
+    }
+  }
+}
+
+b {
+  /* used for event dates/times */
+  margin-right: 3px;
+}
+i {
+  vertical-align: middle;
+}

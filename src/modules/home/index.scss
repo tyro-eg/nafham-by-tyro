@@ -1,0 +1,9 @@
+@import '../../assets/styles/variables.scss';
+@import '../../assets/styles/mixins.scss';
+
+.home {
+  overflow: hidden;
+  &.rtl {
+    text-align: right;
+  }
+}

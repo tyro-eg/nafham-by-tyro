@@ -1,0 +1,256 @@
+@import '../../../../assets/styles/variables.scss';
+@import '../../../../assets/styles/mixins.scss';
+
+.course-detail {
+  .course-info {
+    display: block;
+    background-color: rgba($color-primary, 0.5);
+    padding-top: 3.2rem;
+    &__container {
+      display: flex;
+      @include respond(tab-port) {
+        flex-direction: column;
+        align-items: center;
+      }
+      @include respond(phone) {
+        width: 94%;
+        max-width: unset !important;
+      }
+
+      &__details {
+        width: 70%;
+        @include respond(tab-port) {
+          order: 1;
+          width: 100%;
+        }
+
+        &__name {
+          color: $color-white;
+          font-size: 4.8rem;
+          font-weight: 800;
+          line-height: 64px;
+
+          @include respond(tab-port) {
+            font-size: 2.85rem;
+            line-height: 38px;
+          }
+        }
+
+        &__by {
+          color: $color-white;
+          font-weight: 500;
+          font-size: 2.4rem;
+          line-height: 32px;
+
+          @include respond(tab-port) {
+            font-size: 1.8rem;
+            line-height: 28px;
+          }
+        }
+
+        &__about {
+          text-align: start;
+          color: $color-white;
+          font-weight: 400;
+          font-size: 1.6rem;
+          line-height: 26px;
+          margin-top: 4.8rem;
+          @include respond(tab-port) {
+            margin-bottom: 2rem;
+            margin-top: 2.4rem;
+          }
+
+          .profile-p,
+          p {
+            color: $color-white;
+            font-weight: 400;
+            font-size: 1.6rem;
+            line-height: 26px;
+          }
+        }
+      }
+
+      &__price-card {
+        width: 36rem;
+        min-width: 36rem;
+        height: 32rem;
+        background-color: white;
+        .content {
+          padding: 2.4rem;
+          .title {
+            font-weight: 500;
+            font-size: 18px;
+            line-height: 32px;
+            color: $color-title;
+            margin-bottom: 1.2rem;
+          }
+
+          .newPrice {
+            font-weight: 600;
+            font-size: 32px;
+            line-height: 24px;
+            color: $color-primary;
+          }
+
+          .oldPrice {
+            font-weight: 500;
+            font-size: 16px;
+            line-height: 28px;
+            color: $color-body;
+            text-decoration: line-through;
+          }
+        }
+        @include respond(tab-port) {
+          order: 2;
+        }
+      }
+    }
+  }
+
+  .block2 {
+    display: flex;
+
+    @include respond(tab-port) {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    @include respond(phone) {
+      width: 94%;
+      max-width: unset !important;
+    }
+    &__statistics {
+      width: 70%;
+      height: 12rem;
+      background-color: #eaeef1;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 2rem;
+
+      &-card:not(:first-child) {
+        border-left: 1px solid $color-primary;
+        padding-left: 1.7rem;
+      }
+      &-card {
+        &__name {
+          display: flex;
+          align-items: center;
+          margin-bottom: 1.2rem;
+          color: $color-body;
+          font-size: 1.6rem;
+          line-height: 26px;
+          font-weight: 400;
+          @include respond(phone) {
+            margin-bottom: 0.9rem;
+            font-size: 1.2rem;
+            line-height: 21px;
+          }
+
+          svg {
+            width: 2rem;
+            height: 2rem;
+            margin: 0 0.5rem;
+          }
+        }
+        &__value {
+          color: $color-title;
+          font-weight: 600;
+          font-size: 2rem;
+          line-height: 24px;
+          @include respond(phone) {
+            font-size: 16px;
+            line-height: 20px;
+          }
+        }
+      }
+
+      @include respond(tab-port) {
+        width: 100%;
+        order: 2;
+        margin-bottom: 2.4rem;
+      }
+      @include respond(phone) {
+        bottom: -16rem;
+        height: 17.5rem;
+        flex-wrap: wrap;
+        padding: 1.8rem;
+        border-radius: 8px;
+        &-card {
+          width: 50%;
+        }
+        &-card:nth-child(even) {
+          border-left: 1px solid $color-primary;
+          padding-left: 1.7rem;
+        }
+        &-card:nth-child(odd) {
+          border-left: none;
+          padding-left: 0;
+        }
+      }
+    }
+    &__price-card {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      width: 36rem;
+      min-width: 36rem;
+      height: 32rem;
+      background-color: white;
+      padding: 2.4rem;
+      @include respond(tab-port) {
+        order: 1;
+        margin-bottom: 1rem;
+      }
+
+      .action1 {
+        width: 100%;
+        height: 5.6rem;
+        margin-bottom: 3.2rem;
+      }
+
+      .title {
+        font-weight: 500;
+        font-size: 18px;
+        line-height: 24px;
+        color: $color-title;
+        margin-bottom: 1.2rem;
+      }
+
+      .description {
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 24px;
+        color: $color-body;
+      }
+
+      .action2 {
+        width: 100%;
+        height: 5.6rem;
+      }
+    }
+  }
+
+  &.rtl {
+    .block2 {
+      &__statistics {
+        &-card:not(:first-child) {
+          border-right: 1px solid $color-primary;
+          border-left: none;
+          padding-right: 1.7rem;
+          padding-left: 0;
+        }
+        @include respond(phone) {
+          &-card:nth-child(even) {
+            border-right: 1px solid $color-primary;
+            padding-right: 1.7rem;
+          }
+          &-card:nth-child(odd) {
+            border-right: none;
+            padding-right: 0;
+          }
+        }
+      }
+    }
+  }
+}

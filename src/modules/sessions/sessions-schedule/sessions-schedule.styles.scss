@@ -1,0 +1,21 @@
+@import '../../../assets/styles/variables.scss';
+@import '../../../assets/styles/mixins.scss';
+
+.sessions-schedule {
+  margin-top: 4rem;
+
+  &__title {
+    margin-bottom: 2.1rem;
+    font-weight: 600;
+    font-size: 2.4rem;
+    line-height: 32px;
+    text-align: start;
+  }
+  &__container {
+    .unscheduled-card {
+      width: 100%;
+      display: flex !important;
+      justify-content: center;
+    }
+  }
+}

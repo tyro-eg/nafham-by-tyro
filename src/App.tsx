@@ -1,26 +1,30 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { selectCurrentUser } from './redux/user/user.selectors';
+import MaterialTheme from './component/material-theme/material-theme.component';
+import NotistackProvider from './component/app/NotistackProvider';
+import Layout from './component/app/Layout';
+import RoutesComponent from './component/app/Routes';
+import i18n from './component/i18next/i18n';
+import { useAppSelector } from './redux/store';
 
-function App() {
+import './assets/styles/main.scss';
+import './App.scss';
+
+const App: React.FC = () => {
+  const currentUser = useAppSelector(selectCurrentUser);
+
+  // Set the document direction based on i18n language direction
+  document.getElementById('direction')!.dir = i18n.dir();
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <MaterialTheme>
+      <NotistackProvider>
+        <Layout>
+          <RoutesComponent currentUser={currentUser} />
+        </Layout>
+      </NotistackProvider>
+    </MaterialTheme>
   );
-}
+};
 
 export default App;

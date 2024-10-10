@@ -1,0 +1,179 @@
+.container {
+  max-width: $grid-width !important;
+  // padding: 0 $offset-x;
+  padding: 0;
+  margin: 0 auto;
+
+  .row {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    margin-right: -15px;
+    margin-left: -15px;
+  }
+  &:not(:last-child) {
+    margin-bottom: $gutter-vertical;
+
+    @include respond(tab-port) {
+      margin-bottom: $gutter-vertical-small;
+    }
+  }
+
+  @include respond(tab-port) {
+    max-width: $grid-width-tab-port !important;
+    // padding: 0 3rem;
+  }
+
+  @include respond(phone) {
+    max-width: $grid-width-phone !important;
+  }
+
+  @include clearfix;
+
+  [class^='col-'] {
+    float: left;
+
+    &.rtl {
+      float: right;
+    }
+
+    &:not(:last-child) {
+      margin-right: $gutter-horizontal;
+
+      @include respond(tab-port) {
+        margin-right: $gutter-horizontal-tab-port;
+        margin-bottom: $gutter-vertical-tab-port;
+      }
+
+      @include respond(phone) {
+        margin-right: $gutter-horizontal-phone;
+        margin-bottom: $gutter-vertical-phone;
+      }
+
+      &.rtl {
+        margin-left: $gutter-horizontal;
+        margin-right: 0;
+
+        @include respond(tab-port) {
+          margin-left: $gutter-horizontal-tab-port;
+        }
+
+        @include respond(phone) {
+          margin-left: $gutter-horizontal-phone;
+        }
+      }
+
+      // @include respond(tab-port) {
+      //     // margin-right: 0;
+      //     margin-bottom: $gutter-vertical-tab-port;
+      // }
+    }
+  }
+
+  .col-1-of-1 {
+    width: 100%;
+  }
+
+  .col-1-of-2 {
+    width: calc((100% - #{$gutter-horizontal}) / 2);
+  }
+
+  .col-1-of-3 {
+    width: calc((100% - 2 * #{$gutter-horizontal}) / 3);
+  }
+
+  .col-2-of-3 {
+    width: calc(
+      2 * ((100% - 2 * #{$gutter-horizontal}) / 3) + #{$gutter-horizontal}
+    );
+  }
+
+  .col-1-of-4 {
+    width: calc((100% - 3 * #{$gutter-horizontal}) / 4);
+  }
+
+  .col-2-of-4 {
+    width: calc(
+      2 * ((100% - 3 * #{$gutter-horizontal}) / 4) + #{$gutter-horizontal}
+    );
+  }
+
+  .col-3-of-4 {
+    width: calc(
+      3 * ((100% - 3 * #{$gutter-horizontal}) / 4) + 2 * #{$gutter-horizontal}
+    );
+  }
+
+  @include respond(tab-port) {
+    .col-1-of-1-md {
+      width: 100%;
+    }
+
+    .col-1-of-2-md {
+      width: calc((100% - #{$gutter-horizontal-tab-port}) / 2);
+    }
+
+    .col-1-of-3-md {
+      width: calc((100% - 2 * #{$gutter-horizontal-tab-port}) / 3);
+    }
+
+    .col-2-of-3-md {
+      width: calc(
+        2 * ((100% - 2 * #{$gutter-horizontal-tab-port}) / 3) + #{$gutter-horizontal-tab-port}
+      );
+    }
+
+    .col-1-of-4-md {
+      width: calc((100% - 3 * #{$gutter-horizontal-tab-port}) / 4);
+    }
+
+    .col-2-of-4-md {
+      width: calc(
+        2 * ((100% - 3 * #{$gutter-horizontal-tab-port}) / 4) + #{$gutter-horizontal-tab-port}
+      );
+    }
+
+    .col-3-of-4-md {
+      width: calc(
+        3 * ((100% - 3 * #{$gutter-horizontal-tab-port}) / 4) + 2 * #{$gutter-horizontal-tab-port}
+      );
+    }
+  }
+
+  @include respond(phone) {
+    .col-1-of-1-sm {
+      width: 100%;
+    }
+
+    .col-1-of-2-sm {
+      width: calc((100% - #{$gutter-horizontal-phone}) / 2);
+    }
+
+    .col-1-of-3-sm {
+      width: calc((100% - 2 * #{$gutter-horizontal-phone}) / 3);
+    }
+
+    .col-2-of-3-sm {
+      width: calc(
+        2 * ((100% - 2 * #{$gutter-horizontal-phone}) / 3) + #{$gutter-horizontal-phone}
+      );
+    }
+
+    .col-1-of-4-sm {
+      width: calc((100% - 3 * #{$gutter-horizontal-phone}) / 4);
+    }
+
+    .col-2-of-4-sm {
+      width: calc(
+        2 * ((100% - 3 * #{$gutter-horizontal-phone}) / 4) + #{$gutter-horizontal-phone}
+      );
+    }
+
+    .col-3-of-4-sm {
+      width: calc(
+        3 * ((100% - 3 * #{$gutter-horizontal-phone}) / 4) + 2 * #{$gutter-horizontal-phone}
+      );
+    }
+  }
+}

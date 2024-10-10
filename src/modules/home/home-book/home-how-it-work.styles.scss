@@ -1,0 +1,49 @@
+@import '../../../assets/styles/variables.scss';
+@import '../../../assets/styles/mixins.scss';
+.landing__how-it-works {
+  padding-top: 4.5rem;
+  padding-bottom: 15rem;
+  text-align: center;
+
+  .description {
+    margin-bottom: 130px;
+  }
+
+  .card {
+    display: flex;
+    align-items: center;
+    position: relative;
+    flex-direction: column;
+    padding-top: 100px;
+    padding-bottom: 60px;
+
+    box-shadow: 0px 10px 60px rgba(38, 45, 118, 0.08);
+    border-radius: 20px;
+    border: 0;
+
+    height: 100%;
+
+    h4 {
+      font-weight: 700;
+      margin-bottom: 32px;
+    }
+
+    img {
+      width: 150px;
+      height: 150px;
+      position: absolute;
+
+      top: -88px;
+    }
+
+    p {
+      margin: 0 60px;
+    }
+  }
+
+  @include respond(phone) {
+    .col-1-of-1-sm {
+      margin: 55px auto 0;
+    }
+  }
+}

@@ -1,0 +1,113 @@
+html {
+  font-size: 62.5% !important;
+}
+
+body {
+  box-sizing: border-box;
+
+  @include respond(tab-port) {
+    padding: 0;
+  }
+}
+
+html[dir='rtl'] body {
+  font-family: 'Tajawal', Arial, Helvetica, sans-serif;
+}
+
+html[dir='rtl'] .slick-track {
+  direction: rtl;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+body::-webkit-scrollbar {
+  width: 1rem;
+  background-color: #f5f5f5;
+}
+
+body::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
+  background-color: #f5f5f5;
+  border-radius: 10px;
+}
+
+body::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background-color: #fff;
+  background-image: -webkit-gradient(
+    linear,
+    40% 0%,
+    75% 84%,
+    from(#247688),
+    to(#00576b),
+    color-stop(0.6, #3ac5f1)
+  );
+}
+
+div::-webkit-scrollbar {
+  width: 1rem;
+  background-color: #f5f5f5;
+}
+
+div::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
+  background-color: #f5f5f5;
+  border-radius: 10px;
+}
+
+div::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background-color: #fff;
+  background-image: -webkit-gradient(
+    linear,
+    40% 0%,
+    75% 84%,
+    from(#247688),
+    to(#00576b),
+    color-stop(0.6, #3ac5f1)
+  );
+}
+
+hr {
+  height: 1px;
+
+  border: 0;
+
+  background-color: $color-grey-light-6;
+}
+
+textarea {
+  width: 100%;
+  height: 100%;
+  border-radius: 4px;
+  border: 1px solid $color-body;
+  padding: 0.8rem 1.2rem;
+}
+
+#root {
+  min-height: 550px;
+}
+
+.react-tiny-popover-container {
+  z-index: 1100;
+}
+
+.MuiMenu-list {
+  max-height: 17rem;
+}
+
+#notistack-snackbar {
+  font-size: 1.4rem;
+}
+
+.MuiTooltip-tooltip {
+  font-size: 1.2rem !important;
+}
+
+.modal-close-btn {
+  position: absolute !important;
+  right: 0 !important;
+}

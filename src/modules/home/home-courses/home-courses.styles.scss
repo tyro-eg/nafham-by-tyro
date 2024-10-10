@@ -1,0 +1,81 @@
+@import '../../../assets/styles/variables.scss';
+@import '../../../assets/styles/mixins.scss';
+.landing__courses {
+  padding-top: 4.5rem;
+  padding-bottom: 4.5rem;
+  @include respond(phone) {
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+  .courses-container {
+    width: 62%;
+    margin: auto;
+    text-align: center;
+    @include respond(phone) {
+      width: 100%;
+    }
+  }
+  .courses-header {
+    color: $color-title;
+    font-size: 3.2rem;
+    font-weight: bold;
+    line-height: 4.8rem;
+    margin-bottom: 2.4rem;
+    @include respond(phone) {
+      font-size: 2.8rem;
+    }
+  }
+  .courses-text {
+    color: $color-body;
+    font-size: 1.8rem;
+    line-height: 2.8rem;
+    margin-bottom: 2.4rem;
+    @include respond(phone) {
+      font-size: 1.6rem;
+    }
+  }
+  .courses-action {
+    text-align: center;
+    .more-courses-button {
+      padding: 1.2rem 8rem;
+      font-size: 1.6rem;
+      font-weight: 500;
+      line-height: 2.4rem;
+      margin-bottom: 6.7rem;
+      @include respond(phone) {
+        margin-bottom: 3.7rem;
+      }
+    }
+  }
+  .course-list-container {
+    .tab-init {
+      min-height: 1px;
+      margin-top: 2.4rem;
+    }
+    .no_results {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      &__img {
+        margin-top: 14%;
+        margin-bottom: 1.8rem;
+        margin-left: -8rem;
+        svg {
+          width: 201px;
+          height: 257px;
+        }
+      }
+      &__content {
+        text-align: center;
+        p {
+          font-size: 2.6rem;
+          color: $color-disabled;
+        }
+      }
+    }
+    .course-card {
+      max-width: 35rem;
+    }
+  }
+}
