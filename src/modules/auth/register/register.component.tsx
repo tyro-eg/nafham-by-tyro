@@ -78,7 +78,7 @@ const Register: React.FC = () => {
               email: '',
               password: '',
               password_confirmation: '',
-              phone_number: '44455',
+              phone_number: '',
               countryCode: '',
             }}
             validationSchema={SignUpSchema}
