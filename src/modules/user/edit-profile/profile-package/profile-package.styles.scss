@@ -1,0 +1,96 @@
+@import '../../../../assets/styles/variables.scss';
+@import '../../../../assets/styles/mixins.scss';
+
+.profile-package {
+  width: 27rem;
+  height: 29rem;
+  padding: 3.2rem 2.4rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  border: 1px solid #eaeef1;
+  border-radius: 26px;
+
+  &__rate {
+    color: $color-primary;
+    font-weight: 700;
+    font-size: 3.6rem;
+    line-height: 46px;
+    margin-bottom: 1rem;
+    &-perHour {
+      font-weight: 400;
+      font-size: 17px;
+      line-height: 23px;
+    }
+  }
+  &__minutes {
+    color: $color-body;
+    font-weight: 700;
+    font-size: 2.8rem;
+    line-height: 38px;
+  }
+
+  &__save {
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    font-weight: 500;
+    font-size: 1.5rem;
+    line-height: 20px;
+    color: $color-body;
+    svg {
+      width: 2rem;
+      height: 2rem;
+    }
+    &-title {
+      padding: 0 0.5rem;
+    }
+  }
+
+  &__action {
+    width: 23.2rem;
+    border-radius: 2.4rem;
+    padding: 1rem 0;
+    align-self: center;
+  }
+}
+
+.popular {
+  background-color: $color-primary;
+  border: none;
+  padding-top: 1.2rem;
+  .profile-package {
+    &__badge {
+      font-weight: 700;
+      font-size: 1rem;
+      line-height: 14px;
+      padding: 0.8rem 1.6rem;
+      background-color: #f4b73f;
+      color: white;
+      border-radius: 2.4rem;
+      align-self: flex-end;
+    }
+    &__rate {
+      color: $color-white;
+      margin-top: -2.5rem;
+    }
+
+    &__minutes {
+      color: $color-white;
+    }
+
+    &__save {
+      color: $color-white;
+
+      svg {
+        fill: #f4b73f;
+      }
+    }
+
+    &__action {
+      background-color: $color-white;
+      color: $color-primary;
+    }
+  }
+}

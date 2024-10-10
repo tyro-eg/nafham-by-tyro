@@ -1,0 +1,71 @@
+@import '../../assets/styles/variables.scss';
+@import '../../assets/styles/mixins.scss';
+
+.sessions {
+  background-color: #fafafa;
+  &__container {
+    display: flex;
+    flex-direction: column;
+
+    @include respond(phone) {
+      width: 94%;
+      max-width: unset !important;
+    }
+  }
+
+  &__banner {
+    position: relative;
+    margin: 11rem 0;
+    background-color: #7dcee0;
+    width: 100%;
+    height: 12rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    @include respond(tab-port) {
+      margin: 5rem 0;
+    }
+
+    .overview {
+      position: absolute;
+      width: 50%;
+      bottom: 50%;
+      left: 25%;
+
+      @include respond(tab-port) {
+        left: 10%;
+        width: 80%;
+      }
+
+      @include respond(phone) {
+        left: 3%;
+        width: 94%;
+      }
+
+      &.rtl {
+        left: 0;
+        right: 25%;
+
+        @include respond(tab-port) {
+          right: 10%;
+        }
+
+        @include respond(phone) {
+          right: 3%;
+        }
+      }
+    }
+
+    .filter {
+      position: absolute;
+      width: 100%;
+      top: 75%;
+      z-index: 1;
+      @include respond(phone) {
+        width: 94%;
+        max-width: unset !important;
+      }
+    }
+  }
+}

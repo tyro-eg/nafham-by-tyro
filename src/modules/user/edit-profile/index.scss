@@ -1,0 +1,126 @@
+@import '../../../assets/styles/variables.scss';
+@import '../../../assets/styles/mixins.scss';
+
+.profile {
+  background-color: $color-grey-light-1;
+  padding-top: 0.4rem;
+
+  &__container {
+    @include respond(phone) {
+      width: 94%;
+      max-width: unset !important;
+    }
+  }
+
+  &__fieldsTrail {
+    display: flex;
+    justify-content: space-between;
+
+    &-fields {
+      width: 100%;
+    }
+
+    .withTrial {
+      width: 68%;
+    }
+
+    &-trial {
+      width: 30%;
+    }
+
+    @include respond(tab-port) {
+      flex-direction: column;
+      .withTrial {
+        order: 2;
+        width: 100%;
+      }
+
+      &-trial {
+        order: 1;
+        width: 100%;
+      }
+    }
+  }
+  &__edit {
+    margin-bottom: 3rem;
+    width: 100%;
+    background-color: $color-secondary;
+    padding: 8px 16px;
+  }
+
+  &__available-packages {
+    margin-bottom: 4.8rem;
+    &__title {
+      font-weight: 700;
+      font-size: 28px;
+      line-height: 40px;
+      color: $color-title;
+      margin-bottom: 3.2rem;
+      @include respond(phone) {
+        margin-bottom: 1.8rem;
+      }
+    }
+
+    &__packages {
+      display: flex;
+      padding: 4.8rem;
+      background-color: $color-white;
+      border-radius: 8px;
+      @include respond(phone) {
+        padding: 2.4rem;
+      }
+    }
+  }
+  &__calendar {
+    margin-bottom: 4.8rem;
+
+    &__title {
+      font-weight: 700;
+      font-size: 28px;
+      line-height: 40px;
+      color: $color-title;
+      margin-bottom: 3.2rem;
+
+      @include respond(phone) {
+        margin-bottom: 1.8rem;
+      }
+    }
+
+    &__slots {
+      display: flex;
+      padding: 4.8rem;
+      background-color: $color-white;
+
+      @include respond(phone) {
+        padding: 0;
+      }
+    }
+  }
+
+  &__reviews {
+    margin-bottom: 4.8rem;
+
+    &__title {
+      font-weight: 700;
+      font-size: 28px;
+      line-height: 40px;
+      color: $color-title;
+      margin-bottom: 3.2rem;
+
+      @include respond(phone) {
+        margin-bottom: 1.8rem;
+      }
+    }
+
+    &__container {
+      display: flex;
+      padding: 4.8rem;
+      background-color: $color-white;
+      border-radius: 8px;
+
+      @include respond(phone) {
+        padding: 2.4rem;
+      }
+    }
+  }
+}

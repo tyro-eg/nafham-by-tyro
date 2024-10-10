@@ -1,0 +1,55 @@
+@import '../../../assets/styles/variables.scss';
+@import '../../../assets/styles/mixins.scss';
+
+.landing__instructors {
+  padding-top: 4.5rem;
+  padding-bottom: 4.5rem;
+  background-color: #fafbfd;
+  @include respond(phone) {
+    padding-bottom: 0rem;
+  }
+  .instructors-container {
+    width: 62%;
+    margin: auto;
+    text-align: center;
+    @include respond(phone) {
+      width: 100%;
+    }
+  }
+  .instructors-header {
+    color: $color-title;
+    font-size: 3.2rem;
+    font-weight: bold;
+    line-height: 4.8rem;
+    margin-bottom: 2.4rem;
+    @include respond(phone) {
+      font-size: 2.8rem;
+      line-height: 4.1rem;
+    }
+  }
+  .instructors-text {
+    color: $color-body;
+    font-size: 1.8rem;
+    line-height: 2.8rem;
+    margin-bottom: 2.4rem;
+    @include respond(phone) {
+      font-size: 1.6rem;
+    }
+  }
+  .instructors-action {
+    text-align: center;
+    .more-instructors-button {
+      padding: 1.2rem 8rem;
+      background-color: $color-white;
+      color: $color-primary;
+      font-size: 1.6rem;
+      font-weight: 500;
+      line-height: 2.4rem;
+      text-align: center;
+      margin-bottom: 6.7rem;
+      @include respond(phone) {
+        font-size: 1.2rem;
+      }
+    }
+  }
+}

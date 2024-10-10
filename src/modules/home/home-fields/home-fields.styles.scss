@@ -1,0 +1,62 @@
+@import '../../../assets/styles/variables.scss';
+@import '../../../assets/styles/mixins.scss';
+
+.landing__learning-fields {
+  padding-top: 4.5rem;
+  padding-bottom: 4.5rem;
+  background-color: #fafafa;
+  @include respond(phone) {
+    padding-top: 1rem;
+    padding-bottom: 4rem;
+  }
+  .learning-fields-container {
+    width: 62%;
+    margin: auto;
+    @include respond(phone) {
+      width: 100%;
+    }
+  }
+  .learning-fields-header {
+    color: $color-title;
+    font-size: 3.2rem;
+    font-weight: bold;
+    line-height: 4.8rem;
+    text-align: center;
+    margin-bottom: 2.4rem;
+    @include respond(phone) {
+      font-size: 2.8rem;
+      line-height: 4.1rem;
+    }
+  }
+  .fields-images {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    @include respond(phone) {
+      justify-content: center;
+    }
+    &__card {
+      display: flex;
+      align-items: center;
+      box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.12);
+      border-radius: 6px;
+      width: 261px;
+      padding: 11.5px;
+      margin-bottom: 45px;
+
+      &.rtl {
+        .card-left {
+          margin-right: 11.5px;
+        }
+      }
+
+      .card-left {
+        margin-left: 11.5px;
+
+        h5 {
+          color: $color-primary;
+        }
+      }
+    }
+  }
+}

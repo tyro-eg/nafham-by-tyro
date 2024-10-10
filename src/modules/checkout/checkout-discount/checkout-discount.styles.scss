@@ -1,0 +1,113 @@
+@import '../../../assets/styles/variables.scss';
+@import '../../../assets/styles/mixins.scss';
+
+.discount {
+  padding: 2rem 3.2rem;
+  background-color: $color-white;
+  margin-bottom: 2.2rem;
+  border-radius: 0.8rem;
+  @include respond(phone) {
+    padding: 2rem;
+  }
+
+  &__form {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+
+    .MuiInputBase-root {
+      font-size: 1.4rem;
+      line-height: 2.2rem;
+      height: 100%;
+      background: #f1f3f8;
+    }
+
+    .MuiOutlinedInput-input {
+      padding: 14.5px 14px;
+    }
+
+    .MuiOutlinedInput-notchedOutline {
+      border: none;
+    }
+
+    .MuiFormLabel-root {
+      font-weight: 700;
+      font-size: 2.4rem;
+      line-height: 140%;
+      color: $color-body;
+      @include respond(phone) {
+        font-size: 1.6rem;
+      }
+    }
+
+    .MuiFormHelperText-root {
+      font-size: 1.4rem;
+      margin: 0.3rem 0;
+      text-align: start;
+    }
+  }
+
+  &__input {
+    height: 5.6rem;
+    font-size: 1.4rem;
+  }
+
+  &__input-group {
+    display: flex;
+    position: relative;
+  }
+
+  &__applied,
+  &__invalid {
+    position: absolute;
+    right: 24px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+
+    &:after {
+      content: '';
+      position: absolute;
+      left: -25px;
+      top: 50%;
+      transform: translateY(-50%);
+      // background-image: url('https://tyro-app.s3-eu-west-1.amazonaws.com/checkout/Success+promo+code.png');
+      background-repeat: no-repeat;
+      background-size: 16px;
+      width: 16px;
+      height: 16px;
+    }
+  }
+
+  &__applied {
+    &:after {
+      background-image: url('https://tyro-app.s3-eu-west-1.amazonaws.com/checkout/Success+promo+code.png');
+    }
+  }
+
+  &__invalid {
+    &:after {
+      background-image: url('https://tyro-app.s3-eu-west-1.amazonaws.com/checkout/Payment+Declined!+%403x.png');
+    }
+  }
+
+  .rtl {
+    .discount__applied,
+    .discount__invalid {
+      right: auto;
+      left: 24px;
+
+      &:after {
+        left: auto;
+        right: -25px;
+      }
+    }
+  }
+
+  &__submit {
+    padding: 1rem 2rem !important;
+    font-size: 1.6rem !important;
+  }
+}

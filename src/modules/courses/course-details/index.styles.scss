@@ -1,0 +1,154 @@
+@import '../../../assets/styles/variables.scss';
+@import '../../../assets/styles/mixins.scss';
+
+.course-details {
+  background-color: $color-grey-light-1;
+  @include respond(phone) {
+    padding-top: 3rem;
+  }
+  &__container {
+    @include respond(phone) {
+      width: 94%;
+      max-width: unset !important;
+    }
+  }
+
+  &__content {
+    margin-bottom: 4.8rem;
+
+    &-title {
+      font-weight: 700;
+      font-size: 28px;
+      line-height: 40px;
+      color: $color-title;
+      margin-bottom: 3.2rem;
+
+      @include respond(phone) {
+        margin-bottom: 1.8rem;
+      }
+    }
+
+    .content-title {
+      font-weight: 600;
+      font-size: 16px;
+      line-height: 24px;
+    }
+
+    &-container {
+      display: flex;
+      .MuiAccordion-root {
+        width: 100%;
+        .MuiAccordionSummary-root {
+          background-color: rgba($color: $color-primary, $alpha: 0.2);
+          .MuiAccordionSummary-expandIcon {
+            .MuiSvgIcon-root {
+              width: 3rem;
+              height: 3rem;
+              fill: $color-black;
+            }
+          }
+        }
+        .MuiAccordionDetails-root {
+          flex-direction: column;
+        }
+      }
+
+      .MuiAccordionSummary-root.Mui-expanded {
+        background-color: #00a2c6;
+      }
+
+      p {
+        font-weight: 400;
+        font-size: 1.6rem;
+        line-height: 26px;
+        color: $color-body;
+      }
+    }
+  }
+
+  &__description {
+    margin-bottom: 4.8rem;
+
+    &-title {
+      font-weight: 700;
+      font-size: 28px;
+      line-height: 40px;
+      color: $color-title;
+      margin-bottom: 3.2rem;
+
+      @include respond(phone) {
+        margin-bottom: 1.8rem;
+      }
+    }
+
+    &-container {
+      display: flex;
+      flex-direction: column;
+      padding: 4.8rem 3.2rem;
+      background-color: $color-white;
+      p {
+        font-weight: 400;
+        font-size: 1.6rem;
+        line-height: 26px;
+        color: $color-body;
+      }
+
+      @include respond(phone) {
+        padding: 2.4rem;
+      }
+    }
+  }
+
+  &__calendar {
+    margin-bottom: 4.8rem;
+
+    &-title {
+      font-weight: 700;
+      font-size: 28px;
+      line-height: 40px;
+      color: $color-title;
+      margin-bottom: 3.2rem;
+
+      @include respond(phone) {
+        margin-bottom: 1.8rem;
+      }
+    }
+
+    &-container {
+      display: flex;
+      padding: 4.8rem 3.2rem;
+      background-color: $color-white;
+      border-radius: 1rem;
+
+      @include respond(phone) {
+        padding: 2.4rem;
+      }
+    }
+  }
+
+  &__instructor {
+    margin-bottom: 4.8rem;
+
+    &-title {
+      font-weight: 700;
+      font-size: 28px;
+      line-height: 40px;
+      color: $color-title;
+      margin-bottom: 3.2rem;
+
+      @include respond(phone) {
+        margin-bottom: 1.8rem;
+      }
+    }
+
+    &-container {
+      display: flex;
+      padding: 4.8rem 3.2rem;
+      background-color: $color-white;
+
+      @include respond(phone) {
+        padding: 2.4rem;
+      }
+    }
+  }
+}

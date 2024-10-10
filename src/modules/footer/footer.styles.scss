@@ -1,0 +1,112 @@
+@import '../../assets/styles/variables.scss';
+@import '../../assets/styles/mixins.scss';
+
+.app-footer {
+  width: 100%;
+  padding: 0 0 4rem;
+  background-color: $color-white;
+
+  &__container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    @include respond(phone) {
+      width: 94%;
+      max-width: unset !important;
+    }
+
+    .logo {
+      width: 9.2rem;
+      height: 5.5rem;
+      margin-bottom: 1.8rem;
+      cursor: pointer;
+    }
+
+    .footer-navbar {
+      display: flex;
+      justify-content: center;
+      padding-bottom: 4.8rem;
+      margin-bottom: 2.5rem;
+      border-bottom: 1px solid rgba($color: $color-title, $alpha: 0.2);
+      width: 100%;
+
+      @include respond(phone) {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        & > div:nth-child(2) {
+          margin: 2rem 0;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          flex-direction: column;
+        }
+      }
+
+      a {
+        display: inline-block;
+        font-size: 1.6rem;
+        font-weight: 400;
+        line-height: 2.6rem;
+        color: $color-title;
+        margin-right: 2rem;
+
+        &.active {
+          color: $color-primary;
+          font-weight: 600;
+        }
+      }
+
+      .social {
+        a {
+          color: $color-grey-light-5;
+          font-size: 1.6rem;
+          margin: 0 1.6rem;
+        }
+      }
+
+      &.rtl {
+        a {
+          margin-right: 0;
+          margin-left: 2rem;
+        }
+      }
+    }
+  }
+
+  &__bottom {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+
+    @include respond(phone) {
+      flex-direction: column-reverse;
+      align-items: center;
+    }
+  }
+
+  &__rights {
+    color: $color-title;
+    font-weight: 400;
+    line-height: 24px;
+    font-size: 1.4rem;
+
+    @include respond(phone) {
+      font-size: 1.2rem;
+      margin-top: 1rem;
+    }
+  }
+
+  &__icons {
+    display: flex;
+    align-items: center;
+
+    button {
+      color: $color-title;
+      font-size: 1.6rem;
+    }
+  }
+}

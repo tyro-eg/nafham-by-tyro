@@ -1,0 +1,31 @@
+@import '../../../../assets/styles/variables.scss';
+.session-calendar {
+  .fc {
+    /* the calendar root */
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .fc-day-today,
+  .fc-day-future {
+    background-color: #ffffff !important;
+  }
+
+  .fc-direction-ltr .fc-timegrid-slot-label-frame {
+    text-align: start;
+  }
+  .fc .fc-timegrid-slot {
+    height: 2em;
+  }
+  .fc-timegrid-col-events {
+    margin: 0;
+    text-align: center;
+    .fc-timegrid-event {
+      margin: 0;
+      border-radius: 0.6rem;
+    }
+  }
+  .fc-daygrid-event {
+    padding: 0.5rem;
+    background-color: $color-primary;
+  }
+}

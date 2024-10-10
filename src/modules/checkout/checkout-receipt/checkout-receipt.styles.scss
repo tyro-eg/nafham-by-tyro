@@ -1,0 +1,105 @@
+@import '../../../assets/styles/variables.scss';
+@import '../../../assets/styles/mixins.scss';
+
+.receipt {
+  padding: 2.4rem;
+  border-radius: 0.8rem;
+  background-color: $color-white;
+  @include respond(tab-port) {
+    margin-top: 2.2rem;
+    margin-bottom: 2.2rem;
+  }
+
+  &__title {
+    font-weight: 700;
+    font-size: 2.4rem;
+    line-height: 140%;
+    color: $color-body;
+    @include respond(phone) {
+      font-size: 1.6rem;
+    }
+  }
+
+  &__tutor-wrapper {
+    display: flex;
+    align-items: center;
+    .tutor-img {
+      width: 7.6rem;
+      height: 7.6rem;
+      border-radius: 50%;
+      margin: 0 1rem;
+    }
+
+    .tutor-title {
+      font-weight: 700;
+      font-size: 1.6rem;
+      line-height: 150%;
+      color: $color-body;
+    }
+  }
+
+  h4 {
+    &.rtl {
+      text-align: right;
+    }
+  }
+
+  table {
+    width: 100%;
+    font-size: 16px;
+    line-height: 150%;
+    border-collapse: separate;
+    border-spacing: 0 15px;
+
+    tr {
+      color: $color-body;
+
+      th,
+      td {
+        padding: 1rem 0;
+        text-align: left;
+        &:nth-child(2) {
+          text-align: right;
+        }
+      }
+
+      th {
+        border-bottom: 1px solid #f0f1f2;
+      }
+
+      &.receipt__border {
+        td {
+          border-top: 1px solid #f0f1f2;
+          padding-top: 3.2rem;
+        }
+      }
+      .total-title {
+        font-size: 2.4rem;
+        color: $color-title;
+        @include respond(phone) {
+          font-size: 1.8rem;
+        }
+      }
+      .total-price {
+        font-size: 3.2rem;
+        color: $color-primary;
+        font-weight: 800;
+        @include respond(phone) {
+          font-size: 2.4rem;
+        }
+      }
+    }
+
+    &.rtl {
+      tr {
+        th,
+        td {
+          text-align: right;
+          &:nth-child(2) {
+            text-align: left;
+          }
+        }
+      }
+    }
+  }
+}

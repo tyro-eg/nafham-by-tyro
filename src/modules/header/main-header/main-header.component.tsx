@@ -1,0 +1,261 @@
+import React, { useState } from 'react';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import {
+  AppBar,
+  Button,
+  Container,
+  Toolbar,
+  FormControl,
+  Select,
+  MenuItem,
+} from '@mui/material';
+import { Popover as TinyPopover } from 'react-tiny-popover';
+import { ExpandMore, Info } from '@mui/icons-material';
+import { useSelector } from 'react-redux';
+
+import { selectCurrentUser } from '../../../redux/user/user.selectors';
+import LanguageSelector from '../../../component/i18next/LanguageSelector';
+import logo from '../../../assets/images/logo.png';
+import { rtlClass } from '../../../assets/utils/utils';
+
+import './main-header.styles.scss';
+import { signOut } from '../../../redux/user/user.actions';
+import { useAppDispatch } from '../../../redux/store';
+
+export interface HeaderProps {
+  openFreeTrail: () => void;
+  openEmailConfirm?: () => void;
+}
+
+const Popover = TinyPopover as React.FC<any>;
+
+const MainHeader: React.FC<HeaderProps> = ({
+  openFreeTrail,
+  openEmailConfirm,
+}) => {
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+
+  const currentUser = useSelector(selectCurrentUser); // Fetch current user from Redux state
+
+  const [country, setCountry] = useState('en');
+  const handleChange = (event: any) => {
+    setCountry(event?.target?.value);
+  };
+
+  const [isProfilePopoverOpen, setProfilePopoverOpen] = useState(false);
+  const [isContactPopoverOpen, setContactPopoverOpen] = useState(false);
+
+  const handleLogOut = async () => {
+    await dispatch(signOut(currentUser?.type === 'tutors')); // Trigger sign out action
+    navigate('/');
+  };
+
+  return (
+    <AppBar sx={{ backgroundColor: '#fffffff7' }} position="fixed">
+      {!!currentUser &&
+        !!currentUser?.email &&
+        !currentUser?.email_confirmed && (
+          <div className="header__banner">
+            <Info />
+            <span className="header__banner-text">
+              {t('HEADER.BANNER_UNCONFIRMED.TEXT1')} {currentUser?.email}{' '}
+              {t('HEADER.BANNER_UNCONFIRMED.TEXT2')}{' '}
+              <button
+                className="header__banner-action"
+                type="button"
+                onClick={openEmailConfirm}
+              >
+                {t('HEADER.BANNER_UNCONFIRMED.ACTION')}
+              </button>
+            </span>
+          </div>
+        )}
+      <Toolbar>
+        <Container maxWidth="lg">
+          <div className="container header-container">
+            <div className={`app-header__top ${rtlClass()}`}>
+              <div className="app-header__top-links">
+                {!currentUser && (
+                  <Link className="link" to="/register">
+                    {t('HEADER.TOP.REGISTER')}
+                  </Link>
+                )}
+                <Popover
+                  isOpen={isContactPopoverOpen}
+                  positions={['bottom']}
+                  onClickOutside={() => setContactPopoverOpen(false)}
+                  content={
+                    <div className="contact-menu">
+                      <a
+                        onClick={() => setContactPopoverOpen(false)}
+                        className="item"
+                        href="tel:+201067636419"
+                      >
+                        (+20) 106 7636 419
+                      </a>
+                      <a
+                        onClick={() => setContactPopoverOpen(false)}
+                        className="item"
+                        href="mailto:learn@tyro-app.com"
+                      >
+                        learn@tyro-app.com
+                      </a>
+                    </div>
+                  }
+                >
+                  <Button
+                    endIcon={<ExpandMore />}
+                    className="app-header__blog-title"
+                    onClick={() => setContactPopoverOpen(!isContactPopoverOpen)}
+                  >
+                    {t('HEADER.TOP.CONTACT_US')}
+                  </Button>
+                </Popover>
+                <div className="app-header__top-links--lang">
+                  <FormControl>
+                    <Select
+                      sx={{
+                        margin: (theme) => theme.spacing(1),
+                        minWidth: 120,
+                      }}
+                      id="demo-simple-select"
+                      value={country}
+                      onChange={handleChange}
+                    >
+                      <MenuItem value="en">Global</MenuItem>
+                      <MenuItem value="eg">مصر</MenuItem>
+                      <MenuItem value="sa">السعودية</MenuItem>
+                    </Select>
+                  </FormControl>
+                </div>
+                <div>
+                  <LanguageSelector />
+                </div>
+              </div>
+            </div>
+
+            <div className={`app-header__bottom ${rtlClass()}`}>
+              <div className="links">
+                <Link to="/">
+                  <img src={logo} alt="tyro logo" />
+                </Link>
+                <div>
+                  <NavLink
+                    className={({ isActive }) =>
+                      isActive ? 'menu-item active' : 'menu-item'
+                    }
+                    to="/"
+                  >
+                    {t('NAVIGATION.HOME')}
+                  </NavLink>
+                  <NavLink
+                    className={({ isActive }) =>
+                      isActive ? 'menu-item active' : 'menu-item'
+                    }
+                    to="/home"
+                  >
+                    {t('NAVIGATION.FIND_INSTRUCTOR')}
+                  </NavLink>
+                  <NavLink
+                    className={({ isActive }) =>
+                      isActive ? 'menu-item active' : 'menu-item'
+                    }
+                    to="/courses"
+                  >
+                    {t('NAVIGATION.COURSES')}
+                  </NavLink>
+                  {currentUser && (
+                    <NavLink
+                      className={({ isActive }) =>
+                        isActive ? 'menu-item active' : 'menu-item'
+                      }
+                      to="/my_sessions"
+                    >
+                      {t('NAVIGATION.SESSIONS')}
+                    </NavLink>
+                  )}
+                </div>
+              </div>
+
+              {!currentUser && (
+                <div>
+                  <Link to="/login">{t('HEADER.TOP.LOGIN')}</Link>
+                  <Button
+                    onClick={openFreeTrail}
+                    variant="contained"
+                    color="primary"
+                  >
+                    {t('HEADER.TOP.FREE_TRIAL')}
+                  </Button>
+                </div>
+              )}
+
+              {!!currentUser && (
+                <Popover
+                  isOpen={isProfilePopoverOpen}
+                  positions={['bottom']}
+                  onClickOutside={() => setProfilePopoverOpen(false)}
+                  content={
+                    <div className="profile-popover">
+                      <div className="title">
+                        <div className="name">{currentUser?.full_name}</div>
+                        <span>{currentUser?.email}</span>
+                      </div>
+
+                      {currentUser?.type === 'tutors' && (
+                        <Link
+                          onClick={() => setProfilePopoverOpen(false)}
+                          to={`/profile/${currentUser?.id}`}
+                          className="item"
+                        >
+                          {t('HEADER.USER.PROFILE')}
+                        </Link>
+                      )}
+
+                      <Link
+                        onClick={() => setProfilePopoverOpen(false)}
+                        to="/account_settings"
+                        className="item"
+                      >
+                        {t('HEADER.USER.SETTINGS')}
+                      </Link>
+
+                      <Button
+                        onClick={() => {
+                          handleLogOut();
+                          setProfilePopoverOpen(false);
+                        }}
+                        variant="contained"
+                        color="primary"
+                      >
+                        {t('HEADER.USER.LOGOUT')}
+                      </Button>
+                    </div>
+                  }
+                >
+                  <Button
+                    onClick={() => setProfilePopoverOpen(!isProfilePopoverOpen)}
+                    className="app-header__user"
+                    endIcon={<ExpandMore />}
+                  >
+                    {currentUser?.img && (
+                      <img src={currentUser?.img} alt="profile" />
+                    )}
+                    <div className="app-header__user-center">
+                      <div className="name">{currentUser?.full_name}</div>
+                    </div>
+                  </Button>
+                </Popover>
+              )}
+            </div>
+          </div>
+        </Container>
+      </Toolbar>
+    </AppBar>
+  );
+};
+
+export default MainHeader;

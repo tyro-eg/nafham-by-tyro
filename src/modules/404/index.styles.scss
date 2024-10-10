@@ -1,0 +1,42 @@
+@import '../../assets/styles/variables.scss';
+@import '../../assets/styles/mixins.scss';
+
+.not-found {
+  color: $color-white;
+  text-align: center;
+  height: 85vh;
+  overflow: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &__content {
+    padding: 10px;
+
+    .not-found__404 {
+      font-size: 18rem;
+      color: $color-primary;
+      font-weight: bold;
+      @include respond(phone) {
+        font-size: 12rem;
+      }
+    }
+
+    .not-found__info {
+      color: $color-primary;
+      margin-bottom: 3rem;
+    }
+
+    .custom-button {
+      margin-bottom: 20px;
+      padding: 1.2rem 3rem;
+      border-radius: 0.4rem;
+      background-color: $color-primary;
+      color: $color-white;
+      font-size: 1.6rem;
+      font-weight: 500;
+      line-height: 2.4rem;
+      text-align: center;
+    }
+  }
+}

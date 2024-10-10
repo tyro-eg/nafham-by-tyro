@@ -1,0 +1,141 @@
+@import '../../../../assets/styles/variables.scss';
+@import '../../../../assets/styles/mixins.scss';
+
+.schedule-card {
+  display: flex;
+  padding: 2.8rem 2.8rem 2rem;
+  border: 2px solid $color-primary;
+  border-radius: 8px;
+  background-color: #f2f6ff;
+  width: 73rem;
+
+  @include respond(tab-land) {
+    width: 100%;
+  }
+
+  @include respond(phone) {
+    width: 35rem;
+  }
+
+  &__img-container {
+    width: 16%;
+    padding: 0;
+
+    img {
+      height: 10rem;
+      width: 10rem;
+      border-radius: 10px;
+
+      @include respond(phone) {
+        height: 3.2rem;
+        width: 3.2rem;
+      }
+    }
+  }
+
+  &__container {
+    display: flex;
+    flex-direction: column;
+    width: 84%;
+
+    .unscheduled {
+      padding: 0 2.4rem;
+      color: $color-body;
+      text-align: start;
+
+      p {
+        font-weight: 400;
+        font-size: 1.4rem;
+        line-height: 24px;
+      }
+
+      .hours {
+        font-weight: 700;
+        font-size: 2rem;
+        line-height: 28px;
+        color: $color-primary;
+      }
+
+      @include respond(phone) {
+        padding: 0;
+
+        p {
+          font-size: 1rem;
+        }
+
+        .hours {
+          font-size: 1.2rem;
+        }
+      }
+    }
+  }
+
+  &__info {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+
+    @include respond(phone) {
+      margin-bottom: 1rem;
+    }
+
+    .instructor-info {
+      display: flex;
+      flex-direction: column;
+      padding: 0 2.4rem;
+
+      @include respond(phone) {
+        padding: 0;
+      }
+
+      .name {
+        font-weight: 700;
+        font-size: 18px;
+        line-height: 28px;
+        text-align: start;
+        color: $color-title;
+
+        @include respond(phone) {
+          font-size: 12px;
+          line-height: 15px;
+        }
+      }
+
+      .review {
+        display: flex;
+        align-items: center;
+
+        &-stars {
+          display: flex;
+          justify-content: center;
+        }
+
+        &-ratings {
+          margin: 0 1rem;
+        }
+      }
+
+      .field {
+        padding: 4px 6px;
+        border-radius: 0.6rem;
+        background-color: #eaeef1;
+        color: $color-body;
+        font-weight: 500;
+        font-size: 1.6rem;
+        line-height: 150%;
+        align-self: flex-start;
+        margin: 0 0.5rem;
+
+        @include respond(phone) {
+          font-size: 1.2rem;
+        }
+      }
+    }
+
+    .last_button {
+      font-weight: 500;
+      font-size: 16px;
+      line-height: 24px;
+    }
+  }
+}

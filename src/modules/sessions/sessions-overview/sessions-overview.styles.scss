@@ -1,0 +1,43 @@
+@import '../../../assets/styles/variables.scss';
+@import '../../../assets/styles/mixins.scss';
+
+.sessions-overview {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 16px;
+  padding: 3.2rem 3.2rem 2.4rem;
+  background-color: $color-white;
+  box-shadow: 0px 24px 64px rgba(0, 0, 0, 0.04);
+  width: 100%;
+
+  &__card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    &-value {
+      font-weight: 700;
+      font-size: 28px;
+      line-height: 40px;
+      color: $color-primary;
+
+      @include respond(phone) {
+        font-size: 1.45rem;
+        line-height: 21px;
+      }
+    }
+
+    &-title {
+      font-weight: 500;
+      font-size: 16px;
+      line-height: 24px;
+      color: $color-title;
+
+      @include respond(phone) {
+        font-size: 0.85rem;
+        line-height: 13px;
+      }
+    }
+  }
+}

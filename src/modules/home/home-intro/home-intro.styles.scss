@@ -1,0 +1,116 @@
+@import '../../../assets/styles/variables.scss';
+@import '../../../assets/styles/mixins.scss';
+
+.landing__image-container {
+  width: 99%;
+  margin: 0 auto;
+  background-image: url('../../../assets/images/landing/Rectangle 4.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+  @include respond(phone) {
+    & > .img-container {
+      display: flex;
+      flex-direction: column-reverse;
+    }
+  }
+  .col-2-of-4:first-of-type {
+    margin-top: 13rem;
+    @include respond(phone) {
+      margin-top: 3rem;
+    }
+    &.rtl {
+      float: right;
+    }
+  }
+  .macbook-image {
+    max-height: 64.7rem;
+    max-width: 101.5rem;
+  }
+  .col-2-of-4:last-of-type {
+    padding-left: 9.6rem;
+    @include respond(phone) {
+      padding: 0;
+      img {
+        width: 100%;
+      }
+    }
+    &.rtl {
+      padding-left: 0;
+      padding-right: 9.6rem;
+    }
+  }
+  .header-left {
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-start;
+    flex-direction: column;
+    @include respond(phone) {
+      text-align: center;
+    }
+    .header-left-header {
+      color: $color-black;
+      font-size: 6.4rem;
+      font-weight: 900;
+      line-height: 7.4rem;
+      margin-bottom: 2rem;
+      @include respond(phone) {
+        font-size: 3.6rem;
+        line-height: 5rem;
+      }
+    }
+    .header-left-header > span {
+      color: $color-primary;
+    }
+    .header-left-text {
+      color: $color-black;
+      font-size: 1.8rem;
+      line-height: 2.8rem;
+      margin-bottom: 2.4rem;
+      @include respond(phone) {
+        font-size: 1.6rem;
+      }
+    }
+    .header-button {
+      margin-bottom: 5.9rem;
+      font-size: 1.6rem;
+      font-weight: 500;
+      line-height: 2.4rem;
+      @include respond(phone) {
+        margin: 0 auto 5.9rem auto;
+      }
+    }
+    .feature-text {
+      color: $color-title;
+      font-size: 1.3rem;
+      font-weight: bold;
+      letter-spacing: 0.3rem;
+      &.rtl {
+        letter-spacing: inherit;
+      }
+      line-height: 1.6rem;
+      margin-bottom: 3.2rem;
+      @include respond(phone) {
+        margin: 0 auto 3.2rem auto;
+      }
+    }
+    .logos-container {
+      display: flex;
+      @include respond(phone) {
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+      }
+    }
+    .feature-logo {
+      padding: 0.6rem 1.5rem;
+      cursor: pointer;
+      @include respond(phone) {
+        width: 45%;
+        img {
+          margin: 0 auto;
+        }
+      }
+    }
+  }
+}

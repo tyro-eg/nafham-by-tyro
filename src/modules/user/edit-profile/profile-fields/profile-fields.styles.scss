@@ -1,0 +1,41 @@
+@import '../../../../assets/styles/variables.scss';
+@import '../../../../assets/styles/mixins.scss';
+.profile-fields {
+  background-color: $color-white;
+  padding: 3.2rem;
+  margin-bottom: 4.8rem;
+  @include respond(phone) {
+    margin-bottom: 3.2rem;
+  }
+  &__field {
+    &:not(:last-child) {
+      margin-bottom: 2rem;
+      border-bottom: 1px solid #eaeef1;
+    }
+    &-title {
+      font-weight: 700;
+      font-size: 18px;
+      line-height: 28px;
+      margin-bottom: 2rem;
+      color: $color-title;
+    }
+
+    &-slots {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      margin: 0 -5px;
+      flex-flow: row wrap;
+      span {
+        padding: 3px 15px;
+        margin: 1rem;
+        border-radius: 4px;
+        background-color: $color-primary;
+        color: #fff;
+        font-weight: 400;
+        font-size: 16px;
+        line-height: 26px;
+      }
+    }
+  }
+}

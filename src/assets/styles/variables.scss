@@ -1,0 +1,150 @@
+// COLORS
+$color-primary: #3ac5f1;
+$color-secondary: #3a4b60;
+
+$color-title: #2c3e50;
+$color-body: #778699;
+
+$color-grey-light-1: #f6f6f9;
+$color-grey-light-2: #ececee;
+$color-grey-light-3: #eff3f6;
+$color-grey-light-4: #ecf0f3;
+$color-grey-light-5: #9a99a3;
+$color-grey-light-6: #dce1e7;
+$color-additional: #999999;
+
+$color-grey-dark-1: #110f24;
+
+$color-white: #fff;
+$color-black: #000;
+$color-gold: #ffc94a;
+
+$color-disabled: #969699;
+$color-warning: #fcf8e3;
+$color-danger: #dc3545;
+
+$color-warning-text: #8a6d3b;
+
+$color-not-available: #e5e5e5;
+$color-booked: #9ca5af;
+$color-busy: rgba(56, 157, 255, 0.8);
+$color-old-session: rgba(243, 202, 62, 0.8);
+
+// Directory
+$color-badge: rgba(56, 157, 255, 1);
+
+// Sessions
+$color-group: #03c3ec;
+$color-private: #ffd422;
+
+// Calendar
+$color-calendar-border: rgba(128, 128, 128, 0.16);
+$color-calendar-boxshadow: rgba($color-black, 0.05);
+
+// FONT
+$default-font-size: 1.4rem;
+
+// GRID
+$grid-width: 124rem;
+$gutter-vertical: 3rem;
+$gutter-vertical-small: 2.5rem;
+$gutter-horizontal: 3rem;
+
+$offset-x: 16.5rem;
+
+// Tab Port
+$grid-width-tab-port: 67.8rem;
+$gutter-vertical-tab-port: 1.5rem;
+$gutter-horizontal-tab-port: 3rem;
+
+$offset-x-tab-port: 4.5rem;
+
+// Mobile
+$grid-width-phone: 29rem;
+$gutter-vertical-phone: 3rem;
+$gutter-horizontal-phone: 3rem;
+
+// Responsive
+$breakpoint-lg: 992px;
+$breakpoint-xmd: 959px;
+$breakpoint-md: 768px;
+$breakpoint-sm: 576px;
+$breakpoint-xsm: 340px;
+
+$offset-x-phone: 1.5rem;
+
+$directions: (
+  ltr: (
+    direction: ltr,
+    right: right,
+    left: left,
+    margin-right: 'margin-right',
+    margin-left: 'margin-left',
+    padding-left: 'padding-left',
+    padding-right: 'padding-right',
+    border-top-left-radius: 'border-top-left-radius',
+    border-bottom-left-radius: 'border-bottom-left-radius',
+    border-top-right-radius: 'border-top-right-radius',
+    border-bottom-right-radius: 'border-bottom-right-radius',
+    border-left: 'border-left',
+    border-right: 'border-right',
+    translate: 'translate(-50%, -50%);',
+    mirrorY: 'scale(1, 1)',
+    border-right-color: 'border-right-color',
+    transform-sidebar: 'rotate(90deg)',
+    flex-flow: row nowrap,
+    row: 'row',
+    sidebar-close: translateX(0),
+    sidebar-no-desktop: translateX(calc(0%)),
+    '-': '-',
+  ),
+  rtl: (
+    direction: rtl,
+    right: left,
+    left: right,
+    margin-right: 'margin-left',
+    margin-left: 'margin-right',
+    padding-left: 'padding-right',
+    padding-right: 'padding-left',
+    border-top-left-radius: 'border-top-right-radius',
+    border-bottom-left-radius: 'border-bottom-right-radius',
+    border-top-right-radius: 'border-top-left-radius',
+    border-bottom-right-radius: 'border-bottom-left-radius',
+    border-left: 'border-right',
+    border-right: 'border-left',
+    translate: 'translate(50%, -50%);',
+    mirrorY: 'scale(1, -1)',
+    border-right-color: 'border-left-color',
+    transform-sidebar: 'rotate(-90deg)',
+    flex-flow: row-reverse nowrap,
+    row: 'row-reverse',
+    sidebar-close: translateX(0),
+    sidebar-no-desktop: translateX(calc(100%)),
+    '-': '+',
+  ),
+);
+
+@mixin directify($directions) {
+  @each $direction, $map in $directions {
+    .#{$direction}-support & {
+      $direction-map: () !global;
+
+      @each $key, $submap in $map {
+        $value: map-get(map-get($directions, $direction), '#{$key}');
+        $direction-map: map-merge(
+          $direction-map,
+          (
+            $key: $value,
+          )
+        ) !global;
+      }
+
+      @content;
+      $direction-map: null !global;
+    }
+  }
+}
+
+@function directed($key) {
+  @return map-get($direction-map, $key);
+}

@@ -1,0 +1,181 @@
+@import '../../../../assets/styles/variables.scss';
+@import '../../../../assets/styles/mixins.scss';
+
+.contact-details {
+  margin-bottom: 4.8rem;
+  .form-container {
+    @include respond(phone) {
+      width: 94%;
+      max-width: unset !important;
+    }
+  }
+  .title-container {
+    background-color: $color-primary;
+    padding: 4.2rem 0;
+    margin-bottom: 2.1rem;
+
+    .title {
+      text-align: start;
+      color: $color-white;
+      font-weight: 800;
+      font-size: 4.8rem;
+      line-height: 64px;
+
+      @include respond(phone) {
+        font-size: 3.2rem;
+        line-height: 48px;
+      }
+    }
+  }
+  .sub-title {
+    font-weight: 700;
+    font-size: 2.4rem;
+    line-height: 140%;
+    color: $color-title;
+    margin-bottom: 2.1rem;
+    text-align: start;
+
+    @include respond(phone) {
+      margin-bottom: 1.8rem;
+    }
+  }
+
+  &__form-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 3.2rem;
+    background-color: $color-white;
+    border-radius: 8px;
+
+    @include respond(phone) {
+      flex-direction: column;
+    }
+
+    .edit-btn {
+      font-weight: 700;
+      font-size: 21px;
+      line-height: 140%;
+      color: $color-primary;
+      cursor: pointer;
+
+      @include respond(phone) {
+        align-self: flex-end;
+        order: 1;
+      }
+    }
+  }
+
+  &__form {
+    width: 100%;
+    text-align: start;
+    display: flex;
+    flex-direction: column;
+
+    @include respond(phone) {
+      order: 2;
+    }
+    .form-inputs {
+      display: flex;
+      flex-wrap: wrap;
+
+      .form-group {
+        width: 36.4rem;
+        margin-right: 3.2rem;
+
+        &.rtl {
+          margin-right: 0;
+          margin-left: 3.2rem;
+        }
+
+        @include respond(phone) {
+          width: 100%;
+          margin-left: 0;
+          margin-right: 0;
+        }
+      }
+
+      .custom-input-style {
+        height: 4.8rem;
+        margin-bottom: 4.8rem;
+        width: 100%;
+      }
+      .phone-input {
+        margin-bottom: 4.8rem;
+      }
+      .gender-container {
+        .gender-radio-group {
+          flex-direction: row;
+          margin-bottom: 2.4rem;
+        }
+      }
+      .MuiInputBase-root {
+        font-size: 1.4rem;
+        line-height: 2.2rem;
+        height: 100%;
+        background: #f1f3f8;
+      }
+
+      .MuiOutlinedInput-input {
+        padding: 14.5px 14px;
+      }
+
+      .MuiOutlinedInput-notchedOutline {
+        border: none;
+      }
+
+      .MuiFormLabel-root {
+        font-weight: 600;
+        font-size: 1.6rem;
+        line-height: 24px;
+        color: #2c3e50;
+        margin-bottom: 0.8rem;
+      }
+
+      .MuiFormHelperText-root {
+        font-size: 1.4rem;
+        margin: 0.3rem 0;
+        text-align: start;
+      }
+
+      .react-tel-input {
+        height: 4.4rem;
+        font-family: inherit;
+        direction: ltr;
+        .form-control {
+          height: 100%;
+          border: none;
+          background: #f1f3f8;
+          box-shadow: none;
+        }
+      }
+    }
+    .from-actions {
+      align-self: flex-end;
+
+      .btn-custom-style {
+        width: 7.3rem;
+        height: 4.1rem;
+        border-radius: 6px;
+        line-height: 150%;
+        margin: 0 1.2rem;
+
+        @include respond(phone) {
+        }
+      }
+
+      .cancel-btn {
+        color: $color-body;
+        font-weight: 300;
+        font-size: 1.6rem;
+        line-height: 150%;
+        opacity: 0.8;
+      }
+    }
+  }
+  .form-control-danger {
+    color: #f44336 !important;
+    font-size: 1.4rem;
+    margin-bottom: 0.5rem;
+  }
+}

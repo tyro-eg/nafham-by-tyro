@@ -1,0 +1,149 @@
+@import '../../../assets/styles/variables.scss';
+@import '../../../assets/styles/mixins.scss';
+
+.course-directory {
+  margin-top: 6rem;
+  background-color: #fafafa;
+  .courses {
+    .course {
+      margin-bottom: 4.8rem;
+      @include respond(phone) {
+        width: 94%;
+        max-width: unset !important;
+      }
+      &__header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        .title {
+          color: $color-title;
+          font-weight: 700;
+          font-size: 2.8rem;
+          line-height: 120%;
+          margin-bottom: 2rem;
+          text-align: start;
+          vertical-align: middle;
+
+          @include respond(phone) {
+            font-size: 2.4rem;
+            margin-bottom: 1rem;
+          }
+        }
+      }
+
+      &__text {
+        color: #778699;
+        font-weight: 400;
+        font-size: 16px;
+        line-height: 26px;
+        margin-bottom: 2.4rem;
+        text-align: start;
+
+        @include respond(phone) {
+          font-size: 1.4rem;
+        }
+      }
+
+      &__list {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        @include respond(tab-port) {
+          justify-content: center;
+        }
+      }
+    }
+
+    .banner {
+      background-color: #f2f7f8;
+      border-radius: 6px;
+      padding: 1.2rem 0 3.8rem;
+      margin-bottom: 4.8rem;
+      &__container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        @include respond(tab-port) {
+          flex-direction: column;
+        }
+        @include respond(phone) {
+          width: 94%;
+          max-width: unset !important;
+        }
+      }
+      &__container::after {
+        content: none;
+      }
+      &__block1 {
+        max-width: 38rem;
+
+        .title1 {
+          font-weight: 500;
+          font-size: 1.8rem;
+          line-height: 28px;
+          color: $color-title;
+        }
+        .title2 {
+          font-weight: 800;
+          font-size: 4rem;
+          line-height: 54px;
+          color: $color-primary;
+        }
+        .description {
+          font-weight: 400;
+          font-size: 1.6rem;
+          line-height: 26px;
+          color: $color-body;
+          opacity: 0.7;
+        }
+      }
+      &__block2 {
+        display: flex;
+        align-items: flex-end;
+        @include respond(tab-port) {
+          flex-direction: column;
+          align-items: center;
+        }
+        .image {
+          width: 38rem;
+        }
+        .button {
+          min-width: 18rem;
+          height: 4.8rem;
+          padding: 1.2rem 3.2rem;
+          font-weight: 500;
+          font-size: 1.6rem;
+          line-height: 24px;
+        }
+      }
+    }
+  }
+
+  .no_results {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin-bottom: 3rem;
+
+    &__img {
+      margin-top: 14%;
+      margin-bottom: 1.8rem;
+      margin-left: -8rem;
+      svg {
+        width: 201px;
+        height: 257px;
+      }
+    }
+
+    &__content {
+      text-align: center;
+
+      p {
+        font-size: 2.6rem;
+
+        color: $color-disabled;
+      }
+    }
+  }
+}

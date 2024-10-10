@@ -1,0 +1,80 @@
+@import '../../../assets/styles/variables.scss';
+@import '../../../assets/styles/mixins.scss';
+
+.sessions-info {
+  @include respond(tab-port) {
+    margin-top: 3.6rem;
+  }
+  .session-tab1 {
+    .MuiTabs-flexContainer {
+      flex-direction: row-reverse;
+    }
+  }
+  .MuiTabs-root {
+    min-height: unset;
+    .tab1 {
+      width: 17.8rem;
+      height: 3.2rem;
+      min-height: 3.2rem;
+      background-color: #eaeef1;
+      color: $color-body;
+      font-weight: 600;
+      font-size: 1.5rem;
+      line-height: 20px;
+      padding: 0;
+      border-radius: 2px;
+      @include respond(phone) {
+        width: 12.2rem;
+      }
+
+      &.Mui-selected {
+        background-color: $color-primary;
+        color: $color-white;
+      }
+    }
+    .MuiTabs-indicator {
+      display: none;
+    }
+  }
+  &__tab-init {
+    margin-top: 3rem;
+    align-self: flex-start;
+    width: 100%;
+    min-height: 1px;
+
+    .session-tab2 {
+      .MuiTabs-flexContainer {
+        width: 35rem;
+        background-color: #eaeef1;
+        color: $color-body;
+        border-radius: 16px 2px;
+
+        .tab2 {
+          border: 0;
+          margin: 0;
+          font-weight: 600;
+          font-size: 2rem;
+          line-height: 40px;
+          padding: 1rem 2rem;
+          width: 50%;
+          border-radius: 16px 2px;
+
+          @include respond(phone) {
+            font-size: 1.6rem;
+          }
+
+          &.Mui-selected {
+            background-color: $color-white;
+            color: $color-body;
+          }
+        }
+      }
+    }
+    .session-list-tabs {
+      margin-top: 0;
+      background-color: $color-white;
+      padding: 3.2rem 2.4rem;
+      border-radius: 16px;
+    }
+  }
+}

@@ -1,0 +1,101 @@
+@import '../../../../../assets/styles/variables.scss';
+@import '../../../../../assets/styles/mixins.scss';
+.instructorRateModal {
+  padding: 3rem;
+  &__head {
+    max-width: 40rem;
+    margin: 0 auto 4.8rem auto;
+  }
+
+  &__time {
+    display: flex;
+    justify-content: space-between;
+    .time-field {
+      width: 48%;
+    }
+  }
+
+  &__body {
+    label {
+      text-align: start;
+      display: block;
+    }
+  }
+
+  &__attended-students {
+    margin: 2rem 0;
+    h4 {
+      margin-bottom: 1rem;
+      text-align: start;
+    }
+    &-checkboxes {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+    .MuiSvgIcon-root {
+      width: 2rem;
+      height: 2rem;
+    }
+    .MuiFormControlLabel-root {
+      width: 48%;
+      background-color: #eff3f6;
+      border-radius: 4px;
+      margin-right: 0;
+    }
+  }
+
+  &__instructor-feedback {
+    .select-container {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      margin-bottom: 2.4rem;
+      .select-input {
+        width: 48%;
+        @include respond(phone) {
+          width: 100%;
+        }
+      }
+    }
+    .rating-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 2rem;
+
+      .rating-icon {
+        font-size: 5.4rem;
+      }
+    }
+    .textarea-container {
+      margin-bottom: 2.4rem;
+    }
+  }
+
+  &__instructor-optional {
+    .textarea-container {
+      margin-bottom: 2.4rem;
+    }
+  }
+
+  &__footer {
+    display: flex;
+    justify-content: space-between;
+
+    padding: 0 3rem;
+    margin-top: 4.8rem;
+
+    app-button {
+      max-width: 26rem;
+      width: 100%;
+    }
+  }
+}
+
+hr {
+  width: 80%;
+
+  margin: 3rem auto;
+}
