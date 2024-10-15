@@ -18,12 +18,12 @@ const EditProfile = lazy(() => import('../../modules/user/edit-profile'));
 const PrivateSessions = lazy(
   () => import('../../modules/private-sessions/index.component'),
 );
-const CoursesList = lazy(
-  () => import('../../modules/courses/courses-list/courses-list.component'),
-);
-const CourseDetails = lazy(
-  () => import('../../modules/courses/course-details/index.component'),
-);
+// const CoursesList = lazy(
+//   () => import('../../modules/courses/courses-list/courses-list.component'),
+// );
+// const CourseDetails = lazy(
+//   () => import('../../modules/courses/course-details/index.component'),
+// );
 const Sessions = lazy(() => import('../../modules/sessions/index.component'));
 const Checkout = lazy(() => import('../../modules/checkout/index.component'));
 const Terms = lazy(() => import('../../modules/terms/index.component'));
@@ -55,14 +55,24 @@ const RoutesComponent: React.FC<RoutesProps> = ({ currentUser }) => (
           <GuardedRoute element={<AccountSettings />} auth={!!currentUser} />
         }
       />
-      <Route path="/home" element={<PrivateSessions />} />
-      <Route path="/courses" element={<CoursesList />} />
-      <Route path="/course/:courseId" element={<CourseDetails />} />
+      <Route
+        path="/home"
+        element={
+          <GuardedRoute element={<PrivateSessions />} auth={!!currentUser} />
+        }
+      />
+      {/* <Route path="/courses" element={<CoursesList />} />
+      <Route path="/course/:courseId" element={<CourseDetails />} /> */}
       <Route
         path="/my_sessions"
         element={<GuardedRoute element={<Sessions />} auth={!!currentUser} />}
       />
-      <Route path="/profile/:id" element={<EditProfile />} />
+      <Route
+        path="/profile/:id"
+        element={
+          <GuardedRoute element={<EditProfile />} auth={!!currentUser} />
+        }
+      />
       <Route path="/checkout" element={<Checkout />} />
       <Route path="/terms" element={<Terms />} />
       <Route path="*" element={<NotFound404 />} />

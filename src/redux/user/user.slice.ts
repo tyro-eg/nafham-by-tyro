@@ -37,10 +37,12 @@ const userSlice = createSlice({
   extraReducers: (builder) => {
     // Sign In
     builder.addCase(signInWithEmail.fulfilled, (state, action) => {
+      console.log('fulfilled', { state, action });
       state.currentUser = action.payload;
       state.errors.signInError = null;
     });
     builder.addCase(signInWithEmail.rejected, (state, action) => {
+      console.log('rejected', { state, action });
       if (!state.errors) {
         state.errors = {
           signInError: null,
@@ -56,10 +58,14 @@ const userSlice = createSlice({
 
     // Sign Up
     builder.addCase(signUp.fulfilled, (state, action) => {
+      console.log('fulfilled', { state, action });
+
       state.currentUser = action.payload;
       state.errors.signUpError = null;
     });
     builder.addCase(signUp.rejected, (state, action) => {
+      console.log('rejected', { state, action });
+
       if (!state.errors) {
         state.errors = {
           signInError: null,
