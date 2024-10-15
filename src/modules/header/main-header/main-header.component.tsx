@@ -1,15 +1,7 @@
 import React, { useState } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import {
-  AppBar,
-  Button,
-  Container,
-  Toolbar,
-  FormControl,
-  Select,
-  MenuItem,
-} from '@mui/material';
+import { AppBar, Button, Container, Toolbar, Avatar } from '@mui/material';
 import { Popover as TinyPopover } from 'react-tiny-popover';
 import { ExpandMore, Info } from '@mui/icons-material';
 import { useSelector } from 'react-redux';
@@ -17,7 +9,7 @@ import { useSelector } from 'react-redux';
 import { selectCurrentUser } from '../../../redux/user/user.selectors';
 import LanguageSelector from '../../../component/i18next/LanguageSelector';
 import logo from '../../../assets/images/logo.png';
-import { rtlClass } from '../../../assets/utils/utils';
+import { getNameInitials, rtlClass } from '../../../assets/utils/utils';
 
 import './main-header.styles.scss';
 import { signOut } from '../../../redux/user/user.actions';
@@ -38,18 +30,17 @@ const MainHeader: React.FC<HeaderProps> = ({
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
-  const currentUser = useSelector(selectCurrentUser); // Fetch current user from Redux state
+  const currentUser = useSelector(selectCurrentUser);
 
-  const [country, setCountry] = useState('en');
-  const handleChange = (event: any) => {
-    setCountry(event?.target?.value);
-  };
+  // const [country, setCountry] = useState('en');
+  // const handleChange = (event: any) => {
+  //   setCountry(event?.target?.value);
+  // };
 
   const [isProfilePopoverOpen, setProfilePopoverOpen] = useState(false);
-  const [isContactPopoverOpen, setContactPopoverOpen] = useState(false);
 
   const handleLogOut = async () => {
-    await dispatch(signOut(currentUser?.type === 'tutors')); // Trigger sign out action
+    await dispatch(signOut(currentUser?.type === 'tutors'));
     navigate('/');
   };
 
@@ -77,44 +68,30 @@ const MainHeader: React.FC<HeaderProps> = ({
         <Container maxWidth="lg">
           <div className="container header-container">
             <div className={`app-header__top ${rtlClass()}`}>
+              <div className="contact-menu">
+                <a className="item" href="tel:+201067636419">
+                  (+20) 106 7636 419
+                </a>
+                |
+                <a className="item" href="mailto:learn@tyro-app.com">
+                  learn@tyro-app.com
+                </a>
+              </div>
               <div className="app-header__top-links">
                 {!currentUser && (
-                  <Link className="link" to="/register">
-                    {t('HEADER.TOP.REGISTER')}
-                  </Link>
+                  <>
+                    <Link className="link" to="/login">
+                      {t('HEADER.TOP.LOGIN')}
+                    </Link>
+                    <Link className="link" to="/register">
+                      {t('HEADER.TOP.REGISTER')}
+                    </Link>
+                  </>
                 )}
-                <Popover
-                  isOpen={isContactPopoverOpen}
-                  positions={['bottom']}
-                  onClickOutside={() => setContactPopoverOpen(false)}
-                  content={
-                    <div className="contact-menu">
-                      <a
-                        onClick={() => setContactPopoverOpen(false)}
-                        className="item"
-                        href="tel:+201067636419"
-                      >
-                        (+20) 106 7636 419
-                      </a>
-                      <a
-                        onClick={() => setContactPopoverOpen(false)}
-                        className="item"
-                        href="mailto:learn@tyro-app.com"
-                      >
-                        learn@tyro-app.com
-                      </a>
-                    </div>
-                  }
-                >
-                  <Button
-                    endIcon={<ExpandMore />}
-                    className="app-header__blog-title"
-                    onClick={() => setContactPopoverOpen(!isContactPopoverOpen)}
-                  >
-                    {t('HEADER.TOP.CONTACT_US')}
-                  </Button>
-                </Popover>
-                <div className="app-header__top-links--lang">
+                <div>
+                  <LanguageSelector />
+                </div>
+                {/* <div className="app-header__top-links--lang">
                   <FormControl>
                     <Select
                       sx={{
@@ -130,18 +107,15 @@ const MainHeader: React.FC<HeaderProps> = ({
                       <MenuItem value="sa">السعودية</MenuItem>
                     </Select>
                   </FormControl>
-                </div>
-                <div>
-                  <LanguageSelector />
-                </div>
+                </div> */}
               </div>
             </div>
 
             <div className={`app-header__bottom ${rtlClass()}`}>
+              <Link to="/">
+                <img src={logo} alt="tyro logo" />
+              </Link>
               <div className="links">
-                <Link to="/">
-                  <img src={logo} alt="tyro logo" />
-                </Link>
                 <div>
                   <NavLink
                     className={({ isActive }) =>
@@ -151,46 +125,38 @@ const MainHeader: React.FC<HeaderProps> = ({
                   >
                     {t('NAVIGATION.HOME')}
                   </NavLink>
-                  <NavLink
-                    className={({ isActive }) =>
-                      isActive ? 'menu-item active' : 'menu-item'
-                    }
-                    to="/home"
-                  >
-                    {t('NAVIGATION.FIND_INSTRUCTOR')}
-                  </NavLink>
-                  <NavLink
-                    className={({ isActive }) =>
-                      isActive ? 'menu-item active' : 'menu-item'
-                    }
-                    to="/courses"
-                  >
-                    {t('NAVIGATION.COURSES')}
-                  </NavLink>
                   {currentUser && (
-                    <NavLink
-                      className={({ isActive }) =>
-                        isActive ? 'menu-item active' : 'menu-item'
-                      }
-                      to="/my_sessions"
-                    >
-                      {t('NAVIGATION.SESSIONS')}
-                    </NavLink>
+                    <>
+                      <NavLink
+                        className={({ isActive }) =>
+                          isActive ? 'menu-item active' : 'menu-item'
+                        }
+                        to="/home"
+                      >
+                        {t('NAVIGATION.FIND_INSTRUCTOR')}
+                      </NavLink>
+
+                      <NavLink
+                        className={({ isActive }) =>
+                          isActive ? 'menu-item active' : 'menu-item'
+                        }
+                        to="/my_sessions"
+                      >
+                        {t('NAVIGATION.SESSIONS')}
+                      </NavLink>
+                    </>
                   )}
                 </div>
               </div>
 
               {!currentUser && (
-                <div>
-                  <Link to="/login">{t('HEADER.TOP.LOGIN')}</Link>
-                  <Button
-                    onClick={openFreeTrail}
-                    variant="contained"
-                    color="primary"
-                  >
-                    {t('HEADER.TOP.FREE_TRIAL')}
-                  </Button>
-                </div>
+                <Button
+                  onClick={openFreeTrail}
+                  variant="contained"
+                  color="primary"
+                >
+                  {t('HEADER.TOP.FREE_TRIAL')}
+                </Button>
               )}
 
               {!!currentUser && (
@@ -241,11 +207,19 @@ const MainHeader: React.FC<HeaderProps> = ({
                     className="app-header__user"
                     endIcon={<ExpandMore />}
                   >
-                    {currentUser?.img && (
+                    {currentUser?.img ? (
                       <img src={currentUser?.img} alt="profile" />
+                    ) : (
+                      <Avatar>
+                        {getNameInitials(
+                          currentUser?.first_name + ' ' + currentUser.last_name,
+                        )}
+                      </Avatar>
                     )}
                     <div className="app-header__user-center">
-                      <div className="name">{currentUser?.full_name}</div>
+                      <div className="name">
+                        {currentUser?.first_name + ' ' + currentUser.last_name}
+                      </div>
                     </div>
                   </Button>
                 </Popover>

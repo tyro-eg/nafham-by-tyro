@@ -1,12 +1,16 @@
 @import '../../../assets/styles/variables.scss';
 @import '../../../assets/styles/mixins.scss';
-.MuiPaper-elevation4 {
+
+.MuiPaper-elevation4.MuiAppBar-root {
   box-shadow: none !important;
+  border-bottom: 1px solid $color-grey-light-4;
 }
+
 .header-container {
   display: flex;
   flex-direction: column;
   width: 100%;
+
   .app-header {
     display: flex;
     justify-content: space-around;
@@ -15,26 +19,41 @@
 
     &__top {
       display: flex;
-      justify-content: flex-end;
+      justify-content: space-between;
       align-items: center;
-      font-size: 1.6rem;
-      font-weight: 500;
-      line-height: 2.4rem;
+      margin-top: 0.9rem;
+      font-size: 1.4rem;
+      font-weight: 600;
+      line-height: 2.2rem;
       color: $color-title;
-      height: 4.8rem;
 
       a {
         width: 6.2rem;
         margin: 0 0.9rem;
       }
+
       &.rtl a {
         display: inline-block;
         width: auto;
       }
 
+      .contact-menu {
+        display: flex;
+
+        a.item {
+          direction: ltr;
+          color: $color-body;
+          font-size: 1.4rem;
+          line-height: 2.2rem;
+          text-decoration: none;
+          width: unset;
+        }
+      }
+
       &-links {
         display: flex;
         align-items: center;
+
         &--lang {
           width: 13rem;
 
@@ -43,6 +62,7 @@
           }
         }
       }
+
       .app-header__blog {
         display: inline-block;
         cursor: pointer;
@@ -93,15 +113,27 @@
           font-weight: 600;
         }
       }
+
       &.rtl {
         a {
           margin-right: 0;
           margin-left: 3.2rem;
         }
       }
+
       button {
         display: inline-block;
+        min-width: 14rem;
+        height: 4rem;
+
+        .MuiAvatar-root {
+          background-color: $color-primary;
+          margin-right: 8px;
+          width: 24px;
+          height: 24px;
+        }
       }
+
       .app-header__user {
         display: flex;
         justify-content: center;
@@ -132,11 +164,13 @@
             line-height: 2.4rem;
             display: flex;
             align-items: center;
+
             i {
               margin: 0 0.8rem;
               font-size: 2rem;
             }
           }
+
           & > span {
             color: $color-body;
             font-size: 1.2rem;
@@ -147,6 +181,7 @@
     }
   }
 }
+
 .profile-popover {
   * {
     font-family: 'Inter';
@@ -176,12 +211,14 @@
       font-weight: 500;
       line-height: 1.7rem;
     }
+
     span {
       color: $color-body;
       font-size: 1rem;
       line-height: 1.2rem;
     }
   }
+
   .item {
     width: 100%;
     color: $color-body;
@@ -190,6 +227,7 @@
     border-radius: 0.6rem;
     padding: 0.5rem 0.8rem;
     margin-bottom: 2rem;
+
     &:hover {
       background-color: $color-grey-light-1;
     }
@@ -209,55 +247,12 @@
     border-left: 1px solid $color-grey-light-6;
   }
 }
-.contact-menu {
-  * {
-    font-family: 'Inter';
-  }
 
-  position: relative;
-  background-color: $color-white;
-  margin-top: -3.5rem;
-  padding: 1.5rem;
-  width: 20rem;
-  border: solid 1px $color-grey-light-6;
-  border-radius: 0.6rem;
-  display: flex;
-  flex-direction: column;
-
-  a.item {
-    direction: ltr;
-    width: 100%;
-    color: $color-body;
-    font-size: 1.4rem;
-    line-height: 2.2rem;
-    border-radius: 0.6rem;
-    padding: 0.5rem 0.8rem;
-    text-decoration: none;
-
-    &:hover {
-      background-color: $color-grey-light-1;
-      color: $color-title;
-    }
-  }
-
-  &::before {
-    display: block;
-    content: ' ';
-    width: 1rem;
-    height: 1rem;
-    background-color: $color-white;
-    position: absolute;
-    top: -0.5rem;
-    left: calc(50% - 0.5rem);
-    transform: rotate(45deg);
-    border-top: 1px solid $color-grey-light-6;
-    border-left: 1px solid $color-grey-light-6;
-  }
-}
 .blog-popover {
   * {
     font-family: 'Inter';
   }
+
   position: relative;
   background-color: $color-white;
   padding: 1.5rem;
@@ -267,6 +262,7 @@
   border-radius: 0.6rem;
   display: flex;
   flex-direction: column;
+
   &::before {
     display: block;
     content: ' ';

@@ -1,14 +1,7 @@
 import React, { useState } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import {
-  Button,
-  IconButton,
-  FormControl,
-  Select,
-  MenuItem,
-  SelectChangeEvent,
-} from '@mui/material';
+import { Button, IconButton } from '@mui/material';
 import { Menu, Info } from '@mui/icons-material';
 import { useAppDispatch, useAppSelector } from '../../../redux/store'; // Adjust import based on your store setup
 import LanguageSelector from '../../../component/i18next/LanguageSelector';
@@ -26,11 +19,11 @@ const MobileHeader = ({ openFreeTrail, openEmailConfirm }: HeaderProps) => {
 
   const currentUser = useAppSelector(selectCurrentUser); // Using typed selector hook
   const [mobileHeader, toggleMobileHeader] = useState(false);
-  const [country, setCountry] = useState('en');
+  // const [country, setCountry] = useState('en');
 
-  const handleChange = (event: SelectChangeEvent<string>) => {
-    setCountry(event.target.value as string);
-  };
+  // const handleChange = (event: SelectChangeEvent<string>) => {
+  //   setCountry(event.target.value as string);
+  // };
 
   const handleLogOut = () => {
     if (currentUser) {
@@ -88,7 +81,7 @@ const MobileHeader = ({ openFreeTrail, openEmailConfirm }: HeaderProps) => {
           )}
 
           <LanguageSelector />
-          <div>
+          {/* <div>
             <FormControl>
               <Select
                 sx={{
@@ -107,7 +100,7 @@ const MobileHeader = ({ openFreeTrail, openEmailConfirm }: HeaderProps) => {
                 <MenuItem value="sa">السعودية</MenuItem>
               </Select>
             </FormControl>
-          </div>
+          </div> */}
           {!currentUser && (
             <div className="app-header-mobile__body-links">
               <Link className="link" to="/login" onClick={closeMobileHeader}>
@@ -165,34 +158,28 @@ const MobileHeader = ({ openFreeTrail, openEmailConfirm }: HeaderProps) => {
           >
             {t('NAVIGATION.HOME')}
           </NavLink>
-          <NavLink
-            className={({ isActive }) =>
-              isActive ? 'menu-item active' : 'menu-item'
-            }
-            to="/home"
-            onClick={closeMobileHeader}
-          >
-            {t('NAVIGATION.FIND_INSTRUCTOR')}
-          </NavLink>
-          <NavLink
-            className={({ isActive }) =>
-              isActive ? 'menu-item active' : 'menu-item'
-            }
-            to="/courses"
-            onClick={closeMobileHeader}
-          >
-            {t('NAVIGATION.COURSES')}
-          </NavLink>
           {currentUser && (
-            <NavLink
-              className={({ isActive }) =>
-                isActive ? 'menu-item active' : 'menu-item'
-              }
-              to="/my_sessions"
-              onClick={closeMobileHeader}
-            >
-              {t('NAVIGATION.SESSIONS')}
-            </NavLink>
+            <>
+              <NavLink
+                className={({ isActive }) =>
+                  isActive ? 'menu-item active' : 'menu-item'
+                }
+                to="/home"
+                onClick={closeMobileHeader}
+              >
+                {t('NAVIGATION.FIND_INSTRUCTOR')}
+              </NavLink>
+
+              <NavLink
+                className={({ isActive }) =>
+                  isActive ? 'menu-item active' : 'menu-item'
+                }
+                to="/my_sessions"
+                onClick={closeMobileHeader}
+              >
+                {t('NAVIGATION.SESSIONS')}
+              </NavLink>
+            </>
           )}
 
           {currentUser && (

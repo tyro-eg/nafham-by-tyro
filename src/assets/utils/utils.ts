@@ -25,3 +25,11 @@ export const hideSpinner = () => {
   loadingDiv.style.visibility = 'hidden';
   loadingText.innerText = '';
 };
+
+export const getNameInitials = (name: string): string => {
+  return name
+    .split(' ')
+    .filter((word) => word.length > 0)
+    .map((word) => word[0].toUpperCase())
+    .join('');
+};

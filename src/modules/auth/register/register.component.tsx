@@ -86,6 +86,7 @@ const Register: React.FC = () => {
               try {
                 const { countryCode, ...submitValues } = values;
                 await dispatch(signUp(submitValues));
+                console.log({ signUpError });
 
                 if (!signUpError) {
                   navigate('/home');

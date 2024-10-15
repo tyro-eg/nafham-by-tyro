@@ -30,31 +30,26 @@ const Footer = () => {
           >
             {t('NAVIGATION.HOME')}
           </NavLink>
-          <NavLink
-            className={({ isActive }) =>
-              isActive ? 'menu-item active' : 'menu-item'
-            }
-            to="/home"
-          >
-            {t('NAVIGATION.FIND_INSTRUCTOR')}
-          </NavLink>
-          <NavLink
-            className={({ isActive }) =>
-              isActive ? 'menu-item active' : 'menu-item'
-            }
-            to="/courses"
-          >
-            {t('NAVIGATION.COURSES')}
-          </NavLink>
           {currentUser && (
-            <NavLink
-              className={({ isActive }) =>
-                isActive ? 'menu-item active' : 'menu-item'
-              }
-              to="/my_sessions"
-            >
-              {t('NAVIGATION.SESSIONS')}
-            </NavLink>
+            <>
+              <NavLink
+                className={({ isActive }) =>
+                  isActive ? 'menu-item active' : 'menu-item'
+                }
+                to="/home"
+              >
+                {t('NAVIGATION.FIND_INSTRUCTOR')}
+              </NavLink>
+
+              <NavLink
+                className={({ isActive }) =>
+                  isActive ? 'menu-item active' : 'menu-item'
+                }
+                to="/my_sessions"
+              >
+                {t('NAVIGATION.SESSIONS')}
+              </NavLink>
+            </>
           )}
           <NavLink
             className={({ isActive }) =>
@@ -67,7 +62,7 @@ const Footer = () => {
         </div>
         <div className="app-footer__bottom">
           <p className="app-footer__rights">
-            © 2022 Nafham. All rights reserved
+            © 2024 Nafham. All rights reserved
           </p>
           <div className="app-footer__icons">
             <IconButton
@@ -82,7 +77,10 @@ const Footer = () => {
             </IconButton>
             <IconButton
               onClick={() =>
-                window.open('https://www.facebook.com/nafhambytyro', '_blank')
+                window.open(
+                  'https://www.facebook.com/NafhamEducation',
+                  '_blank',
+                )
               }
             >
               <Facebook />
