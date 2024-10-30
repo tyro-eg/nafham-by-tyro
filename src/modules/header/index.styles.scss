@@ -1,13 +1,16 @@
 @import '../../assets/styles/variables.scss';
 @import '../../assets/styles/mixins.scss';
+
 .header {
   margin-bottom: 12rem;
 
   @include respond(phone) {
     margin-bottom: 7.5rem;
   }
+
   &__withBanner {
-    margin-bottom: 18.3rem;
+    margin-bottom: 18rem;
+
     @include respond(phone) {
       margin-bottom: 13.7rem;
     }
@@ -23,13 +26,16 @@
     color: $color-white;
     font-size: 1.6rem;
     font-weight: 500;
+
     @include respond(phone) {
       font-size: 1.4rem;
       padding: 0 1rem;
     }
+
     &-text {
       margin: 0 1.8rem;
     }
+
     &-action {
       color: $color-white;
       padding: 0;

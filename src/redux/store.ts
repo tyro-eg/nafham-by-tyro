@@ -1,7 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
-import rootReducer from './root-reducer'; // Assuming rootReducer now uses Redux Toolkit's combineReducers
+import rootReducer from './root-reducer';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 
 const persistConfig = {

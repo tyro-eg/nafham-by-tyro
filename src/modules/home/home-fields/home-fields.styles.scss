@@ -4,18 +4,22 @@
 .landing__learning-fields {
   padding-top: 4.5rem;
   padding-bottom: 4.5rem;
-  background-color: #fafafa;
+  background-color: $color-grey-light-0;
+
   @include respond(phone) {
     padding-top: 1rem;
     padding-bottom: 4rem;
   }
+
   .learning-fields-container {
     width: 62%;
     margin: auto;
+
     @include respond(phone) {
       width: 100%;
     }
   }
+
   .learning-fields-header {
     color: $color-title;
     font-size: 3.2rem;
@@ -23,18 +27,22 @@
     line-height: 4.8rem;
     text-align: center;
     margin-bottom: 2.4rem;
+
     @include respond(phone) {
       font-size: 2.8rem;
       line-height: 4.1rem;
     }
   }
+
   .fields-images {
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
+
     @include respond(phone) {
       justify-content: center;
     }
+
     &__card {
       display: flex;
       align-items: center;

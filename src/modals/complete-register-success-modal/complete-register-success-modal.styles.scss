@@ -1,0 +1,27 @@
+.completeRegisterModal {
+  &__wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 3rem;
+    text-align: center;
+
+    img {
+      width: 6.4rem;
+      height: 6.4rem;
+      margin-bottom: 3.2rem;
+    }
+
+    p {
+      margin-top: 1.4rem;
+      margin-bottom: 3.2rem;
+    }
+  }
+
+  &__btn {
+    font-size: 1.6rem;
+    padding: 1rem 0;
+    width: 100%;
+  }
+}

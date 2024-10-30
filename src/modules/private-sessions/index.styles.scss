@@ -6,12 +6,21 @@
   flex-direction: column;
   justify-content: center;
   padding-top: 10rem;
-  background-color: #fafafa;
+  background-color: $color-grey-light-0;
+
+  @include respond(tab-port) {
+    padding-top: 16rem;
+  }
+
+  @include respond(phone) {
+    padding-top: 10rem;
+  }
 
   &__container {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
+
     @include respond(phone) {
       width: 94%;
       max-width: unset !important;
@@ -108,6 +117,7 @@
       margin-top: 14%;
       margin-bottom: 1.8rem;
       margin-left: -8rem;
+
       svg {
         width: 201px;
         height: 257px;
@@ -129,5 +139,6 @@
 .MuiPagination-root {
   display: flex;
   justify-content: center;
-  margin-bottom: 2rem;
+  padding-bottom: 2rem;
+  background-color: $color-grey-light-0;
 }

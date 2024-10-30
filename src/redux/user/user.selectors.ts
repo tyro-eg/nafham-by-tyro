@@ -8,11 +8,6 @@ export const selectCurrentUser = createSelector(
   (user) => user?.currentUser,
 );
 
-export const selectInstructors = createSelector(
-  [selectUser],
-  (user) => user?.instructors,
-);
-
 export const selectSignInError = createSelector([selectUser], (user) => {
   return user?.errors.signInError;
 });
@@ -25,4 +20,19 @@ export const selectSignUpError = createSelector(
 export const selectChangePasswordError = createSelector(
   [selectUser],
   (user) => user?.errors.changePasswordError,
+);
+
+export const selectInstructors = createSelector(
+  [selectUser],
+  (user) => user?.instructors,
+);
+
+export const selectInstructorsLoading = createSelector(
+  [selectUser],
+  (user) => user?.loading?.getInstructorsLoading,
+);
+
+export const selectInstructorsError = createSelector(
+  [selectUser],
+  (user) => user?.errors.getInstructorsError,
 );

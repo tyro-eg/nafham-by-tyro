@@ -2,7 +2,8 @@
 @import '../../assets/styles/mixins.scss';
 
 .sessions {
-  background-color: #fafafa;
+  background-color: $color-grey-light-0;
+
   &__container {
     display: flex;
     flex-direction: column;
@@ -62,6 +63,7 @@
       width: 100%;
       top: 75%;
       z-index: 1;
+
       @include respond(phone) {
         width: 94%;
         max-width: unset !important;

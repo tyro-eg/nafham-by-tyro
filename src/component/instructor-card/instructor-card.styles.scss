@@ -1,0 +1,209 @@
+@import '../../assets/styles/variables.scss';
+@import '../../assets/styles/mixins.scss';
+
+.instructor-card {
+  width: 90%;
+  display: flex;
+  align-items: center;
+  padding: 2.1rem;
+  margin-bottom: 2.1rem;
+  border-radius: 16px;
+  background-color: $color-white;
+  box-shadow: -5px 5px 32px 0 rgba(67, 86, 100, 0.17);
+
+  @include respond(tab-port) {
+    flex-direction: column;
+  }
+
+  @include respond(phone) {
+    width: 100%;
+  }
+
+  &__body {
+    height: 22.5rem;
+    width: 45rem;
+    padding: 0 2rem;
+
+    @include respond(tab-port) {
+      width: 100%;
+      padding: 0;
+      margin: 2rem 0;
+      height: auto;
+    }
+
+    .card-details {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.4rem;
+
+      &__container {
+        display: flex;
+        align-items: center;
+
+        .image {
+          margin-right: 1rem;
+
+          &.rtl {
+            margin-right: 0;
+            margin-left: 1rem;
+          }
+
+          img {
+            width: 4.9rem;
+            height: 4.9rem;
+
+            border-radius: 50%;
+          }
+        }
+
+        .info {
+          &:hover {
+            background-color: transparent;
+          }
+
+          &.MuiButton-root {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+
+            h6 {
+              color: $color-title;
+              font-weight: 700;
+              font-size: 2.2rem;
+              line-height: 140%;
+              width: 18rem;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              text-align: start;
+            }
+
+            .review {
+              display: flex;
+              align-items: center;
+              margin-top: 0.3rem;
+
+              .review-numbers {
+                margin: 0 0.5rem;
+                font-weight: 700;
+                font-size: 10px;
+                line-height: 150%;
+                color: $color-body;
+              }
+            }
+          }
+        }
+      }
+
+      .price {
+        display: flex;
+        flex-direction: column;
+        padding: 1.6rem 1rem;
+        background-color: $color-grey-light-0;
+        border-radius: 6px;
+        min-width: 17rem;
+        align-items: center;
+
+        .new-price {
+          color: $color-primary;
+          font-weight: 700;
+          font-size: 18px;
+          line-height: 140%;
+        }
+      }
+
+      @include respond(phone) {
+        flex-direction: column;
+      }
+    }
+  }
+
+  &__about {
+    height: 7.8rem;
+
+    @include respond(tab-port) {
+      height: auto;
+      margin-bottom: 1.2rem;
+    }
+  }
+
+  &__video {
+    height: 22.5rem;
+    width: 30rem;
+
+    iframe {
+      border-radius: 16px;
+      height: 100%;
+    }
+  }
+
+  &__curriculum {
+    img {
+      width: 2.4rem;
+      height: 2.4rem;
+      margin-right: 1.6rem;
+
+      &.rtl {
+        margin-right: 0;
+        margin-left: 1.6rem;
+      }
+    }
+  }
+
+  &__fields {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: flex-start;
+    align-items: center;
+    align-content: flex-start;
+    height: 7rem;
+    overflow: hidden;
+    gap: 4px;
+
+    &:hover {
+      overflow-y: auto;
+    }
+
+    @include respond(tab-port) {
+      height: auto;
+    }
+  }
+
+  &__field {
+    padding: 4px;
+    border-radius: 0.6rem;
+    background-color: #eaeef1;
+    color: $color-body;
+    font-weight: 500;
+    font-size: 1.4rem;
+    line-height: 150%;
+  }
+
+  &__footer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 22.5rem;
+
+    .book-now-btn {
+      width: 19.4rem;
+      padding: 1.2rem 4rem;
+      margin-top: 1.2rem;
+    }
+
+    @include respond(tab-port) {
+      height: auto;
+    }
+
+    @include respond(phone) {
+      align-items: center;
+
+      .book-now-btn {
+        width: 100%;
+      }
+    }
+  }
+}

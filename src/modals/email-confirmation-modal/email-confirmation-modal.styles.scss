@@ -1,0 +1,28 @@
+@import '../../assets/styles/variables.scss';
+@import '../../assets/styles/mixins.scss';
+
+.email-confirm {
+  padding: 5rem 10rem;
+
+  @include respond(phone) {
+    padding: 2rem;
+  }
+
+  h5 {
+    text-align: center;
+
+    @include respond(phone) {
+      font-size: 1.4rem;
+    }
+  }
+
+  .button-wrapper {
+    margin-top: 4rem;
+    display: flex;
+    justify-content: space-between;
+
+    &__action {
+      min-width: 16rem;
+    }
+  }
+}
