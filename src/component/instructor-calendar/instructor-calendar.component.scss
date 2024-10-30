@@ -1,0 +1,102 @@
+@import '../../assets/styles/variables.scss';
+@import '../../assets/styles/mixins.scss';
+
+.instructor-calendar {
+  display: flex;
+  font-size: 14px;
+  background-color: $color-white;
+  border-radius: 0.5rem;
+  width: 100%;
+
+  &__container {
+    flex-grow: 1;
+    position: relative;
+
+    .fc {
+      table {
+        font-size: 1.2rem;
+      }
+      max-height: 62rem;
+
+      .fc-button {
+        padding: 0.2rem 0.4rem;
+      }
+    }
+
+    .fc-day-today {
+      background-color: #ffffff !important;
+    }
+
+    .fc-header-toolbar {
+      margin-bottom: 0.5rem !important;
+
+      .fc-toolbar-chunk {
+        .fc-button-group {
+          .fc-button-primary {
+            background-color: $color-primary;
+            border-color: $color-white;
+
+            &:focus {
+              box-shadow: none;
+            }
+          }
+
+          .fc-button-active {
+            background-color: #41b7dc;
+
+            &:focus {
+              box-shadow: none;
+            }
+          }
+        }
+
+        .fc-today-button {
+          background-color: $color-primary;
+          border-color: $color-white;
+
+          &:focus {
+            box-shadow: none;
+          }
+        }
+
+        .fc-today-button:disabled {
+          cursor: default;
+        }
+
+        .fc-toolbar-title {
+          display: none;
+        }
+      }
+    }
+
+    .fc-view-harness {
+      height: 14.5rem !important;
+    }
+
+    .fc-direction-ltr .fc-timegrid-slot-label-frame {
+      text-align: start;
+    }
+
+    .fc .fc-timegrid-slot {
+      height: 2em;
+    }
+
+    .fc-timegrid-col-events {
+      margin: 0;
+      text-align: center;
+
+      .fc-timegrid-event {
+        margin: 0;
+        border-radius: 0.6rem;
+      }
+    }
+  }
+}
+
+b {
+  /* used for event dates/times */
+  margin-right: 3px;
+}
+i {
+  vertical-align: middle;
+}

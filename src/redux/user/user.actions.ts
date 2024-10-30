@@ -2,6 +2,8 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { post, patch, remove } from '../../assets/utils/api';
 import { snackActions } from '../../assets/utils/toaster';
 import { showSpinner, hideSpinner } from '../../assets/utils/utils';
+import Instructors from './instructors.data';
+import { Instructor } from '../../assets/types';
 
 const getErrorMessage = (error: any): string =>
   error.response?.data?.error || error.message || 'Unknown error';
@@ -90,6 +92,29 @@ export const changePassword = createAsyncThunk(
       showSpinner();
       await patch(`/${payload.type}/passwords`, payload.userData);
       hideSpinner();
+    } catch (error) {
+      snackActions.error(getErrorMessage(error));
+      hideSpinner();
+      return rejectWithValue(getErrorMessage(error));
+    }
+  },
+);
+
+export const getInstructors = createAsyncThunk(
+  'user/getInstructors',
+  async (_payload: any, { rejectWithValue }) => {
+    try {
+      console.log(11111111);
+
+      showSpinner();
+      const response = new Promise<{ data: Instructor[] }>((resolve) => {
+        setTimeout(() => {
+          resolve({ data: Instructors });
+        }, 1000);
+      });
+      hideSpinner();
+      const result = await response;
+      return result.data;
     } catch (error) {
       snackActions.error(getErrorMessage(error));
       hideSpinner();

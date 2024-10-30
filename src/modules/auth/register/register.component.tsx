@@ -10,8 +10,8 @@ import 'react-phone-input-2/lib/material.css';
 import './register.styles.scss';
 import { rtlClass } from '../../../assets/utils/utils';
 
-import { ReactComponent as Facebook } from '../../../assets/images/auth/Facebook.svg';
-import { ReactComponent as Google } from '../../../assets/images/auth/google.svg';
+// import { ReactComponent as Facebook } from '../../../assets/images/auth/Facebook.svg';
+// import { ReactComponent as Google } from '../../../assets/images/auth/google.svg';
 import main from '../../../assets/images/auth/sign.png';
 import { useAppDispatch, useAppSelector } from '../../../redux/store';
 import { selectSignUpError } from '../../../redux/user/user.selectors';
@@ -86,7 +86,6 @@ const Register: React.FC = () => {
               try {
                 const { countryCode, ...submitValues } = values;
                 await dispatch(signUp(submitValues));
-                console.log({ signUpError });
 
                 if (!signUpError) {
                   navigate('/home');

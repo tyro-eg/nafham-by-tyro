@@ -3,18 +3,22 @@
 
 .course-directory {
   margin-top: 6rem;
-  background-color: #fafafa;
+  background-color: $color-grey-light-0;
+
   .courses {
     .course {
       margin-bottom: 4.8rem;
+
       @include respond(phone) {
         width: 94%;
         max-width: unset !important;
       }
+
       &__header {
         display: flex;
         align-items: center;
         justify-content: space-between;
+
         .title {
           color: $color-title;
           font-weight: 700;
@@ -48,6 +52,7 @@
         display: flex;
         flex-wrap: wrap;
         justify-content: space-between;
+
         @include respond(tab-port) {
           justify-content: center;
         }
@@ -59,21 +64,26 @@
       border-radius: 6px;
       padding: 1.2rem 0 3.8rem;
       margin-bottom: 4.8rem;
+
       &__container {
         display: flex;
         align-items: center;
         justify-content: space-between;
+
         @include respond(tab-port) {
           flex-direction: column;
         }
+
         @include respond(phone) {
           width: 94%;
           max-width: unset !important;
         }
       }
+
       &__container::after {
         content: none;
       }
+
       &__block1 {
         max-width: 38rem;
 
@@ -83,12 +93,14 @@
           line-height: 28px;
           color: $color-title;
         }
+
         .title2 {
           font-weight: 800;
           font-size: 4rem;
           line-height: 54px;
           color: $color-primary;
         }
+
         .description {
           font-weight: 400;
           font-size: 1.6rem;
@@ -97,16 +109,20 @@
           opacity: 0.7;
         }
       }
+
       &__block2 {
         display: flex;
         align-items: flex-end;
+
         @include respond(tab-port) {
           flex-direction: column;
           align-items: center;
         }
+
         .image {
           width: 38rem;
         }
+
         .button {
           min-width: 18rem;
           height: 4.8rem;
@@ -130,6 +146,7 @@
       margin-top: 14%;
       margin-bottom: 1.8rem;
       margin-left: -8rem;
+
       svg {
         width: 201px;
         height: 257px;

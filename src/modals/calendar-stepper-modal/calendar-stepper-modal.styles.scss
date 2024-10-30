@@ -1,0 +1,272 @@
+@import '../../assets/styles/variables.scss';
+@import '../../assets/styles/mixins.scss';
+.calendar-stepper {
+  padding: 5rem;
+  @include respond(phone) {
+    padding: 3rem;
+  }
+  h1 {
+    font-weight: bold;
+    font-size: 2.8rem;
+    margin-bottom: 4.2rem;
+
+    @include respond(phone) {
+      font-size: 1.8rem;
+      margin-bottom: 2.5rem;
+      margin-top: 2.5rem;
+    }
+  }
+
+  .MuiStepper-root {
+    @include respond(phone) {
+      padding: 0;
+    }
+    .MuiStep-root {
+      .MuiStepLabel-root {
+        .MuiStepLabel-iconContainer {
+          svg {
+            height: 2.7rem;
+            width: 2.7rem;
+            fill: $color-disabled;
+            @include respond(phone) {
+              height: 1.8rem;
+              width: 1.8rem;
+            }
+          }
+        }
+        .MuiStepLabel-labelContainer {
+          .MuiStepLabel-label {
+            color: $color-body;
+            font-size: 1.8rem;
+            font-weight: bold;
+            @include respond(phone) {
+              font-size: 1.2rem;
+            }
+            .step-title {
+              color: $color-body;
+              font-size: 1.8rem;
+              font-weight: bold;
+              @include respond(phone) {
+                font-size: 1.2rem;
+              }
+            }
+          }
+        }
+      }
+      .MuiStepLabel-root.finished {
+        .MuiStepLabel-iconContainer {
+          svg {
+            fill: $color-primary;
+          }
+        }
+      }
+      .MuiStepContent-root {
+        border-left: 2px dashed #bdbdbd;
+        @include respond(phone) {
+          margin-left: 0;
+          padding-right: 0;
+          padding-left: 0;
+        }
+      }
+      .MuiStepContent-last {
+        border-left: none;
+      }
+    }
+    .MuiStepConnector-vertical {
+      @include respond(phone) {
+        margin-left: 0;
+      }
+      .MuiStepConnector-lineVertical {
+        min-height: 2.4rem;
+        border-left-width: 2px;
+        border-left-style: dashed;
+      }
+    }
+  }
+  .MuiStepper-root.rtl {
+    .MuiStep-root {
+      .MuiStepContent-root {
+        margin-left: 0;
+        margin-right: 2rem;
+        padding-right: 2rem;
+        padding-left: 0.8rem;
+        border-right: 2px dashed #bdbdbd;
+        border-left: unset;
+        @include respond(phone) {
+          margin-right: 0;
+          padding-right: 0;
+          padding-left: 0;
+        }
+      }
+      .MuiStepContent-last {
+        border-right: none;
+      }
+    }
+    .MuiStepConnector-vertical {
+      margin-left: 0;
+      margin-right: 2rem;
+      @include respond(phone) {
+        margin-right: 0;
+      }
+      .MuiStepConnector-lineVertical {
+        min-height: 2.4rem;
+        border-right-width: 2px;
+        border-right-style: dashed;
+        border-left: unset;
+      }
+    }
+  }
+
+  .fields__wrapper {
+    width: 100%;
+    margin: 5rem 2rem 5rem 2rem;
+
+    label.radio {
+      cursor: pointer;
+    }
+    label.radio input {
+      position: absolute;
+      top: 0;
+      left: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+    label.radio span {
+      width: 20.7rem;
+      margin: 1rem 1.5rem 1rem 1.5rem;
+      padding: 10px 20px;
+      text-align: center;
+      border-radius: 4px;
+      border: 0;
+      display: inline-block;
+      color: rgba($color: $color-title, $alpha: 0.4);
+      background-color: $color-grey-light-1;
+      font-size: 1.8rem;
+
+      @include respond(phone) {
+        font-size: 1.6rem;
+        font-weight: bold;
+      }
+    }
+    label.radio input:checked + span {
+      color: $color-white;
+      background-color: $color-primary;
+    }
+
+    label.radio input:hover + span {
+      color: $color-white;
+      background-color: rgba($color: $color-primary, $alpha: 0.8);
+    }
+  }
+
+  .calendar__warning {
+    background-color: $color-warning;
+    color: $color-warning-text;
+
+    padding: 2rem 3rem;
+    margin-bottom: 2rem;
+
+    @include respond(phone) {
+      padding: 1.5rem;
+    }
+
+    &--title {
+      display: flex;
+      align-items: center;
+
+      @include respond(phone) {
+        margin-bottom: 1rem;
+      }
+
+      h4 {
+        font-size: 1.6rem;
+        font-weight: bold;
+
+        color: $color-warning-text;
+
+        @include respond(phone) {
+          font-size: 1.2rem;
+          font-weight: bold;
+        }
+      }
+
+      .mark {
+        svg {
+          color: $color-warning-text;
+          font-size: 2.2rem;
+        }
+      }
+
+      .title {
+        margin: 0 1.2rem;
+      }
+    }
+
+    &--body {
+      p {
+        @include respond(phone) {
+          font-size: 1.2rem;
+
+          line-height: 18px;
+        }
+      }
+    }
+  }
+
+  .calendar-actions {
+    &__container {
+      display: flex;
+      justify-content: center;
+
+      margin-top: 3.7rem;
+
+      @include respond(phone) {
+        flex-direction: column;
+        align-items: center;
+
+        height: 9rem;
+      }
+    }
+
+    &__button {
+      height: 4rem;
+      margin: 0 1.2rem;
+      display: block;
+      min-width: 14rem;
+      font-size: 1.4rem;
+      font-weight: 500;
+      padding: 8px 16px;
+      border-radius: 4px;
+
+      @include respond(phone) {
+        display: block;
+        width: 100%;
+        margin: auto;
+        &:first-of-type {
+          margin-bottom: 1rem;
+        }
+      }
+    }
+  }
+
+  .trial-button {
+    display: flex;
+    justify-content: flex-start;
+    margin-top: 2rem;
+
+    &__button {
+      height: 4rem;
+      display: block;
+      width: 15rem;
+
+      @include respond(phone) {
+        width: 100%;
+        margin: auto;
+      }
+    }
+  }
+}
+
+.hide {
+  display: none;
+}

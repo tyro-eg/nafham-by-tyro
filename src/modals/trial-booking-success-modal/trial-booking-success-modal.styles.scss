@@ -1,0 +1,29 @@
+.trialBookingModal {
+  &__wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 3rem;
+    text-align: center;
+
+    img {
+      display: block;
+      height: 16rem;
+      margin: 0 auto 2rem auto;
+    }
+
+    p {
+      text-align: center;
+      font-size: 2.5rem;
+      font-weight: bold;
+      line-height: 30px;
+      margin-bottom: 2rem;
+    }
+
+    &-btn {
+      width: 14rem;
+      margin: auto;
+    }
+  }
+}

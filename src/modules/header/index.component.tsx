@@ -6,10 +6,11 @@ import { selectCurrentUser } from '../../redux/user/user.selectors';
 import MainHeader from './main-header/main-header.component';
 import MobileHeader from './mobile-header/mobile-header.component';
 // import FreeTrailModal from '../../components/modals/free-trail-modal/free-trail-modal.component';
-// import EmailConfirmationModal from '../../components/modals/email-confirmation-modal/email-confirmation-modal.component';
 
 import './index.styles.scss';
 import { useAppSelector } from '../../redux/store';
+import EmailConfirmationModal from '../../modals/email-confirmation-modal/email-confirmation-modal.component';
+import FreeTrailModal from '../../modals/free-trail-modal/free-trail-modal.component';
 
 const Header = () => {
   const theme = useTheme();
@@ -78,7 +79,7 @@ const Header = () => {
           >
             <Close />
           </IconButton>
-          {/* <FreeTrailModal /> */}
+          <FreeTrailModal />
         </Dialog>
       )}
       {openEmailConfirmModal && currentUser && currentUser.email && (
@@ -96,10 +97,10 @@ const Header = () => {
             },
           }}
         >
-          {/* <EmailConfirmationModal
+          <EmailConfirmationModal
             email={currentUser.email}
             onClose={handleCloseEmailConfirmModal}
-          /> */}
+          />
         </Dialog>
       )}
     </div>

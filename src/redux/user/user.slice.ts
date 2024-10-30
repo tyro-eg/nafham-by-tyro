@@ -1,9 +1,10 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import {
   signInWithEmail,
   signOut,
   signUp,
   changePassword,
+  getInstructors,
 } from './user.actions';
 
 interface UserState {
@@ -15,6 +16,10 @@ interface UserState {
     signOutError: string | null;
     signUpError: string | null;
     changePasswordError: string | null;
+    getInstructorsError: string | null;
+  };
+  loading: {
+    getInstructorsLoading: boolean;
   };
 }
 
@@ -27,7 +32,33 @@ const initialState: UserState = {
     signOutError: null,
     signUpError: null,
     changePasswordError: null,
+    getInstructorsError: null,
   },
+  loading: {
+    getInstructorsLoading: false,
+  },
+};
+
+// Helper to safely handle payload errors
+const setError = (
+  state: UserState,
+  key: keyof UserState['errors'],
+  action: PayloadAction<unknown | string | undefined>,
+) => {
+  state.errors[key] =
+    typeof action.payload === 'string'
+      ? action.payload
+      : `${key.replace('Error', '')} failed`;
+};
+
+// Helper to safely update loading state
+const setLoading = (
+  state: UserState,
+  key: keyof UserState['loading'],
+  isLoading: boolean,
+) => {
+  if (!state.loading) state.loading = {} as UserState['loading']; // Ensure loading is initialized
+  state.loading[key] = isLoading;
 };
 
 const userSlice = createSlice({
@@ -36,62 +67,53 @@ const userSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     // Sign In
-    builder.addCase(signInWithEmail.fulfilled, (state, action) => {
-      console.log('fulfilled', { state, action });
-      state.currentUser = action.payload;
-      state.errors.signInError = null;
-    });
-    builder.addCase(signInWithEmail.rejected, (state, action) => {
-      console.log('rejected', { state, action });
-      if (!state.errors) {
-        state.errors = {
-          signInError: null,
-          signOutError: null,
-          signUpError: null,
-          changePasswordError: null,
-        };
-      }
-
-      state.errors.signInError =
-        (action?.payload as string) || 'Sign in failed';
-    });
+    builder
+      .addCase(signInWithEmail.fulfilled, (state, action) => {
+        state.currentUser = action.payload;
+        state.errors.signInError = null;
+      })
+      .addCase(signInWithEmail.rejected, (state, action) => {
+        setError(state, 'signInError', action);
+      });
 
     // Sign Up
-    builder.addCase(signUp.fulfilled, (state, action) => {
-      console.log('fulfilled', { state, action });
-
-      state.currentUser = action.payload;
-      state.errors.signUpError = null;
-    });
-    builder.addCase(signUp.rejected, (state, action) => {
-      console.log('rejected', { state, action });
-
-      if (!state.errors) {
-        state.errors = {
-          signInError: null,
-          signOutError: null,
-          signUpError: null,
-          changePasswordError: null,
-        };
-      }
-      state.errors.signUpError = (action.payload as string) || 'Sign up failed';
-    });
+    builder
+      .addCase(signUp.fulfilled, (state, action) => {
+        state.currentUser = action.payload;
+        state.errors.signUpError = null;
+      })
+      .addCase(signUp.rejected, (state, action) => {
+        setError(state, 'signUpError', action);
+      });
 
     // Sign Out
-    builder.addCase(signOut.fulfilled, (state) => {
-      state.currentUser = null;
-      state.errors.signOutError = null;
-    });
-    builder.addCase(signOut.rejected, (state, action) => {
-      state.errors.signOutError =
-        (action.payload as string) || 'Sign out failed';
-    });
+    builder
+      .addCase(signOut.fulfilled, (state) => {
+        state.currentUser = null;
+        state.errors.signOutError = null;
+      })
+      .addCase(signOut.rejected, (state, action) => {
+        setError(state, 'signOutError', action);
+      });
 
     // Change Password
     builder.addCase(changePassword.rejected, (state, action) => {
-      state.errors.changePasswordError =
-        (action.payload as string) || 'Change password failed';
+      setError(state, 'changePasswordError', action);
     });
+
+    // Get Instructors
+    builder
+      .addCase(getInstructors.pending, (state) => {
+        setLoading(state, 'getInstructorsLoading', true);
+      })
+      .addCase(getInstructors.fulfilled, (state, action) => {
+        setLoading(state, 'getInstructorsLoading', false);
+        state.instructors = action.payload;
+      })
+      .addCase(getInstructors.rejected, (state, action) => {
+        setLoading(state, 'getInstructorsLoading', false);
+        setError(state, 'getInstructorsError', action);
+      });
   },
 });
 
