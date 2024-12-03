@@ -5,18 +5,23 @@ import {
   signUp,
   changePassword,
   getInstructors,
+  getInstructorById,
+  updateUserInfo,
 } from './user.actions';
 
 interface UserState {
   currentUser: any;
   instructors: any | null;
   instructor: any | null;
+  instructorsPagination: any | null;
   errors: {
     signInError: string | null;
     signOutError: string | null;
     signUpError: string | null;
     changePasswordError: string | null;
     getInstructorsError: string | null;
+    updateUserInfoError: string | null;
+    getInstructorByIdError: string | null;
   };
   loading: {
     getInstructorsLoading: boolean;
@@ -27,12 +32,15 @@ const initialState: UserState = {
   currentUser: null,
   instructors: null,
   instructor: null,
+  instructorsPagination: null,
   errors: {
     signInError: null,
     signOutError: null,
     signUpError: null,
     changePasswordError: null,
     getInstructorsError: null,
+    updateUserInfoError: null,
+    getInstructorByIdError: null,
   },
   loading: {
     getInstructorsLoading: false,
@@ -109,10 +117,28 @@ const userSlice = createSlice({
       .addCase(getInstructors.fulfilled, (state, action) => {
         setLoading(state, 'getInstructorsLoading', false);
         state.instructors = action.payload;
+        // state.instructorsPagination = action.payload.headers;
+        state.instructorsPagination = {
+          currentPage: 1,
+          totalPages: 1,
+        };
       })
       .addCase(getInstructors.rejected, (state, action) => {
         setLoading(state, 'getInstructorsLoading', false);
         setError(state, 'getInstructorsError', action);
+      })
+
+      .addCase(getInstructorById.fulfilled, (state, action) => {
+        state.instructor = action.payload;
+      })
+      .addCase(getInstructorById.rejected, (state, action) => {
+        setError(state, 'getInstructorByIdError', action);
+      })
+      .addCase(updateUserInfo.fulfilled, (state) => {
+        state.errors.updateUserInfoError = null;
+      })
+      .addCase(updateUserInfo.rejected, (state, action) => {
+        setError(state, 'updateUserInfoError', action);
       });
   },
 });

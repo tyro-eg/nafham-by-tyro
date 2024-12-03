@@ -1,0 +1,19 @@
+@import '../../assets/styles/variables.scss';
+@import '../../assets/styles/mixins.scss';
+
+.session-view-calendar-modal {
+  padding: 5rem 10rem;
+
+  @include respond(phone) {
+    padding: 2rem;
+  }
+
+  &__head {
+    margin-bottom: 2.4rem;
+  }
+
+  &__wrapper {
+    overflow-y: auto;
+    max-height: 70rem;
+  }
+}

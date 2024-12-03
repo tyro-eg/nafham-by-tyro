@@ -27,6 +27,16 @@ export const selectInstructors = createSelector(
   (user) => user?.instructors,
 );
 
+export const selectInstructor = createSelector(
+  [selectUser],
+  (user) => user?.instructor,
+);
+
+export const selectInstructorsPagination = createSelector(
+  [selectUser],
+  (user) => user?.instructorsPagination,
+);
+
 export const selectInstructorsLoading = createSelector(
   [selectUser],
   (user) => user?.loading?.getInstructorsLoading,
@@ -35,4 +45,14 @@ export const selectInstructorsLoading = createSelector(
 export const selectInstructorsError = createSelector(
   [selectUser],
   (user) => user?.errors.getInstructorsError,
+);
+
+export const selectInstructorByIdError = createSelector(
+  [selectUser],
+  (user) => user?.errors.getInstructorByIdError,
+);
+
+export const selectUpdateUserInfoError = createSelector(
+  [selectUser],
+  (user) => user?.errors.updateUserInfoError,
 );

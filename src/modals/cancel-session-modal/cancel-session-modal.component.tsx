@@ -1,0 +1,77 @@
+// cancel-session-modal.component.tsx
+
+import React from 'react';
+import { Button } from '@mui/material';
+import { Warning } from '@mui/icons-material';
+import { useTranslation } from 'react-i18next';
+
+import './cancel-session-modal.styles.scss';
+import { useAppDispatch } from '../../redux/store';
+import { cancelSession, endSession } from '../../redux/session/session.actions';
+
+interface CancelSessionModalProps {
+  type: 'cancel' | 'end';
+  sessionId: number;
+  handleClose: () => void;
+}
+
+const CancelSessionModal: React.FC<CancelSessionModalProps> = ({
+  type,
+  sessionId,
+  handleClose,
+}) => {
+  const { t } = useTranslation();
+  const dispatch = useAppDispatch();
+
+  const cancelThisSession = () => {
+    if (type === 'cancel') {
+      dispatch(cancelSession({ sessionId }));
+    } else {
+      dispatch(endSession({ sessionId }));
+    }
+    handleClose();
+  };
+
+  return (
+    <div className="cancelCalendarModal">
+      <div className="cancelCalendarModal__head">
+        <Warning
+          fontSize="inherit"
+          className="cancelCalendarModal__head-icon"
+        />
+        <h4 className="u-color-title u-font-size-18">
+          {type === 'cancel'
+            ? t('MYSESSIONS.MAIN.CANCELMODAL.TITLE')
+            : t('MYSESSIONS.MAIN.ENDMODAL.TITLE')}
+        </h4>
+      </div>
+      <div className="cancelCalendarModal__body">
+        <p className="u-color-body u-font-size-14">
+          {type === 'cancel'
+            ? t('MYSESSIONS.MAIN.CANCELMODAL.DESCRIPTION')
+            : t('MYSESSIONS.MAIN.ENDMODAL.DESCRIPTION')}
+        </p>
+      </div>
+      <div className="cancelCalendarModal__actions-container">
+        <Button
+          className="cancelCalendarModal__actions-container-action"
+          variant="contained"
+          color="secondary"
+          onClick={handleClose}
+        >
+          {t('MYSESSIONS.MAIN.CANCELMODAL.NO')}
+        </Button>
+        <Button
+          className="cancelCalendarModal__actions-container-action"
+          variant="contained"
+          color="primary"
+          onClick={cancelThisSession}
+        >
+          {t('MYSESSIONS.MAIN.CANCELMODAL.YES')}
+        </Button>
+      </div>
+    </div>
+  );
+};
+
+export default CancelSessionModal;
