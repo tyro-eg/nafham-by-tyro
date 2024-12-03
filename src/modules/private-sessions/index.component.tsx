@@ -25,14 +25,14 @@ const PrivateSessions: React.FC = () => {
   };
 
   useEffect(() => {
-    dispatch(getInstructors({ pageNumber: 1 }));
+    dispatch(getInstructors({ pageNumber: 1, pageSize: 10 }));
   }, [dispatch]);
 
   const handlePageChange = (
     _event: React.ChangeEvent<unknown>,
     value: number,
   ) => {
-    dispatch(getInstructors({ pageNumber: value }));
+    dispatch(getInstructors({ pageNumber: value, pageSize: 10 }));
     scrollToTop();
   };
 

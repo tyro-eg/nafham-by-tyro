@@ -97,7 +97,7 @@ const Register: React.FC = () => {
             }}
             validateOnBlur
           >
-            {({ submitForm, isSubmitting, handleChange, errors, touched }) => (
+            {({ submitForm, isSubmitting, errors, touched }) => (
               <Form className={`second-section__form ${rtlClass()}`}>
                 <div className="group-inputs">
                   <div className="group1">

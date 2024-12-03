@@ -37,6 +37,7 @@
 
   &__dropdown-container {
     display: flex;
+
     @media only screen and (max-width: $breakpoint-xmd) {
       order: 3;
       width: 100%;
@@ -51,14 +52,17 @@
       justify-content: space-between;
       margin-top: 2rem !important;
       width: 100%;
+
       &:not(:last-child) {
         margin-right: auto !important;
+
         &.rtl {
           margin-right: 0 !important;
           margin-left: auto !important;
         }
       }
     }
+
     @include respond(phone) {
       flex-direction: column;
     }
@@ -71,25 +75,36 @@
     .MuiOutlinedInput-input {
       padding: 11.7px 14px;
     }
+
     .MuiOutlinedInput-root:hover {
       outline: $color-primary;
     }
+
     .MuiSelect-icon {
       top: calc(50% - 7px);
     }
+
     .MuiSelect-select {
       color: $color-secondary;
     }
+
     .MuiSelect-select.Mui-disabled {
       background-color: $color-grey-light-2;
       color: $color-disabled;
     }
+
     .MuiSelect-select:focus {
       background-color: unset;
     }
+
     .MuiInputLabel-formControl {
       margin-bottom: 1rem;
     }
+
+    .MuiOutlinedInput-notchedOutline {
+      border: none;
+    }
+
     .MuiInputLabel-root {
       font-weight: 700;
       font-size: 1.2rem;
@@ -113,6 +128,7 @@
     @media only screen and (max-width: $breakpoint-xmd) {
       margin-right: 0;
       width: 48%;
+
       &.rtl {
         margin-left: 0;
       }
@@ -157,10 +173,12 @@
         background-color: $color-white;
         height: 4rem;
         width: 100%;
+
         @include respond(tab-port) {
           width: 100%;
           min-width: 100%;
         }
+
         &::placeholder {
           color: $color-grey-light-5;
         }
@@ -177,6 +195,7 @@
         border: none;
         background-color: transparent;
         padding: 0.2rem 0.5rem;
+
         &:hover {
           background-color: transparent;
         }
@@ -194,10 +213,12 @@
       position: relative;
       border-radius: 0.4rem;
       overflow: hidden;
+
       .active {
         color: white;
         background-color: $color-primary !important;
       }
+
       @media only screen and (max-width: $breakpoint-xmd) {
         display: initial;
         order: 2;
@@ -216,8 +237,10 @@
         border-radius: 4px;
         background-color: $color-grey-light-1;
         padding: 8px 12px 8px;
+
         &.rtl {
           flex-direction: row-reverse;
+
           .MuiButton-startIcon {
             margin-right: -4px;
             margin-left: 8px;
@@ -235,9 +258,11 @@
     display: none;
     width: 100%;
     margin-bottom: 2rem;
+
     @include respond(phone) {
       display: inline-block;
     }
+
     div:first-of-type {
       margin-bottom: 0;
     }

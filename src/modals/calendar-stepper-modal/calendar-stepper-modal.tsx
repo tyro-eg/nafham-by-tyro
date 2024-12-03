@@ -9,7 +9,6 @@ import {
   Stepper,
 } from '@mui/material';
 import { CheckCircle, Warning } from '@mui/icons-material';
-import { useDispatch, useSelector } from 'react-redux';
 import { useSnackbar } from 'notistack';
 
 import StepperCalendar from './stepper-calendar/stepper-calendar.component';
@@ -40,7 +39,7 @@ const CalendarStepperModal: React.FC<CalendarStepperModalProps> = ({
   const dispatch = useAppDispatch();
 
   // const bookingTrailStatus = useAppSelector(selectBookingTrialStatus);
-  const currentUser = useSelector(selectCurrentUser);
+  const currentUser = useAppSelector(selectCurrentUser);
 
   const [activeStep, setActiveStep] = useState(0);
   const [selectedField, setSelectedField] = useState<number | undefined>();

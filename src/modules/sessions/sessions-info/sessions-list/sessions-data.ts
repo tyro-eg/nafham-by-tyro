@@ -1,8 +1,8 @@
 const SESSIONS = [
   {
     id: 26165,
-    start_date: '2022-12-09T22:00:00.000+02:00',
-    end_date: '2022-12-09T23:00:00.000+02:00',
+    start_time: '2022-12-09T22:00:00.000+02:00',
+    end_time: '2022-12-09T23:00:00.000+02:00',
     state: 'open',
     offline: true,
     external_link: '',
@@ -64,8 +64,8 @@ const SESSIONS = [
   },
   {
     id: 3984,
-    start_date: '2022-12-10T22:00:00.000+02:00',
-    end_date: '2022-12-10T23:00:00.000+02:00',
+    start_time: '2022-12-10T22:00:00.000+02:00',
+    end_time: '2022-12-10T23:00:00.000+02:00',
     state: 'scheduled',
     offline: false,
     external_link: '',
