@@ -1,9 +1,29 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { post, patch, remove } from '../../assets/utils/api';
+import { post, patch, remove, jsonGet } from '../../assets/utils/api';
 import { snackActions } from '../../assets/utils/toaster';
 import { showSpinner, hideSpinner } from '../../assets/utils/utils';
 import Instructors from './instructors.data';
 import { Instructor } from '../../assets/types';
+
+interface SignInPayload {
+  email: string;
+  password: string;
+}
+
+interface UpdateUserInfoPayload {
+  id: number;
+  type: string;
+  userData: any;
+}
+
+interface GetInstructorByIdPayload {
+  id: number;
+}
+
+interface GetInstructorsPayload {
+  pageNumber: number;
+  pageSize: number;
+}
 
 const getErrorMessage = (error: any): string =>
   error.response?.data?.error || error.message || 'Unknown error';
@@ -23,7 +43,7 @@ const saveUserDataToLocalStorage = (userData: any, headers: any) => {
 
 export const signInWithEmail = createAsyncThunk(
   'user/signInWithEmail',
-  async ({ payload }: { payload: any }, { rejectWithValue }) => {
+  async ({ payload }: { payload: SignInPayload }, { rejectWithValue }) => {
     try {
       showSpinner();
       const {
@@ -102,10 +122,8 @@ export const changePassword = createAsyncThunk(
 
 export const getInstructors = createAsyncThunk(
   'user/getInstructors',
-  async (_payload: any, { rejectWithValue }) => {
+  async (_payload: GetInstructorsPayload, { rejectWithValue }) => {
     try {
-      console.log(11111111);
-
       showSpinner();
       const response = new Promise<{ data: Instructor[] }>((resolve) => {
         setTimeout(() => {
@@ -119,6 +137,41 @@ export const getInstructors = createAsyncThunk(
       snackActions.error(getErrorMessage(error));
       hideSpinner();
       return rejectWithValue(getErrorMessage(error));
+    }
+  },
+);
+
+export const getInstructorById = createAsyncThunk<
+  any,
+  GetInstructorByIdPayload
+>('user/getInstructorById', async ({ id }, { rejectWithValue }) => {
+  try {
+    showSpinner();
+    const response = await jsonGet(`/tutor/${id}`, {
+      params: { include: 'fields,packages' },
+    });
+    hideSpinner();
+    return response.data;
+  } catch (error) {
+    const errorMessage = getErrorMessage(error);
+    snackActions.error(errorMessage);
+    hideSpinner();
+    return rejectWithValue(errorMessage);
+  }
+});
+
+export const updateUserInfo = createAsyncThunk<void, UpdateUserInfoPayload>(
+  'user/updateUserInfo',
+  async ({ id, type, userData }, { rejectWithValue }) => {
+    try {
+      showSpinner();
+      await patch(`/${type === 'users' ? 'user' : 'tutor'}`, userData);
+      hideSpinner();
+    } catch (error) {
+      const errorMessage = getErrorMessage(error);
+      snackActions.error(errorMessage);
+      hideSpinner();
+      return rejectWithValue(errorMessage);
     }
   },
 );

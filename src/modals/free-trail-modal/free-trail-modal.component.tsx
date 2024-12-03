@@ -18,7 +18,7 @@ const FreeTrailModal = () => {
   console.log('instructors', instructors);
 
   useEffect(() => {
-    dispatch(getInstructors({}));
+    dispatch(getInstructors({ pageNumber: 1, pageSize: 10 }));
   }, []);
 
   return (

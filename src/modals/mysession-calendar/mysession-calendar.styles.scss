@@ -1,0 +1,312 @@
+@import '../../assets/styles/variables.scss';
+@import '../../assets/styles/mixins.scss';
+
+.mySession-calendar {
+  padding: 5rem;
+
+  .calendar__header {
+    font-size: 2.8rem;
+    font-weight: bold;
+    text-transform: uppercase;
+
+    @include respond(phone) {
+      font-size: 1.6rem;
+    }
+  }
+
+  .calendar__warning {
+    background-color: $color-warning;
+    color: $color-warning-text;
+
+    padding: 2rem 3rem;
+    margin-bottom: 2rem;
+
+    @include respond(phone) {
+      padding: 1.5rem;
+    }
+
+    &--title {
+      display: flex;
+      align-items: center;
+
+      @include respond(phone) {
+        margin-bottom: 1rem;
+      }
+
+      h4 {
+        font-size: 1.6rem;
+        font-weight: bold;
+
+        color: $color-warning-text;
+
+        @include respond(phone) {
+          font-size: 1.2rem;
+          font-weight: bold;
+        }
+      }
+
+      .mark {
+        svg {
+          color: $color-warning-text;
+          font-size: 2.2rem;
+        }
+      }
+
+      .title {
+        margin: 0 1.2rem;
+      }
+    }
+
+    &--body {
+      p {
+        @include respond(phone) {
+          font-size: 1.2rem;
+
+          line-height: 18px;
+        }
+      }
+    }
+  }
+
+  .calendar__unscheduled-hours {
+    max-width: 27rem;
+    margin-left: auto;
+
+    border: 1px solid $color-calendar-border;
+    box-shadow: 0 4px 16px 0 $color-calendar-boxshadow;
+
+    padding: 1.5rem;
+
+    &.rtl {
+      margin-right: auto;
+      margin-left: 0;
+    }
+
+    p {
+      color: $color-title;
+
+      font-size: 1.4rem;
+      font-weight: 700;
+
+      text-align: center;
+
+      @include respond(phone) {
+        font-size: 1.2rem;
+      }
+    }
+  }
+
+  .calendar-container {
+    display: flex;
+    font-family:
+      Arial,
+      Helvetica Neue,
+      Helvetica,
+      sans-serif;
+    font-size: 14px;
+    margin-bottom: 3rem;
+    background-color: $color-white;
+    border-radius: 0.4rem;
+    border: 1px solid $color-grey-light-2;
+
+    .calendar-container-main {
+      flex-grow: 1;
+
+      .calendar {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        padding: 0 1rem;
+
+        &__legend {
+          display: flex;
+          flex-wrap: wrap;
+
+          @include respond(tab-port) {
+            order: 3;
+            margin: 1rem 1rem 0;
+          }
+
+          @include respond(phone) {
+            order: 3;
+            justify-content: center;
+
+            margin: 1rem;
+          }
+
+          &.rtl {
+            margin-right: 1rem;
+            margin-left: 0;
+          }
+
+          [class^='calendar__legend'] {
+            display: flex;
+            align-items: center;
+
+            .title {
+              font-size: 1rem;
+            }
+
+            .color {
+              height: 1.5rem;
+              width: 1.5rem;
+
+              border-radius: 2px;
+
+              margin-right: 5px;
+
+              &.rtl {
+                margin-left: 5px;
+                margin-right: 0;
+              }
+            }
+          }
+
+          [class^='calendar__legend']:not(:last-child) {
+            margin-right: 1rem;
+
+            &.rtl {
+              margin-left: 1rem;
+              margin-right: 0;
+            }
+          }
+
+          &--available .color {
+            background: $color-primary;
+          }
+
+          &--not__available .color {
+            background: $color-not-available;
+          }
+
+          &--booked .color {
+            background: $color-booked;
+          }
+
+          &--busy .color {
+            background: $color-busy;
+          }
+
+          &--old-session .color {
+            background: $color-old-session;
+          }
+        }
+
+        &__timezone {
+          text-align: right;
+          line-height: 18px;
+          order: 2;
+
+          @include respond(phone) {
+            width: 100%;
+            text-align: center;
+            margin-top: 1rem;
+          }
+
+          p {
+            font-size: 1.2rem;
+          }
+        }
+      }
+
+      .fc {
+        @include respond(phone) {
+          table {
+            font-size: 1.2rem;
+          }
+        }
+      }
+
+      .fc-day-today {
+        background-color: #ffffff !important;
+      }
+
+      .fc-header-toolbar {
+        margin-bottom: 0.5rem;
+
+        .fc-toolbar-chunk {
+          .fc-button-group {
+            .fc-button-primary {
+              background-color: $color-primary;
+              border-color: $color-white;
+
+              &:focus {
+                box-shadow: none;
+              }
+            }
+
+            .fc-button-active {
+              background-color: #41b7dc;
+
+              &:focus {
+                box-shadow: none;
+              }
+            }
+          }
+
+          .fc-today-button {
+            background-color: $color-primary;
+            border-color: $color-white;
+
+            &:focus {
+              box-shadow: none;
+            }
+          }
+
+          .fc-today-button:disabled {
+            cursor: default;
+          }
+
+          @include respond(phone) {
+            .fc-toolbar-title {
+              display: none;
+            }
+          }
+        }
+      }
+
+      .fc-direction-ltr .fc-timegrid-slot-label-frame {
+        text-align: start;
+      }
+
+      .fc .fc-timegrid-slot {
+        height: 2em;
+      }
+
+      .fc-timegrid-col-events {
+        margin: 0;
+        text-align: center;
+
+        .fc-timegrid-event {
+          margin: 0;
+          border-radius: 0.6rem;
+        }
+      }
+    }
+  }
+
+  &__actions-container {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 4.5rem;
+
+    &-action {
+      min-width: 14rem;
+      height: 4rem;
+    }
+
+    &-action:first-child {
+      margin: 0 1rem;
+    }
+  }
+}
+
+b {
+  /* used for event dates/times */
+  margin-right: 3px;
+}
+
+i {
+  vertical-align: middle;
+}
