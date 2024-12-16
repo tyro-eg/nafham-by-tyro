@@ -1,358 +1,299 @@
-// import React, { useEffect, useState } from 'react'
-// import { useTranslation } from 'react-i18next'
-// import { Button } from '@material-ui/core'
-// import { Check, Edit } from '@material-ui/icons'
-// import { useParams } from 'react-router-dom'
-// import PropTypes from 'prop-types'
-// import { connect } from 'react-redux'
-// import { createStructuredSelector } from 'reselect'
+import React, { useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Button } from '@mui/material';
+import { Check, Edit } from '@mui/icons-material';
+import { useParams } from 'react-router-dom';
 
-// import {
-//   selectCurrentUser,
-//   selectInstructor,
-// } from '../../../redux/user/user.selectors'
+import {
+  selectCurrentUser,
+  selectInstructor,
+} from '../../../redux/user/user.selectors';
 
-// import ProfileCalendar from './profile-calendar-container/profile-calendar-container.component'
-// import ProfileMissingInfoBanner from './profile-missing-info-banner/profile-missing-info-banner.component'
-// import ProfilePackage from './profile-package/profile-package.component'
-// import ProfileReviewsList from './profile-reviews-list/profile-reviews-list.component'
-// import ProfileInfo from './profile-info/profile-info.component'
-// import AppCard from '../../../components/card/app-card.component'
-// import ProfileFields from './profile-fields/profile-fields.component'
-// import {
-//   getInstructorByIdStart,
-//   updateInstructorStart,
-// } from '../../../redux/user/user.actions'
-// import { getYoutubeId } from './edit-profile.utils'
-// import Carousel from '../../../components/carousel/carousel'
+import ProfileCalendar from './profile-calendar-container/profile-calendar-container.component';
+import ProfileMissingInfoBanner from './profile-missing-info-banner/profile-missing-info-banner.component';
+import ProfileReviewsList from './profile-reviews-list/profile-reviews-list.component';
+import ProfileInfo from './profile-info/profile-info.component';
+import ProfileFields from './profile-fields/profile-fields.component';
+import { getYoutubeId } from './edit-profile.utils';
 
-// import Instructors from './instructors.data'
+import './index.scss';
+import { useAppDispatch, useAppSelector } from '../../../redux/store';
+import {
+  getInstructorById,
+  updateUserInfo,
+} from '../../../redux/user/user.actions';
+import AppCard from '../../../component/card/app-card.component';
 
-// import './index.scss'
-// const EditProfile = ({
-//   currentUser,
-//   instructor,
-//   getInstructorStartProp,
-//   updateInstructorStartProp,
-// }) => {
-//   const { t } = useTranslation()
-//   // const history = useHistory()
-//   const { id } = useParams()
-//   const [showEditMode, setShowEditMode] = useState(false)
-//   const [editMode, setEditMode] = useState(false)
-//   const [profileData, setProfileData] = useState({})
-//   const [profileReviewsData, setProfileReviewsData] = useState([])
-//   const [profileInfoData, setProfileInfoData] = useState({})
-//   const [profilePackagesData, setProfilePackagesData] = useState([])
-//   const [missingInformationFlag, setMissingInformationFlag] = useState(false)
-//   const [updateSlots, doUpdateSlots] = useState(0)
-//   const [profileUserInfo, setProfileUserInfo] = useState({})
+const EditProfile: React.FC = () => {
+  const { t } = useTranslation();
+  const dispatch = useAppDispatch();
+  const { id } = useParams<{ id: string }>();
 
-//   useEffect(() => {
-//     onBlockingMissingInformation(false)
-//     getInstructorStartProp(id)
-//     if (currentUser && currentUser.id)
-//       setShowEditMode(Number(currentUser.id) === Number(id))
-//   }, [])
+  const currentUser = useAppSelector(selectCurrentUser);
+  const instructor = useAppSelector(selectInstructor);
 
-//   useEffect(() => {
-//     if (instructor) {
-//       const prof = Instructors.find(
-//         (instructorObj) => Number(instructorObj.id) === 2,
-//       )
-//       setProfileData(prof)
-//       setProfileReviewsData(prof.tutor_reviews)
-//       setProfileInfoData(initProfileInfoObj(prof))
-//       // setProfilePackagesData(initProfilePackagesObj())
-//       if (instructor.packages && instructor.packages.data) {
-//         setProfilePackagesData(instructor.packages.data)
-//       }
-//       setProfileUserInfo(initProfileUserInfoObj(prof))
-//     }
-//   }, [instructor])
+  const [showEditMode, setShowEditMode] = useState(false);
+  const [editMode, setEditMode] = useState(false);
+  const [profileData, setProfileData] = useState<any>({});
+  const [profileReviewsData, setProfileReviewsData] = useState<any[]>([]);
+  const [profileInfoData, setProfileInfoData] = useState<any>({});
+  const [profilePackagesData, setProfilePackagesData] = useState<any>([]);
+  const [missingInformationFlag, setMissingInformationFlag] = useState(false);
+  const [updateSlots, doUpdateSlots] = useState(0);
+  const [profileUserInfo, setProfileUserInfo] = useState<any>({});
 
-//   const initProfileInfoObj = (profile) => {
-//     const profileInfoObj = {
-//       full_name: instructor.full_name,
-//       about: instructor.bio,
-//       number_of_reviews: profile.number_of_reviews,
-//       video: instructor.video_url,
-//       profile_picture_medium: profile.profile_picture_medium,
-//       average_rating: profile.average_rating,
-//       online: profile.online,
-//       rate: profile.rate_to_display,
-//       number_of_students: profile.number_of_students,
-//     }
+  useEffect(() => {
+    onBlockingMissingInformation(false);
+    dispatch(getInstructorById({ id: +id! }));
+    if (currentUser && currentUser.id) {
+      setShowEditMode(Number(currentUser.id) === Number(id));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id, currentUser]);
 
-//     return profileInfoObj
-//   }
+  useEffect(() => {
+    if (instructor) {
+      setProfileData(instructor);
+      setProfileReviewsData(instructor?.tutor_reviews!);
+      setProfileInfoData(initProfileInfoObj(instructor));
+      // setProfilePackagesData(initProfilePackagesObj())
+      if (instructor.tutor_packages) {
+        setProfilePackagesData(instructor.tutor_packages);
+      }
+      setProfileUserInfo(initProfileUserInfoObj(instructor));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [instructor]);
 
-//   const initProfileUserInfoObj = (profile) => {
-//     const profileUserInfoObj = {
-//       bio: instructor.bio,
-//       video_url: instructor.video_url,
-//       profile_picture_medium: profile.profile_picture_medium,
-//     }
+  const initProfileInfoObj = (profile: any) => ({
+    full_name: instructor?.full_name,
+    about: instructor?.about,
+    number_of_reviews: profile?.number_of_reviews,
+    video: instructor?.video,
+    profile_picture_medium: profile?.profile_picture_medium,
+    average_rating: profile?.average_rating,
+    online: !!profile?.online,
+    rate: profile?.rate_to_display,
+    number_of_students: profile?.number_of_students,
+  });
 
-//     return profileUserInfoObj
-//   }
+  const initProfileUserInfoObj = (profile: any) => ({
+    bio: instructor?.bio,
+    video_url: instructor?.video,
+    profile_picture_medium: profile?.profile_picture_medium,
+  });
 
-//   // const initProfilePackagesObj = (profilePackages) => {
-//   //   let output = {}
-//   //   if (instructor.packages && instructor.packages.data) {
-//   //     const defaultPackage = profilePackages.find(
-//   //       (el) => el.type === 'DefaultPackage',
-//   //     )
+  // const initProfilePackagesObj = (profilePackages: any[]) => {
+  //   let output = {};
+  //   if (instructor.packages?.data) {
+  //     const defaultPackage = profilePackages.find(
+  //       (el) => el.type === 'DefaultPackage',
+  //     );
 
-//   //     const freeTrialPackage = profilePackages.find(
-//   //       (el) => el.type === 'TrialPackage',
-//   //     )
+  //     const freeTrialPackage = profilePackages.find(
+  //       (el) => el.type === 'TrialPackage',
+  //     );
 
-//   //     profilePackages.forEach((el, i) => {
-//   //       if (el.type === 'TrialPackage') {
-//   //         profilePackages.splice(i, 1)
-//   //       }
-//   //     })
+  //     profilePackages.forEach((el, i) => {
+  //       if (el.type === 'TrialPackage') {
+  //         profilePackages.splice(i, 1);
+  //       }
+  //     });
 
-//   //     profilePackages.sort((a, b) => a.minutes - b.minutes)
+  //     profilePackages.sort((a, b) => a.minutes - b.minutes);
 
-//   //     const defaultPackageRate = defaultPackage.rate
+  //     const defaultPackageRate = defaultPackage.rate;
 
-//   //     const newProfilePackages = JSON.parse(JSON.stringify(profilePackages))
-//   //     newProfilePackages.forEach((el) => {
-//   //       const packageObj = el
-//   //       if (
-//   //         packageObj.type !== 'DefaultPackage' &&
-//   //         packageObj.type !== 'TrialPackage'
-//   //       ) {
-//   //         const savings =
-//   //           100 - Math.round((packageObj.rate / defaultPackageRate) * 100)
-//   //         packageObj.savings = savings
-//   //         return packageObj
-//   //       }
-//   //       return undefined
-//   //     })
+  //     const newProfilePackages = JSON.parse(JSON.stringify(profilePackages));
+  //     newProfilePackages.forEach((el) => {
+  //       const packageObj = el;
+  //       if (
+  //         packageObj.type !== 'DefaultPackage' &&
+  //         packageObj.type !== 'TrialPackage'
+  //       ) {
+  //         const savings =
+  //           100 - Math.round((packageObj.rate / defaultPackageRate) * 100);
+  //         packageObj.savings = savings;
+  //         return packageObj;
+  //       }
+  //       return undefined;
+  //     });
 
-//   //     output = {
-//   //       freeTrialPackage,
-//   //       newProfilePackages,
-//   //     }
-//   //   }
-//   //   return output
-//   // }
+  //     output = {
+  //       freeTrialPackage,
+  //       newProfilePackages,
+  //     };
+  //   }
+  //   return output;
+  // };
 
-//   const toggleEditMode = () => {
-//     setEditMode((prevState) => !prevState)
-//   }
-//   const updateProfile = () => {
-//     doUpdateSlots((prev) => prev + 1)
-//     const { slots, ...info } = profileUserInfo
-//     updateInstructorStartProp({ tutor: info })
-//   }
-//   const onBlockingMissingInformation = (flag) => setMissingInformationFlag(flag)
-//   // const navigateToCheckout = () => {
-//   //   history.push(`/checkout?id=${id}&course=false`)
-//   // }
-//   const openFreeTrialModal = () => {}
-//   const freeTrailCardFlag = () =>
-//     !showEditMode &&
-//     profileData &&
-//     profileData.free_trial &&
-//     profileData.free_trial.enabled &&
-//     !profileData.free_trial.claimed &&
-//     profilePackagesData &&
-//     profilePackagesData.freeTrialPackage &&
-//     profilePackagesData.freeTrialPackage.rate === 0
+  const toggleEditMode = () => setEditMode((prevState) => !prevState);
 
-//   // const profilePackageTrailFlag = () =>
-//   //   profileData &&
-//   //   profileData.free_trial &&
-//   //   profileData.free_trial.enabled &&
-//   //   !profileData.free_trial.claimed &&
-//   //   profilePackagesData &&
-//   //   profilePackagesData.freeTrialPackage &&
-//   //   profilePackagesData.freeTrialPackage.rate !== 0
+  const updateProfile = () => {
+    doUpdateSlots((prev) => prev + 1);
+    const { slots, ...info } = profileUserInfo;
+    dispatch(updateUserInfo({ id: +id!, type: '', userData: info }));
+  };
 
-//   const getProfileInfo = (updatedData) => {
-//     if (updatedData) {
-//       if (updatedData.about && updatedData.about !== profileData.about) {
-//         setProfileUserInfo((prevState) => ({
-//           ...prevState,
-//           bio: updatedData.about,
-//         }))
-//       }
-//       if (updatedData.video && updatedData.video !== profileData.video) {
-//         setProfileUserInfo((prevState) => ({
-//           ...prevState,
-//           video_url: getYoutubeId(updatedData.video),
-//         }))
-//       }
-//       if (
-//         updatedData.img &&
-//         updatedData.img !== profileData.profile_picture_medium
-//       ) {
-//         setProfileUserInfo((prevState) => ({
-//           ...prevState,
-//           profile_picture_medium: updatedData.img,
-//         }))
-//       }
-//       if (updatedData.slots) {
-//         setProfileUserInfo((prevState) => ({
-//           ...prevState,
-//           slots:
-//             updatedData.slots && updatedData.slots.length > 0
-//               ? updatedData.slots
-//               : [],
-//         }))
-//       }
-//     }
-//   }
+  const onBlockingMissingInformation = (flag: boolean) =>
+    setMissingInformationFlag(flag);
 
-//   const onToggleEditFromCalender = () => {
-//     setEditMode(true)
-//   }
-//   return (
-//     <>
-//       {!!instructor && (
-//         <section className="profile">
-//           <ProfileInfo
-//             data={profileInfoData}
-//             editMode={editMode}
-//             getProfileInfo={getProfileInfo}
-//           />
-//           <div className="profile__container container">
-//             <div className="profile__fieldsTrail">
-//               <div
-//                 className={`profile__fieldsTrail-fields ${
-//                   freeTrailCardFlag() ? 'withTrial' : ''
-//                 }`}
-//               >
-//                 <ProfileFields
-//                   fields={
-//                     !!instructor.fields && !!instructor.fields.data
-//                       ? instructor.fields.data
-//                       : []
-//                   }
-//                 />
-//               </div>
-//               {freeTrailCardFlag() && (
-//                 <div className="profile__fieldsTrail-trial">
-//                   <AppCard
-//                     title={t('CARDS.FREE_TRIAL.TITLE')}
-//                     label={t('CARDS.FREE_TRIAL.LABEL')}
-//                     type="primary"
-//                     onClickButton={openFreeTrialModal}
-//                   >
-//                     <p>{t('CARDS.FREE_TRIAL.BODY')}.</p>
-//                   </AppCard>
-//                 </div>
-//               )}
-//             </div>
-//             <div className="profile__available-packages">
-//               <h4 className="profile__available-packages__title">
-//                 {t('PROFILE.PACKAGES.TITLE')}
-//               </h4>
-//               <div className="profile__available-packages__packages">
-//                 <Carousel>
-//                   {profilePackagesData.map((newPackage) => (
-//                     <ProfilePackage
-//                       key={newPackage.id}
-//                       packageData={newPackage}
-//                       instructorId={instructor.id}
-//                     />
-//                   ))}
-//                 </Carousel>
-//               </div>
-//             </div>
+  const openFreeTrialModal = () => {};
 
-//             <div className="profile__calendar">
-//               <h4 className="profile__calendar__title">
-//                 {t('PROFILE.INSTRUCTOR_AVAILABILITY')}
-//               </h4>
-//               <div className="profile__calendar__slots">
-//                 <ProfileCalendar
-//                   showEditMode={showEditMode}
-//                   editModeFlag={editMode}
-//                   toggleEditMode={onToggleEditFromCalender}
-//                   getProfileInfo={getProfileInfo}
-//                   updateSlots={updateSlots}
-//                   instructorId={id}
-//                 />
-//               </div>
-//             </div>
-//             <div className="profile__reviews">
-//               <h4 className="profile__reviews__title">
-//                 {t('COURSES.COURSE_REVIEWS.REVIEWS')}
-//               </h4>
-//               <div className="profile__reviews__container">
-//                 {profileReviewsData && profileReviewsData.length > 0 && (
-//                   <ProfileReviewsList profileReviews={profileReviewsData} />
-//                 )}
-//               </div>
-//             </div>
-//             {showEditMode && (
-//               <ProfileMissingInfoBanner
-//                 data={profileUserInfo}
-//                 blockingMissingInfo={onBlockingMissingInformation}
-//               />
-//             )}
+  const freeTrailCardFlag = () =>
+    !showEditMode &&
+    profileData?.free_trial?.enabled &&
+    !profileData?.free_trial?.claimed &&
+    profilePackagesData?.filter((el: any) => el.type === 'TrialPackage')
+      .length > 0;
 
-//             {showEditMode && editMode && (
-//               <Button
-//                 disabled={missingInformationFlag}
-//                 onClick={() => {
-//                   toggleEditMode()
-//                   updateProfile()
-//                 }}
-//                 startIcon={<Check />}
-//                 className="profile__edit"
-//                 variant="contained"
-//                 color="primary"
-//               >
-//                 {t('PROFILE.EDITPROFILE.EDITACTION.SAVE&UPDATE')}
-//               </Button>
-//             )}
+  const getProfileInfo = (updatedData: any) => {
+    if (updatedData) {
+      setProfileUserInfo((prevState: any) => ({
+        ...prevState,
+        ...updatedData,
+        bio:
+          updatedData.about !== profileData.about
+            ? updatedData.about
+            : prevState.bio,
+        video_url:
+          updatedData.video !== profileData.video
+            ? getYoutubeId(updatedData.video)
+            : prevState.video_url,
+        profile_picture_medium:
+          updatedData.img !== profileData.profile_picture_medium
+            ? updatedData.img
+            : prevState.profile_picture_medium,
+        slots:
+          updatedData.slots?.length > 0
+            ? updatedData.slots
+            : prevState.slots || [],
+      }));
+    }
+  };
 
-//             {showEditMode && !editMode && (
-//               <Button
-//                 onClick={toggleEditMode}
-//                 startIcon={<Edit />}
-//                 className="profile__edit"
-//                 variant="contained"
-//                 color="primary"
-//               >
-//                 {t('PROFILE.EDITPROFILE.EDITACTION.EDITYOURPROFILE')}
-//               </Button>
-//             )}
-//           </div>
-//         </section>
-//       )}
-//     </>
-//   )
-// }
+  const renderProfileInfo = useCallback(
+    () => (
+      <ProfileInfo
+        data={profileInfoData}
+        editMode={editMode}
+        getProfileInfo={getProfileInfo}
+      />
+    ),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [profileInfoData, editMode],
+  );
 
-// EditProfile.propTypes = {
-//   currentUser: PropTypes.object,
-//   getInstructorStartProp: PropTypes.func,
-//   updateInstructorStartProp: PropTypes.func,
-//   instructor: PropTypes.object,
-// }
+  const renderProfileCalender = useCallback(
+    () => (
+      <ProfileCalendar
+        showEditMode={showEditMode}
+        editModeFlag={editMode}
+        toggleEditMode={onToggleEditFromCalender}
+        getProfileInfo={getProfileInfo}
+        updateSlots={updateSlots}
+        instructorId={id!}
+      />
+    ),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [editMode, showEditMode, updateSlots, id],
+  );
 
-// const mapStateToProps = createStructuredSelector({
-//   currentUser: selectCurrentUser,
-//   instructor: selectInstructor,
-// })
+  const onToggleEditFromCalender = () => setEditMode(true);
 
-// const mapDispatchToProps = (dispatch) => ({
-//   getInstructorStartProp: (instructorId) =>
-//     dispatch(getInstructorByIdStart(instructorId)),
-//   updateInstructorStartProp: (info) => dispatch(updateInstructorStart(info)),
-// })
-
-// export default connect(mapStateToProps, mapDispatchToProps)(EditProfile)
-
-const EditProfile = () => {
-  return <div>Edit Profile</div>;
+  return (
+    <>
+      {!!instructor && (
+        <section className="profile">
+          {renderProfileInfo()}
+          <div className="profile__container container">
+            <div className="profile__fieldsTrail">
+              <div
+                className={`profile__fieldsTrail-fields ${
+                  freeTrailCardFlag() ? 'withTrial' : ''
+                }`}
+              >
+                <ProfileFields fields={instructor.instructor_fields || []} />
+              </div>
+              {freeTrailCardFlag() && (
+                <div className="profile__fieldsTrail-trial">
+                  <AppCard
+                    title={t('CARDS.FREE_TRIAL.TITLE')}
+                    label={t('CARDS.FREE_TRIAL.LABEL')}
+                    type="primary"
+                    onClickButton={openFreeTrialModal}
+                  >
+                    <p>{t('CARDS.FREE_TRIAL.BODY')}.</p>
+                  </AppCard>
+                </div>
+              )}
+            </div>
+            {/* <div className="profile__available-packages">
+              <h4 className="profile__available-packages__title">
+                {t('PROFILE.PACKAGES.TITLE')}
+              </h4>
+              <div className="profile__available-packages__packages">
+                <Carousel>
+                  {profilePackagesData
+                    .filter(
+                      (newPackage: any) => newPackage.type !== 'TrialPackage',
+                    )
+                    .map((newPackage: any) => (
+                      <ProfilePackage
+                        key={newPackage.id}
+                        packageData={newPackage}
+                        instructorId={instructor.id}
+                      />
+                    ))}
+                </Carousel>
+              </div>
+            </div> */}
+            <div className="profile__calendar">
+              <h4 className="profile__calendar__title">
+                {t('PROFILE.INSTRUCTOR_AVAILABILITY')}
+              </h4>
+              <div className="profile__calendar__slots">
+                {renderProfileCalender()}
+              </div>
+            </div>
+            {profileReviewsData?.length > 0 && (
+              <div className="profile__reviews">
+                <h4 className="profile__reviews__title">
+                  {t('COURSES.COURSE_REVIEWS.REVIEWS')}
+                </h4>
+                <div className="profile__reviews__container">
+                  <ProfileReviewsList profileReviews={profileReviewsData} />
+                </div>
+              </div>
+            )}
+            {showEditMode && (
+              <ProfileMissingInfoBanner
+                data={profileUserInfo}
+                blockingMissingInfo={onBlockingMissingInformation}
+              />
+            )}
+            {showEditMode && (
+              <Button
+                onClick={() => {
+                  toggleEditMode();
+                  if (editMode) updateProfile();
+                }}
+                startIcon={editMode ? <Check /> : <Edit />}
+                variant="contained"
+                color="primary"
+                disabled={editMode && missingInformationFlag}
+                className="profile__edit"
+              >
+                {editMode
+                  ? t('PROFILE.EDITPROFILE.EDITACTION.SAVE&UPDATE')
+                  : t('PROFILE.EDITPROFILE.EDITACTION.EDITYOURPROFILE')}
+              </Button>
+            )}
+          </div>
+        </section>
+      )}
+    </>
+  );
 };
 
 export default EditProfile;

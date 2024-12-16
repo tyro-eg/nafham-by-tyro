@@ -147,11 +147,19 @@ export const getInstructorById = createAsyncThunk<
 >('user/getInstructorById', async ({ id }, { rejectWithValue }) => {
   try {
     showSpinner();
-    const response = await jsonGet(`/tutor/${id}`, {
-      params: { include: 'fields,packages' },
+    // const response = await jsonGet(`/tutor/${id}`, {
+    //   params: { include: 'fields,packages' },
+    // });
+    const response = new Promise<{ data: Instructor }>((resolve) => {
+      setTimeout(() => {
+        resolve({
+          data: Instructors.find((instructor) => instructor.id === id)!,
+        });
+      }, 1000);
     });
     hideSpinner();
-    return response.data;
+    const result = await response;
+    return result.data;
   } catch (error) {
     const errorMessage = getErrorMessage(error);
     snackActions.error(errorMessage);
