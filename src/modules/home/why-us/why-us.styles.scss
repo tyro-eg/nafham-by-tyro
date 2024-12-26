@@ -1,0 +1,144 @@
+@import '../../../assets/styles/variables.scss';
+@import '../../../assets/styles/mixins.scss';
+
+.landing__why-us {
+  background-color: $color-white;
+  padding-top: 9.6rem;
+  padding-bottom: 9.6rem;
+  position: relative;
+
+  .container {
+    position: relative;
+    z-index: 1;
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 10.3rem;
+    left: 14.5rem;
+    width: 15.1rem;
+    height: 11.1rem;
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="151" height="111" viewBox="0 0 151 111" fill="none"><circle cx="138.39" cy="18.4227" r="11.8192" fill="%2333D9EF"/><circle cx="55.6562" cy="55.4561" r="55.1562" fill="%2333EFA0"/></svg>')
+      no-repeat center;
+    background-size: contain;
+
+    @include respond(tab-port) {
+      top: 3.3rem;
+      left: 4.5rem;
+    }
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 3.6rem;
+    right: 0;
+    width: 21.3rem;
+    height: 20.9rem;
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="213" height="209" viewBox="0 0 213 209" fill="none"><circle cx="127.36" cy="104.309" r="104.009" fill="%235B61EB"/><circle cx="12.3192" cy="179.164" r="11.8192" fill="%23F56666"/></svg>')
+      no-repeat center;
+    background-size: contain;
+  }
+
+  .why-us-header {
+    color: $color-gold;
+    font-size: 2.2rem;
+    font-weight: 600;
+    letter-spacing: 1.625px;
+    text-transform: uppercase;
+    text-align: center;
+
+    @include respond(phone) {
+      font-size: 1.8rem;
+    }
+  }
+
+  .why-us-description {
+    color: $color-midnight-blue;
+    font-size: 4rem;
+    font-weight: 600;
+    line-height: 5.8rem;
+    letter-spacing: -1.2px;
+    text-align: center;
+    padding-bottom: 7.2rem;
+    max-width: 75rem;
+    text-align: center;
+    margin: auto;
+
+    @include respond(phone) {
+      font-size: 2.4rem;
+      line-height: 3.8rem;
+    }
+  }
+
+  .strong-points {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    column-gap: 3rem;
+    row-gap: 3rem;
+
+    &__card {
+      width: 35rem;
+      height: 48rem;
+      padding: 4.8rem 3.8rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      border-radius: 10px;
+      box-shadow: 0px 32px 54px 0px rgba(22, 28, 45, 0.16);
+
+      &.green {
+        background-color: $color-green;
+      }
+
+      &.primary {
+        background-color: $color-primary;
+      }
+
+      &.gold {
+        background-color: $color-gold;
+      }
+
+      .image {
+        height: 14.2rem;
+        min-height: 14.2rem;
+        margin: 2rem 0;
+      }
+
+      .title {
+        color: $color-white;
+        font-size: 2.4rem;
+        font-weight: 600;
+        line-height: 3.4rem;
+        letter-spacing: -0.5px;
+        text-align: center;
+      }
+
+      .description {
+        color: $color-white;
+        font-size: 1.7rem;
+        font-weight: 600;
+        line-height: 2.9rem;
+        letter-spacing: -0.2px;
+        text-align: center;
+        height: 8.7rem;
+      }
+
+      .action {
+        color: $color-white;
+        font-size: 1.7rem;
+        font-weight: 600;
+        line-height: 3.2rem;
+        letter-spacing: -0.6px;
+
+        span {
+          margin: 0 1rem;
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,84 @@
+@import '../../../assets/styles/variables.scss';
+@import '../../../assets/styles/mixins.scss';
+
+.landing__start-learning {
+  background-color: $color-blue-gray;
+  padding: 4.8rem 0;
+
+  .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    row-gap: 3rem;
+
+    @include respond(tab-port) {
+      flex-direction: column-reverse;
+      justify-content: center;
+    }
+  }
+
+  .image-container {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+
+    @include respond(tab-port) {
+      justify-content: center;
+    }
+
+    .image {
+      max-width: 47rem;
+      max-height: 34rem;
+      transform: scaleX(-1);
+
+      &.rtl {
+        transform: scaleX(1);
+      }
+    }
+  }
+
+  .learning-content {
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-start;
+    flex-direction: column;
+    row-gap: 2rem;
+
+    @include respond(tab-port) {
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    &__title {
+      color: $color-midnight-blue;
+      letter-spacing: -1.2px;
+      font-size: 4rem;
+      line-height: 4.4rem;
+      font-weight: 600;
+
+      @include respond(phone) {
+        font-size: 2.8rem;
+        line-height: 3.2rem;
+      }
+    }
+
+    &__description {
+      color: $color-midnight-blue;
+      font-size: 1.9rem;
+      font-weight: 600;
+      line-height: 3.2rem;
+      letter-spacing: -0.2px;
+      opacity: 0.7;
+
+      @include respond(phone) {
+        font-size: 1.6rem;
+        line-height: 1.8rem;
+      }
+    }
+
+    &__button {
+      background-color: $color-primary !important;
+    }
+  }
+}

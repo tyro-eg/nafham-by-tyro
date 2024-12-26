@@ -27,7 +27,7 @@ const MobileHeader = ({ openFreeTrail, openEmailConfirm }: HeaderProps) => {
 
   const handleLogOut = () => {
     if (currentUser) {
-      dispatch(signOut(currentUser.type === 'tutors')); // Dispatching the signOut action
+      dispatch(signOut()).unwrap();
       navigate('/');
     }
   };
@@ -129,7 +129,7 @@ const MobileHeader = ({ openFreeTrail, openEmailConfirm }: HeaderProps) => {
 
           {currentUser && (
             <div className="app-header-mobile__body-profile">
-              {currentUser.type === 'tutors' && (
+              {currentUser.type === 'Tutor' && (
                 <Link
                   to={`/profile/${currentUser.id}`}
                   className="item"

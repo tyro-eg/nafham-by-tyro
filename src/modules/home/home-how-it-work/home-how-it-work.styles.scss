@@ -1,0 +1,140 @@
+@import '../../../assets/styles/variables.scss';
+@import '../../../assets/styles/mixins.scss';
+
+.landing__how-it-works {
+  padding-top: 9.6rem;
+  padding-bottom: 9.6rem;
+  text-align: center;
+  background-color: $color-blue-gray;
+
+  .title {
+    color: $color-midnight-blue;
+    font-size: 6rem;
+    font-weight: 600;
+    line-height: 7.4rem;
+    letter-spacing: -2.305px;
+    text-align: center;
+    margin-bottom: 2.4rem;
+
+    @include respond(phone) {
+      font-size: 3.6rem;
+      line-height: 4.4rem;
+    }
+  }
+
+  .bow-underline {
+    position: relative;
+    display: inline-block;
+  }
+
+  .bow-underline::after {
+    content: '';
+    position: absolute;
+    right: -9px;
+    bottom: -16px;
+    width: 196px;
+    height: 18px;
+    transform: rotate(-1.51deg);
+
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="196" height="18" viewBox="0 0 196 18" fill="none"><g clip-path="url(%23clip0_1_881)"><path fill-rule="evenodd" clip-rule="evenodd" d="M28.3666 15.102C36.8961 14.209 45.443 13.3903 54.005 12.6462C71.1365 11.1681 88.3198 9.96954 105.54 9.05162C135.204 7.44917 164.963 6.73442 194.724 6.90954C198.523 6.93215 204.645 6.14513 208 7.38148C203.718 7.0565 205.428 4.31252 205.322 4.02286C205.624 3.65265 206.032 2.50532 207.659 3.07616C205.299 2.16621 204.669 5.52343 205.322 6.34718L205.624 6.7287C206.045 7.26139 206.612 7.87461 207.666 7.85342C209.164 7.82375 209.83 7.51572 210.54 6.65239C211.426 5.58277 211.626 3.89569 210.402 2.88118C206.691 -0.19486 198.398 1.0542 193.068 1.03301C165.225 0.925654 137.388 1.59599 109.629 3.04226C91.442 3.99949 73.3002 5.30702 55.2271 6.96324C46.1878 7.78658 37.166 8.69239 28.1644 9.68038C19.5209 10.6299 10.3347 11.2304 2.07021 13.2199C-0.282243 13.7865 0.0413522 17.617 2.81747 17.586C11.314 17.4899 19.9786 15.9808 28.3644 15.102H28.3666Z" fill="%233AC5F1"/></g><defs><clipPath id="clip0_1_881"><rect width="210.763" height="16.7864" fill="white" transform="translate(0.499695 0.799744)"/></clipPath></defs></svg>')
+      no-repeat center;
+    background-size: contain;
+  }
+
+  .description {
+    color: $color-midnight-blue;
+    text-align: center;
+    font-size: 2.4rem;
+    font-weight: 600;
+    line-height: 40.986px;
+    letter-spacing: -0.256px;
+    opacity: 0.7;
+    max-width: 85rem;
+    text-align: center;
+    margin: auto;
+    margin-bottom: 8rem;
+
+    @include respond(phone) {
+      font-size: 1.8rem;
+      line-height: 2.8rem;
+    }
+  }
+
+  .how-it-works {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    column-gap: 6rem;
+    row-gap: 4rem;
+
+    &__card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 32.4rem;
+      height: 27.4rem;
+
+      .icon {
+        width: 10.6rem;
+        height: 10.6rem;
+        margin-bottom: 3.4rem;
+      }
+
+      .title {
+        color: $color-midnight-blue;
+        font-size: 2.6rem;
+        font-weight: 600;
+        line-height: 4rem;
+        letter-spacing: -0.64px;
+        text-align: center;
+        margin-bottom: 1.8rem;
+      }
+
+      .description {
+        color: $color-midnight-blue;
+        text-align: center;
+        font-size: 2.2rem;
+        font-weight: 600;
+        line-height: 37.143px;
+        letter-spacing: -0.256px;
+        opacity: 0.7;
+      }
+
+      &.middle {
+        position: relative;
+
+        &::before {
+          content: '';
+          position: absolute;
+          top: -30%;
+          left: -45%;
+          width: 245.141px;
+          height: 169.544px;
+          background: url('/assets/images/newLanding/arrow1.svg') no-repeat
+            center;
+          background-size: contain;
+        }
+
+        &::after {
+          content: '';
+          position: absolute;
+          top: 0;
+          right: -45%;
+          width: 245.141px;
+          height: 169.544px;
+          background: url('/assets/images/newLanding/arrow2.svg') no-repeat
+            center;
+          background-size: contain;
+        }
+
+        @include respond(tab-land) {
+          &::before,
+          &::after {
+            display: none;
+          }
+        }
+      }
+    }
+  }
+}

@@ -91,10 +91,10 @@ export const signUp = createAsyncThunk(
 
 export const signOut = createAsyncThunk(
   'user/signOut',
-  async (isInstructor: boolean, { rejectWithValue }) => {
+  async (_, { rejectWithValue }) => {
     try {
       showSpinner();
-      await remove(isInstructor ? '/tutors/sign_out' : '/users/sign_out');
+      await remove('/users/sign_out');
       localStorage.clear();
       hideSpinner();
     } catch (error) {

@@ -1,63 +1,53 @@
-// import React, { useEffect } from 'react';
-// import { useTranslation } from 'react-i18next';
-// import { createStructuredSelector } from 'reselect';
-// import { connect } from 'react-redux';
-// import PropTypes from 'prop-types';
+import React from 'react';
+import { useTranslation } from 'react-i18next';
 
-// import Carousel from '../../../components/carousel/carousel';
-// import HomeInstructorCard from '../../../components/home-instructor-card/home-instructor-card.component';
+import './home-instructors.styles.scss';
 
-// import './home-instructors.styles.scss';
-// import { getInstructorsStart } from '../../../redux/user/user.actions';
-// import { selectInstructors } from '../../../redux/user/user.selectors.ts';
+import instructor1 from '../../../assets/images/newLanding/instructor1.webp';
+import instructor2 from '../../../assets/images/newLanding/instructor2.webp';
+import instructor3 from '../../../assets/images/newLanding/instructor3.webp';
+import instructor4 from '../../../assets/images/newLanding/instructor4.webp';
 
-// const HomeInstructors = ({ instructors, getInstructorsStartProp }) => {
-//   const { t } = useTranslation();
-//   useEffect(() => {
-//     getInstructorsStartProp({ pageNumber: 1, pageSize: 5 });
-//   }, []);
-//   return (
-//     <div className="landing__instructors">
-//       <div className="container">
-//         <div className="instructors-container">
-//           <p className="instructors-header">{t('LANDING.BLOCK3.TITLE')}</p>
-//         </div>
-//         {instructors && (
-//           <Carousel>
-//             {instructors.map(
-//               (instructor, i) =>
-//                 i < 5 && (
-//                   <HomeInstructorCard
-//                     key={instructor.id}
-//                     instructor={instructor}
-//                   />
-//                 ),
-//             )}
-//           </Carousel>
-//         )}
-//       </div>
-//     </div>
-//   );
-// };
+interface InstructorCard {
+  image: string;
+  alt: string;
+}
+const HomeInstructors: React.FC = () => {
+  const { t } = useTranslation();
 
-// HomeInstructors.propTypes = {
-//   instructors: PropTypes.array,
-//   getInstructorsStartProp: PropTypes.func.isRequired,
-// };
+  const instructors: InstructorCard[] = [
+    { image: instructor1, alt: 'instructor1' },
+    { image: instructor2, alt: 'instructor2' },
+    { image: instructor3, alt: 'instructor3' },
+    { image: instructor4, alt: 'instructor4' },
+  ];
 
-// const mapStateToProps = createStructuredSelector({
-//   instructors: selectInstructors,
-// });
+  return (
+    <div className="landing__best-instructors">
+      <div className="container">
+        <div className="best-instructors-container">
+          <p className="best-instructors-header">{t('LANDING.BLOCK3.TITLE')}</p>
+          <p className="best-instructors-description">
+            <span>{t('LANDING.BLOCK3.DESCRIPTION.PART1')}</span>
+            <span className="parallelogram">
+              {t('LANDING.BLOCK3.DESCRIPTION.PART2')}
+            </span>
+          </p>
+        </div>
 
-// const mapDispatchToProps = (dispatch) => ({
-//   getInstructorsStartProp: (pageNumber) =>
-//     dispatch(getInstructorsStart(pageNumber)),
-// });
-
-// export default connect(mapStateToProps, mapDispatchToProps)(HomeInstructors);
-
-const HomeInstructors = () => {
-  return <div>HomeInstructors</div>;
+        <div className="instructors-images">
+          {instructors.map((instructor, index) => (
+            <img
+              className="image"
+              key={index}
+              src={instructor.image}
+              alt={instructor.alt}
+            />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default HomeInstructors;
