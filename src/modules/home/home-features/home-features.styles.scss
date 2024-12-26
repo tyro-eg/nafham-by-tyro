@@ -1,49 +1,69 @@
 @import '../../../assets/styles/variables.scss';
 @import '../../../assets/styles/mixins.scss';
+
 .landing__features {
-  padding-top: 4.5rem;
-  padding-bottom: 4.5rem;
+  background-color: $color-white;
+  padding-top: 4.8rem;
+  padding-bottom: 4.8rem;
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0.75)),
+    url('/assets/images/newLanding/blend.webp') center/cover no-repeat;
 
-  .row {
+  .container {
+    display: flex;
+    flex-direction: column;
     align-items: center;
+    row-gap: 5rem;
 
-    p {
-      margin-top: 12px;
-      margin-bottom: 23px;
-    }
-  }
-
-  @include respond(phone) {
-    text-align: center;
-
-    .col-1-of-1-sm {
-      margin: auto;
-
-      img {
-        width: 100%;
-        margin-bottom: 28px;
-      }
-    }
-
-    .row {
-      &:nth-of-type(1),
-      &:nth-of-type(3) {
-        flex-direction: column-reverse;
-      }
-    }
-  }
-
-  &-title {
-    text-align: start;
-    @include respond(phone) {
+    .features-title {
+      color: $color-midnight-blue;
+      font-size: 4.8rem;
+      font-weight: 600;
+      line-height: 7.4rem;
+      letter-spacing: -2.305px;
       text-align: center;
-    }
-  }
 
-  .feature-button {
-    font-size: 1.6rem;
-    font-weight: 500;
-    line-height: 2.4rem;
-    padding: 1.2rem 3rem;
+      span {
+        color: $color-primary;
+      }
+    }
+
+    .bow-underline {
+      position: relative;
+      display: inline-block;
+    }
+
+    .bow-underline::after {
+      content: '';
+      position: absolute;
+      left: -21px;
+      bottom: -5px;
+      width: 233px;
+      height: 14px;
+      transform: rotate(1.51deg);
+
+      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="238" height="14" viewBox="0 0 238 14" fill="none"><path d="M2.72519 5.57909C41.6658 2.6042 142.785 -0.332167 235.736 11.7214" stroke="%233AC5F1" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>')
+        no-repeat center;
+      background-size: contain;
+    }
+
+    .features-images {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      column-gap: 7.7rem;
+      row-gap: 4rem;
+
+      .feature-logo {
+        cursor: pointer;
+
+        .image {
+          max-width: 24rem;
+          min-width: 17rem;
+          height: 5rem;
+        }
+      }
+    }
   }
 }

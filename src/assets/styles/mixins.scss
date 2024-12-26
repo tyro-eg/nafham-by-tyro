@@ -59,3 +59,19 @@ ORDER: Base + typography > general layout + grid > page layout > components
     } //1800
   }
 }
+
+@mixin ellipsis($lines: 1) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  @if $lines ==1 {
+    white-space: nowrap;
+  }
+
+  @if $lines >1 {
+    white-space: normal;
+    display: -webkit-box;
+    -webkit-line-clamp: $lines;
+    -webkit-box-orient: vertical;
+  }
+}

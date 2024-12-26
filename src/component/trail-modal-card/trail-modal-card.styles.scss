@@ -64,6 +64,8 @@
 
     &-field {
       color: $color-body;
+      @include ellipsis(1);
+      max-width: 90%;
     }
   }
 

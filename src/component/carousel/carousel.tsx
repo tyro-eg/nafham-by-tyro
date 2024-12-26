@@ -7,14 +7,19 @@ import 'slick-carousel/slick/slick-theme.css';
 interface CarouselProps {
   children: ReactNode[];
   small?: boolean;
+  arrows?: boolean;
 }
 
-const Carousel: FC<CarouselProps> = ({ children, small = false }) => {
+const Carousel: FC<CarouselProps> = ({
+  children,
+  small = false,
+  arrows = true,
+}) => {
   const { i18n } = useTranslation();
 
   const settings: Settings = {
     dots: true,
-    arrows: true,
+    arrows,
     infinite: children.length > 2,
     speed: 500,
     autoplay: true,

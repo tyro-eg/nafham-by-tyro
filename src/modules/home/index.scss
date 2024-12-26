@@ -3,7 +3,38 @@
 
 .home {
   overflow: hidden;
+  background-color: $color-white;
+
   &.rtl {
     text-align: right;
+  }
+
+  @include respond(phone) {
+    .container {
+      max-width: calc(100% - 4.4rem) !important;
+    }
+  }
+
+  .custom-button {
+    padding: 1.2rem 3rem;
+    border-radius: 0.4rem;
+    background-color: $color-gold;
+    color: $color-white;
+    font-size: 1.6rem;
+    font-weight: 500;
+    line-height: 2.4rem;
+    text-align: center;
+  }
+
+  .parallelogram {
+    white-space: nowrap;
+    color: $color-white;
+    padding: 0 4px;
+    background-color: $color-primary;
+    clip-path: polygon(2% 0%, 100% 0%, 99% 100%, 0% 100%);
+
+    &.gold {
+      background-color: $color-gold;
+    }
   }
 }

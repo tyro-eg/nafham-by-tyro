@@ -2,67 +2,97 @@
 @import '../../../assets/styles/mixins.scss';
 
 .landing__learning-fields {
-  padding-top: 4.5rem;
-  padding-bottom: 4.5rem;
-  background-color: $color-grey-light-0;
+  background-color: $color-white;
+  padding-top: 10rem;
+  padding-bottom: 7rem;
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0.75)),
+    url('../../../assets/images/newLanding/blend.webp') center/cover no-repeat;
 
   @include respond(phone) {
-    padding-top: 1rem;
     padding-bottom: 4rem;
+    padding-top: 5rem;
   }
 
   .learning-fields-container {
     width: 62%;
     margin: auto;
 
-    @include respond(phone) {
+    @include respond(tab-port) {
       width: 100%;
     }
   }
 
   .learning-fields-header {
-    color: $color-title;
-    font-size: 3.2rem;
-    font-weight: bold;
-    line-height: 4.8rem;
+    color: $color-gold;
+    font-size: 2.2rem;
+    font-weight: 600;
+    letter-spacing: 1.625px;
+    text-transform: uppercase;
     text-align: center;
-    margin-bottom: 2.4rem;
 
     @include respond(phone) {
-      font-size: 2.8rem;
-      line-height: 4.1rem;
+      font-size: 1.8rem;
+    }
+  }
+
+  .learning-fields-description {
+    color: $color-midnight-blue;
+    font-size: 4rem;
+    font-weight: 600;
+    line-height: 5.8rem;
+    letter-spacing: -1.2px;
+    text-align: center;
+    padding-bottom: 4.8rem;
+
+    @include respond(phone) {
+      font-size: 2.4rem;
+      line-height: 3.8rem;
     }
   }
 
   .fields-images {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     flex-wrap: wrap;
-
-    @include respond(phone) {
-      justify-content: center;
-    }
+    column-gap: 3rem;
+    row-gap: 3rem;
 
     &__card {
       display: flex;
       align-items: center;
+      justify-content: space-between;
+      background-color: $color-white;
       box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.12);
-      border-radius: 6px;
-      width: 261px;
-      padding: 11.5px;
-      margin-bottom: 45px;
+      border-radius: 10px;
+      width: 35rem;
+      height: 11.7rem;
+      padding: 2.6rem 3.2rem;
 
-      &.rtl {
-        .card-left {
-          margin-right: 11.5px;
-        }
+      .title {
+        color: $color-midnight-blue;
+        font-size: 2.1rem;
+        font-weight: 600;
+        line-height: 3.2rem;
+        letter-spacing: -0.5px;
       }
 
-      .card-left {
-        margin-left: 11.5px;
+      .image {
+        width: 6.4rem;
+        height: 6.4rem;
+      }
 
-        h5 {
-          color: $color-primary;
+      &:hover {
+        background-color: $color-primary;
+
+        .title {
+          color: $color-white;
+        }
+
+        .image {
+          width: 10rem;
+          height: 10rem;
+          margin-bottom: 4rem;
         }
       }
     }

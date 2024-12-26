@@ -62,7 +62,7 @@ const Footer = () => {
         </div>
         <div className="app-footer__bottom">
           <p className="app-footer__rights">
-            © 2024 Nafham. All rights reserved
+            {`© ${new Date().getFullYear()} Nafham. All rights reserved.`}
           </p>
           <div className="app-footer__icons">
             <IconButton

@@ -1,0 +1,71 @@
+@import '../../../assets/styles/variables.scss';
+@import '../../../assets/styles/mixins.scss';
+
+.landing__statistics {
+  background-color: $color-white;
+  padding-top: 4.8rem;
+  padding-bottom: 4.8rem;
+
+  .statistics-container {
+    width: 95%;
+    margin: auto;
+
+    @include respond(tab-port) {
+      width: 100%;
+    }
+
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    row-gap: 3rem;
+    column-gap: 1rem;
+    flex-wrap: wrap;
+
+    .statistics-card {
+      max-width: 33.8rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      row-gap: 1.8rem;
+
+      .title {
+        color: $color-white;
+        text-align: center;
+        font-size: 4.8rem;
+        font-weight: 600;
+        line-height: 5.8rem;
+        letter-spacing: -1.8px;
+        direction: ltr;
+
+        @include respond(phone) {
+          font-size: 3.6rem;
+        }
+      }
+
+      .description {
+        color: $color-midnight-blue;
+        text-align: center;
+        font-size: 1.9rem;
+        font-weight: 600;
+        line-height: 3.2rem;
+        letter-spacing: -0.2px;
+        opacity: 0.7;
+
+        @include respond(phone) {
+          font-size: 1.6rem;
+        }
+      }
+    }
+  }
+
+  .statistics-image {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .image {
+      max-width: 70rem;
+      max-height: 40rem;
+    }
+  }
+}
