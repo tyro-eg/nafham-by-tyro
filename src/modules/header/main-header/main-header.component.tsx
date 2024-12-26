@@ -40,7 +40,7 @@ const MainHeader: React.FC<HeaderProps> = ({
   const [isProfilePopoverOpen, setProfilePopoverOpen] = useState(false);
 
   const handleLogOut = async () => {
-    await dispatch(signOut(currentUser?.type === 'tutors'));
+    await dispatch(signOut());
     navigate('/');
   };
 
@@ -171,7 +171,7 @@ const MainHeader: React.FC<HeaderProps> = ({
                         <span>{currentUser?.email}</span>
                       </div>
 
-                      {currentUser?.type === 'tutors' && (
+                      {currentUser?.type === 'Tutor' && (
                         <Link
                           onClick={() => setProfilePopoverOpen(false)}
                           to={`/profile/${currentUser?.id}`}

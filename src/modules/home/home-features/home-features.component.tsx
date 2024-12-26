@@ -1,92 +1,70 @@
-// import React from 'react';
-// import { useTranslation } from 'react-i18next';
-// import { Button } from '@material-ui/core';
-// import PropTypes from 'prop-types';
+import React from 'react';
+import { useTranslation } from 'react-i18next';
 
-// import { rtlClass } from '../../../assets/utils/utils';
+import cnbc from '../../../assets/images/newLanding/cnbc.webp';
+import wamda from '../../../assets/images/newLanding/wamda.webp';
+import bbc from '../../../assets/images/newLanding/bbc.webp';
+import dubai from '../../../assets/images/newLanding/dubai.webp';
 
-// import feature1 from '../../../assets/images/landing/feature_1.png';
-// import feature2 from '../../../assets/images/landing/feature_2.png';
-// import feature3 from '../../../assets/images/landing/feature_3.png';
-// import feature4 from '../../../assets/images/landing/feature_4.png';
+import './home-features.styles.scss';
 
-// import './home-features.styles.scss';
+type Feature = {
+  image: string;
+  alt: string;
+  url: string;
+};
 
-// const HomeFeatures = ({ openFreeTrail }) => {
-//   const { t } = useTranslation();
-//   return (
-//     <div className="landing__features">
-//       <div className="container">
-//         <div className="row">
-//           <div className={`col-2-of-4 col-1-of-1-sm ${rtlClass()}`}>
-//             <h2>{t('LANDING.BLOCK3.ITEM1.TITLE')}</h2>
-//             <p>{t('LANDING.BLOCK3.ITEM1.DESCRIPTION')}</p>
-//             <Button
-//               size="large"
-//               className="feature-button"
-//               variant="contained"
-//               color="primary"
-//               onClick={openFreeTrail}
-//             >
-//               {t('LANDING.BLOCK3.ITEM1.BUTTON')}
-//             </Button>
-//           </div>
-//           <div className="col-2-of-4 col-1-of-1-sm">
-//             <img src={feature1} alt="feature_1" />
-//           </div>
-//         </div>
+const HomeFeatures: React.FC = () => {
+  const { t } = useTranslation();
 
-//         <div className="row">
-//           <div className={`col-2-of-4 col-1-of-1-sm ${rtlClass()}`}>
-//             <img src={feature2} alt="feature_2" />
-//           </div>
-//           <div className="col-2-of-4 col-1-of-1-sm">
-//             <h2>{t('LANDING.BLOCK3.ITEM2.TITLE')}</h2>
-//             <p>{t('LANDING.BLOCK3.ITEM2.DESCRIPTION')}</p>
-//           </div>
-//         </div>
+  const features: Feature[] = [
+    {
+      image: cnbc,
+      alt: 'cnbc',
+      url: 'https://thestartupscene.me/INVESTMENTS/9-Egyptian-Flat6Labs-Startups-Embark-on-Gulf-Tour-with-StartEgypt?fbclid=IwAR1IUlBDZEUKyaijN5THAORx6KPGaxxvpawJ0jegM3q9y_UFj22TrzA996s',
+    },
+    {
+      image: wamda,
+      alt: 'wamda',
+      url: 'https://www.wamda.com/2017/09/egyptian-startup-plans-regulating-private-tutoring',
+    },
+    {
+      image: bbc,
+      alt: 'BBC',
+      url: 'http://bbc.com/news/business-36461191',
+    },
+    {
+      image: dubai,
+      alt: 'Dubai',
+      url: 'https://youtu.be/8d6lTKv6r1c',
+    },
+  ];
 
-//         <div className="row">
-//           <div className={`col-2-of-4 col-1-of-1-sm ${rtlClass()}`}>
-//             <h2>{t('LANDING.BLOCK3.ITEM3.TITLE')}</h2>
-//             <p>{t('LANDING.BLOCK3.ITEM3.DESCRIPTION')}</p>
-//           </div>
-//           <div className="col-2-of-4 col-1-of-1-sm">
-//             <img src={feature3} alt="feature_3" />
-//           </div>
-//         </div>
+  const handleOpenLink = (url: string) => {
+    window.open(url, '_blank');
+  };
 
-//         <div className="row">
-//           <div className={`col-2-of-4 col-1-of-1-sm ${rtlClass()}`}>
-//             <img src={feature4} alt="feature_4" />
-//           </div>
-//           <div className="col-2-of-4 col-1-of-1-sm">
-//             <h2>{t('LANDING.BLOCK3.ITEM4.TITLE')}</h2>
-//             <p>{t('LANDING.BLOCK3.ITEM4.DESCRIPTION')}</p>
-//             <Button
-//               size="large"
-//               className="feature-button"
-//               variant="contained"
-//               color="primary"
-//               onClick={openFreeTrail}
-//             >
-//               {t('LANDING.BLOCK3.ITEM4.BUTTON')}
-//             </Button>
-//           </div>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
-// HomeFeatures.propTypes = {
-//   openFreeTrail: PropTypes.func.isRequired,
-// };
-
-// export default HomeFeatures;
-
-const HomeFeatures = () => {
-  return <div>HomeFeatures</div>;
+  return (
+    <div className="landing__features">
+      <div className="container">
+        <p className="features-title bow-underline">
+          {t('LANDING.BLOCK1.FEATURED.PART1')}{' '}
+          <span>{t('LANDING.BLOCK1.FEATURED.PART2')}</span>
+        </p>
+        <div className="features-images">
+          {features.map(({ image, alt, url }, index) => (
+            <div
+              key={alt + index}
+              className="feature-logo"
+              onClick={() => handleOpenLink(url)}
+            >
+              <img className="image" src={image} alt={alt} />
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default HomeFeatures;

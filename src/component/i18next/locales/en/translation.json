@@ -77,116 +77,89 @@
       }
     },
     "BLOCK1": {
-      "TITLE1": "Learn through",
-      "TITLEGREEN": "Live",
-      "TITLE2": "online sessions",
+      "TITLE": "Your go-to platform for quality tutoring",
+      "SUBTITLE": "START THE SUCCESS",
       "DESCRIPTION": "Select, Schedule & Book your online sessions and enjoy a unique learning experience with many of our top-notch professional instructors.",
       "ACTION": "Book a free session now",
-      "FEATURED": "FEATURED IN"
+      "FEATURED": {
+        "PART1": "Featured",
+        "PART2": "In"
+      }
     },
     "BLOCK2": {
       "TITLE": "What We Offer",
-      "DESCRIPTION": "We provide all that you need to learn and improve your skills in various languages and get you prepared to score high grades in exams successfully.",
-      "LANGUAGES": {
-        "ENGLISH": {
-          "TITLE": "English",
-          "DESCRIPTION": "Improve your English skills with the best English professionals in all aspects: writing, reading, conversations and more."
-        },
-        "FRENCH": {
-          "TITLE": "French",
-          "DESCRIPTION": "Now you can quickly learn French both written and spoken with the best professional French teaching instructors."
-        },
-        "GERMAN": {
-          "TITLE": "German",
-          "DESCRIPTION": "Learning German was never easier! With our german instructors, you can learn both basics and high level."
-        },
-        "IELTS": {
-          "TITLE": "IELTS",
-          "DESCRIPTION": "Get prepared to qualify for the test. And score the grade you desire with the help of our professors."
-        }
+      "DESCRIPTION": {
+        "PART1": "Explore",
+        "PART2": " Diverse Curriculums Tailored for Your Educational ",
+        "PART3": "Success!"
       }
     },
     "BLOCK3": {
-      "TITLE": "Unlimited Access To 100+ Instructors",
-      "DESCRIPTION": "Choosing the best qualified instructors took us a lot of time and effort, to offer you the best quality learning experience with satisfying results.",
-      "ACTION": "Explore more instructors",
-      "ITEM1": {
-        "TITLE": "Top Qualified teachers",
-        "DESCRIPTION": "We have 100+ professional teachers in different curriculums, to provide you the best online learning experience. We do a rigorous application process to accept our instructors to teach, we look for the best of the best.",
-        "BUTTON": "Book Free Trial Now"
-      },
-      "ITEM2": {
-        "TITLE": "Select your timing",
-        "DESCRIPTION": "Book your session anywhere with your preferred teacher and arrange your own schedule. With our robust scheduling software, you can schedule all of your sessions within only minutes!"
-      },
-      "ITEM3": {
-        "TITLE": "Attend Private and Group Sessions",
-        "DESCRIPTION": "Whether you prefer attending private or group sessions, we’ve got you covered! With us, You can choose your own way of attending a session. We focus on personalizing the learning experience for every student we have."
-      },
-      "ITEM4": {
-        "TITLE": "Interactive session Experience",
-        "DESCRIPTION": "Communicate online through interactive classes and share your learning experience. With our interactive software, students are able to audio/video chat, text/draw on the whiteboard, and text chat with the instructor. Our interactive whiteboard allows for students to share their documents real time with the instructor, solve equations and more!",
-        "BUTTON": "Book Free Trial Now"
+      "TITLE": "Our Best Instructors",
+      "DESCRIPTION": {
+        "PART1": "Unleashing Excellence with ",
+        "PART2": "Our Top Instructors!"
       }
     },
     "BLOCK4": {
-      "TITLE": "Improve Your Language Skills in 3 Easy Steps",
       "ITEM1": {
-        "TITLE": "Choose the best instructor based on your needs",
-        "DESCRIPTION": "We provide you with a wide selection of professional instructors in different fields, to offer you the best learning experience."
+        "TITLE": "250K+",
+        "DESCRIPTION": "Delivered sessions enriched our students experience significantly."
       },
       "ITEM2": {
-        "TITLE": "Schedule your session based on your availability using a clear and easy process",
-        "DESCRIPTION": "Book your session easily with the instructor you prefer and adjust the schedule to your suitable free time."
+        "TITLE": "5K+",
+        "DESCRIPTION": "Students have joined us on our educational journey."
       },
       "ITEM3": {
-        "TITLE": "Start your Live sessions and feel confident about your language skills day by day",
-        "DESCRIPTION": "Start your session anywhere and interact with your instructor and get the best online learning experience."
+        "TITLE": "4.5/5.0",
+        "DESCRIPTION": "Average students ratings we have got all over internet."
       }
     },
     "BLOCK5": {
-      "TITLE": "live group courses for a more interactive learning environment.",
-      "DESCRIPTION": "Our live group courses will help you communicate and share your learning experience with others in an easy, affordable way.",
-      "ACTION": "Explore More Courses"
+      "TITLE": "Testimonial"
     },
     "BLOCK6": {
-      "TITLE": "Are your language skills not good? It's okay we got your back",
-      "DESCRIPTION": "If you are not sure about your language skills, get an evaluation for your level from our instructors as well as feedback on how to improve your skills in a free session.",
+      "TITLE": {
+        "PART1": "Ready",
+        "PART2": " to start learning?"
+      },
+      "DESCRIPTION": "Join us on a journey where every lesson is a discovery, and each step forward is a celebration of growth. Learning, the friendly way!",
       "ACTION": "Book a free session now"
     },
     "BLOCK7": {
-      "TITLE": "How it works",
+      "TITLE": "Why choose us",
+      "DESCRIPTION": {
+        "PART1": "People choose us because we serve quality personalized ",
+        "PART2": "learning experience"
+      },
+      "ITEM1": {
+        "TITLE": "Top Qualified Teachers",
+        "DESCRIPTION": "Hand-picked Qualified teachers with years of teaching experience."
+      },
+      "ITEM2": {
+        "TITLE": "Flexible Scheduling",
+        "DESCRIPTION": "Select the lessons suitable at the time of your choosing."
+      },
+      "ITEM3": {
+        "TITLE": "24/7 Customer Support",
+        "DESCRIPTION": "7 days a week customer support available at your fingertips for support!"
+      },
+      "ACTION": "Learn more"
+    },
+    "BLOCK8": {
+      "TITLE": "How does it work?",
       "DESCRIPTION": "Choose the best instructor based on your needs, Schedule your sessions on your preferred dates, and enjoy a unique learning experience.",
       "ITEM1": {
-        "TITLE": "Choose the best instructor based on your needs",
+        "TITLE": "Choose the best instructor",
         "DESCRIPTION": "We provide you with the best teachers for every curriculum."
       },
       "ITEM2": {
-        "TITLE": "Schedule your sessions on your preferred dates",
+        "TITLE": "Schedule your sessions",
         "DESCRIPTION": "You can choose your best timing for every session."
       },
       "ITEM3": {
-        "TITLE": "Start a unique learning experience",
+        "TITLE": "Start Rolling!",
         "DESCRIPTION": "Enjoy communicating online through interactive sessions."
-      }
-    },
-    "BLOCK8": {
-      "TITLE": "Real Stories from Real Students",
-      "DESCRIPTION": "Get inspired by these stories",
-      "ITEM1": {
-        "DESCRIPTION": "They are professionals and I learned a lot of grammars and Linguistics which helped me to improve my language, Many thanks for Mr. Ahmed Hossam .",
-        "TITLE": "Mizo Koki",
-        "DATE": "Oct 12, 2019"
-      },
-      "ITEM2": {
-        "DESCRIPTION": "My experience was with teacher Bendetta ,she is one of the best teachers in Tyro ,she is very talented teacher and have a simple,clear and exciting way in teaching her students and she is friendly💙",
-        "TITLE": "Yasser Nawaya",
-        "DATE": "Nov 18, 2019"
-      },
-      "ITEM3": {
-        "DESCRIPTION": "Through my experience with Tyro, the truth is that I highly recommend it to anyone who wants to learn a language in an easy way and at any time that suits him.",
-        "TITLE": "Omar",
-        "DATE": "Dec 30, 2020"
       }
     },
     "TESTIMONIAL": "Some special words from our students about us"
