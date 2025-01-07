@@ -4,18 +4,34 @@ import { snackActions } from '../../assets/utils/toaster';
 import { showSpinner, hideSpinner } from '../../assets/utils/utils';
 import { parseTimeSlotsIntoCalendarEvents } from '../../assets/utils/event.utils';
 
+export type SlotType = {
+  id: number;
+  created_at: string;
+  end_time: string;
+  start_time: string;
+  status: string;
+  tutor: {
+    id: number;
+    created_at: string;
+    email: string;
+    first_name: string;
+    last_name: string;
+    phone_number: string;
+    type: string;
+    updated_at: string;
+  };
+  updated_at: string;
+};
+
 const getErrorMessage = (error: any): string =>
   error.response?.data?.message || error.message || 'Unknown error';
 
 export const createSlots = createAsyncThunk(
   'calendar/createSlots',
-  async (
-    { userId, slots }: { userId: number; slots: any },
-    { rejectWithValue },
-  ) => {
+  async ({ slots }: { slots: any }, { rejectWithValue }) => {
     try {
       showSpinner();
-      await post(`/tutors/${userId}/time_slots`, { time_slots: slots });
+      await post(`/availabilities`, { availabilities: slots });
       hideSpinner();
       return;
     } catch (error) {
@@ -48,16 +64,34 @@ export const getSlots = createAsyncThunk(
   },
 );
 
-export const deleteSlots = createAsyncThunk(
-  'calendar/deleteSlots',
+export const getAvailability = createAsyncThunk(
+  'calendar/getAvailability',
   async (
-    { userId, ids }: { userId: number; ids: number[] },
+    { params }: { params: { a: string; end_time: string } },
     { rejectWithValue },
   ) => {
     try {
       showSpinner();
-      await remove(`/tutors/${userId}/time_slots/bulk_destroy`, {
-        data: { time_slots: { ids } },
+      const res = await apiGet(`/availabilities`, params);
+      const slots = parseTimeSlotsIntoCalendarEvents(res.data);
+      hideSpinner();
+      return slots;
+    } catch (error) {
+      const errorMessage = getErrorMessage(error);
+      snackActions.error(errorMessage);
+      hideSpinner();
+      return rejectWithValue(errorMessage);
+    }
+  },
+);
+
+export const deleteSlots = createAsyncThunk(
+  'calendar/deleteSlots',
+  async ({ ids }: { ids: number[] }, { rejectWithValue }) => {
+    try {
+      showSpinner();
+      await remove(`/availabilities`, {
+        data: { ids },
       });
       hideSpinner();
       return;
