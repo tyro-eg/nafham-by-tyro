@@ -20,16 +20,16 @@ export const calculateMissingProfileInformation = (profileData: any) => {
       bold: false,
     });
   }
-  if (profileData.bio == null || profileData.bio.trim() === '') {
+  if (profileData.about == null || profileData.about.trim() === '') {
     output.push({
       text: 'PROFILE.EDITPROFILE.MISSING_INFORMATION.ABOUT',
       bold: false,
     });
   }
   if (
-    profileData.video_url == null ||
-    profileData.video_url.trim() === '' ||
-    profileData.video_url.includes('error')
+    profileData.video == null ||
+    profileData.video.trim() === '' ||
+    profileData.video.includes('error')
   ) {
     output.push({
       text: 'PROFILE.EDITPROFILE.MISSING_INFORMATION.VIDEO',

@@ -94,14 +94,14 @@ const PrivateSessions: React.FC = () => {
         {/* {instructors && instructors.length > 0 && renderBanner()} */}
 
         <div className="instructor-list__container container">
-          {renderInstructors(3, instructors.length)}
+          {renderInstructors(3, instructors?.length)}
         </div>
 
         {((instructors && instructors.length === 0) || !instructors) &&
           renderNoResults()}
       </section>
 
-      {instructors.length && instructorsPagination?.['total-pages'] && (
+      {instructors?.length && instructorsPagination?.['total-pages'] && (
         <Pagination
           color="primary"
           size="large"

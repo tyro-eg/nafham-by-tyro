@@ -1,12 +1,76 @@
 import { Instructor } from '../../assets/types';
 const Instructors: Instructor[] = [
   {
+    id: 12,
+    full_name: 'Omar Abdelaziz',
+    available: true,
+    online: true,
+    about:
+      'Salut tout le monde, bienvenue au monde du français\r\nSi vous aimez apprendre , posséder ou améliorer la langue francaise , Je vous conseille de rejoindre \r\nNafhambytyro  .\r\nLe français est un grand plaisir pour moi .',
+    rate_to_display: 500,
+    number_of_reviews: 2,
+    average_rating: 5,
+    number_of_sessions: 983,
+    number_of_students: 54,
+    video: 'e1gUv2UP5b0',
+    profile_picture_medium:
+      'https://s3-eu-west-1.amazonaws.com/tyro-app/tyro-app/users/imgs/82862/medium/data?1655844222',
+    bio: undefined,
+    instructor_fields: [
+      'Egyptian National Preparatory French | Languages | English',
+      'Egyptian National Primary French | Languages | French',
+      'French | Languages | German',
+      'French for Kids | Languages | Spanish',
+    ],
+    tutor_fields: [
+      [394, 'Egyptian National Preparatory French - Languages'],
+      [393, 'Egyptian National Primary French - Languages'],
+      [355, 'French'],
+      [357, 'French for Kids'],
+    ],
+    tutor_reviews: [
+      {
+        id: 3944,
+        student: 'Baraah Hesham',
+        rating: 5,
+        text: 'Hello',
+        created_at: '2022-05-01T17:01:37.000Z',
+      },
+    ],
+    free_trial: {
+      enabled: true,
+      claimed: false,
+    },
+    tutor_packages: [
+      {
+        id: 2827,
+        type: 'DefaultPackage',
+        minutes: 60,
+        time_in_hours: 1,
+        rate: 500,
+        offline_rate: 0,
+        tutor_user_id: 12,
+        deleted_at: undefined,
+      },
+      {
+        id: 2828,
+        type: 'TrialPackage',
+        minutes: 30,
+        time_in_hours: 0.5,
+        rate: 0,
+        offline_rate: 0,
+        tutor_user_id: 12,
+        deleted_at: undefined,
+      },
+    ],
+  },
+  {
     id: 82862,
     full_name: 'Lobna ElRouby',
     available: true,
     online: undefined,
     about:
-      'Salut tout le monde, bienvenue au monde du français\r\nSi vous aimez apprendre , posséder ou améliorer la langue française , Je vous conseille de rejoindre \r\nNafhambytyro  .\r\nLe français est un grand plaisir pour moi . Ce plaisir a commencé dès mon enfance à l’école puis à l’université.  J’enseigne la langue française il y a si longtemps  depuis 2005 pour  les petits  ainsi que pour les grands .\r\nVenez !Venez ! Ensemble  Sans doute nous apprenons , nous jouons et nous nous amusons. \r\nJe vous attends. \r\n',
+      'Salut tout le monde, bienvenue au monde du français\r\nSi vous aimez apprendre , posséder ou améliorer la langue francaise , Je vous conseille de rejoindre \r\nNafhambytyro  .\r\nLe français est un grand plaisir pour moi . Ce plaisir a commencé depuis mon enfance à l',
     rate_to_display: 500,
     number_of_reviews: 2,
     average_rating: 5,
