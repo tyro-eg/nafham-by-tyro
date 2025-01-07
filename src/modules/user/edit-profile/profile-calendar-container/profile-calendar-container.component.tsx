@@ -27,10 +27,11 @@ import './profile-calendar-container.styles.scss';
 import {
   createSlots,
   deleteSlots,
-  getSlots,
+  getAvailability,
 } from '../../../../redux/calendar/calendar.actions';
 import { addDays, getDay } from 'date-fns';
 import ProfileModal from '../../../../modals/profile-modal/profile-modal.component';
+import { DateSelectArg, EventAddArg } from '@fullcalendar/core';
 
 interface ProfileCalendarProps {
   showEditMode: boolean;
@@ -68,8 +69,12 @@ const ProfileCalendar: React.FC<ProfileCalendarProps> = ({
   );
 
   const [currentEvents, setCurrentEvents] = useState<any[]>([]);
-  const [addedEvents, setAddedEvents] = useState<any[]>([]);
-  const [deletedEvents, setDeletedEvents] = useState<any[]>([]);
+  const [addedEvents, setAddedEvents] = useState<
+    { start_time: string; end_time: string }[]
+  >([]);
+  const [deletedEvents, setDeletedEvents] = useState<
+    { id: string; start_time: string; end_time: string }[]
+  >([]);
   const [userSlots, setUserSlots] = useState<any[]>([]);
   const [openProfileModal, setOpenProfileModal] = useState(false);
 
@@ -78,11 +83,10 @@ const ProfileCalendar: React.FC<ProfileCalendarProps> = ({
 
   useEffect(() => {
     dispatch(
-      getSlots({
-        userId: currentUser.id,
+      getAvailability({
         params: {
-          from: today.toISOString(),
-          to: addDays(today, 7).toISOString(),
+          a: today.toISOString(),
+          end_time: addDays(today, 7).toISOString(),
         },
       }),
     );
@@ -117,11 +121,10 @@ const ProfileCalendar: React.FC<ProfileCalendarProps> = ({
           ? { start: view.activeStart, end: view.activeEnd }
           : { start: new Date(), end: addDays(new Date(), 7) };
       dispatch(
-        getSlots({
-          userId: +id!,
+        getAvailability({
           params: {
-            from: start.toISOString(),
-            to: end.toISOString(),
+            a: start.toISOString(),
+            end_time: end.toISOString(),
           },
         }),
       );
@@ -134,21 +137,33 @@ const ProfileCalendar: React.FC<ProfileCalendarProps> = ({
       const calendarApi = calendarRef.current.getApi();
       if (addedEvents.length > 0) {
         calendarApi.removeAllEvents();
-        dispatch(createSlots({ userId: +id!, slots: addedEvents }));
+        dispatch(createSlots({ slots: addedEvents }));
         setAddedEvents([]);
       }
       if (deletedEvents.length > 0) {
-        const ids = deletedEvents.map((event) => event.id);
-        dispatch(deleteSlots({ userId: +id!, ids }));
+        const ids = deletedEvents.map((event) => +event.id);
+        dispatch(deleteSlots({ ids }));
         setDeletedEvents([]);
       }
     }
   };
 
-  const handleDateSelect = (selectInfo: any) => {
+  const handleDateSelect = (selectInfo: DateSelectArg) => {
     if (!showEditMode) return;
+
+    const { start, end, view } = selectInfo;
+    const calendarApi = view.calendar;
+
+    const durationInMinutes = (end.getTime() - start.getTime()) / (1000 * 60);
+
+    const isSingleDay = start.getDate() === end.getDate();
+    const isValidDuration = durationInMinutes <= 30;
+
+    if (!isSingleDay || !isValidDuration) {
+      calendarApi.unselect();
+      return;
+    }
     const title = 'event';
-    const calendarApi = selectInfo.view.calendar;
 
     calendarApi.unselect();
 
@@ -171,7 +186,8 @@ const ProfileCalendar: React.FC<ProfileCalendarProps> = ({
 
     setAddedEvents((prev) =>
       prev.filter(
-        (ele) => ele.from !== event.startStr && ele.to !== event.endStr,
+        (ele) =>
+          ele.start_time !== event.startStr && ele.end_time !== event.endStr,
       ),
     );
 
@@ -186,7 +202,7 @@ const ProfileCalendar: React.FC<ProfileCalendarProps> = ({
     if (event.id) {
       setDeletedEvents((prev) => [
         ...prev,
-        { id: event.id, from: event.startStr, to: event.endStr },
+        { id: event.id, start_time: event.startStr, end_time: event.endStr },
       ]);
     }
     event.remove();
@@ -204,11 +220,10 @@ const ProfileCalendar: React.FC<ProfileCalendarProps> = ({
           : { start: new Date(), end: addDays(new Date(), 7) };
       if (currentUser?.id) {
         dispatch(
-          getSlots({
-            userId: currentUser.id,
+          getAvailability({
             params: {
-              from: start.toISOString(),
-              to: end.toISOString(),
+              a: start.toISOString(),
+              end_time: end.toISOString(),
             },
           }),
         );
@@ -221,8 +236,14 @@ const ProfileCalendar: React.FC<ProfileCalendarProps> = ({
     return `${timeZoneArr[0]} +${timeZoneArr[1].slice(0, 2)}:${timeZoneArr[1].slice(2)}`;
   };
 
-  const handleEventAdd = () => {};
-  const handleEventsSet = () => {};
+  const handleEventAdd = (args: EventAddArg) => {
+    if (!showEditMode) return;
+    const { event } = args;
+    setAddedEvents((prev) => [
+      ...prev,
+      { start_time: event.startStr, end_time: event.endStr },
+    ]);
+  };
 
   const handleCloseProfileModal = () => setOpenProfileModal(false);
   const triggerOpenProfileModal = () => setOpenProfileModal(true);
@@ -321,16 +342,11 @@ const ProfileCalendar: React.FC<ProfileCalendarProps> = ({
             // ]}
             selectable={!!showEditMode}
             selectMirror={!!showEditMode}
-            events={currentEvents} // alternatively, use the `events` setting to fetch from a feed
+            events={currentEvents}
             select={handleDateSelect}
-            eventContent={renderEventContent} // custom render function
+            eventContent={renderEventContent}
             eventClick={handleEventClick}
             eventAdd={handleEventAdd}
-            eventsSet={handleEventsSet} // called after events are initialized/added/changed/removed
-            /* you can update a remote database when these fire:
-            eventRemove={handleEventRemove}
-            eventChange={function(){}}
-          */
             locale={i18n.language === 'ar' ? arLocale : undefined}
           />
           {showEditMode && (

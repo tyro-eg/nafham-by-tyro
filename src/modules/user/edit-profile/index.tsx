@@ -23,6 +23,7 @@ import {
   updateUserInfo,
 } from '../../../redux/user/user.actions';
 import AppCard from '../../../component/card/app-card.component';
+import { selectTimeSlots } from '../../../redux/calendar/calendar.selectors';
 
 const EditProfile: React.FC = () => {
   const { t } = useTranslation();
@@ -31,6 +32,7 @@ const EditProfile: React.FC = () => {
 
   const currentUser = useAppSelector(selectCurrentUser);
   const instructor = useAppSelector(selectInstructor);
+  const slots = useAppSelector(selectTimeSlots);
 
   const [showEditMode, setShowEditMode] = useState(false);
   const [editMode, setEditMode] = useState(false);
@@ -53,23 +55,25 @@ const EditProfile: React.FC = () => {
 
   useEffect(() => {
     if (instructor) {
-      setProfileData(instructor);
+      setProfileData({ ...instructor, slots: slots || [] });
       setProfileReviewsData(instructor?.tutor_reviews!);
       setProfileInfoData(initProfileInfoObj(instructor));
       // setProfilePackagesData(initProfilePackagesObj())
       if (instructor.tutor_packages) {
         setProfilePackagesData(instructor.tutor_packages);
       }
-      setProfileUserInfo(initProfileUserInfoObj(instructor));
+      setProfileUserInfo(
+        initProfileUserInfoObj({ ...instructor, slots: slots || [] }),
+      );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [instructor]);
+  }, [instructor, slots]);
 
   const initProfileInfoObj = (profile: any) => ({
-    full_name: instructor?.full_name,
-    about: instructor?.about,
+    full_name: profile?.full_name,
+    about: profile?.about,
     number_of_reviews: profile?.number_of_reviews,
-    video: instructor?.video,
+    video: profile?.video,
     profile_picture_medium: profile?.profile_picture_medium,
     average_rating: profile?.average_rating,
     online: !!profile?.online,
@@ -78,9 +82,10 @@ const EditProfile: React.FC = () => {
   });
 
   const initProfileUserInfoObj = (profile: any) => ({
-    bio: instructor?.bio,
-    video_url: instructor?.video,
+    about: profile?.about,
+    video: profile?.video,
     profile_picture_medium: profile?.profile_picture_medium,
+    slots: profile?.slots,
   });
 
   // const initProfilePackagesObj = (profilePackages: any[]) => {
@@ -152,14 +157,14 @@ const EditProfile: React.FC = () => {
       setProfileUserInfo((prevState: any) => ({
         ...prevState,
         ...updatedData,
-        bio:
+        about:
           updatedData.about !== profileData.about
             ? updatedData.about
-            : prevState.bio,
-        video_url:
+            : prevState.about,
+        video:
           updatedData.video !== profileData.video
             ? getYoutubeId(updatedData.video)
-            : prevState.video_url,
+            : prevState.video,
         profile_picture_medium:
           updatedData.img !== profileData.profile_picture_medium
             ? updatedData.img

@@ -1,5 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { createSlots, deleteSlots, getSlots } from './calendar.actions';
+import {
+  createSlots,
+  deleteSlots,
+  getAvailability,
+  getSlots,
+} from './calendar.actions';
 
 interface CalendarState {
   timeSlots: any[] | null;
@@ -33,6 +38,13 @@ const calendarSlice = createSlice({
         state.error = null;
       })
       .addCase(getSlots.rejected, (state, action) => {
+        state.error = action.payload as string;
+      })
+      .addCase(getAvailability.fulfilled, (state, action) => {
+        state.timeSlots = action.payload;
+        state.error = null;
+      })
+      .addCase(getAvailability.rejected, (state, action) => {
         state.error = action.payload as string;
       })
       .addCase(createSlots.fulfilled, (state) => {

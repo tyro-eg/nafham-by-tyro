@@ -56,8 +56,8 @@ export type Instructor = {
   average_rating?: number;
   number_of_sessions: number;
   number_of_students: number;
-  video: string;
-  profile_picture_medium: string;
+  video?: string;
+  profile_picture_medium?: string;
   bio?: string;
   instructor_fields: string[];
   tutor_fields: (string | number)[][];
