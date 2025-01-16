@@ -216,7 +216,7 @@ const SessionsInstructorRate = ({
                         Student Language level
                       </InputLabel>
                       <Field
-                        component={Select}
+                        as={Select}
                         variant="standard"
                         name="languageLevel"
                         inputProps={{
@@ -236,7 +236,7 @@ const SessionsInstructorRate = ({
                           Previous Language level
                         </InputLabel>
                         <Field
-                          component={Select}
+                          as={Select}
                           variant="standard"
                           name="previousLanguageLevel"
                           inputProps={{
@@ -257,7 +257,7 @@ const SessionsInstructorRate = ({
                           Recommended Course
                         </InputLabel>
                         <Field
-                          component={Select}
+                          as={Select}
                           variant="standard"
                           name="recommendedCourse"
                           inputProps={{
