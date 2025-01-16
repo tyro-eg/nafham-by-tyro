@@ -31,7 +31,7 @@ interface LoginModalProps {
   openRegisterModal: () => void;
   openJoinCourseModal?: () => void;
   modalData: {
-    courseItem?: boolean;
+    courseItem?: any;
     fromCheckout?: boolean;
   };
 }

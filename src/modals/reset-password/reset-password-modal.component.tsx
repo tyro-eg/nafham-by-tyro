@@ -37,7 +37,7 @@ const ResetPasswordModal = ({ handleClose }: { handleClose: () => void }) => {
               {t('FORGET_PASSWORD.FORM.LABEL')}
             </InputLabel>
             <Field
-              component={TextField}
+              as={TextField}
               placeholder={t('FORGET_PASSWORD.FORM.EMAIL_PLACEHOLDER')}
               name="email"
               id="email"
