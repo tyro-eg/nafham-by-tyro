@@ -24,6 +24,7 @@ interface ProfileInfoProps {
     rate: number;
     number_of_reviews: number;
     number_of_students: number;
+    number_of_sessions: number;
   };
   editMode: boolean;
   getProfileInfo: (updatedData: Record<string, unknown>) => void;
@@ -139,7 +140,7 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({
 
                 <div className="profile-info__instructor-info">
                   <div className="profile-info__instructor-name">
-                    {data.full_name}
+                    {data.full_name || '-'}
                   </div>
                   <div className="profile-info__instructor-stars">
                     <Rating
@@ -220,15 +221,15 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({
               // },
               {
                 label: t('PROFILE.EDITPROFILE.STATISTICS.REVIEWS'),
-                value: data.number_of_reviews,
+                value: data.number_of_reviews || 0,
               },
               {
                 label: t('PROFILE.EDITPROFILE.STATISTICS.ACTIVE_HOURS'),
-                value: `36 ${t('GENEREL.HOURS')}`,
+                value: `${data.number_of_sessions || 0} ${t('GENEREL.HOURS')}`,
               },
               {
                 label: t('PROFILE.EDITPROFILE.STATISTICS.NUMBER_OF_STUDENTS'),
-                value: data.number_of_students,
+                value: data.number_of_students || 0,
               },
             ].map((stat, idx) => (
               <div key={idx} className="profile-info__statistics-card">
