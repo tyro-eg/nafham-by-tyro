@@ -36,5 +36,9 @@
     &.gold {
       background-color: $color-gold;
     }
+
+    &.rtl {
+      clip-path: unset;
+    }
   }
 }

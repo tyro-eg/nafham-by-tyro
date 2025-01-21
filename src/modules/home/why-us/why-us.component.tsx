@@ -6,6 +6,7 @@ import notes from '../../../assets/images/newLanding/notes.svg';
 import programming from '../../../assets/images/newLanding/programming.svg';
 
 import './why-us.styles.scss';
+import { rtlClass } from '../../../assets/utils/utils';
 
 const HomeWhyUs: React.FC = () => {
   const { t } = useTranslation();
@@ -17,7 +18,7 @@ const HomeWhyUs: React.FC = () => {
           <p className="why-us-header">{t('LANDING.BLOCK7.TITLE')}</p>
           <p className="why-us-description">
             <span>{t('LANDING.BLOCK7.DESCRIPTION.PART1')}</span>
-            <span className="parallelogram">
+            <span className={`parallelogram ${rtlClass()}`}>
               {t('LANDING.BLOCK7.DESCRIPTION.PART2')}
             </span>
           </p>

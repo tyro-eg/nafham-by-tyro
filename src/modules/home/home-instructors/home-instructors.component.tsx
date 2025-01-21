@@ -7,6 +7,7 @@ import instructor1 from '../../../assets/images/newLanding/instructor1.webp';
 import instructor2 from '../../../assets/images/newLanding/instructor2.webp';
 import instructor3 from '../../../assets/images/newLanding/instructor3.webp';
 import instructor4 from '../../../assets/images/newLanding/instructor4.webp';
+import { rtlClass } from '../../../assets/utils/utils';
 
 interface InstructorCard {
   image: string;
@@ -29,7 +30,7 @@ const HomeInstructors: React.FC = () => {
           <p className="best-instructors-header">{t('LANDING.BLOCK3.TITLE')}</p>
           <p className="best-instructors-description">
             <span>{t('LANDING.BLOCK3.DESCRIPTION.PART1')}</span>
-            <span className="parallelogram">
+            <span className={`parallelogram ${rtlClass()}`}>
               {t('LANDING.BLOCK3.DESCRIPTION.PART2')}
             </span>
           </p>

@@ -7,6 +7,7 @@ import sat from '../../../assets/images/newLanding/sat.webp';
 import IB from '../../../assets/images/newLanding/ib.webp';
 
 import './home-fields.styles.scss';
+import { rtlClass } from '../../../assets/utils/utils';
 
 interface FieldCard {
   image: string | undefined;
@@ -32,11 +33,11 @@ const HomeFields: React.FC = () => {
         <div className="learning-fields-container">
           <p className="learning-fields-header">{t('LANDING.BLOCK2.TITLE')}</p>
           <p className="learning-fields-description">
-            <span className="parallelogram">
+            <span className={`parallelogram ${rtlClass()}`}>
               {t('LANDING.BLOCK2.DESCRIPTION.PART1')}
             </span>
             <span>{t('LANDING.BLOCK2.DESCRIPTION.PART2')}</span>
-            <span className="parallelogram">
+            <span className={`parallelogram ${rtlClass()}`}>
               {t('LANDING.BLOCK2.DESCRIPTION.PART3')}
             </span>
           </p>

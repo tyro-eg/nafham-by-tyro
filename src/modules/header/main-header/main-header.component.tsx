@@ -69,12 +69,12 @@ const MainHeader: React.FC<HeaderProps> = ({
           <div className="container header-container">
             <div className={`app-header__top ${rtlClass()}`}>
               <div className="contact-menu">
-                <a className="item" href="tel:+201067636419">
-                  (+20) 106 7636 419
+                <a className="item" href="tel:+971507105394">
+                  (+971) 50 710 5394
                 </a>
                 |
-                <a className="item" href="mailto:learn@tyro-app.com">
-                  learn@tyro-app.com
+                <a className="item" href="mailto:learn@nafhambytyro.com">
+                  learn@nafhambytyro.com
                 </a>
               </div>
               <div className="app-header__top-links">

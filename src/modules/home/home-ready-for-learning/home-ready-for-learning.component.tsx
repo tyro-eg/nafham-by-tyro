@@ -21,7 +21,7 @@ const HomeReadyForLearning: React.FC<HomeReadyForLearningProps> = ({
         <div className={`col-2-of-4 col-1-of-1-md col-1-of-1-sm ${rtlClass()}`}>
           <div className="learning-content">
             <p className="learning-content__title">
-              <span className="parallelogram gold">
+              <span className={`parallelogram gold ${rtlClass()}`}>
                 {t('LANDING.BLOCK6.TITLE.PART1')}
               </span>
               {t('LANDING.BLOCK6.TITLE.PART2')}
