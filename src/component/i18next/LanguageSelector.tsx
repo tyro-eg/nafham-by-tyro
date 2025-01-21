@@ -10,6 +10,7 @@ import { useTranslation } from 'react-i18next';
  */
 function LanguageSelector() {
   const { i18n } = useTranslation();
+  const directionEle = document.getElementById('direction');
 
   /**
    * This function return language selected ar or en
@@ -19,6 +20,7 @@ function LanguageSelector() {
    */
   const changeLanguage = (lng: string) => {
     i18n.changeLanguage(lng);
+    directionEle!.dir = lng === 'ar' ? 'rtl' : 'ltr';
   };
 
   return (

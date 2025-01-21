@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import statistics from '../../../assets/images/newLanding/statistics.webp';
 
 import './home-statistics.styles.scss';
+import { rtlClass } from '../../../assets/utils/utils';
 
 const HomeStatistics: React.FC = () => {
   const { t } = useTranslation();
@@ -13,7 +14,7 @@ const HomeStatistics: React.FC = () => {
       <div className="container">
         <div className="statistics-container">
           <div className="statistics-card">
-            <h5 className="title parallelogram">
+            <h5 className={`title parallelogram ${rtlClass()}`}>
               {t('LANDING.BLOCK4.ITEM1.TITLE')}
             </h5>
             <p className="description">
@@ -21,7 +22,7 @@ const HomeStatistics: React.FC = () => {
             </p>
           </div>
           <div className="statistics-card">
-            <h5 className="title parallelogram gold">
+            <h5 className={`title parallelogram gold ${rtlClass()}`}>
               {t('LANDING.BLOCK4.ITEM2.TITLE')}
             </h5>
             <p className="description">
@@ -29,7 +30,7 @@ const HomeStatistics: React.FC = () => {
             </p>
           </div>
           <div className="statistics-card">
-            <h5 className="title parallelogram">
+            <h5 className={`title parallelogram ${rtlClass()}`}>
               {t('LANDING.BLOCK4.ITEM3.TITLE')}
             </h5>
             <p className="description">

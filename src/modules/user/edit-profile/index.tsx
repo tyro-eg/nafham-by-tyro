@@ -208,11 +208,11 @@ const EditProfile: React.FC = () => {
 
   return (
     <>
-      {!!instructor && (
-        <section className="profile">
-          {renderProfileInfo()}
-          <div className="profile__container container">
-            <div className="profile__fieldsTrail">
+      <section className="profile">
+        {renderProfileInfo()}
+        <div className="profile__container container">
+          <div className="profile__fieldsTrail">
+            {instructor?.instructor_fields && (
               <div
                 className={`profile__fieldsTrail-fields ${
                   freeTrailCardFlag() ? 'withTrial' : ''
@@ -220,20 +220,21 @@ const EditProfile: React.FC = () => {
               >
                 <ProfileFields fields={instructor.instructor_fields || []} />
               </div>
-              {freeTrailCardFlag() && (
-                <div className="profile__fieldsTrail-trial">
-                  <AppCard
-                    title={t('CARDS.FREE_TRIAL.TITLE')}
-                    label={t('CARDS.FREE_TRIAL.LABEL')}
-                    type="primary"
-                    onClickButton={openFreeTrialModal}
-                  >
-                    <p>{t('CARDS.FREE_TRIAL.BODY')}.</p>
-                  </AppCard>
-                </div>
-              )}
-            </div>
-            {/* <div className="profile__available-packages">
+            )}
+            {freeTrailCardFlag() && (
+              <div className="profile__fieldsTrail-trial">
+                <AppCard
+                  title={t('CARDS.FREE_TRIAL.TITLE')}
+                  label={t('CARDS.FREE_TRIAL.LABEL')}
+                  type="primary"
+                  onClickButton={openFreeTrialModal}
+                >
+                  <p>{t('CARDS.FREE_TRIAL.BODY')}.</p>
+                </AppCard>
+              </div>
+            )}
+          </div>
+          {/* <div className="profile__available-packages">
               <h4 className="profile__available-packages__title">
                 {t('PROFILE.PACKAGES.TITLE')}
               </h4>
@@ -253,50 +254,49 @@ const EditProfile: React.FC = () => {
                 </Carousel>
               </div>
             </div> */}
-            <div className="profile__calendar">
-              <h4 className="profile__calendar__title">
-                {t('PROFILE.INSTRUCTOR_AVAILABILITY')}
+          <div className="profile__calendar">
+            <h4 className="profile__calendar__title">
+              {t('PROFILE.INSTRUCTOR_AVAILABILITY')}
+            </h4>
+            <div className="profile__calendar__slots">
+              {renderProfileCalender()}
+            </div>
+          </div>
+          {profileReviewsData?.length > 0 && (
+            <div className="profile__reviews">
+              <h4 className="profile__reviews__title">
+                {t('COURSES.COURSE_REVIEWS.REVIEWS')}
               </h4>
-              <div className="profile__calendar__slots">
-                {renderProfileCalender()}
+              <div className="profile__reviews__container">
+                <ProfileReviewsList profileReviews={profileReviewsData} />
               </div>
             </div>
-            {profileReviewsData?.length > 0 && (
-              <div className="profile__reviews">
-                <h4 className="profile__reviews__title">
-                  {t('COURSES.COURSE_REVIEWS.REVIEWS')}
-                </h4>
-                <div className="profile__reviews__container">
-                  <ProfileReviewsList profileReviews={profileReviewsData} />
-                </div>
-              </div>
-            )}
-            {showEditMode && (
-              <ProfileMissingInfoBanner
-                data={profileUserInfo}
-                blockingMissingInfo={onBlockingMissingInformation}
-              />
-            )}
-            {showEditMode && (
-              <Button
-                onClick={() => {
-                  toggleEditMode();
-                  if (editMode) updateProfile();
-                }}
-                startIcon={editMode ? <Check /> : <Edit />}
-                variant="contained"
-                color="primary"
-                disabled={editMode && missingInformationFlag}
-                className="profile__edit"
-              >
-                {editMode
-                  ? t('PROFILE.EDITPROFILE.EDITACTION.SAVE&UPDATE')
-                  : t('PROFILE.EDITPROFILE.EDITACTION.EDITYOURPROFILE')}
-              </Button>
-            )}
-          </div>
-        </section>
-      )}
+          )}
+          {showEditMode && (
+            <ProfileMissingInfoBanner
+              data={profileUserInfo}
+              blockingMissingInfo={onBlockingMissingInformation}
+            />
+          )}
+          {showEditMode && (
+            <Button
+              onClick={() => {
+                toggleEditMode();
+                if (editMode) updateProfile();
+              }}
+              startIcon={editMode ? <Check /> : <Edit />}
+              variant="contained"
+              color="primary"
+              disabled={editMode && missingInformationFlag}
+              className="profile__edit"
+            >
+              {editMode
+                ? t('PROFILE.EDITPROFILE.EDITACTION.SAVE&UPDATE')
+                : t('PROFILE.EDITPROFILE.EDITACTION.EDITYOURPROFILE')}
+            </Button>
+          )}
+        </div>
+      </section>
     </>
   );
 };

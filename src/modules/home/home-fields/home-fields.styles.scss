@@ -57,6 +57,7 @@
     flex-wrap: wrap;
     column-gap: 3rem;
     row-gap: 3rem;
+    direction: ltr;
 
     &__card {
       display: flex;
