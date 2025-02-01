@@ -3,15 +3,12 @@
 
 .schedule-card {
   display: flex;
+  column-gap: 1.6rem;
   padding: 2.8rem 2.8rem 2rem;
   border: 2px solid $color-primary;
   border-radius: 8px;
   background-color: #f2f6ff;
   width: 73rem;
-
-  @include respond(tab-land) {
-    width: 100%;
-  }
 
   @include respond(phone) {
     width: 35rem;

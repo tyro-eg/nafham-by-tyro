@@ -1,5 +1,5 @@
 import { useState, FC } from 'react';
-import { Avatar, Button, Dialog, Rating } from '@mui/material';
+import { Button, Dialog, Rating } from '@mui/material';
 
 import './trail-modal-card.styles.scss';
 import CalendarStepperModal from '../../modals/calendar-stepper-modal/calendar-stepper-modal';
@@ -25,18 +25,20 @@ const TrailModalCard: FC<TrailModalCardProps> = ({ instructor }) => {
           <div
             className="trail-modal-card__image"
             style={{
-              backgroundImage: `url(${instructor.profile_picture_medium})`,
+              backgroundImage: `url(${instructor.avatar})`,
             }}
           >
-            {instructor.profile_picture_medium
+            {instructor.avatar
               ? null
-              : getNameInitials(instructor.full_name)}
+              : getNameInitials(
+                  `${instructor.first_name} ${instructor.last_name}`,
+                )}
           </div>
           <div className="trail-modal-card__body">
             <h3 className="trail-modal-card__body-name u-font-size-16 u-font-weight-bold">
-              {instructor.full_name}
+              {instructor.first_name} {instructor.last_name}
             </h3>
-            {instructor.instructor_fields.map((instructorField) => (
+            {instructor.instructor_fields?.map((instructorField) => (
               <h4 className="trail-modal-card__body-field u-font-size-14 u-font-weight-500">
                 {instructorField}
               </h4>
@@ -50,9 +52,9 @@ const TrailModalCard: FC<TrailModalCardProps> = ({ instructor }) => {
             </div>
             <div className="trail-modal-card__body-separator"></div>
             <div className="trail-modal-card__body-about">
-              {instructor?.about.length > 100
-                ? `${instructor?.about.substring(0, 100)}...`
-                : instructor?.about}
+              {instructor?.bio?.length || 0 > 100
+                ? `${instructor?.bio?.substring(0, 100)}...`
+                : instructor?.bio}
             </div>
           </div>
         </div>

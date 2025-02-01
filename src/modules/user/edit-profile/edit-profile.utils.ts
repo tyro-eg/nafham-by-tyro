@@ -1,9 +1,14 @@
+import { UserInfoType } from '.';
+
 /* eslint-disable no-useless-escape */
-export const calculateMissingProfileInformation = (profileData: any) => {
+export const calculateMissingProfileInformation = (
+  profileData: UserInfoType,
+) => {
   const output = [];
+
   if (
-    !profileData.slots ||
-    (profileData.slots && profileData.slots.length === 0)
+    !profileData?.slots ||
+    (profileData?.slots && profileData.slots.length === 0)
   ) {
     output.push({
       text: 'PROFILE.EDITPROFILE.MISSING_INFORMATION.AVAILABILITY',
@@ -11,25 +16,25 @@ export const calculateMissingProfileInformation = (profileData: any) => {
     });
   }
   if (
-    profileData.profile_picture_medium == null ||
-    profileData.profile_picture_medium.trim() === '' ||
-    profileData.profile_picture_medium.includes('dummy-img')
+    profileData?.avatar == null ||
+    profileData?.avatar?.trim() === '' ||
+    profileData?.avatar?.includes('dummy-img')
   ) {
     output.push({
       text: 'PROFILE.EDITPROFILE.MISSING_INFORMATION.PICTURE',
       bold: false,
     });
   }
-  if (profileData.about == null || profileData.about.trim() === '') {
+  if (profileData?.bio == null || profileData?.bio?.trim() === '') {
     output.push({
       text: 'PROFILE.EDITPROFILE.MISSING_INFORMATION.ABOUT',
       bold: false,
     });
   }
   if (
-    profileData.video == null ||
-    profileData.video.trim() === '' ||
-    profileData.video.includes('error')
+    profileData?.video_url == null ||
+    profileData?.video_url?.trim() === '' ||
+    profileData?.video_url?.includes('error')
   ) {
     output.push({
       text: 'PROFILE.EDITPROFILE.MISSING_INFORMATION.VIDEO',

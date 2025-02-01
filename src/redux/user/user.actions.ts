@@ -2,8 +2,6 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { post, patch, remove, jsonGet } from '../../assets/utils/api';
 import { snackActions } from '../../assets/utils/toaster';
 import { showSpinner, hideSpinner } from '../../assets/utils/utils';
-import Instructors from './instructors.data';
-import { Instructor } from '../../assets/types';
 
 interface SignInPayload {
   email: string;
@@ -122,17 +120,21 @@ export const changePassword = createAsyncThunk(
 
 export const getInstructors = createAsyncThunk(
   'user/getInstructors',
-  async (_payload: GetInstructorsPayload, { rejectWithValue }) => {
+  async (
+    { pageNumber, pageSize }: GetInstructorsPayload,
+    { rejectWithValue },
+  ) => {
     try {
       showSpinner();
-      const response = new Promise<{ data: Instructor[] }>((resolve) => {
-        setTimeout(() => {
-          resolve({ data: Instructors });
-        }, 1000);
+      const response = await jsonGet(`/tutors`, {
+        params: {
+          include: 'fields,packages',
+          page: pageNumber,
+          per_page: pageSize,
+        },
       });
       hideSpinner();
-      const result = await response;
-      return result.data;
+      return response;
     } catch (error) {
       snackActions.error(getErrorMessage(error));
       hideSpinner();
@@ -147,19 +149,12 @@ export const getInstructorById = createAsyncThunk<
 >('user/getInstructorById', async ({ id }, { rejectWithValue }) => {
   try {
     showSpinner();
-    // const response = await jsonGet(`/tutor/${id}`, {
-    //   params: { include: 'fields,packages' },
-    // });
-    const response = new Promise<{ data: Instructor }>((resolve) => {
-      setTimeout(() => {
-        resolve({
-          data: Instructors.find((instructor) => instructor.id === id)!,
-        });
-      }, 1000);
+    const response = await jsonGet(`/tutors/${id}`, {
+      params: { include: 'fields,packages' },
     });
+
     hideSpinner();
-    const result = await response;
-    return result.data;
+    return response.data;
   } catch (error) {
     const errorMessage = getErrorMessage(error);
     snackActions.error(errorMessage);

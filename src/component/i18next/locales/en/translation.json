@@ -673,7 +673,7 @@
       "PREVIOUS": "Previous Sessions"
     },
     "SCHEDULE": {
-      "TITLE": "Schedule Your Sessions",
+      "TITLE": "Unscheduled Sessions",
       "DESCRIPTION": "Select from your instructors list the one you want to schedule your session with.",
       "CARD": {
         "UNSCHEDULED": "Unscheduled Hours",
@@ -718,6 +718,7 @@
     "NOREVIEWS": "No Reviews Yet",
     "HOURLYRATE": "Hourly Rate",
     "BOOKNOW": "Book Now",
+    "OPENPROFILE": "Open Profile",
     "FREETRIAL": "Book Free Trial",
     "COURSEAD": {
       "TITLE": "We Also Provide Group Courses",

@@ -1,7 +1,5 @@
-// sessions-list-card.component.tsx
-
-import React, { useState, useEffect, ReactNode } from 'react';
-import { Button, Dialog } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import { Button } from '@mui/material';
 import {
   TimerTwoTone,
   CheckCircle,
@@ -28,7 +26,6 @@ import { selectCurrentUser } from '../../../../../redux/user/user.selectors';
 import { rtlClass } from '../../../../../assets/utils/utils';
 
 import { useAppSelector } from '../../../../../redux/store';
-import CancelSessionModal from '../../../../../modals/cancel-session-modal/cancel-session-modal.component';
 import { SessionType } from '../../../../../redux/session/session.actions';
 
 import './sessions-list-card.styles.scss';
@@ -45,18 +42,18 @@ const SessionListCard: React.FC<SessionListCardProps> = ({ session }) => {
   const [isInstructor, setIsInstructor] = useState(false);
   const [sessionName, setSessionName] = useState('');
   const [sessionDuration, setSessionDuration] = useState(0);
-  const [isWithinTwelveHours, setIsWithinTwelveHours] = useState(false);
-  const [openCancelSessionModal, setOpenCancelSessionModal] = useState(false);
-  const [modalType, setModalType] = useState<'cancel' | 'end'>('cancel');
+  // const [isWithinTwelveHours, setIsWithinTwelveHours] = useState(false);
+  // const [openCancelSessionModal, setOpenCancelSessionModal] = useState(false);
+  // const [modalType, setModalType] = useState<'cancel' | 'end'>('cancel');
 
   const locales = { ar: arSA, en: enUS };
 
   useEffect(() => {
     setIsInstructor(session?.tutor?.data?.id === currentUser?.id);
     calculateSessionDetails();
-    setIsWithinTwelveHours(
-      differenceInHours(parseISO(session.start_time!), new Date()) < 12,
-    );
+    // setIsWithinTwelveHours(
+    //   differenceInHours(parseISO(session.start_time!), new Date()) < 12,
+    // );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [session, currentUser]);
 
@@ -108,14 +105,14 @@ const SessionListCard: React.FC<SessionListCardProps> = ({ session }) => {
     navigate(`/session-network-test/${session.id}`);
   };
 
-  const openCancelModal = (type: 'cancel' | 'end') => {
-    setModalType(type);
-    setOpenCancelSessionModal(true);
-  };
+  // const openCancelModal = (type: 'cancel' | 'end') => {
+  //   setModalType(type);
+  //   setOpenCancelSessionModal(true);
+  // };
 
-  const closeModal = () => {
-    setOpenCancelSessionModal(false);
-  };
+  // const closeModal = () => {
+  //   setOpenCancelSessionModal(false);
+  // };
 
   const isInstructorAndNotGroup = () =>
     isInstructor && session.type !== 'GroupSession';
@@ -123,7 +120,7 @@ const SessionListCard: React.FC<SessionListCardProps> = ({ session }) => {
   const notInstructorOrIsGroup = () =>
     !isInstructor || session.type === 'GroupSession';
 
-  const triggerOpenRescheduleModal = () => {};
+  // const triggerOpenRescheduleModal = () => {};
 
   return (
     <div className="sessions-card">
@@ -181,7 +178,7 @@ const SessionListCard: React.FC<SessionListCardProps> = ({ session }) => {
             </div>
           </div>
           <div className={`sessions-card__actions ${rtlClass()}`}>
-            {(session.state === 'scheduled' ||
+            {/* {(session.state === 'scheduled' ||
               session.state === 'rescheduled') &&
               isWithinTwelveHours && (
                 <div>
@@ -226,10 +223,10 @@ const SessionListCard: React.FC<SessionListCardProps> = ({ session }) => {
                     </div>
                   )}
                 </div>
-              )}
+              )} */}
             {session.state === 'open' && (
               <div className="sessions-card__status-wrapper">
-                {isInstructor && (
+                {/* {isInstructor && (
                   <Button
                     className="sessions-card__status-wrapper-button endSession"
                     color="secondary"
@@ -238,7 +235,7 @@ const SessionListCard: React.FC<SessionListCardProps> = ({ session }) => {
                   >
                     {t('MYSESSIONS.MAIN.CARD.END')}
                   </Button>
-                )}
+                )} */}
                 <Button
                   className="sessions-card__status-wrapper-button"
                   color="primary"
@@ -344,7 +341,7 @@ const SessionListCard: React.FC<SessionListCardProps> = ({ session }) => {
           )}
         </div>
       </div>
-      {openCancelSessionModal && (
+      {/* {openCancelSessionModal && (
         <Dialog
           maxWidth="xs"
           fullWidth
@@ -357,7 +354,7 @@ const SessionListCard: React.FC<SessionListCardProps> = ({ session }) => {
             handleClose={closeModal}
           />
         </Dialog>
-      )}
+      )} */}
     </div>
   );
 };
