@@ -2,7 +2,10 @@ import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Pagination } from '@mui/material';
 
-import { selectInstructors } from '../../redux/user/user.selectors';
+import {
+  selectInstructors,
+  selectInstructorsPagination,
+} from '../../redux/user/user.selectors';
 import { ReactComponent as EmptyImg } from '../../assets/images/empty.svg';
 import PrivateSessionsFilter from './private-sessions-filter/private-sessions-filter.component';
 // import Group from '../../assets/images/landing/feature_3.png';
@@ -10,19 +13,14 @@ import PrivateSessionsFilter from './private-sessions-filter/private-sessions-fi
 import './index.styles.scss';
 import { getInstructors } from '../../redux/user/user.actions';
 import { useAppDispatch, useAppSelector } from '../../redux/store';
-import { Instructor } from '../../assets/types';
 import InstructorCard from '../../component/instructor-card/instructor-card.component';
 
 const PrivateSessions: React.FC = () => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
 
-  const instructors: Instructor[] = useAppSelector(selectInstructors);
-  // const instructorsPagination = useSelector(selectInstructorsPagination);
-  const instructorsPagination = {
-    'total-pages': 3,
-    pageNumber: 1,
-  };
+  const instructors = useAppSelector(selectInstructors);
+  const instructorsPagination = useAppSelector(selectInstructorsPagination);
 
   useEffect(() => {
     dispatch(getInstructors({ pageNumber: 1, pageSize: 10 }));
@@ -39,13 +37,6 @@ const PrivateSessions: React.FC = () => {
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
-
-  const renderInstructors = (start: number, end: number) =>
-    instructors
-      ?.slice(start, end)
-      .map((instructor) => (
-        <InstructorCard key={instructor.id} instructor={instructor} />
-      ));
 
   // const renderBanner = () => (
   //   <div className="banner">
@@ -88,13 +79,9 @@ const PrivateSessions: React.FC = () => {
       <PrivateSessionsFilter />
       <section className="instructor-list">
         <div className="instructor-list__container container">
-          {renderInstructors(0, 3)}
-        </div>
-
-        {/* {instructors && instructors.length > 0 && renderBanner()} */}
-
-        <div className="instructor-list__container container">
-          {renderInstructors(3, instructors?.length)}
+          {instructors?.map((instructor) => (
+            <InstructorCard key={instructor.id} instructor={instructor} />
+          ))}
         </div>
 
         {((instructors && instructors.length === 0) || !instructors) &&

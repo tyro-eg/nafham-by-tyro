@@ -1,8 +1,8 @@
 import React, { FC, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Rating from '@mui/material/Rating';
-import { Button, Dialog, DialogTitle, DialogContent } from '@mui/material';
-import AddIcon from '@mui/icons-material/Add';
+import { Button, Dialog, DialogContent } from '@mui/material';
+// import AddIcon from '@mui/icons-material/Add';
 
 import './sessions-schedule-card.styles.scss';
 import MySessionCalendar from '../../../../modals/mysession-calendar/mysession-calendar.component';
@@ -30,7 +30,7 @@ const SessionsScheduleCard: FC<SessionsScheduleCardProps> = ({ data }) => {
   const [openScheduleSessionModal, setOpenScheduleSessionModal] =
     useState(false);
 
-  const handleOpenScheduleModal = () => setOpenScheduleSessionModal(true);
+  // const handleOpenScheduleModal = () => setOpenScheduleSessionModal(true);
   const handleCloseScheduleModal = () => setOpenScheduleSessionModal(false);
 
   const gotoInstructorProfile = () => {
@@ -58,7 +58,7 @@ const SessionsScheduleCard: FC<SessionsScheduleCardProps> = ({ data }) => {
               />
             </div>
           </div>
-          <Button
+          {/* <Button
             variant="contained"
             color="primary"
             startIcon={<AddIcon />}
@@ -66,7 +66,7 @@ const SessionsScheduleCard: FC<SessionsScheduleCardProps> = ({ data }) => {
             onClick={handleOpenScheduleModal}
           >
             {t('MYSESSIONS.SCHEDULE.CARD.SCHEDULE')}
-          </Button>
+          </Button> */}
         </div>
         <div className="unscheduled">
           <p>{t('MYSESSIONS.SCHEDULE.CARD.UNSCHEDULED')}</p>

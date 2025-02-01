@@ -20,11 +20,6 @@ const Sessions = () => {
   };
   return (
     <section className="sessions">
-      <div className="sessions__container container">
-        {SESSIONS_SCHEDULE_DATA && (
-          <SessionsSchedule unscheduledSessionsData={SESSIONS_SCHEDULE_DATA} />
-        )}
-      </div>
       <div className="sessions__banner">
         {overViewData && (
           <div className={`overview ${rtlClass()}`}>
@@ -37,6 +32,11 @@ const Sessions = () => {
       </div>
       <div className="sessions__container container">
         <SessionsInfo />
+      </div>
+      <div className="sessions__container container">
+        {SESSIONS_SCHEDULE_DATA && (
+          <SessionsSchedule unscheduledSessionsData={SESSIONS_SCHEDULE_DATA} />
+        )}
       </div>
     </section>
   );

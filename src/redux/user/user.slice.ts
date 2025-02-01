@@ -8,11 +8,12 @@ import {
   getInstructorById,
   updateUserInfo,
 } from './user.actions';
+import { Instructor } from '../../assets/types';
 
 interface UserState {
   currentUser: any;
-  instructors: any | null;
-  instructor: any | null;
+  instructors: Instructor[] | null;
+  instructor: Instructor | null;
   instructorsPagination: any | null;
   errors: {
     signInError: string | null;
@@ -116,12 +117,8 @@ const userSlice = createSlice({
       })
       .addCase(getInstructors.fulfilled, (state, action) => {
         setLoading(state, 'getInstructorsLoading', false);
-        state.instructors = action.payload;
-        // state.instructorsPagination = action.payload.headers;
-        state.instructorsPagination = {
-          currentPage: 1,
-          totalPages: 1,
-        };
+        state.instructors = action.payload.data;
+        state.instructorsPagination = action.payload.headers;
       })
       .addCase(getInstructors.rejected, (state, action) => {
         setLoading(state, 'getInstructorsLoading', false);

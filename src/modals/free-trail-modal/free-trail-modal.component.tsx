@@ -1,24 +1,20 @@
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import TrailModalCard from '../../component/trail-modal-card/trail-modal-card.component';
-import { RootState, useAppDispatch, useAppSelector } from '../../redux/store';
+import { useAppDispatch, useAppSelector } from '../../redux/store';
 
 import './free-trail-modal.styles.scss';
 import { selectInstructors } from '../../redux/user/user.selectors';
 import { getInstructors } from '../../redux/user/user.actions';
-import { Instructor } from '../../assets/types';
 
 const FreeTrailModal = () => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
-  const instructors: Instructor[] = useAppSelector((state: RootState) =>
-    selectInstructors(state),
-  );
-
-  console.log('instructors', instructors);
+  const instructors = useAppSelector(selectInstructors);
 
   useEffect(() => {
     dispatch(getInstructors({ pageNumber: 1, pageSize: 10 }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

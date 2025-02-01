@@ -12,22 +12,12 @@ import './profile-info.styles.scss';
 import ReadMore from '../../../../component/read-more/read-more.component';
 import EditProfileVideoModal from '../../../../modals/edit-profile-video/edit-profile-video.modal';
 import EditProfileImageModal from '../../../../modals/edit-profile-image/edit-profile-image.modal';
+import { ProfileInfoType, UserInfoType } from '..';
 
 interface ProfileInfoProps {
-  data: {
-    video?: string;
-    about?: string;
-    profile_picture_medium?: string;
-    full_name: string;
-    online?: boolean;
-    average_rating: number;
-    rate: number;
-    number_of_reviews: number;
-    number_of_students: number;
-    number_of_sessions: number;
-  };
+  data: ProfileInfoType;
   editMode: boolean;
-  getProfileInfo: (updatedData: Record<string, unknown>) => void;
+  getProfileInfo: (updatedData: Partial<UserInfoType>) => void;
 }
 
 const ProfileInfo: React.FC<ProfileInfoProps> = ({
@@ -44,45 +34,54 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({
   const [openVideoEditModal, setOpenVideoEditModal] = useState(false);
   const [openImageEditModal, setOpenImageEditModal] = useState(false);
   const [croppedImg, setCroppedImg] = useState<string | undefined>();
-  const [profileUpdateData, setProfileUpdateData] = useState<
-    Record<string, unknown>
-  >({});
+  const [profileUpdateData, setProfileUpdateData] =
+    useState<Partial<UserInfoType>>();
 
   useEffect(() => {
     if (data) {
-      if (data.video) {
-        const videoId = data.video;
+      if (data.video_url) {
+        const videoId = data.video_url;
         setVideoUrl(`https://www.youtube.com/embed/${videoId}`);
         setYoutubeThumbnail(
           `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`,
         );
       }
-      if (data.about) {
-        setAbout(data.about);
+      if (data.bio) {
+        setAbout(data.bio);
       }
     }
+
+    return () => {
+      setVideoUrl(null);
+      setYoutubeThumbnail(thumbnailPlaceholder);
+      setAbout('');
+      setCroppedImg(undefined);
+      setProfileUpdateData(undefined);
+    };
   }, [data]);
 
   useEffect(() => {
-    if (Object.keys(profileUpdateData).length > 0) {
+    if (profileUpdateData && Object.keys(profileUpdateData).length > 0) {
       getProfileInfo(profileUpdateData);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profileUpdateData]);
 
   const setProfileInfo = (updatedData: string, type: string) => {
-    setProfileUpdateData((prevState) => ({
-      ...prevState,
-      [type]: updatedData,
-    }));
-    if (type === 'video') {
+    setProfileUpdateData((prevState) => {
+      return {
+        ...(prevState || {}),
+        [type]: updatedData,
+      };
+    });
+    if (type === 'video_url') {
       const videoId = getYoutubeId(updatedData);
       setVideoUrl(`https://www.youtube.com/embed/${videoId}`);
       setYoutubeThumbnail(
         `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`,
       );
     }
-    if (type === 'img') {
+    if (type === 'avatar') {
       setCroppedImg(updatedData);
     }
   };
@@ -99,26 +98,23 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({
                     data.online ? 'online' : ''
                   } ${editMode ? 'editMode' : ''}`}
                 >
-                  {!editMode && data.profile_picture_medium && (
+                  {!editMode && data.avatar && (
                     <Button
                       className="profile-img-btn"
                       onClick={() => setOpenImageViewModal(true)}
                     >
                       <img
                         className="clickable-img"
-                        src={croppedImg || data.profile_picture_medium}
+                        src={croppedImg || data.avatar}
                         alt="Profile"
                       />
                     </Button>
                   )}
                   {editMode && (
                     <>
-                      {data.profile_picture_medium ? (
+                      {data.avatar ? (
                         <>
-                          <img
-                            src={croppedImg || data.profile_picture_medium}
-                            alt="Profile"
-                          />
+                          <img src={croppedImg || data.avatar} alt="Profile" />
                           <IconButton
                             className="edit-icon"
                             onClick={() => setOpenImageEditModal(true)}
@@ -169,7 +165,7 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({
                     rows={5}
                     cols={40}
                     onChange={(e) => setAbout(e.target.value)}
-                    onBlur={(e) => setProfileInfo(e.target.value, 'about')}
+                    onBlur={(e) => setProfileInfo(e.target.value, 'bio')}
                     value={about}
                     placeholder={t('PROFILE.ABOUT_INSTRUCTOR')}
                   />
@@ -265,7 +261,7 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({
       >
         <EditProfileImageModal
           onClose={() => setOpenImageEditModal(false)}
-          imageUrl={croppedImg || data.profile_picture_medium}
+          imageUrl={croppedImg || data.avatar}
           onSetProfileInfo={setProfileInfo}
         />
       </Dialog>
@@ -276,7 +272,7 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({
         onClose={() => setOpenImageViewModal(false)}
       >
         <div className="profile-info__img-viewer-modal">
-          <img src={croppedImg || data.profile_picture_medium} alt="Profile" />
+          <img src={croppedImg || data.avatar} alt="Profile" />
         </div>
       </Dialog>
     </section>

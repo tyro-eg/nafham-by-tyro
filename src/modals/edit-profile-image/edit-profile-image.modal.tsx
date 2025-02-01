@@ -88,7 +88,7 @@ const EditProfileImageModal: React.FC<EditProfileImageModalProps> = ({
   const saveImage = () => {
     if (previewCanvasRef.current) {
       const base64 = previewCanvasRef.current.toDataURL('image/webp');
-      onSetProfileInfo(base64, 'img');
+      onSetProfileInfo(base64, 'avatar');
       onClose();
     }
   };
