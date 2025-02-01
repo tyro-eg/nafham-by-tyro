@@ -2,7 +2,7 @@
 @import '../../../assets/styles/mixins.scss';
 
 .sessions-schedule {
-  margin-top: 4rem;
+  margin-bottom: 4rem;
 
   &__title {
     margin-bottom: 2.1rem;
@@ -11,6 +11,7 @@
     line-height: 32px;
     text-align: start;
   }
+
   &__container {
     .unscheduled-card {
       width: 100%;

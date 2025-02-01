@@ -24,6 +24,29 @@ import {
 } from '../../../redux/user/user.actions';
 import AppCard from '../../../component/card/app-card.component';
 import { selectTimeSlots } from '../../../redux/calendar/calendar.selectors';
+import { Instructor } from '../../../assets/types';
+
+export type ProfileInfoType = {
+  full_name?: string;
+  bio?: string;
+  number_of_reviews?: number;
+  video_url?: string;
+  avatar?: string;
+  average_rating?: number;
+  online?: boolean;
+  rate?: number;
+  number_of_students?: number;
+  number_of_sessions?: number;
+};
+
+export type UserInfoType =
+  | {
+      bio?: string;
+      video_url?: string;
+      avatar?: string;
+      slots: any[];
+    }
+  | undefined;
 
 const EditProfile: React.FC = () => {
   const { t } = useTranslation();
@@ -38,11 +61,11 @@ const EditProfile: React.FC = () => {
   const [editMode, setEditMode] = useState(false);
   const [profileData, setProfileData] = useState<any>({});
   const [profileReviewsData, setProfileReviewsData] = useState<any[]>([]);
-  const [profileInfoData, setProfileInfoData] = useState<any>({});
+  const [profileInfoData, setProfileInfoData] = useState<ProfileInfoType>({});
   const [profilePackagesData, setProfilePackagesData] = useState<any>([]);
   const [missingInformationFlag, setMissingInformationFlag] = useState(false);
   const [updateSlots, doUpdateSlots] = useState(0);
-  const [profileUserInfo, setProfileUserInfo] = useState<any>({});
+  const [profileUserInfo, setProfileUserInfo] = useState<UserInfoType>();
 
   useEffect(() => {
     onBlockingMissingInformation(false);
@@ -62,30 +85,34 @@ const EditProfile: React.FC = () => {
       if (instructor.tutor_packages) {
         setProfilePackagesData(instructor.tutor_packages);
       }
-      setProfileUserInfo(
-        initProfileUserInfoObj({ ...instructor, slots: slots || [] }),
-      );
+      setProfileUserInfo(initProfileUserInfoObj(instructor, slots || []));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [instructor, slots]);
 
-  const initProfileInfoObj = (profile: any) => ({
-    full_name: profile?.full_name,
-    about: profile?.about,
+  const initProfileInfoObj = (
+    profile: Partial<Instructor>,
+  ): ProfileInfoType => ({
+    full_name: profile?.first_name + ' ' + profile?.last_name,
+    bio: profile?.bio,
     number_of_reviews: profile?.number_of_reviews,
-    video: profile?.video,
-    profile_picture_medium: profile?.profile_picture_medium,
+    video_url: profile?.video_url,
+    avatar: profile?.avatar,
     average_rating: profile?.average_rating,
     online: !!profile?.online,
     rate: profile?.rate_to_display,
     number_of_students: profile?.number_of_students,
+    number_of_sessions: profile?.number_of_sessions,
   });
 
-  const initProfileUserInfoObj = (profile: any) => ({
-    about: profile?.about,
-    video: profile?.video,
-    profile_picture_medium: profile?.profile_picture_medium,
-    slots: profile?.slots,
+  const initProfileUserInfoObj = (
+    profile: Partial<Instructor>,
+    slots: any[],
+  ): UserInfoType => ({
+    bio: profile?.bio,
+    video_url: profile?.video_url,
+    avatar: profile?.avatar,
+    slots: slots,
   });
 
   // const initProfilePackagesObj = (profilePackages: any[]) => {
@@ -136,7 +163,7 @@ const EditProfile: React.FC = () => {
 
   const updateProfile = () => {
     doUpdateSlots((prev) => prev + 1);
-    const { slots, ...info } = profileUserInfo;
+    const { slots, ...info } = profileUserInfo || {};
     dispatch(updateUserInfo({ id: +id!, type: '', userData: info }));
   };
 
@@ -152,29 +179,31 @@ const EditProfile: React.FC = () => {
     profilePackagesData?.filter((el: any) => el.type === 'TrialPackage')
       .length > 0;
 
-  const getProfileInfo = (updatedData: any) => {
-    if (updatedData) {
-      setProfileUserInfo((prevState: any) => ({
+  const getProfileInfo = (updatedData: Partial<UserInfoType>) => {
+    if (!updatedData) return;
+
+    setProfileUserInfo((prevState) => {
+      const updateField = (
+        field: keyof NonNullable<UserInfoType>,
+        transform?: (value: any) => any,
+      ) => {
+        if (updatedData[field] !== undefined) {
+          const newValue = updatedData[field];
+          return transform ? transform(newValue) : newValue;
+        }
+        return prevState?.[field];
+      };
+
+      return {
         ...prevState,
-        ...updatedData,
-        about:
-          updatedData.about !== profileData.about
-            ? updatedData.about
-            : prevState.about,
-        video:
-          updatedData.video !== profileData.video
-            ? getYoutubeId(updatedData.video)
-            : prevState.video,
-        profile_picture_medium:
-          updatedData.img !== profileData.profile_picture_medium
-            ? updatedData.img
-            : prevState.profile_picture_medium,
-        slots:
-          updatedData.slots?.length > 0
-            ? updatedData.slots
-            : prevState.slots || [],
-      }));
-    }
+        bio: updateField('bio'),
+        video_url: updateField('video_url', getYoutubeId),
+        avatar: updateField('avatar'),
+        slots: updateField('slots', (slots) =>
+          slots && slots.length > 0 ? slots : [],
+        ),
+      };
+    });
   };
 
   const renderProfileInfo = useCallback(
@@ -202,6 +231,16 @@ const EditProfile: React.FC = () => {
     ),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [editMode, showEditMode, updateSlots, id],
+  );
+
+  const renderProfileMissingInfoBanner = useCallback(
+    () => (
+      <ProfileMissingInfoBanner
+        data={profileUserInfo!}
+        blockingMissingInfo={onBlockingMissingInformation}
+      />
+    ),
+    [profileUserInfo],
   );
 
   const onToggleEditFromCalender = () => setEditMode(true);
@@ -272,12 +311,7 @@ const EditProfile: React.FC = () => {
               </div>
             </div>
           )}
-          {showEditMode && (
-            <ProfileMissingInfoBanner
-              data={profileUserInfo}
-              blockingMissingInfo={onBlockingMissingInformation}
-            />
-          )}
+          {showEditMode && renderProfileMissingInfoBanner()}
           {showEditMode && (
             <Button
               onClick={() => {

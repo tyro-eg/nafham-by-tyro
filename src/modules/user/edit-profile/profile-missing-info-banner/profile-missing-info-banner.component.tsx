@@ -5,6 +5,7 @@ import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import { calculateMissingProfileInformation } from '../edit-profile.utils';
 
 import './profile-missing-info-banner.styles.scss';
+import { UserInfoType } from '..';
 
 interface MissingProfileItem {
   text: string;
@@ -12,7 +13,7 @@ interface MissingProfileItem {
 }
 
 interface ProfileMissingInfoBannerProps {
-  data: Record<string, any>;
+  data: UserInfoType;
   blockingMissingInfo: (flag: boolean) => void;
 }
 

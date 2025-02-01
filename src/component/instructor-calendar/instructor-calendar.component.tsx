@@ -12,35 +12,38 @@ import { useAppDispatch, useAppSelector } from '../../redux/store';
 import { addDays, getDay } from 'date-fns';
 import { EventContentArg } from '@fullcalendar/core';
 import {
-  selectSlotsError,
+  // selectSlotsError,
   selectTimeSlots,
 } from '../../redux/calendar/calendar.selectors';
 import { getSlots } from '../../redux/calendar/calendar.actions';
 
-const InstructorCalendar: React.FC = () => {
+const InstructorCalendar: React.FC<{ instructorId: number }> = ({
+  instructorId,
+}) => {
   const { t, i18n } = useTranslation();
   const dispatch = useAppDispatch();
   const slots = useAppSelector(selectTimeSlots);
   const currentUser = useAppSelector(selectCurrentUser);
-  const error = useAppSelector(selectSlotsError);
+  // const error = useAppSelector(selectSlotsError);
 
   const [currentEvents, setCurrentEvents] = useState(slots || []);
   const calendarRef = useRef<FullCalendar>(null);
   const today = new Date();
 
   useEffect(() => {
-    if (currentUser?.id) {
+    if (instructorId) {
       dispatch(
         getSlots({
-          userId: currentUser.id,
+          userId: instructorId,
           params: {
-            from: today.toISOString(),
-            to: addDays(today, 7).toISOString(),
+            start_time: today.toISOString(),
+            end_time: addDays(today, 7).toISOString(),
           },
         }),
       );
     }
-  }, [dispatch, currentUser]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [instructorId]);
 
   useEffect(() => {
     setCurrentEvents(slots!);

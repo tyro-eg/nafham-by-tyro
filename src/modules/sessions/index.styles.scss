@@ -16,7 +16,8 @@
 
   &__banner {
     position: relative;
-    margin: 11rem 0;
+    margin-bottom: 11rem;
+    margin-top: 24rem;
     background-color: #7dcee0;
     width: 100%;
     height: 12rem;
@@ -24,8 +25,9 @@
     flex-direction: column;
     align-items: center;
 
-    @include respond(tab-port) {
-      margin: 5rem 0;
+    @include respond(phone) {
+      margin-top: 14rem;
+      margin-bottom: 5rem;
     }
 
     .overview {
@@ -33,6 +35,7 @@
       width: 50%;
       bottom: 50%;
       left: 25%;
+      box-shadow: -5px 5px 32px 0 rgba(67, 86, 100, 0.17);
 
       @include respond(tab-port) {
         left: 10%;

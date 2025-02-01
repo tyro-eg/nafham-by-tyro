@@ -64,12 +64,10 @@ const MySessionCalendar: React.FC<MySessionCalendarProps> = ({
       instructors &&
       instructors.length > 0 &&
       instructors[0].time_slots &&
-      instructors[0].time_slots.data &&
-      instructors[0].time_slots.data.length > 0
+      instructors[0].time_slots! &&
+      instructors[0].time_slots.length > 0
     ) {
-      handleEvents(
-        parseTimeSlotsIntoCalendarEvents(instructors[0].time_slots.data),
-      );
+      handleEvents(parseTimeSlotsIntoCalendarEvents(instructors[0].time_slots));
     }
   }, [instructors]);
 
@@ -156,7 +154,7 @@ const MySessionCalendar: React.FC<MySessionCalendarProps> = ({
       const privateObj = {
         start_date: chunk[0].startStr,
         end_date: chunk[chunk.length - 1].endStr,
-        tutor_id: +instructors[0].id,
+        tutor_id: +instructors![0].id,
         student_id: +currentUser.id,
         field_id: 15,
         time_slots: slotsIds,

@@ -27,18 +27,19 @@ import './profile-calendar-container.styles.scss';
 import {
   createSlots,
   deleteSlots,
-  getAvailability,
+  getSlots,
 } from '../../../../redux/calendar/calendar.actions';
 import { addDays, getDay } from 'date-fns';
 import ProfileModal from '../../../../modals/profile-modal/profile-modal.component';
 import { DateSelectArg, EventAddArg } from '@fullcalendar/core';
+import { UserInfoType } from '..';
 
 interface ProfileCalendarProps {
   showEditMode: boolean;
   editModeFlag: boolean;
   toggleEditMode: () => void;
   updateSlots: number;
-  getProfileInfo: (data: { slots: any[] }) => void;
+  getProfileInfo: (updatedData: Partial<UserInfoType>) => void;
   instructorId: string;
 }
 
@@ -57,7 +58,7 @@ const ProfileCalendar: React.FC<ProfileCalendarProps> = ({
 
   const calendarRef = useRef<FullCalendar | null>(null);
 
-  const slots = useAppSelector((state: RootState) => selectTimeSlots(state));
+  const slots = useAppSelector(selectTimeSlots);
   const currentUser = useAppSelector((state: RootState) =>
     selectCurrentUser(state),
   );
@@ -83,9 +84,10 @@ const ProfileCalendar: React.FC<ProfileCalendarProps> = ({
 
   useEffect(() => {
     dispatch(
-      getAvailability({
+      getSlots({
+        userId: +instructorId,
         params: {
-          a: today.toISOString(),
+          start_time: today.toISOString(),
           end_time: addDays(today, 7).toISOString(),
         },
       }),
@@ -121,9 +123,10 @@ const ProfileCalendar: React.FC<ProfileCalendarProps> = ({
           ? { start: view.activeStart, end: view.activeEnd }
           : { start: new Date(), end: addDays(new Date(), 7) };
       dispatch(
-        getAvailability({
+        getSlots({
+          userId: +instructorId,
           params: {
-            a: start.toISOString(),
+            start_time: start.toISOString(),
             end_time: end.toISOString(),
           },
         }),
@@ -220,9 +223,10 @@ const ProfileCalendar: React.FC<ProfileCalendarProps> = ({
           : { start: new Date(), end: addDays(new Date(), 7) };
       if (currentUser?.id) {
         dispatch(
-          getAvailability({
+          getSlots({
+            userId: +instructorId,
             params: {
-              a: start.toISOString(),
+              start_time: start.toISOString(),
               end_time: end.toISOString(),
             },
           }),
@@ -242,6 +246,10 @@ const ProfileCalendar: React.FC<ProfileCalendarProps> = ({
     setAddedEvents((prev) => [
       ...prev,
       { start_time: event.startStr, end_time: event.endStr },
+    ]);
+    setUserSlots((prev) => [
+      ...prev,
+      { from: event.startStr, to: event.endStr },
     ]);
   };
 

@@ -27,7 +27,7 @@ const EditProfileVideoModal: React.FC<EditProfileVideoModalProps> = ({
   };
 
   const onSave = () => {
-    onSetProfileInfo(videoUrl, 'video');
+    onSetProfileInfo(videoUrl, 'video_url');
     onClose();
   };
 

@@ -51,7 +51,7 @@ export const getSlots = createAsyncThunk(
   ) => {
     try {
       showSpinner();
-      const res = await apiGet(`/tutors/${userId}/time_slots`, params);
+      const res = await apiGet(`/tutors/${userId}/availabilities`, params);
       const slots = parseTimeSlotsIntoCalendarEvents(res.data);
       hideSpinner();
       return slots;

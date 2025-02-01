@@ -7,10 +7,11 @@ import { ArrowRightAlt } from '@mui/icons-material';
 import ReadMore from '../read-more/read-more.component';
 import InstructorCalendar from '../instructor-calendar/instructor-calendar.component';
 
-import UAE from '../../assets/images/landing/united-arab-emirates-round.png';
-import SAT from '../../assets/images/landing/sat-round.png';
-import EGYPT from '../../assets/images/landing/egypt-round.png';
-import SAUDI from '../../assets/images/landing/saudi-arabia-round.png';
+// import UAE from '../../assets/images/landing/united-arab-emirates-round.png';
+// import SAT from '../../assets/images/landing/sat-round.png';
+// import EGYPT from '../../assets/images/landing/egypt-round.png';
+// import SAUDI from '../../assets/images/landing/saudi-arabia-round.png';
+import Profile from '../../assets/images/videoSession/people/profile.png';
 
 import { rtlClass } from '../../assets/utils/utils';
 import './instructor-card.styles.scss';
@@ -32,15 +33,15 @@ const InstructorCard: React.FC<{ instructor: Instructor }> = ({
       img, span { position: absolute; width: 100%; top: 0; bottom: 0; margin: auto }
       span { height: 1.5em; text-align: center; font: 48px/1.5 sans-serif; color: white; text-shadow: 0 0 0.5em black }
     </style>
-    <a href=https://www.youtube.com/embed/${instructor.video}?autoplay=1>
-      <img src=https://i.ytimg.com/vi_webp/${instructor.video}/hqdefault.webp>
+    <a href=https://www.youtube.com/embed/${instructor.video_url}?autoplay=1>
+      <img src=https://i.ytimg.com/vi_webp/${instructor.video_url}/hqdefault.webp>
       <span>&#x25BA;</span>
     </a>`;
 
   const goToProfile = () => navigate(`/profile/${instructor.id}`);
   const openTrialModal = () => setOpenCalendarStepperModal(true);
-  const navigateToCheckout = () =>
-    navigate(`/checkout?id=${instructor.id}&course=false`);
+  // const navigateToCheckout = () =>
+  //   navigate(`/checkout?id=${instructor.id}&course=false`);
   const handleCloseCalendarStepperModal = () =>
     setOpenCalendarStepperModal(false);
 
@@ -52,7 +53,7 @@ const InstructorCard: React.FC<{ instructor: Instructor }> = ({
       <div className="instructor-card__video">
         <iframe
           title="youtube-video"
-          src={instructor.video}
+          src={instructor.video_url}
           loading="lazy"
           frameBorder="0"
           srcDoc={videoHtml}
@@ -69,17 +70,13 @@ const InstructorCard: React.FC<{ instructor: Instructor }> = ({
             sx={{ display: 'flex' }}
           >
             <Box className={`image ${rtlClass()}`} sx={{ marginRight: '16px' }}>
-              <img
-                src={
-                  instructor.profile_picture_medium ||
-                  'https://s3-eu-west-1.amazonaws.com/tyroeg/staging-tyro/users/imgs/5899/thumb/data?1598099301'
-                }
-                alt="Instructor"
-              />
+              <img src={instructor.avatar || Profile} alt="Instructor" />
             </Box>
 
             <Button onClick={goToProfile} className="info">
-              <h6>{instructor.full_name}</h6>
+              <h6>
+                {instructor.first_name} {instructor.last_name}
+              </h6>
               <Box
                 className="review"
                 sx={{ display: 'flex', alignItems: 'center' }}
@@ -100,13 +97,15 @@ const InstructorCard: React.FC<{ instructor: Instructor }> = ({
             </Button>
           </Box>
 
-          <div className="instructor-card__fields">
-            {instructor.fields?.map((field) => (
-              <div key={field.id} className="instructor-card__field">
-                {field.name}
-              </div>
-            ))}
-          </div>
+          {instructor.fields && (
+            <div className="instructor-card__fields">
+              {instructor.fields?.map((field) => (
+                <div key={field.id} className="instructor-card__field">
+                  {field.name}
+                </div>
+              ))}
+            </div>
+          )}
 
           {/* <div className="price">
             {instructor.rate_to_display > 0 ? (
@@ -121,7 +120,7 @@ const InstructorCard: React.FC<{ instructor: Instructor }> = ({
 
         <div className="instructor-card__about">
           <ReadMore
-            text={instructor.about || ''}
+            text={instructor.bio || ''}
             maxLength={95}
             readonly
             onClick={goToProfile}
@@ -141,7 +140,7 @@ const InstructorCard: React.FC<{ instructor: Instructor }> = ({
       </div>
 
       <div className="instructor-card__footer">
-        <InstructorCalendar />
+        <InstructorCalendar instructorId={instructor.id} />
 
         {isTrialAvailable() ? (
           <Button
@@ -156,9 +155,11 @@ const InstructorCard: React.FC<{ instructor: Instructor }> = ({
           <Button
             endIcon={<ArrowRightAlt />}
             className="book-now-btn"
-            onClick={navigateToCheckout}
+            variant="contained"
+            color="primary"
+            onClick={goToProfile}
           >
-            {t('DIRECTORY.BOOKNOW')}
+            {t('DIRECTORY.OPENPROFILE')}
           </Button>
         )}
       </div>
