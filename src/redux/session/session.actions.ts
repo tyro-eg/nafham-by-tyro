@@ -2,73 +2,50 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { post, apiGet } from '../../assets/utils/api';
 import { snackActions } from '../../assets/utils/toaster';
 import { showSpinner, hideSpinner } from '../../assets/utils/utils';
-import Sessions from '../../modules/sessions/sessions-info/sessions-list/sessions-data';
 
 export type SessionType = {
   id: number;
-  start_time?: string | null; // ISO date string
-  end_time?: string | null; // ISO date string
-  state: string | null;
-  offline: boolean | null;
-  external_link: string | null; // URL string or empty
-  is_session_trial: boolean | null;
-  type?: string | null;
-  course: {
-    data?: {
-      course_id: number | null;
-      course_name: string | null;
-      course_description: string | null;
-      course_instructor_name: string | null;
-      course_students:
-        | {
-            id: number | null;
-            student_full_name: string | null;
-          }[]
-        | null;
-      course_image: string | null; // URL string
-      course_instructor_fields:
-        | {
-            id: number | null;
-            name: string | null;
-            created_at: string | null; // ISO date string
-            updated_at: string | null; // ISO date string
-            parent_id: number | null;
-            visible: boolean | null;
-          }[]
-        | null;
-      course_type: string | null;
-    };
+  created_at: string;
+  end_time: string;
+  grade_subject: {
+    id: number;
+    created_at: string;
+    full_course_name: string;
+    updated_at: string;
   };
-  should_record: boolean | null;
-  mirokey: string | null; // URL string
-  field?: {
-    data: {
-      name: string | null;
-    };
+  session_type: 'regular' | 'trial' | 'group';
+  start_time: string;
+  status: 'open' | 'scheduled' | 'completed' | 'missed' | 'canceled';
+  student: {
+    id: number;
+    created_at: string;
+    email: string;
+    first_name: string;
+    last_name: string;
+    phone_number: string;
+    type: 'Student' | 'Tutor';
+    updated_at: string;
+    image: string;
   };
-  student?: {
-    data: {
-      full_name: string | null;
-      image: string | null; // URL string
-      id: number | null;
-    };
+  tutor: {
+    id: number;
+    created_at: string;
+    email: string;
+    first_name: string;
+    last_name: string;
+    phone_number: string;
+    type: 'Tutor' | 'Student';
+    updated_at: string;
+    image: string;
+    rating: number;
+    reviews: number;
   };
-  tutor?: {
-    data: {
-      full_name: string | null;
-      image: string | null; // URL string
-      id: number | null;
-      rating: number | null;
-      reviews: number | null;
-    };
-  };
-  show_feedback: boolean | null;
-  opentok_room_id: string | null;
-  firebase_key: string | null;
+  updated_at: string;
 };
 
 interface GetSessionsPayload {
-  pageSize: number;
+  pageSize?: number;
+  pageNumber?: number;
 }
 
 interface CancelSessionPayload {
@@ -88,21 +65,11 @@ const getErrorMessage = (error: any): string =>
 
 export const getSessions = createAsyncThunk<any, GetSessionsPayload>(
   'session/getSessions',
-  async ({ pageSize }, { rejectWithValue }) => {
+  async ({ pageSize, pageNumber }, { rejectWithValue }) => {
     try {
       showSpinner();
-      // const res = await apiGet('/sessions', {
-      //     params: { include: 'field,student,tutor', page: 1, page_size: pageSize },
-      // });
-      const response = new Promise<{ data: SessionType[]; headers: any }>(
-        (resolve) => {
-          setTimeout(() => {
-            resolve({
-              data: Sessions,
-              headers: { 'page-items': 10, 'total-pages': 5 },
-            });
-          }, 1000);
-        },
+      const response = await apiGet(
+        `/sessions?${pageSize ? `per_page=${pageSize}` : ''}${pageNumber ? `page=${pageNumber}` : ''}`,
       );
       hideSpinner();
       return response;
