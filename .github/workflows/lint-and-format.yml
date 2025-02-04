@@ -1,0 +1,32 @@
+name: Lint and Format
+
+on:
+  push:
+    branches:
+      - development  # Change this if you want to trigger on another branch
+  pull_request:
+    branches:
+      - development  # Runs on PRs to development
+
+jobs:
+  lint-and-format:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18  # Adjust based on your project needs
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Run Linter
+        run: npm run lint
+
+      - name: Run Formatter
+        run: npm run format:write
