@@ -8,12 +8,14 @@ import { useTranslation } from 'react-i18next';
 import Dialog from '@mui/material/Dialog';
 import { selectTimeSlots } from '../../../../redux/calendar/calendar.selectors';
 import { selectCurrentUser } from '../../../../redux/user/user.selectors';
-import SESSIONS from '../sessions-list/sessions-data';
-import './sessions-calendar-container.styles.scss';
 import { useAppDispatch, useAppSelector } from '../../../../redux/store';
 import { getSlots } from '../../../../redux/calendar/calendar.actions';
 import { addDays, getDay } from 'date-fns';
 import SessionViewCalendarModal from '../../../../modals/session-view-calendar-modal/session-view-calendar-modal.component';
+import { selectSessions } from '../../../../redux/session/session.selectors';
+import { getSessions } from '../../../../redux/session/session.actions';
+
+import './sessions-calendar-container.styles.scss';
 
 interface SessionsCalendarContainerProps {}
 
@@ -28,6 +30,7 @@ const SessionsCalendarContainer: React.FC<
 
   const dispatch = useAppDispatch();
   const slots = useAppSelector(selectTimeSlots);
+  const sessions = useAppSelector(selectSessions);
   const currentUser = useAppSelector(selectCurrentUser);
 
   useEffect(() => {
@@ -40,11 +43,18 @@ const SessionsCalendarContainer: React.FC<
         },
       }),
     );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, currentUser.id]);
 
   useEffect(() => {
     setCurrentEvents(slots!);
   }, [slots]);
+
+  useEffect(() => {
+    if (currentUser?.id) {
+      dispatch(getSessions({}));
+    }
+  }, [dispatch, currentUser.id]);
 
   const handleDateChange = (direction: 'next' | 'prev') => {
     const calendarApi = calendarRef.current?.getApi();
@@ -127,7 +137,7 @@ const SessionsCalendarContainer: React.FC<
           sx={{ '& .MuiDialog-paper': { width: '100%', margin: 0 } }}
         >
           <SessionViewCalendarModal
-            sessions={SESSIONS}
+            sessions={sessions!}
             handleClose={handleCloseViewCalendarModal}
           />
         </Dialog>

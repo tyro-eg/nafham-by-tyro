@@ -24,7 +24,7 @@ const SessionViewCalendarModal: React.FC<SessionViewCalendarModalProps> = ({
             ? 1
             : -1,
         )
-        .sort((a) => (a.state === 'open' ? -1 : 1));
+        .sort((a) => (a.status === 'open' ? -1 : 1));
 
       setSessionsArr(sortedSessions);
     }
