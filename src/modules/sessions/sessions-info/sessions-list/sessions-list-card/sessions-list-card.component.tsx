@@ -49,7 +49,7 @@ const SessionListCard: React.FC<SessionListCardProps> = ({ session }) => {
   const locales = { ar: arSA, en: enUS };
 
   useEffect(() => {
-    setIsInstructor(session?.tutor?.data?.id === currentUser?.id);
+    setIsInstructor(session?.tutor?.id === currentUser?.id);
     calculateSessionDetails();
     // setIsWithinTwelveHours(
     //   differenceInHours(parseISO(session.start_time!), new Date()) < 12,
@@ -70,11 +70,11 @@ const SessionListCard: React.FC<SessionListCardProps> = ({ session }) => {
       ),
     );
     setSessionName(
-      session.type === 'TrialSession'
+      session.session_type === 'trial'
         ? t('MYSESSIONS.FILTERS.FREETRIALSESSION')
-        : session.type === 'PrivateSession'
-          ? t('MYSESSIONS.FILTERS.1TO1SESSION')
-          : t('MYSESSIONS.FILTERS.GROUPSESSION'),
+        : session.session_type === 'group'
+          ? t('MYSESSIONS.FILTERS.GROUPSESSION')
+          : t('MYSESSIONS.FILTERS.1TO1SESSION'),
     );
   };
 
@@ -115,10 +115,10 @@ const SessionListCard: React.FC<SessionListCardProps> = ({ session }) => {
   // };
 
   const isInstructorAndNotGroup = () =>
-    isInstructor && session.type !== 'GroupSession';
+    isInstructor && session.session_type !== 'group';
 
   const notInstructorOrIsGroup = () =>
-    !isInstructor || session.type === 'GroupSession';
+    !isInstructor || session.session_type === 'group';
 
   // const triggerOpenRescheduleModal = () => {};
 
@@ -129,51 +129,49 @@ const SessionListCard: React.FC<SessionListCardProps> = ({ session }) => {
           <div className="sessions-card__img-container">
             {isInstructorAndNotGroup() && (
               <div className="card-img">
-                <img src={session.student?.data?.image || ''} alt="student" />
+                <img src={session.student?.image || ''} alt="student" />
               </div>
             )}
             {notInstructorOrIsGroup() && (
               <Button
                 className="card-img sessions-card__instructor-img"
-                onClick={() => navigate(`/profile/${session.tutor?.data?.id}`)}
+                onClick={() => navigate(`/profile/${session.tutor?.id}`)}
               >
-                <img src={session.tutor?.data?.image || ''} alt="instructor" />
+                <img src={session.tutor?.image || ''} alt="instructor" />
               </Button>
             )}
             <div className="user-info">
               {isInstructorAndNotGroup() && (
                 <p className="name">
-                  {session.student?.data?.full_name
-                    ? session.student.data.full_name
+                  {session.student?.first_name
+                    ? `${session.student?.first_name} ${session.student?.last_name ?? ''}`
                     : ''}
                 </p>
               )}
               {notInstructorOrIsGroup() && (
                 <p className="name">
-                  {session.tutor?.data?.full_name
-                    ? session.tutor.data.full_name
+                  {session.tutor?.first_name
+                    ? `${session.tutor?.first_name} ${session.tutor?.last_name ?? ''}`
                     : ''}
                 </p>
               )}
-              {session.type !== 'GroupSession' && (
+              {session.session_type !== 'group' && (
                 <div className="review">
                   <div className="review-stars">
                     <Rating
                       name="instructor rating"
-                      value={session.tutor?.data?.rating || 0}
+                      value={session.tutor?.rating || 0}
                       precision={0.1}
                       readOnly
                     />
                     <span className="review-numbers">
-                      {session.tutor?.data?.rating || 0} / 5.0
+                      {session.tutor?.rating || 0} / 5.0
                     </span>
                   </div>
                 </div>
               )}
-              {session.type === 'GroupSession' && (
-                <p className="u-color-body u-font-size-12">
-                  {session.course?.data?.course_name || ''}
-                </p>
+              {session.session_type === 'group' && (
+                <p className="u-color-body u-font-size-12">{''}</p>
               )}
             </div>
           </div>
@@ -224,7 +222,7 @@ const SessionListCard: React.FC<SessionListCardProps> = ({ session }) => {
                   )}
                 </div>
               )} */}
-            {session.state === 'open' && (
+            {session.status === 'open' && (
               <div className="sessions-card__status-wrapper">
                 {/* {isInstructor && (
                   <Button
@@ -252,7 +250,7 @@ const SessionListCard: React.FC<SessionListCardProps> = ({ session }) => {
           <div className={`prop-card ${rtlClass()}`}>
             <p className="title">{t('MYSESSIONS.MAIN.CARD.TYPE')}</p>
             <p className="value">
-              {session.type === 'GroupSession' ? <Group /> : <Person />}
+              {session.session_type === 'group' ? <Group /> : <Person />}
               {sessionName}
             </p>
           </div>
@@ -275,7 +273,9 @@ const SessionListCard: React.FC<SessionListCardProps> = ({ session }) => {
           <div className={`prop-card ${rtlClass()}`}>
             <p className="title">{t('MYSESSIONS.MAIN.CARD.SUBJECT')}</p>
             <p className="value field">
-              {session.field?.data?.name ? session.field.data.name : ''}
+              {session?.grade_subject
+                ? session.grade_subject.full_course_name.split(' - ')[2]
+                : ''}
             </p>
           </div>
           <div className={`prop-card ${rtlClass()}`}>
@@ -291,20 +291,21 @@ const SessionListCard: React.FC<SessionListCardProps> = ({ session }) => {
       </div>
       <div className="sessions-card__status u-center-text">
         <div>
-          {session.state === 'scheduled' && (
-            <div className="sessions-card__status-wrapper">
-              <Timer
-                className="u-color-primary u-font-size-18"
-                aria-hidden="true"
-              ></Timer>
-              <p className="u-color-title">
-                {t('MYSESSIONS.MAIN.CARD.WILLGOLIVE')} :{' '}
-                <span>{getRelativeSessionDate()}</span>
-              </p>
-            </div>
-          )}
+          {session.status === 'scheduled' &&
+            parseISO(session.start_time!) > new Date() && (
+              <div className="sessions-card__status-wrapper">
+                <Timer
+                  className="u-color-primary u-font-size-18"
+                  aria-hidden="true"
+                ></Timer>
+                <p className="u-color-title">
+                  {t('MYSESSIONS.MAIN.CARD.WILLGOLIVE')} :{' '}
+                  <span>{getRelativeSessionDate()}</span>
+                </p>
+              </div>
+            )}
 
-          {session.state === 'completed' && (
+          {session.status === 'completed' && (
             <div className="sessions-card__status-wrapper">
               <CheckCircle
                 className="u-color-primary u-font-size-18"
@@ -316,7 +317,9 @@ const SessionListCard: React.FC<SessionListCardProps> = ({ session }) => {
             </div>
           )}
 
-          {session.state === 'missed' && (
+          {(session.status === 'missed' ||
+            (session.status === 'scheduled' &&
+              parseISO(session.start_time!) > new Date())) && (
             <div className="sessions-card__status-wrapper">
               <Cancel
                 className="u-color-danger u-font-size-18"
@@ -328,7 +331,7 @@ const SessionListCard: React.FC<SessionListCardProps> = ({ session }) => {
             </div>
           )}
 
-          {session.state === 'canceled' && (
+          {session.status === 'canceled' && (
             <div className="sessions-card__status-wrapper">
               <Cancel
                 className="u-color-danger u-font-size-18"

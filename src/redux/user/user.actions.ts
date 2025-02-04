@@ -126,13 +126,9 @@ export const getInstructors = createAsyncThunk(
   ) => {
     try {
       showSpinner();
-      const response = await jsonGet(`/tutors`, {
-        params: {
-          include: 'fields,packages',
-          page: pageNumber,
-          per_page: pageSize,
-        },
-      });
+      const response = await jsonGet(
+        `/tutors?${pageSize ? `per_page=${pageSize}` : ''}${pageNumber ? `page=${pageNumber}` : ''}`,
+      );
       hideSpinner();
       return response;
     } catch (error) {

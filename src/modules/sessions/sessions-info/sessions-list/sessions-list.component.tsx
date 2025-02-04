@@ -10,12 +10,14 @@ import {
   selectSessionsPagination,
 } from '../../../../redux/session/session.selectors';
 
-import './sessions-list.styles.scss';
 import { useAppDispatch, useAppSelector } from '../../../../redux/store';
 import { useNavigate } from 'react-router-dom';
 import { getSessions } from '../../../../redux/session/session.actions';
 import { Button } from '@mui/material';
 import { CalendarToday } from '@mui/icons-material';
+import Loader from '../../../../component/app/Loader';
+
+import './sessions-list.styles.scss';
 
 const SessionsList = () => {
   const dispatch = useAppDispatch();
@@ -56,8 +58,14 @@ const SessionsList = () => {
               }),
             )
           }
-          hasMore={Number(sessionsPagination['total-pages']) > 1}
-          loader={<h4 className="loading-text">Loading...</h4>}
+          hasMore={
+            (sessions?.length || 0) < Number(sessionsPagination['total-count'])
+          }
+          loader={
+            <h4 className="loading-text">
+              <Loader />
+            </h4>
+          }
         >
           <div className="sessions-list">
             {sessions && sessions.length > 0 ? (
