@@ -30,7 +30,7 @@ const SessionsList = () => {
   const sessionsPagination = useAppSelector(selectSessionsPagination);
 
   useEffect(() => {
-    dispatch(getSessions({ pageSize: 10 }));
+    dispatch(getSessions({ pageSize: 10, pageNumber: 1 }));
   }, [dispatch]);
 
   useEffect(() => {
@@ -55,6 +55,7 @@ const SessionsList = () => {
             dispatch(
               getSessions({
                 pageSize: Number(sessionsPagination['page-items']) + 10,
+                pageNumber: 1,
               }),
             )
           }

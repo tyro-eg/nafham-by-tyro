@@ -151,6 +151,10 @@
       &.clickable-img {
         cursor: pointer;
       }
+
+      &.avatar {
+        border-radius: 0;
+      }
     }
 
     .edit-icon {

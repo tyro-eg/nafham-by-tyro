@@ -57,13 +57,13 @@ const Login = () => {
         validationSchema={LoginSchema}
         onSubmit={async (values, { setSubmitting }) => {
           try {
-            await dispatch(
+            const loginResponse = await dispatch(
               signInWithEmail({
                 payload: values,
               }),
             );
 
-            if (!signInError) {
+            if (loginResponse?.payload?.id) {
               navigate('/home');
             }
             setSubmitting(false);

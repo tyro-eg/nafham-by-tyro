@@ -13,6 +13,7 @@ import ReadMore from '../../../../component/read-more/read-more.component';
 import EditProfileVideoModal from '../../../../modals/edit-profile-video/edit-profile-video.modal';
 import EditProfileImageModal from '../../../../modals/edit-profile-image/edit-profile-image.modal';
 import { ProfileInfoType, UserInfoType } from '..';
+import Avatar from '../../../../assets/images/Avatar.png';
 
 interface ProfileInfoProps {
   data: ProfileInfoType;
@@ -98,21 +99,28 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({
                     data.online ? 'online' : ''
                   } ${editMode ? 'editMode' : ''}`}
                 >
-                  {!editMode && data.avatar && (
+                  {!editMode && (
                     <Button
                       className="profile-img-btn"
-                      onClick={() => setOpenImageViewModal(true)}
+                      onClick={() =>
+                        (croppedImg || data.avatar) &&
+                        setOpenImageViewModal(true)
+                      }
                     >
-                      <img
-                        className="clickable-img"
-                        src={croppedImg || data.avatar}
-                        alt="Profile"
-                      />
+                      {croppedImg || data.avatar ? (
+                        <img
+                          className="clickable-img"
+                          src={croppedImg || data.avatar}
+                          alt="Profile"
+                        />
+                      ) : (
+                        <img className="avatar" src={Avatar} alt="Profile" />
+                      )}
                     </Button>
                   )}
                   {editMode && (
                     <>
-                      {data.avatar ? (
+                      {data.avatar || croppedImg ? (
                         <>
                           <img src={croppedImg || data.avatar} alt="Profile" />
                           <IconButton

@@ -13,15 +13,13 @@ import { rtlClass } from '../../../assets/utils/utils';
 // import { ReactComponent as Facebook } from '../../../assets/images/auth/Facebook.svg';
 // import { ReactComponent as Google } from '../../../assets/images/auth/google.svg';
 import main from '../../../assets/images/auth/sign.png';
-import { useAppDispatch, useAppSelector } from '../../../redux/store';
-import { selectSignUpError } from '../../../redux/user/user.selectors';
+import { useAppDispatch } from '../../../redux/store';
 import { signUp } from '../../../redux/user/user.actions';
 
 const Register: React.FC = () => {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const signUpError = useAppSelector(selectSignUpError);
 
   const SignUpSchema = object().shape({
     first_name: string()
@@ -85,9 +83,11 @@ const Register: React.FC = () => {
             onSubmit={async (values, { setSubmitting }) => {
               try {
                 const { countryCode, ...submitValues } = values;
-                await dispatch(signUp(submitValues));
+                const signUpResponse = await dispatch(
+                  signUp({ ...submitValues, type: 'Student' }),
+                );
 
-                if (!signUpError) {
+                if (signUpResponse?.payload?.id) {
                   navigate('/home');
                 }
                 setSubmitting(false);
