@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { AppBar, Button, Container, Toolbar, Avatar } from '@mui/material';
+import { AppBar, Button, Container, Toolbar } from '@mui/material';
 import { Popover as TinyPopover } from 'react-tiny-popover';
 import { ExpandMore, Info } from '@mui/icons-material';
 import { useSelector } from 'react-redux';
@@ -9,7 +9,8 @@ import { useSelector } from 'react-redux';
 import { selectCurrentUser } from '../../../redux/user/user.selectors';
 import LanguageSelector from '../../../component/i18next/LanguageSelector';
 import logo from '../../../assets/images/logo.png';
-import { getNameInitials, rtlClass } from '../../../assets/utils/utils';
+import { rtlClass } from '../../../assets/utils/utils';
+import Profile from '../../../assets/images/videoSession/people/profile.png';
 
 import './main-header.styles.scss';
 import { signOut } from '../../../redux/user/user.actions';
@@ -210,11 +211,7 @@ const MainHeader: React.FC<HeaderProps> = ({
                     {currentUser?.img ? (
                       <img src={currentUser?.img} alt="profile" />
                     ) : (
-                      <Avatar>
-                        {getNameInitials(
-                          currentUser?.first_name + ' ' + currentUser.last_name,
-                        )}
-                      </Avatar>
+                      <img src={Profile} alt="profile" />
                     )}
                     <div className="app-header__user-center">
                       <div className="name">

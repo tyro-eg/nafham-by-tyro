@@ -18,10 +18,7 @@ import ResetPasswordModal from '../reset-password/reset-password-modal.component
 // import { ReactComponent as Google } from '../../../assets/images/auth/google.svg';
 
 import './login-modal.styles.scss';
-import {
-  selectCurrentUser,
-  selectSignInError,
-} from '../../redux/user/user.selectors';
+import { selectCurrentUser } from '../../redux/user/user.selectors';
 import { useAppDispatch, useAppSelector } from '../../redux/store';
 import { signInWithEmail } from '../../redux/user/user.actions';
 import { rtlClass } from '../../assets/utils/utils';
@@ -45,7 +42,6 @@ const LoginModal: FC<LoginModalProps> = ({
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const signInError = useAppSelector(selectSignInError);
   const currentUser = useAppSelector(selectCurrentUser);
 
   const LoginSchema = (t: any) =>
@@ -104,13 +100,13 @@ const LoginModal: FC<LoginModalProps> = ({
         validationSchema={LoginSchema(i18n)}
         onSubmit={async (values, { setSubmitting }) => {
           try {
-            await dispatch(
+            const loginResponse = await dispatch(
               signInWithEmail({
                 payload: values,
               }),
             );
 
-            if (!signInError) {
+            if (loginResponse?.payload?.id) {
               navigate('/home');
             }
             setSubmitting(false);

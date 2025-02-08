@@ -87,8 +87,8 @@ const ProfileCalendar: React.FC<ProfileCalendarProps> = ({
       getSlots({
         userId: +instructorId,
         params: {
-          start_time: today.toISOString(),
-          end_time: addDays(today, 7).toISOString(),
+          from: today.toISOString(),
+          to: addDays(today, 7).toISOString(),
         },
       }),
     );
@@ -126,8 +126,8 @@ const ProfileCalendar: React.FC<ProfileCalendarProps> = ({
         getSlots({
           userId: +instructorId,
           params: {
-            start_time: start.toISOString(),
-            end_time: end.toISOString(),
+            from: start.toISOString(),
+            to: end.toISOString(),
           },
         }),
       );
@@ -226,8 +226,8 @@ const ProfileCalendar: React.FC<ProfileCalendarProps> = ({
           getSlots({
             userId: +instructorId,
             params: {
-              start_time: start.toISOString(),
-              end_time: end.toISOString(),
+              from: start.toISOString(),
+              to: end.toISOString(),
             },
           }),
         );

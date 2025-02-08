@@ -21,10 +21,7 @@ import './register-modal.styles.scss';
 import { rtlClass } from '../../assets/utils/utils';
 import { signUp } from '../../redux/user/user.actions';
 import { useAppDispatch, useAppSelector } from '../../redux/store';
-import {
-  selectCurrentUser,
-  selectSignUpError,
-} from '../../redux/user/user.selectors';
+import { selectCurrentUser } from '../../redux/user/user.selectors';
 
 interface RegisterModalProps {
   onClose: () => void;
@@ -46,7 +43,6 @@ const RegisterModal: FC<RegisterModalProps> = ({
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const currentUser = useAppSelector(selectCurrentUser);
-  const signUpError = useAppSelector(selectSignUpError);
 
   const [openCompleteRegisterModal, setOpenCompleteRegisterModal] =
     useState(false);
@@ -77,6 +73,7 @@ const RegisterModal: FC<RegisterModalProps> = ({
 
   useEffect(() => {
     if (currentUser) successLogic();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentUser]);
 
   const goToTerms = () => navigate('/terms');
@@ -135,10 +132,11 @@ const RegisterModal: FC<RegisterModalProps> = ({
               first_name: values.email.split('@')[0],
               last_name: 'Student',
               password_confirmation: values.password,
+              type: 'Student',
             };
-            await dispatch(signUp(user));
+            const signUpResponse = await dispatch(signUp(user));
 
-            if (!signUpError) {
+            if (signUpResponse?.payload?.id) {
               navigate('/home');
             }
             setSubmitting(false);

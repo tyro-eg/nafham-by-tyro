@@ -52,7 +52,7 @@ const SessionsCalendarContainer: React.FC<
 
   useEffect(() => {
     if (currentUser?.id) {
-      dispatch(getSessions({}));
+      dispatch(getSessions({ pageNumber: 1, pageSize: 100 }));
     }
   }, [dispatch, currentUser.id]);
 
