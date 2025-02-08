@@ -44,8 +44,8 @@ export type SessionType = {
 };
 
 interface GetSessionsPayload {
-  pageSize?: number;
-  pageNumber?: number;
+  pageSize: number;
+  pageNumber: number;
 }
 
 interface CancelSessionPayload {
@@ -68,9 +68,10 @@ export const getSessions = createAsyncThunk<any, GetSessionsPayload>(
   async ({ pageSize, pageNumber }, { rejectWithValue }) => {
     try {
       showSpinner();
-      const response = await apiGet(
-        `/sessions?${pageSize ? `per_page=${pageSize}` : ''}${pageNumber ? `page=${pageNumber}` : ''}`,
-      );
+      const response = await apiGet(`/sessions`, {
+        per_page: pageSize,
+        page: pageNumber,
+      });
       hideSpinner();
       return response;
     } catch (error) {

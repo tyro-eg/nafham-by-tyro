@@ -36,8 +36,8 @@ const InstructorCalendar: React.FC<{ instructorId: number }> = ({
         getSlots({
           userId: instructorId,
           params: {
-            start_time: today.toISOString(),
-            end_time: addDays(today, 7).toISOString(),
+            from: today.toISOString(),
+            to: addDays(today, 7).toISOString(),
           },
         }),
       );

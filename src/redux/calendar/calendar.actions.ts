@@ -23,6 +23,14 @@ export type SlotType = {
   updated_at: string;
 };
 
+type GetSlotsParams = {
+  userId: number;
+  params: {
+    from: string;
+    to: string;
+  };
+};
+
 const getErrorMessage = (error: any): string =>
   error.response?.data?.message || error.message || 'Unknown error';
 
@@ -45,13 +53,13 @@ export const createSlots = createAsyncThunk(
 
 export const getSlots = createAsyncThunk(
   'calendar/getSlots',
-  async (
-    { userId, params }: { userId: number; params: any },
-    { rejectWithValue },
-  ) => {
+  async ({ userId, params }: GetSlotsParams, { rejectWithValue }) => {
     try {
       showSpinner();
-      const res = await apiGet(`/tutors/${userId}/availabilities`, params);
+      const res = await apiGet(`/tutors/${userId}/availabilities`, {
+        'by_date_range[start_time]': params.from,
+        'by_date_range[end_time]': params.to,
+      });
       const slots = parseTimeSlotsIntoCalendarEvents(res.data);
       hideSpinner();
       return slots;

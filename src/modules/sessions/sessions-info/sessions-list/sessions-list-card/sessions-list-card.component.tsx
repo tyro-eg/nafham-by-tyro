@@ -28,6 +28,8 @@ import { rtlClass } from '../../../../../assets/utils/utils';
 import { useAppSelector } from '../../../../../redux/store';
 import { SessionType } from '../../../../../redux/session/session.actions';
 
+import Profile from '../../../../../assets/images/videoSession/people/profile.png';
+
 import './sessions-list-card.styles.scss';
 
 interface SessionListCardProps {
@@ -129,7 +131,11 @@ const SessionListCard: React.FC<SessionListCardProps> = ({ session }) => {
           <div className="sessions-card__img-container">
             {isInstructorAndNotGroup() && (
               <div className="card-img">
-                <img src={session.student?.image || ''} alt="student" />
+                {session.student?.image ? (
+                  <img src={session.student?.image} alt="student" />
+                ) : (
+                  <img src={Profile} alt="student" />
+                )}
               </div>
             )}
             {notInstructorOrIsGroup() && (
@@ -137,7 +143,11 @@ const SessionListCard: React.FC<SessionListCardProps> = ({ session }) => {
                 className="card-img sessions-card__instructor-img"
                 onClick={() => navigate(`/profile/${session.tutor?.id}`)}
               >
-                <img src={session.tutor?.image || ''} alt="instructor" />
+                {session.tutor?.image ? (
+                  <img src={session.tutor?.image} alt="instructor" />
+                ) : (
+                  <img src={Profile} alt="instructor" />
+                )}
               </Button>
             )}
             <div className="user-info">

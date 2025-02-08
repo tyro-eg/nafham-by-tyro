@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { post, patch, remove, jsonGet } from '../../assets/utils/api';
+import { post, patch, remove, jsonGet, apiGet } from '../../assets/utils/api';
 import { snackActions } from '../../assets/utils/toaster';
 import { showSpinner, hideSpinner } from '../../assets/utils/utils';
 
@@ -126,9 +126,10 @@ export const getInstructors = createAsyncThunk(
   ) => {
     try {
       showSpinner();
-      const response = await jsonGet(
-        `/tutors?${pageSize ? `per_page=${pageSize}` : ''}${pageNumber ? `page=${pageNumber}` : ''}`,
-      );
+      const response = await apiGet(`/tutors`, {
+        per_page: pageSize,
+        page: pageNumber,
+      });
       hideSpinner();
       return response;
     } catch (error) {
