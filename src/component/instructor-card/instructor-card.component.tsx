@@ -154,7 +154,7 @@ const InstructorCard: React.FC<{ instructor: Instructor }> = ({
         ) : (
           <Button
             endIcon={<ArrowRightAlt />}
-            className="book-now-btn"
+            className={`book-now-btn ${rtlClass()}`}
             variant="contained"
             color="primary"
             onClick={goToProfile}

@@ -9,6 +9,8 @@ import { useTranslation } from 'react-i18next';
 import { parseTimeSlotsIntoCalendarEvents } from '../../../assets/utils/event.utils';
 import { rtlClass } from '../../../assets/utils/utils';
 import { Instructor } from '../../../assets/types';
+import { getSlots } from '../../../redux/calendar/calendar.actions';
+import { useAppDispatch } from '../../../redux/store';
 
 interface StepperCalendarProps {
   instructor: Instructor;
@@ -28,6 +30,7 @@ const StepperCalendar: React.FC<StepperCalendarProps> = ({
   const { t, i18n } = useTranslation();
   const calendarRef = useRef<FullCalendar>(null);
   const validDate = addDays(new Date(), 1);
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     if (instructor?.time_slots?.length) {
@@ -55,6 +58,29 @@ const StepperCalendar: React.FC<StepperCalendarProps> = ({
       event.setProp('title', 'Booked');
       setSelectedEvent(event);
       onSelectSlot(event);
+    }
+  };
+
+  const handleDateChange = () => {
+    const calendarApi = calendarRef.current?.getApi();
+    const view = calendarApi?.view;
+    if (calendarApi) {
+      const { start, end } =
+        view?.activeStart && view?.activeEnd
+          ? { start: view.activeStart, end: view.activeEnd }
+          : { start: new Date(), end: addDays(new Date(), 7) };
+
+      if (instructor.id) {
+        dispatch(
+          getSlots({
+            userId: instructor.id,
+            params: {
+              from: start.toISOString(),
+              to: end.toISOString(),
+            },
+          }),
+        );
+      }
     }
   };
 
@@ -94,14 +120,30 @@ const StepperCalendar: React.FC<StepperCalendarProps> = ({
         <FullCalendar
           ref={calendarRef}
           plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+          customButtons={{
+            day: {
+              text: i18n.language === 'ar' ? 'يوم' : 'day',
+              click: () => {
+                calendarRef.current?.getApi().changeView('timeGridDay');
+                handleDateChange();
+              },
+            },
+            week: {
+              text: i18n.language === 'ar' ? 'أسبوع' : 'week',
+              click: () => {
+                calendarRef.current?.getApi().changeView('timeGridWeek');
+                handleDateChange();
+              },
+            },
+          }}
           headerToolbar={{
             left: 'prev,next today',
             center: 'title',
-            right: 'timeGridWeek,timeGridDay',
+            right: 'week,day',
           }}
           firstDay={getDay(new Date())}
           initialView="timeGridWeek"
-          eventColor="#357cd6"
+          eventColor="#3ac5f1"
           allDaySlot={false}
           slotLabelInterval="00:30"
           slotLabelFormat={{

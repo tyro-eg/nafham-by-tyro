@@ -25,7 +25,7 @@ const SessionsCalendarContainer: React.FC<
   const [currentEvents, setCurrentEvents] = useState<any[]>([]);
   const [openViewCalendarModal, setOpenViewCalendarModal] = useState(false);
   const { t, i18n } = useTranslation();
-  const today = new Date();
+  const today = new Date(new Date().setHours(0, 0, 0, 0));
   const calendarRef = useRef<FullCalendar>(null);
 
   const dispatch = useAppDispatch();
@@ -56,11 +56,13 @@ const SessionsCalendarContainer: React.FC<
     }
   }, [dispatch, currentUser.id]);
 
-  const handleDateChange = (direction: 'next' | 'prev') => {
+  const handleDateChange = (direction?: 'next' | 'prev') => {
     const calendarApi = calendarRef.current?.getApi();
     const view = calendarApi?.view;
     if (calendarApi) {
-      direction === 'next' ? calendarApi.next() : calendarApi.prev();
+      if (direction) {
+        direction === 'next' ? calendarApi.next() : calendarApi.prev();
+      }
 
       const { start, end } =
         view?.activeStart && view?.activeEnd
@@ -92,15 +94,43 @@ const SessionsCalendarContainer: React.FC<
         customButtons={{
           next: { text: 'next', click: () => handleDateChange('next') },
           prev: { text: 'prev', click: () => handleDateChange('prev') },
+          today: {
+            text: i18n.language === 'ar' ? 'اليوم' : 'today',
+            click: () => {
+              calendarRef.current?.getApi().today();
+              handleDateChange();
+            },
+          },
+          day: {
+            text: i18n.language === 'ar' ? 'يوم' : 'day',
+            click: () => {
+              calendarRef.current?.getApi().changeView('timeGridDay');
+              handleDateChange();
+            },
+          },
+          week: {
+            text: i18n.language === 'ar' ? 'أسبوع' : 'week',
+            click: () => {
+              calendarRef.current?.getApi().changeView('timeGridWeek');
+              handleDateChange();
+            },
+          },
+          month: {
+            text: i18n.language === 'ar' ? 'شهر' : 'month',
+            click: () => {
+              calendarRef.current?.getApi().changeView('dayGridMonth');
+              handleDateChange();
+            },
+          },
         }}
         headerToolbar={{
           left: 'prev,next today',
           center: 'title',
-          right: 'dayGridMonth,timeGridWeek,timeGridDay',
+          right: 'day,week,month',
         }}
         firstDay={getDay(new Date())}
         initialView="dayGridMonth"
-        eventColor="#357cd6"
+        eventColor="#3ac5f1"
         allDaySlot={false}
         slotLabelInterval="00:30"
         slotLabelFormat={{
