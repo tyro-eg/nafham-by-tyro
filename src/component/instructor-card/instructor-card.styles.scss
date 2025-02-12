@@ -189,9 +189,21 @@
     height: 22.5rem;
 
     .book-now-btn {
-      width: 19.4rem;
+      width: 20.4rem;
       padding: 1.2rem 4rem;
       margin-top: 1.2rem;
+
+      &.rtl {
+        .MuiButton-endIcon {
+          display: inherit;
+          margin-left: -4px;
+          margin-right: 8px;
+
+          svg {
+            transform: rotate(180deg);
+          }
+        }
+      }
     }
 
     @include respond(tab-port) {

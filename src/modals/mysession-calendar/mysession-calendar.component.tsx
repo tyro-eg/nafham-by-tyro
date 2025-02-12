@@ -257,7 +257,7 @@ const MySessionCalendar: React.FC<MySessionCalendarProps> = ({
             }}
             firstDay={getDay(new Date())}
             initialView="timeGridWeek"
-            eventColor="#357cd6"
+            eventColor="#3ac5f1"
             allDaySlot={false}
             slotLabelInterval="00:30"
             slotLabelFormat={{
