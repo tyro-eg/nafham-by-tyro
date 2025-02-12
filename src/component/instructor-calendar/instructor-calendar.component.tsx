@@ -6,15 +6,10 @@ import interactionPlugin from '@fullcalendar/interaction';
 import arLocale from '@fullcalendar/core/locales/ar-kw';
 import { useTranslation } from 'react-i18next';
 
-import { selectCurrentUser } from '../../redux/user/user.selectors';
 import './instructor-calendar.component.scss';
-import { useAppDispatch, useAppSelector } from '../../redux/store';
+import { useAppDispatch } from '../../redux/store';
 import { addDays, getDay } from 'date-fns';
 import { EventContentArg } from '@fullcalendar/core';
-import {
-  // selectSlotsError,
-  selectTimeSlots,
-} from '../../redux/calendar/calendar.selectors';
 import { getSlots } from '../../redux/calendar/calendar.actions';
 
 const InstructorCalendar: React.FC<{ instructorId: number }> = ({
@@ -22,13 +17,10 @@ const InstructorCalendar: React.FC<{ instructorId: number }> = ({
 }) => {
   const { t, i18n } = useTranslation();
   const dispatch = useAppDispatch();
-  const slots = useAppSelector(selectTimeSlots);
-  const currentUser = useAppSelector(selectCurrentUser);
-  // const error = useAppSelector(selectSlotsError);
-
-  const [currentEvents, setCurrentEvents] = useState(slots || []);
   const calendarRef = useRef<FullCalendar>(null);
-  const today = new Date();
+  const today = new Date(new Date().setHours(0, 0, 0, 0));
+
+  const [slots, setSlots] = useState([]);
 
   useEffect(() => {
     if (instructorId) {
@@ -37,38 +29,45 @@ const InstructorCalendar: React.FC<{ instructorId: number }> = ({
           userId: instructorId,
           params: {
             from: today.toISOString(),
-            to: addDays(today, 7).toISOString(),
+            to: addDays(today, 1).toISOString(),
           },
         }),
-      );
+      ).then((action: any) => {
+        if (action.payload) {
+          setSlots(action.payload);
+        }
+      });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [instructorId]);
 
-  useEffect(() => {
-    setCurrentEvents(slots!);
-  }, [slots]);
-
-  const handleDateChange = (direction: 'next' | 'prev') => {
+  const handleDateChange = (direction?: 'next' | 'prev') => {
     const calendarApi = calendarRef.current?.getApi();
     const view = calendarApi?.view;
     if (calendarApi) {
-      direction === 'next' ? calendarApi.next() : calendarApi.prev();
+      if (direction) {
+        direction === 'next' ? calendarApi.next() : calendarApi.prev();
+      }
 
       const { start, end } =
         view?.activeStart && view?.activeEnd
           ? { start: view.activeStart, end: view.activeEnd }
           : { start: new Date(), end: addDays(new Date(), 7) };
-      if (currentUser?.id) {
+
+      if (instructorId) {
         dispatch(
           getSlots({
-            userId: currentUser.id,
+            userId: instructorId,
             params: {
               from: start.toISOString(),
               to: end.toISOString(),
             },
           }),
-        );
+        ).then((action: any) => {
+          if (action.payload) {
+            setSlots(action.payload);
+          }
+        });
       }
     }
   };
@@ -94,15 +93,36 @@ const InstructorCalendar: React.FC<{ instructorId: number }> = ({
               text: 'prev',
               click: () => handleDateChange('prev'),
             },
+            today: {
+              text: i18n.language === 'ar' ? 'اليوم' : 'today',
+              click: () => {
+                calendarRef.current?.getApi().today();
+                handleDateChange();
+              },
+            },
+            day: {
+              text: i18n.language === 'ar' ? 'يوم' : 'day',
+              click: () => {
+                calendarRef.current?.getApi().changeView('timeGridDay');
+                handleDateChange();
+              },
+            },
+            week: {
+              text: i18n.language === 'ar' ? 'أسبوع' : 'week',
+              click: () => {
+                calendarRef.current?.getApi().changeView('timeGridWeek');
+                handleDateChange();
+              },
+            },
           }}
           headerToolbar={{
             left: 'prev,next today',
             center: 'title',
-            right: 'timeGridWeek,timeGridDay',
+            right: 'day,week',
           }}
           firstDay={getDay(new Date())}
           initialView="timeGridDay"
-          eventColor="#357cd6"
+          eventColor="#3ac5f1"
           allDaySlot={false}
           slotLabelInterval="00:30"
           slotLabelFormat={{
@@ -125,7 +145,7 @@ const InstructorCalendar: React.FC<{ instructorId: number }> = ({
           direction={i18n.dir()}
           validRange={{ start: new Date() }}
           selectMirror
-          events={currentEvents}
+          events={slots}
           eventContent={renderEventContent}
           locale={i18n.language === 'ar' ? arLocale : undefined}
         />

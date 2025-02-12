@@ -14,6 +14,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+
   /* Transparent Overlay */
   p {
     font-size: 1.6rem;
@@ -26,6 +27,7 @@
     z-index: 1;
     text-align: center;
   }
+
   &:before {
     content: '';
     display: block;
@@ -54,7 +56,7 @@
     padding: 2rem;
     border: 3px solid rgba(238, 238, 238, 0.63);
     border-radius: 50%;
-    border-top-color: #357cd6;
+    border-top-color: #3ac5f1;
     animation: spin 1s ease-in-out infinite;
     -webkit-animation: spin 1s ease-in-out infinite;
 
@@ -63,6 +65,7 @@
         -webkit-transform: rotate(360deg);
       }
     }
+
     @-webkit-keyframes spin {
       to {
         -webkit-transform: rotate(360deg);

@@ -11,15 +11,18 @@
   &__container {
     flex-grow: 1;
     position: relative;
+
     &:hover .calendar__hover {
       z-index: 30;
       opacity: 1;
     }
+
     .calendar {
       display: flex;
       align-items: center;
       flex-wrap: wrap;
       justify-content: space-between;
+
       &__legend {
         display: flex;
         flex-wrap: wrap;
@@ -76,19 +79,24 @@
         &--available .color {
           background: $color-primary;
         }
+
         &--not__available .color {
           background: $color-not-available;
         }
+
         &--booked .color {
           background: $color-booked;
         }
+
         &--busy .color {
           background: $color-busy;
         }
+
         &--old-session .color {
           background: $color-old-session;
         }
       }
+
       &__timezone {
         text-align: right;
         line-height: 18px;
@@ -99,10 +107,12 @@
           text-align: center;
           margin-top: 1rem;
         }
+
         p {
           font-size: 1.2rem;
         }
       }
+
       @include respond(phone) {
         justify-content: center;
       }
@@ -115,6 +125,7 @@
         }
       }
     }
+
     .fc-day-today {
       background-color: #ffffff !important;
     }
@@ -127,27 +138,34 @@
           .fc-button-primary {
             background-color: $color-primary;
             border-color: $color-white;
+
             &:focus {
               box-shadow: none;
             }
           }
+
           .fc-button-active {
             background-color: #41b7dc;
+
             &:focus {
               box-shadow: none;
             }
           }
         }
+
         .fc-today-button {
           background-color: $color-primary;
           border-color: $color-white;
+
           &:focus {
             box-shadow: none;
           }
         }
+
         .fc-today-button:disabled {
           cursor: default;
         }
+
         @include respond(phone) {
           .fc-toolbar-title {
             display: none;
@@ -159,18 +177,27 @@
     .fc-direction-ltr .fc-timegrid-slot-label-frame {
       text-align: start;
     }
+
     .fc .fc-timegrid-slot {
       height: 2em;
     }
+
     .fc-timegrid-col-events {
       margin: 0;
       text-align: center;
+
       .fc-timegrid-event {
         margin: 0;
         border-radius: 0.6rem;
       }
     }
+
+    .fc-daygrid-event {
+      padding: 0.5rem;
+      background-color: $color-primary;
+    }
   }
+
   .calendar__hover {
     position: absolute;
     width: 100%;
@@ -203,6 +230,7 @@ b {
   /* used for event dates/times */
   margin-right: 3px;
 }
+
 i {
   vertical-align: middle;
 }

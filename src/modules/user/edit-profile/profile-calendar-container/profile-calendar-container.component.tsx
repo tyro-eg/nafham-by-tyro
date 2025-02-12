@@ -79,7 +79,7 @@ const ProfileCalendar: React.FC<ProfileCalendarProps> = ({
   const [userSlots, setUserSlots] = useState<any[]>([]);
   const [openProfileModal, setOpenProfileModal] = useState(false);
 
-  const today = new Date();
+  const today = new Date(new Date().setHours(0, 0, 0, 0));
   const validDate = addDays(today, 1);
 
   useEffect(() => {
@@ -211,11 +211,13 @@ const ProfileCalendar: React.FC<ProfileCalendarProps> = ({
     event.remove();
   };
 
-  const handleDateChange = (direction: 'next' | 'prev') => {
+  const handleDateChange = (direction?: 'next' | 'prev') => {
     const calendarApi = calendarRef.current?.getApi();
     const view = calendarApi?.view;
     if (calendarApi) {
-      direction === 'next' ? calendarApi.next() : calendarApi.prev();
+      if (direction) {
+        direction === 'next' ? calendarApi.next() : calendarApi.prev();
+      }
 
       const { start, end } =
         view?.activeStart && view?.activeEnd
@@ -303,23 +305,45 @@ const ProfileCalendar: React.FC<ProfileCalendarProps> = ({
             ref={calendarRef}
             plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
             customButtons={{
-              next: {
-                text: 'next',
-                click: () => handleDateChange('next'),
+              next: { text: 'next', click: () => handleDateChange('next') },
+              prev: { text: 'prev', click: () => handleDateChange('prev') },
+              today: {
+                text: i18n.language === 'ar' ? 'اليوم' : 'today',
+                click: () => {
+                  calendarRef.current?.getApi().today();
+                  handleDateChange();
+                },
               },
-              prev: {
-                text: 'prev',
-                click: () => handleDateChange('prev'),
+              day: {
+                text: i18n.language === 'ar' ? 'يوم' : 'day',
+                click: () => {
+                  calendarRef.current?.getApi().changeView('timeGridDay');
+                  handleDateChange();
+                },
+              },
+              week: {
+                text: i18n.language === 'ar' ? 'أسبوع' : 'week',
+                click: () => {
+                  calendarRef.current?.getApi().changeView('timeGridWeek');
+                  handleDateChange();
+                },
+              },
+              month: {
+                text: i18n.language === 'ar' ? 'شهر' : 'month',
+                click: () => {
+                  calendarRef.current?.getApi().changeView('dayGridMonth');
+                  handleDateChange();
+                },
               },
             }}
             headerToolbar={{
               left: 'prev,next today',
               center: 'title',
-              right: 'timeGridWeek,timeGridDay,dayGridMonth',
+              right: 'day,week,month',
             }}
             firstDay={getDay(new Date())}
             initialView="timeGridWeek"
-            eventColor="#357cd6"
+            eventColor="#3ac5f1"
             allDaySlot={false}
             slotLabelInterval="00:30"
             slotLabelFormat={{
