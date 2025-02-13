@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useSnackbar } from 'notistack';
 import { useTranslation } from 'react-i18next';
 import InfiniteScroll from 'react-infinite-scroll-component';
@@ -11,9 +11,7 @@ import {
 } from '../../../../redux/session/session.selectors';
 
 import { useAppDispatch, useAppSelector } from '../../../../redux/store';
-import { useNavigate } from 'react-router-dom';
 import { getSessions } from '../../../../redux/session/session.actions';
-import { Button } from '@mui/material';
 import { CalendarToday } from '@mui/icons-material';
 import Loader from '../../../../component/app/Loader';
 
@@ -23,7 +21,6 @@ const SessionsList = () => {
   const dispatch = useAppDispatch();
   const { enqueueSnackbar } = useSnackbar();
   const { t } = useTranslation();
-  const navigate = useNavigate();
 
   const sessions = useAppSelector(selectSessions);
   const sessionsError = useAppSelector(selectSessionsError);
@@ -42,13 +39,9 @@ const SessionsList = () => {
     }
   }, [sessionsError, enqueueSnackbar]);
 
-  const goToHome = () => {
-    navigate('/home');
-  };
-
   return (
     <div className="sessions-list-container">
-      {sessionsPagination && (
+      {sessionsPagination ? (
         <InfiniteScroll
           dataLength={sessions?.length || 0}
           next={() =>
@@ -82,13 +75,16 @@ const SessionsList = () => {
                 <p className="subtitle">
                   {t('MYSESSIONS.NO_SESSIONS_SUBTITLE')}
                 </p>
-                <Button variant="contained" color="primary" onClick={goToHome}>
-                  {t('MYSESSIONS.NO_SESSIONS_ACTION')}
-                </Button>
               </div>
             )}
           </div>
         </InfiniteScroll>
+      ) : (
+        <div className="no-sessions">
+          <CalendarToday />
+          <p className="title">{t('MYSESSIONS.NO_SESSIONS_TITLE')}</p>
+          <p className="subtitle">{t('MYSESSIONS.NO_SESSIONS_SUBTITLE')}</p>
+        </div>
       )}
     </div>
   );
