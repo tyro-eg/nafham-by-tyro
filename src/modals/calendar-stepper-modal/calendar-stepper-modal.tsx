@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Button,
@@ -68,8 +68,8 @@ const CalendarStepperModal: React.FC<CalendarStepperModalProps> = ({
   const handleSelectedSlot = (slot: any) => setSelectedSlot(slot);
 
   const getSelectedFieldTitle = (value: number | undefined) => {
-    const fieldObj = instructor?.fields?.find((el) => el.id === value);
-    return fieldObj ? `(${fieldObj.name.trim()})` : '';
+    const fieldObj = instructor?.grade_subjects?.find((el) => el.id === value);
+    return fieldObj ? `(${fieldObj.full_course_name.trim()})` : '';
   };
 
   const bookNow = () => {
@@ -126,22 +126,22 @@ const CalendarStepperModal: React.FC<CalendarStepperModalProps> = ({
             </StepLabel>
             <StepContent>
               <div className="fields__wrapper">
-                {instructor?.fields?.map((field) => (
+                {instructor?.grade_subjects?.map((subject) => (
                   <label
-                    key={field.id}
+                    key={subject.id}
                     className="radio"
-                    htmlFor={`${field.id}`}
+                    htmlFor={`${subject.id}`}
                   >
                     <input
                       type="radio"
                       name="radioParent"
-                      id={field.id.toString()}
-                      value={field.id}
-                      checked={field.id === selectedField}
+                      id={subject.id.toString()}
+                      value={subject.id}
+                      checked={subject.id === selectedField}
                       onChange={handleSelectField}
                       onClick={handleNext}
                     />
-                    <span>{field.name}</span>
+                    <span>{subject.full_course_name}</span>
                   </label>
                 ))}
               </div>

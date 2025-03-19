@@ -251,13 +251,13 @@ const EditProfile: React.FC = () => {
         {renderProfileInfo()}
         <div className="profile__container container">
           <div className="profile__fieldsTrail">
-            {instructor?.instructor_fields && (
+            {!!instructor?.grade_subjects?.length && (
               <div
                 className={`profile__fieldsTrail-fields ${
                   freeTrailCardFlag() ? 'withTrial' : ''
                 }`}
               >
-                <ProfileFields fields={instructor.instructor_fields || []} />
+                <ProfileFields fields={instructor.grade_subjects || []} />
               </div>
             )}
             {freeTrailCardFlag() && (

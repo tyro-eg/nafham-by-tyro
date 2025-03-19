@@ -1,16 +1,15 @@
 import React, { useState } from 'react';
-import { Dialog, IconButton, useMediaQuery } from '@mui/material';
+import { Dialog, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import { Close } from '@mui/icons-material';
 import { selectCurrentUser } from '../../redux/user/user.selectors';
 import MainHeader from './main-header/main-header.component';
 import MobileHeader from './mobile-header/mobile-header.component';
-// import FreeTrailModal from '../../components/modals/free-trail-modal/free-trail-modal.component';
 
 import './index.styles.scss';
 import { useAppSelector } from '../../redux/store';
 import EmailConfirmationModal from '../../modals/email-confirmation-modal/email-confirmation-modal.component';
-import FreeTrailModal from '../../modals/free-trail-modal/free-trail-modal.component';
+import RegisterModal from '../../modals/register-modal/register-modal.component';
+import LoginModal from '../../modals/login-modal/login-modal.component';
 
 const Header = () => {
   const theme = useTheme();
@@ -18,15 +17,12 @@ const Header = () => {
 
   const currentUser = useAppSelector(selectCurrentUser);
 
-  const [openFreeTrailModal, setOpenFreeTrailModal] = useState(false);
+  const [openRegisterModal, setOpenRegisterModal] = useState(false);
+  const [openLoginModal, setOpenLoginModal] = useState(false);
   const [openEmailConfirmModal, setOpenEmailConfirmModal] = useState(false);
 
   const triggerOpenFreeTrailModal = () => {
-    setOpenFreeTrailModal(true);
-  };
-
-  const handleCloseFreeTrailModal = () => {
-    setOpenFreeTrailModal(false);
+    setOpenRegisterModal(true);
   };
 
   const handleCloseEmailConfirmModal = () => {
@@ -57,29 +53,32 @@ const Header = () => {
           openEmailConfirm={triggerOpenEmailConfirmModal}
         />
       )}
-      {openFreeTrailModal && (
+      {openRegisterModal && (
         <Dialog
-          maxWidth="md"
+          onClose={() => setOpenRegisterModal(false)}
+          maxWidth="sm"
           fullWidth
-          onClose={handleCloseFreeTrailModal}
-          aria-labelledby="free-trail-dialog"
-          open={openFreeTrailModal}
-          sx={{
-            '.MuiDialog-paper': {
-              width: '100%',
-              margin: 0,
-              borderRadius: '16px',
-            },
-          }}
+          open={openRegisterModal}
         >
-          <IconButton
-            className="modal-close-btn"
-            onClick={handleCloseFreeTrailModal}
-            aria-label="close"
-          >
-            <Close />
-          </IconButton>
-          <FreeTrailModal />
+          <RegisterModal
+            modalData={{}}
+            onClose={() => setOpenRegisterModal(false)}
+            openLoginModal={() => setOpenLoginModal(true)}
+          />
+        </Dialog>
+      )}
+      {openLoginModal && (
+        <Dialog
+          onClose={() => setOpenLoginModal(false)}
+          maxWidth="sm"
+          fullWidth
+          open={openLoginModal}
+        >
+          <LoginModal
+            onClose={() => setOpenLoginModal(false)}
+            openRegisterModal={() => setOpenRegisterModal(true)}
+            modalData={{}}
+          />
         </Dialog>
       )}
       {openEmailConfirmModal && currentUser && currentUser.email && (

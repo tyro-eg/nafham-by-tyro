@@ -2,9 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import './profile-fields.styles.scss';
+import { Field } from '../../../../assets/types';
 
 interface ProfileFieldsProps {
-  fields: string[];
+  fields: Field[];
 }
 
 const ProfileFields: React.FC<ProfileFieldsProps> = ({ fields }) => {
@@ -14,18 +15,19 @@ const ProfileFields: React.FC<ProfileFieldsProps> = ({ fields }) => {
   const [categories, setCategories] = useState<string[]>([]);
 
   useEffect(() => {
-    if (fields?.length) {
+    if (!!fields?.length) {
       separateFields(fields);
     }
   }, [fields]);
 
-  const separateFields = (fieldsList: string[]) => {
+  const separateFields = (fieldsList: Field[]) => {
     const subjectsSet = new Set<string>();
     const categoriesSet = new Set<string>();
     const curriculumsSet = new Set<string>();
 
-    fieldsList.forEach((field) => {
-      const [subject, category, curriculum] = field.split(' | ');
+    fieldsList?.forEach((field) => {
+      const [curriculum, category, subject] =
+        field?.full_course_name?.split(' - ');
       subjectsSet.add(subject);
       categoriesSet.add(category);
       curriculumsSet.add(curriculum);

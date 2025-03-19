@@ -34,15 +34,11 @@ type Schedule = {
   updated_at: string;
 };
 
-type Field = {
+export type Field = {
   id: number;
-  name: string;
+  full_course_name: string;
   created_at: string;
   updated_at: string;
-  price: number;
-  in_person_price: number;
-  parent_id: number;
-  visible: number;
 };
 
 export type Instructor = {
@@ -60,7 +56,7 @@ export type Instructor = {
   free_trial?: FreeTrial;
   tutor_packages?: TutorPackage[];
   time_slots?: Schedule[];
-  fields?: Field[];
+  grade_subjects?: Field[];
   type: 'Tutor' | 'Student';
   bio?: string;
   avatar?: string;

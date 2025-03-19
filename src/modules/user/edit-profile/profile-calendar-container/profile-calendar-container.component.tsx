@@ -260,151 +260,147 @@ const ProfileCalendar: React.FC<ProfileCalendarProps> = ({
 
   return (
     <div className="profile-calendar">
-      <div className="profile-calendar">
-        <div className="profile-calendar__container">
-          <div className="calendar">
-            <div className={`calendar__legend ${rtlClass()}`}>
-              <div className={`calendar__legend--available ${rtlClass()}`}>
-                <div className={`color ${rtlClass()}`}></div>
-                <div className="title">
-                  {t('CALENDAR.MYSESSION.LEGEND.AVAILABLE')}
-                </div>
-              </div>
-
-              <div className={`calendar__legend--not__available ${rtlClass()}`}>
-                <div className={`color ${rtlClass()}`}></div>
-                <div className="title">
-                  {t('CALENDAR.MYSESSION.LEGEND.NOT_AVAILABLE')}
-                </div>
-              </div>
-
-              <div className={`calendar__legend--booked ${rtlClass()}`}>
-                <div className={`color ${rtlClass()}`}></div>
-                <div className="title">
-                  {t('CALENDAR.MYSESSION.LEGEND.RESERVED')}
-                </div>
-              </div>
-
-              <div className={`calendar__legend--busy ${rtlClass()}`}>
-                <div className={`color ${rtlClass()}`}></div>
-                <div className="title">
-                  {t('CALENDAR.MYSESSION.LEGEND.BUSY')}
-                </div>
+      <div className="profile-calendar__container">
+        <div className="calendar">
+          <div className={`calendar__legend ${rtlClass()}`}>
+            <div className={`calendar__legend--available ${rtlClass()}`}>
+              <div className={`color ${rtlClass()}`}></div>
+              <div className="title">
+                {t('CALENDAR.MYSESSION.LEGEND.AVAILABLE')}
               </div>
             </div>
-            <div className="calendar__timezone">
-              <p>{t('CALENDAR.MYSESSION.HEADER.TIMEZONE1')}</p>
-              <p>
-                {t('CALENDAR.MYSESSION.HEADER.TIMEZONE2')}{' '}
-                <span className="u-color-primary">({calculateTimeZone()})</span>
-              </p>
+
+            <div className={`calendar__legend--not__available ${rtlClass()}`}>
+              <div className={`color ${rtlClass()}`}></div>
+              <div className="title">
+                {t('CALENDAR.MYSESSION.LEGEND.NOT_AVAILABLE')}
+              </div>
+            </div>
+
+            <div className={`calendar__legend--booked ${rtlClass()}`}>
+              <div className={`color ${rtlClass()}`}></div>
+              <div className="title">
+                {t('CALENDAR.MYSESSION.LEGEND.RESERVED')}
+              </div>
+            </div>
+
+            <div className={`calendar__legend--busy ${rtlClass()}`}>
+              <div className={`color ${rtlClass()}`}></div>
+              <div className="title">{t('CALENDAR.MYSESSION.LEGEND.BUSY')}</div>
             </div>
           </div>
-
-          <FullCalendar
-            ref={calendarRef}
-            plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-            customButtons={{
-              next: { text: 'next', click: () => handleDateChange('next') },
-              prev: { text: 'prev', click: () => handleDateChange('prev') },
-              today: {
-                text: i18n.language === 'ar' ? 'اليوم' : 'today',
-                click: () => {
-                  calendarRef.current?.getApi().today();
-                  handleDateChange();
-                },
-              },
-              day: {
-                text: i18n.language === 'ar' ? 'يوم' : 'day',
-                click: () => {
-                  calendarRef.current?.getApi().changeView('timeGridDay');
-                  handleDateChange();
-                },
-              },
-              week: {
-                text: i18n.language === 'ar' ? 'أسبوع' : 'week',
-                click: () => {
-                  calendarRef.current?.getApi().changeView('timeGridWeek');
-                  handleDateChange();
-                },
-              },
-              month: {
-                text: i18n.language === 'ar' ? 'شهر' : 'month',
-                click: () => {
-                  calendarRef.current?.getApi().changeView('dayGridMonth');
-                  handleDateChange();
-                },
-              },
-            }}
-            headerToolbar={{
-              left: 'prev,next today',
-              center: 'title',
-              right: 'day,week,month',
-            }}
-            firstDay={getDay(new Date())}
-            initialView="timeGridWeek"
-            eventColor="#3ac5f1"
-            allDaySlot={false}
-            slotLabelInterval="00:30"
-            slotLabelFormat={{
-              hour: '2-digit',
-              minute: '2-digit',
-              omitZeroMinute: false,
-              meridiem: true,
-            }}
-            dayHeaderFormat={{
-              weekday: 'short',
-              month: 'short',
-              day: 'numeric',
-              omitCommas: true,
-            }}
-            buttonText={{
-              today: t('CALENDAR.BUTTONS.TODAY'),
-              month: t('CALENDAR.BUTTONS.MONTH'),
-              week: t('CALENDAR.BUTTONS.WEEK'),
-              day: t('CALENDAR.BUTTONS.DAY'),
-            }}
-            direction={i18n.dir()}
-            validRange={{ start: validDate }}
-            // businessHours={[
-            //   {
-            //     startTime: '08:00',
-            //     daysOfWeek: [0, 1, 2, 3, 4, 5, 6],
-            //   },
-            // ]}
-            selectable={!!showEditMode}
-            selectMirror={!!showEditMode}
-            events={currentEvents}
-            select={handleDateSelect}
-            eventContent={renderEventContent}
-            eventClick={handleEventClick}
-            eventAdd={handleEventAdd}
-            locale={i18n.language === 'ar' ? arLocale : undefined}
-          />
-          {showEditMode && (
-            <div className={`calendar__hover ${editModeFlag ? 'hide' : ''}`}>
-              <Button
-                color="primary"
-                variant="contained"
-                onClick={toggleEditMode}
-                className="calendar__hover--btn"
-              >
-                {t('CALENDAR.PROFILE.EDITPROFILE.EDITPROFILELABEL')}
-              </Button>
-            </div>
-          )}
+          <div className="calendar__timezone">
+            <p>{t('CALENDAR.MYSESSION.HEADER.TIMEZONE1')}</p>
+            <p>
+              {t('CALENDAR.MYSESSION.HEADER.TIMEZONE2')}{' '}
+              <span className="u-color-primary">({calculateTimeZone()})</span>
+            </p>
+          </div>
         </div>
-        {openProfileModal && (
-          <Dialog
-            maxWidth="sm"
-            fullWidth
-            onClose={handleCloseProfileModal}
-            open={openProfileModal}
-          >
-            <ProfileModal instructorId={instructorId} />
-          </Dialog>
+
+        <FullCalendar
+          ref={calendarRef}
+          plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+          customButtons={{
+            next: { text: 'next', click: () => handleDateChange('next') },
+            prev: { text: 'prev', click: () => handleDateChange('prev') },
+            today: {
+              text: i18n.language === 'ar' ? 'اليوم' : 'today',
+              click: () => {
+                calendarRef.current?.getApi().today();
+                handleDateChange();
+              },
+            },
+            day: {
+              text: i18n.language === 'ar' ? 'يوم' : 'day',
+              click: () => {
+                calendarRef.current?.getApi().changeView('timeGridDay');
+                handleDateChange();
+              },
+            },
+            week: {
+              text: i18n.language === 'ar' ? 'أسبوع' : 'week',
+              click: () => {
+                calendarRef.current?.getApi().changeView('timeGridWeek');
+                handleDateChange();
+              },
+            },
+            month: {
+              text: i18n.language === 'ar' ? 'شهر' : 'month',
+              click: () => {
+                calendarRef.current?.getApi().changeView('dayGridMonth');
+                handleDateChange();
+              },
+            },
+          }}
+          headerToolbar={{
+            left: 'prev,next today',
+            center: 'title',
+            right: 'day,week,month',
+          }}
+          firstDay={getDay(new Date())}
+          initialView="timeGridWeek"
+          eventColor="#3ac5f1"
+          allDaySlot={false}
+          slotLabelInterval="00:30"
+          slotLabelFormat={{
+            hour: '2-digit',
+            minute: '2-digit',
+            omitZeroMinute: false,
+            meridiem: true,
+          }}
+          dayHeaderFormat={{
+            weekday: 'short',
+            month: 'short',
+            day: 'numeric',
+            omitCommas: true,
+          }}
+          buttonText={{
+            today: t('CALENDAR.BUTTONS.TODAY'),
+            month: t('CALENDAR.BUTTONS.MONTH'),
+            week: t('CALENDAR.BUTTONS.WEEK'),
+            day: t('CALENDAR.BUTTONS.DAY'),
+          }}
+          direction={i18n.dir()}
+          validRange={{ start: validDate }}
+          // businessHours={[
+          //   {
+          //     startTime: '08:00',
+          //     daysOfWeek: [0, 1, 2, 3, 4, 5, 6],
+          //   },
+          // ]}
+          selectable={!!showEditMode}
+          selectMirror={!!showEditMode}
+          events={currentEvents}
+          select={handleDateSelect}
+          eventContent={renderEventContent}
+          eventClick={handleEventClick}
+          eventAdd={handleEventAdd}
+          locale={i18n.language === 'ar' ? arLocale : undefined}
+        />
+        {showEditMode && (
+          <div className={`calendar__hover ${editModeFlag ? 'hide' : ''}`}>
+            <Button
+              color="primary"
+              variant="contained"
+              onClick={toggleEditMode}
+              className="calendar__hover--btn"
+            >
+              {t('CALENDAR.PROFILE.EDITPROFILE.EDITPROFILELABEL')}
+            </Button>
+          </div>
         )}
       </div>
+      {openProfileModal && (
+        <Dialog
+          maxWidth="sm"
+          fullWidth
+          onClose={handleCloseProfileModal}
+          open={openProfileModal}
+        >
+          <ProfileModal instructorId={instructorId} />
+        </Dialog>
+      )}
     </div>
   );
 };
