@@ -1,0 +1,212 @@
+@import '../../../assets/styles/variables.scss';
+@import '../../../assets/styles/mixins.scss';
+
+.stepper-calendar {
+  display: flex;
+  font-size: 14px;
+  background-color: $color-white;
+  border-radius: 0.5rem;
+  width: 100%;
+
+  &__container {
+    flex-grow: 1;
+    position: relative;
+
+    .calendar {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: space-between;
+
+      &__legend {
+        display: flex;
+        flex-wrap: wrap;
+
+        @include respond(tab-port) {
+          order: 3;
+          margin: 1rem 1rem 0;
+        }
+
+        @include respond(phone) {
+          order: 3;
+          justify-content: center;
+
+          margin: 1rem;
+        }
+
+        &.rtl {
+          margin-right: 1rem;
+          margin-left: 0;
+        }
+
+        [class^='calendar__legend'] {
+          display: flex;
+          align-items: center;
+
+          .title {
+            font-size: 1rem;
+          }
+
+          .color {
+            height: 1.5rem;
+            width: 1.5rem;
+
+            border-radius: 2px;
+
+            margin-right: 5px;
+
+            &.rtl {
+              margin-left: 5px;
+              margin-right: 0;
+            }
+          }
+        }
+
+        [class^='calendar__legend']:not(:last-child) {
+          margin-right: 1rem;
+
+          &.rtl {
+            margin-left: 1rem;
+            margin-right: 0;
+          }
+        }
+
+        &--available .color {
+          background: $color-primary;
+        }
+
+        &--not__available .color {
+          background: $color-not-available;
+        }
+
+        &--booked .color {
+          background: $color-booked;
+        }
+
+        &--busy .color {
+          background: $color-busy;
+        }
+
+        &--old-session .color {
+          background: $color-old-session;
+        }
+      }
+
+      &__timezone {
+        text-align: right;
+        line-height: 18px;
+        order: 2;
+
+        @include respond(phone) {
+          width: 100%;
+          text-align: center;
+          margin-top: 1rem;
+        }
+
+        p {
+          font-size: 1.2rem;
+        }
+      }
+
+      @include respond(phone) {
+        justify-content: center;
+      }
+    }
+
+    .fc {
+      .fc-view-harness {
+        max-height: 37rem;
+      }
+
+      @include respond(phone) {
+        table {
+          font-size: 1.2rem;
+        }
+      }
+    }
+
+    .fc-day-today {
+      background-color: #ffffff !important;
+    }
+
+    .fc-header-toolbar {
+      margin-bottom: 0.5rem;
+
+      .fc-toolbar-chunk {
+        .fc-button-group {
+          .fc-button-primary {
+            background-color: $color-primary;
+            border-color: $color-white;
+
+            &:focus {
+              box-shadow: none;
+            }
+
+            &:disabled {
+              cursor: not-allowed;
+            }
+          }
+
+          .fc-button-active {
+            background-color: #41b7dc;
+
+            &:focus {
+              box-shadow: none;
+            }
+          }
+        }
+
+        .fc-today-button {
+          background-color: $color-primary;
+          border-color: $color-white;
+
+          &:focus {
+            box-shadow: none;
+          }
+        }
+
+        .fc-today-button:disabled {
+          cursor: not-allowed;
+        }
+
+        @include respond(phone) {
+          .fc-toolbar-title {
+            display: none;
+          }
+        }
+      }
+    }
+
+    .fc-direction-ltr .fc-timegrid-slot-label-frame {
+      text-align: start;
+    }
+
+    .fc .fc-timegrid-slot {
+      height: 2em;
+    }
+
+    .fc-timegrid-col-events {
+      margin: 0;
+      text-align: center;
+
+      .fc-timegrid-event {
+        margin: 0;
+        border-radius: 0.6rem;
+      }
+    }
+
+    .fc-daygrid-event {
+      padding: 0.5rem;
+      background-color: $color-primary;
+    }
+  }
+}
+
+b {
+  /* used for event dates/times */
+  margin-right: 3px;
+}
+
+i {
+  vertical-align: middle;
+}

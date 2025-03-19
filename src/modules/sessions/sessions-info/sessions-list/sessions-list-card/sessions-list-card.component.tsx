@@ -329,7 +329,7 @@ const SessionListCard: React.FC<SessionListCardProps> = ({ session }) => {
 
           {(session.status === 'missed' ||
             (session.status === 'scheduled' &&
-              parseISO(session.start_time!) > new Date())) && (
+              parseISO(session.start_time!) < new Date())) && (
             <div className="sessions-card__status-wrapper">
               <Cancel
                 className="u-color-danger u-font-size-18"

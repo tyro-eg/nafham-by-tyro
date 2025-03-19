@@ -6,11 +6,13 @@ import interactionPlugin from '@fullcalendar/interaction';
 import arLocale from '@fullcalendar/core/locales/ar-kw';
 import { getDay, addDays } from 'date-fns';
 import { useTranslation } from 'react-i18next';
-import { parseTimeSlotsIntoCalendarEvents } from '../../../assets/utils/event.utils';
 import { rtlClass } from '../../../assets/utils/utils';
 import { Instructor } from '../../../assets/types';
 import { getSlots } from '../../../redux/calendar/calendar.actions';
-import { useAppDispatch } from '../../../redux/store';
+import { useAppDispatch, useAppSelector } from '../../../redux/store';
+
+import './stepper-calendar.styles.scss';
+import { selectTimeSlots } from '../../../redux/calendar/calendar.selectors';
 
 interface StepperCalendarProps {
   instructor: Instructor;
@@ -29,14 +31,28 @@ const StepperCalendar: React.FC<StepperCalendarProps> = ({
   const [selectedEvent, setSelectedEvent] = useState<any | null>(null);
   const { t, i18n } = useTranslation();
   const calendarRef = useRef<FullCalendar>(null);
-  const validDate = addDays(new Date(), 1);
+  const today = new Date(new Date().setHours(0, 0, 0, 0));
+  const validDate = addDays(today, 1);
   const dispatch = useAppDispatch();
 
+  const slots = useAppSelector(selectTimeSlots);
+
   useEffect(() => {
-    if (instructor?.time_slots?.length) {
-      setCurrentEvents(parseTimeSlotsIntoCalendarEvents(instructor.time_slots));
-    }
+    dispatch(
+      getSlots({
+        userId: +instructor.id,
+        params: {
+          from: today.toISOString(),
+          to: addDays(today, 7).toISOString(),
+        },
+      }),
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [instructor]);
+
+  useEffect(() => {
+    setCurrentEvents(slots || []);
+  }, [slots]);
 
   const calculateTimeZone = () => {
     const timeZoneArr = new Date().toTimeString().substring(9, 17).split('+');
@@ -61,19 +77,22 @@ const StepperCalendar: React.FC<StepperCalendarProps> = ({
     }
   };
 
-  const handleDateChange = () => {
+  const handleDateChange = (direction?: 'next' | 'prev') => {
     const calendarApi = calendarRef.current?.getApi();
     const view = calendarApi?.view;
     if (calendarApi) {
+      if (direction) {
+        direction === 'next' ? calendarApi.next() : calendarApi.prev();
+      }
+
       const { start, end } =
         view?.activeStart && view?.activeEnd
           ? { start: view.activeStart, end: view.activeEnd }
           : { start: new Date(), end: addDays(new Date(), 7) };
-
-      if (instructor.id) {
+      if (instructor?.id) {
         dispatch(
           getSlots({
-            userId: instructor.id,
+            userId: +instructor.id,
             params: {
               from: start.toISOString(),
               to: end.toISOString(),
@@ -91,21 +110,35 @@ const StepperCalendar: React.FC<StepperCalendarProps> = ({
   );
 
   return (
-    <div className="calendar-container">
-      <div className="calendar-container-main">
+    <div className="stepper-calendar">
+      <div className="stepper-calendar__container">
         <div className="calendar">
           <div className={`calendar__legend ${rtlClass()}`}>
-            {['AVAILABLE', 'NOT_AVAILABLE', 'RESERVED', 'BUSY'].map((key) => (
-              <div
-                key={key}
-                className={`calendar__legend--${key.toLowerCase()} ${rtlClass()}`}
-              >
-                <div className={`color ${rtlClass()}`} />
-                <div className="title">
-                  {t(`CALENDAR.MYSESSION.LEGEND.${key}`)}
-                </div>
+            <div className={`calendar__legend--available ${rtlClass()}`}>
+              <div className={`color ${rtlClass()}`}></div>
+              <div className="title">
+                {t('CALENDAR.MYSESSION.LEGEND.AVAILABLE')}
               </div>
-            ))}
+            </div>
+
+            <div className={`calendar__legend--not__available ${rtlClass()}`}>
+              <div className={`color ${rtlClass()}`}></div>
+              <div className="title">
+                {t('CALENDAR.MYSESSION.LEGEND.NOT_AVAILABLE')}
+              </div>
+            </div>
+
+            <div className={`calendar__legend--booked ${rtlClass()}`}>
+              <div className={`color ${rtlClass()}`}></div>
+              <div className="title">
+                {t('CALENDAR.MYSESSION.LEGEND.RESERVED')}
+              </div>
+            </div>
+
+            <div className={`calendar__legend--busy ${rtlClass()}`}>
+              <div className={`color ${rtlClass()}`}></div>
+              <div className="title">{t('CALENDAR.MYSESSION.LEGEND.BUSY')}</div>
+            </div>
           </div>
 
           <div className="calendar__timezone">
@@ -121,6 +154,15 @@ const StepperCalendar: React.FC<StepperCalendarProps> = ({
           ref={calendarRef}
           plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
           customButtons={{
+            next: { text: 'next', click: () => handleDateChange('next') },
+            prev: { text: 'prev', click: () => handleDateChange('prev') },
+            today: {
+              text: i18n.language === 'ar' ? 'اليوم' : 'today',
+              click: () => {
+                calendarRef.current?.getApi().today();
+                handleDateChange();
+              },
+            },
             day: {
               text: i18n.language === 'ar' ? 'يوم' : 'day',
               click: () => {
@@ -135,11 +177,18 @@ const StepperCalendar: React.FC<StepperCalendarProps> = ({
                 handleDateChange();
               },
             },
+            month: {
+              text: i18n.language === 'ar' ? 'شهر' : 'month',
+              click: () => {
+                calendarRef.current?.getApi().changeView('dayGridMonth');
+                handleDateChange();
+              },
+            },
           }}
           headerToolbar={{
             left: 'prev,next today',
             center: 'title',
-            right: 'week,day',
+            right: 'day,week,month',
           }}
           firstDay={getDay(new Date())}
           initialView="timeGridWeek"

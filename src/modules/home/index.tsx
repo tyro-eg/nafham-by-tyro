@@ -11,17 +11,29 @@ import HomeTestimonial from './home-testimonial/home-testimonial.component';
 import HomeWhyUs from './why-us/why-us.component';
 import HomeReadyForLearning from './home-ready-for-learning/home-ready-for-learning.component';
 import HomeFeatures from './home-features/home-features.component';
+import FreeTrailModal from '../../modals/free-trail-modal/free-trail-modal.component';
+import RegisterModal from '../../modals/register-modal/register-modal.component';
+import LoginModal from '../../modals/login-modal/login-modal.component';
+import { useAppSelector } from '../../redux/store';
+import { selectCurrentUser } from '../../redux/user/user.selectors';
 
 import { rtlClass } from '../../assets/utils/utils';
 
 import './index.scss';
-import FreeTrailModal from '../../modals/free-trail-modal/free-trail-modal.component';
 
 const Home: React.FC = () => {
   const [openFreeTrailModal, setOpenFreeTrailModal] = useState(false);
+  const [openRegisterModal, setOpenRegisterModal] = useState(false);
+  const [openLoginModal, setOpenLoginModal] = useState(false);
+
+  const currentUser = useAppSelector(selectCurrentUser);
 
   const triggerOpenFreeTrailModal = () => {
-    setOpenFreeTrailModal(true);
+    if (currentUser) {
+      setOpenFreeTrailModal(true);
+      return;
+    }
+    setOpenRegisterModal(true);
   };
 
   const handleCloseFreeTrailModal = () => {
@@ -62,6 +74,34 @@ const Home: React.FC = () => {
             <Close />
           </IconButton>
           <FreeTrailModal />
+        </Dialog>
+      )}
+      {openRegisterModal && (
+        <Dialog
+          onClose={() => setOpenRegisterModal(false)}
+          maxWidth="sm"
+          fullWidth
+          open={openRegisterModal}
+        >
+          <RegisterModal
+            modalData={{}}
+            onClose={() => setOpenRegisterModal(false)}
+            openLoginModal={() => setOpenLoginModal(true)}
+          />
+        </Dialog>
+      )}
+      {openLoginModal && (
+        <Dialog
+          onClose={() => setOpenLoginModal(false)}
+          maxWidth="sm"
+          fullWidth
+          open={openLoginModal}
+        >
+          <LoginModal
+            onClose={() => setOpenLoginModal(false)}
+            openRegisterModal={() => setOpenRegisterModal(true)}
+            modalData={{}}
+          />
         </Dialog>
       )}
     </div>
