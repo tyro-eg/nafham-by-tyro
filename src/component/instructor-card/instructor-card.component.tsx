@@ -97,11 +97,11 @@ const InstructorCard: React.FC<{ instructor: Instructor }> = ({
             </Button>
           </Box>
 
-          {instructor.fields && (
+          {!!instructor.grade_subjects?.length && (
             <div className="instructor-card__fields">
-              {instructor.fields?.map((field) => (
-                <div key={field.id} className="instructor-card__field">
-                  {field.name}
+              {instructor.grade_subjects.map((subject) => (
+                <div key={subject.id} className="instructor-card__field">
+                  {subject.full_course_name}
                 </div>
               ))}
             </div>

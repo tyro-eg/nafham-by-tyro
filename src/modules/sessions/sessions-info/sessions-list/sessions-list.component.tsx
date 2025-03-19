@@ -13,7 +13,6 @@ import {
 import { useAppDispatch, useAppSelector } from '../../../../redux/store';
 import { getSessions } from '../../../../redux/session/session.actions';
 import { CalendarToday } from '@mui/icons-material';
-import Loader from '../../../../component/app/Loader';
 
 import './sessions-list.styles.scss';
 
@@ -55,11 +54,7 @@ const SessionsList = () => {
           hasMore={
             (sessions?.length || 0) < Number(sessionsPagination['total-count'])
           }
-          loader={
-            <h4 className="loading-text">
-              <Loader />
-            </h4>
-          }
+          loader={<p>loading...</p>}
         >
           <div className="sessions-list">
             {sessions && sessions.length > 0 ? (

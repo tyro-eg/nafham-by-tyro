@@ -33,7 +33,6 @@
 
     .card-details {
       display: flex;
-      align-items: center;
       justify-content: space-between;
       margin-bottom: 1.4rem;
 
@@ -157,7 +156,7 @@
     justify-content: flex-start;
     align-items: center;
     align-content: flex-start;
-    height: 7rem;
+    max-height: 7rem;
     overflow: hidden;
     gap: 4px;
 

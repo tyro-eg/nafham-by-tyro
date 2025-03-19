@@ -76,6 +76,11 @@ const LoginModal: FC<LoginModalProps> = ({
     setOpenForgetPasswordModal(false);
   const goToTerms = () => navigate('/terms');
 
+  const onRegister = () => {
+    openRegisterModal();
+    onClose();
+  };
+
   return (
     <div className="login-modal">
       <div className="login-modal__card">
@@ -166,7 +171,7 @@ const LoginModal: FC<LoginModalProps> = ({
             <div className="no-account">
               <p className="register-text">
                 {t('LOGIN.NO_ACCOUNT')}
-                <Button onClick={openRegisterModal} className="register-link">
+                <Button onClick={onRegister} className="register-link">
                   {t('LOGIN.REGISTER')}
                 </Button>
               </p>

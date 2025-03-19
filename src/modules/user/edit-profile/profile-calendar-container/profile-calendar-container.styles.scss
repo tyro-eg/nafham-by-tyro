@@ -119,6 +119,10 @@
     }
 
     .fc {
+      .fc-view-harness {
+        max-height: 55rem;
+      }
+
       @include respond(phone) {
         table {
           font-size: 1.2rem;
@@ -142,6 +146,10 @@
             &:focus {
               box-shadow: none;
             }
+
+            &:disabled {
+              cursor: not-allowed;
+            }
           }
 
           .fc-button-active {
@@ -163,7 +171,7 @@
         }
 
         .fc-today-button:disabled {
-          cursor: default;
+          cursor: not-allowed;
         }
 
         @include respond(phone) {
