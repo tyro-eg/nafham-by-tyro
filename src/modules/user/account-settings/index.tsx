@@ -1,4 +1,4 @@
-import ChangePassword from './change-password/change-password.component';
+// import ChangePassword from './change-password/change-password.component';
 import ContactDetails from './contact-details/contact-details.component';
 
 import './index.scss';
@@ -6,7 +6,7 @@ import './index.scss';
 const AccountSettings = () => (
   <div className="edit-user">
     <ContactDetails />
-    <ChangePassword />
+    {/* <ChangePassword /> */}
   </div>
 );
 

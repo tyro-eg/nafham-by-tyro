@@ -84,3 +84,16 @@ export type InstructorProfile = {
   updated_at: string;
   video_url: string;
 };
+
+export type CurrentUser = {
+  id: number;
+  avatar: string;
+  created_at: string;
+  email: string;
+  first_name: string;
+  last_name: string;
+  phone_number: string;
+  type: 'Tutor' | 'Student';
+  updated_at: string;
+  email_confirmed: boolean;
+};

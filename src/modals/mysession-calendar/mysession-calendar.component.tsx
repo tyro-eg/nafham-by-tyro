@@ -155,7 +155,7 @@ const MySessionCalendar: React.FC<MySessionCalendarProps> = ({
         start_date: chunk[0].startStr,
         end_date: chunk[chunk.length - 1].endStr,
         tutor_id: +instructors![0].id,
-        student_id: +currentUser.id,
+        student_id: +currentUser?.id!,
         field_id: 15,
         time_slots: slotsIds,
       };
