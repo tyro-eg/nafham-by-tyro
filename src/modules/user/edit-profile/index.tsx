@@ -163,7 +163,7 @@ const EditProfile: React.FC = () => {
 
   const updateProfile = () => {
     doUpdateSlots((prev) => prev + 1);
-    const { slots, ...info } = profileUserInfo || {};
+    const { slots, avatar, ...info } = profileUserInfo || {};
     dispatch(
       updateTutorInfo({
         id: +id!,
