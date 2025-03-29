@@ -20,7 +20,7 @@ import './index.scss';
 import { useAppDispatch, useAppSelector } from '../../../redux/store';
 import {
   getInstructorById,
-  updateUserInfo,
+  updateTutorInfo,
 } from '../../../redux/user/user.actions';
 import AppCard from '../../../component/card/app-card.component';
 import { selectTimeSlots } from '../../../redux/calendar/calendar.selectors';
@@ -164,7 +164,12 @@ const EditProfile: React.FC = () => {
   const updateProfile = () => {
     doUpdateSlots((prev) => prev + 1);
     const { slots, ...info } = profileUserInfo || {};
-    dispatch(updateUserInfo({ id: +id!, type: '', userData: info }));
+    dispatch(
+      updateTutorInfo({
+        id: +id!,
+        userData: { tutor: info },
+      }),
+    );
   };
 
   const onBlockingMissingInformation = (flag: boolean) =>

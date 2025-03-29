@@ -36,7 +36,7 @@ const SessionsCalendarContainer: React.FC<
   useEffect(() => {
     dispatch(
       getSlots({
-        userId: currentUser.id,
+        userId: currentUser?.id!,
         params: {
           from: today.toISOString(),
           to: addDays(today, 30).toISOString(),
@@ -44,7 +44,7 @@ const SessionsCalendarContainer: React.FC<
       }),
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch, currentUser.id]);
+  }, [dispatch, currentUser?.id]);
 
   useEffect(() => {
     setCurrentEvents(slots!);
@@ -54,7 +54,7 @@ const SessionsCalendarContainer: React.FC<
     if (currentUser?.id) {
       dispatch(getSessions({ pageNumber: 1, pageSize: 100 }));
     }
-  }, [dispatch, currentUser.id]);
+  }, [dispatch, currentUser?.id]);
 
   const handleDateChange = (direction?: 'next' | 'prev') => {
     const calendarApi = calendarRef.current?.getApi();

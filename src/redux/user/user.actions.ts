@@ -8,6 +8,21 @@ interface SignInPayload {
   password: string;
 }
 
+interface UpdateTutorInfoPayload {
+  id: number;
+  userData: {
+    tutor: {
+      first_name?: string;
+      last_name?: string;
+      phone_number?: string;
+      email?: string;
+      video_url?: string;
+      bio?: string;
+      avatar?: any;
+    };
+  };
+}
+
 interface UpdateUserInfoPayload {
   id: number;
   type: string;
@@ -159,6 +174,23 @@ export const getInstructorById = createAsyncThunk<
     return rejectWithValue(errorMessage);
   }
 });
+
+export const updateTutorInfo = createAsyncThunk<any, UpdateTutorInfoPayload>(
+  'user/updateTutorInfo',
+  async ({ id, userData }, { rejectWithValue }) => {
+    try {
+      showSpinner();
+      const response = await patch(`/tutors/${id}`, userData);
+      hideSpinner();
+      return response?.data?.data || {};
+    } catch (error) {
+      const errorMessage = getErrorMessage(error);
+      snackActions.error(errorMessage);
+      hideSpinner();
+      return rejectWithValue(errorMessage);
+    }
+  },
+);
 
 export const updateUserInfo = createAsyncThunk<void, UpdateUserInfoPayload>(
   'user/updateUserInfo',

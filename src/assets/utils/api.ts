@@ -12,7 +12,7 @@ interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig {
 }
 
 const baseURL = process.env.REACT_APP_API_BASE_URL;
-const userType = localStorage.getItem('tyro.type');
+// const userType = localStorage.getItem('tyro.type');
 
 // Define Axios/Kitsu instances
 const api = new Kitsu({
@@ -64,7 +64,7 @@ axios.interceptors.response.use(
       if (originalRequest) originalRequest._retry = true;
 
       try {
-        const res = await axios.post(`${baseURL}/users/tokens`, null, {
+        const res = await axios.post(`${baseURL}/users/tokens`, undefined, {
           headers: {
             Authorization: accessToken,
             'Refresh-Token': refreshToken,
@@ -110,7 +110,7 @@ api.interceptors.response.use(
       if (originalRequest) originalRequest._retry = true;
 
       try {
-        const res = await axios.post(`${baseURL}/users/tokens`, null, {
+        const res = await axios.post(`${baseURL}/users/tokens`, undefined, {
           headers: {
             Authorization: accessToken,
             'Refresh-Token': refreshToken,

@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Button, IconButton, Dialog, Rating } from '@mui/material';
-import EditIcon from '@mui/icons-material/Edit';
+import { Button, Dialog, Rating } from '@mui/material';
+// import EditIcon from '@mui/icons-material/Edit';
 import { useTranslation } from 'react-i18next';
 
 import { getYoutubeId } from '../edit-profile.utils';
 import { rtlClass } from '../../../../assets/utils/utils';
 import thumbnailPlaceholder from '../../../../assets/images/video-edit-placeholder_16@2x.png';
-import { ReactComponent as ProfileImgPlaceholder } from '../../../../assets/images/img-placeholder_23@2x.svg';
+// import { ReactComponent as ProfileImgPlaceholder } from '../../../../assets/images/img-placeholder_23@2x.svg';
 
 import './profile-info.styles.scss';
 import ReadMore from '../../../../component/read-more/read-more.component';
@@ -95,11 +95,9 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({
             <div className="profile-info__instructor">
               <div className="profile-info__instructor-card">
                 <div
-                  className={`profile-info__instructor-img ${
-                    data.online ? 'online' : ''
-                  } ${editMode ? 'editMode' : ''}`}
+                  className={`profile-info__instructor-img ${editMode ? 'editMode' : ''}`}
                 >
-                  {!editMode && (
+                  {
                     <Button
                       className="profile-img-btn"
                       onClick={() =>
@@ -117,8 +115,8 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({
                         <img className="avatar" src={Avatar} alt="Profile" />
                       )}
                     </Button>
-                  )}
-                  {editMode && (
+                  }
+                  {/* {editMode && (
                     <>
                       {data.avatar || croppedImg ? (
                         <>
@@ -139,7 +137,7 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({
                         </Button>
                       )}
                     </>
-                  )}
+                  )} */}
                 </div>
 
                 <div className="profile-info__instructor-info">
