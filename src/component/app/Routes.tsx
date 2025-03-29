@@ -2,6 +2,7 @@ import React, { Suspense, lazy } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import GuardedRoute from '../guarded-route/guarded-route.component';
 import Loader from './Loader';
+import { CurrentUser } from '../../assets/types';
 
 const Home = lazy(() => import('../../modules/home/index'));
 const SignIn = lazy(() => import('../../modules/auth/signin/signin.component'));
@@ -30,7 +31,7 @@ const Terms = lazy(() => import('../../modules/terms/index.component'));
 const NotFound404 = lazy(() => import('../../modules/404/index.component'));
 
 interface RoutesProps {
-  currentUser: any;
+  currentUser: CurrentUser | null;
 }
 
 const RoutesComponent: React.FC<RoutesProps> = ({ currentUser }) => (
@@ -52,7 +53,10 @@ const RoutesComponent: React.FC<RoutesProps> = ({ currentUser }) => (
       <Route
         path="/account_settings"
         element={
-          <GuardedRoute element={<AccountSettings />} auth={!!currentUser} />
+          <GuardedRoute
+            element={<AccountSettings />}
+            auth={!!currentUser && currentUser.type === 'Tutor'}
+          />
         }
       />
       <Route

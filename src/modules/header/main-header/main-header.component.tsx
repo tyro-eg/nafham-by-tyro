@@ -168,27 +168,33 @@ const MainHeader: React.FC<HeaderProps> = ({
                   content={
                     <div className="profile-popover">
                       <div className="title">
-                        <div className="name">{currentUser?.full_name}</div>
+                        <div className="name">
+                          {currentUser?.first_name +
+                            ' ' +
+                            currentUser?.last_name}
+                        </div>
                         <span>{currentUser?.email}</span>
                       </div>
 
                       {currentUser?.type === 'Tutor' && (
-                        <Link
-                          onClick={() => setProfilePopoverOpen(false)}
-                          to={`/profile/${currentUser?.id}`}
-                          className="item"
-                        >
-                          {t('HEADER.USER.PROFILE')}
-                        </Link>
-                      )}
+                        <>
+                          <Link
+                            onClick={() => setProfilePopoverOpen(false)}
+                            to={`/profile/${currentUser?.id}`}
+                            className="item"
+                          >
+                            {t('HEADER.USER.PROFILE')}
+                          </Link>
 
-                      <Link
-                        onClick={() => setProfilePopoverOpen(false)}
-                        to="/account_settings"
-                        className="item"
-                      >
-                        {t('HEADER.USER.SETTINGS')}
-                      </Link>
+                          <Link
+                            onClick={() => setProfilePopoverOpen(false)}
+                            to="/account_settings"
+                            className="item"
+                          >
+                            {t('HEADER.USER.SETTINGS')}
+                          </Link>
+                        </>
+                      )}
 
                       <Button
                         onClick={() => {
@@ -208,8 +214,8 @@ const MainHeader: React.FC<HeaderProps> = ({
                     className="app-header__user"
                     endIcon={<ExpandMore />}
                   >
-                    {currentUser?.img ? (
-                      <img src={currentUser?.img} alt="profile" />
+                    {currentUser?.avatar ? (
+                      <img src={currentUser?.avatar} alt="profile" />
                     ) : (
                       <img src={Profile} alt="profile" />
                     )}

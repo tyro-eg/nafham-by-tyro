@@ -56,3 +56,8 @@ export const selectUpdateUserInfoError = createSelector(
   [selectUser],
   (user) => user?.errors.updateUserInfoError,
 );
+
+export const selectUpdateTutorInfoError = createSelector(
+  [selectUser],
+  (user) => user?.errors.updateTutorInfoError,
+);

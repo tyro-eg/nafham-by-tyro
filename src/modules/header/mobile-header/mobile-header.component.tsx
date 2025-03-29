@@ -74,7 +74,9 @@ const MobileHeader = ({ openFreeTrail, openEmailConfirm }: HeaderProps) => {
             <div>
               <div className="app-header__user">
                 <div className="app-header__user-center">
-                  <div className="name">{currentUser.full_name}</div>
+                  <div className="name">
+                    {currentUser?.first_name + ' ' + currentUser?.last_name}
+                  </div>
                 </div>
               </div>
             </div>
@@ -127,17 +129,15 @@ const MobileHeader = ({ openFreeTrail, openEmailConfirm }: HeaderProps) => {
             </div>
           )}
 
-          {currentUser && (
+          {currentUser && currentUser.type === 'Tutor' && (
             <div className="app-header-mobile__body-profile">
-              {currentUser.type === 'Tutor' && (
-                <Link
-                  to={`/profile/${currentUser.id}`}
-                  className="item"
-                  onClick={closeMobileHeader}
-                >
-                  {t('HEADER.USER.PROFILE')}
-                </Link>
-              )}
+              <Link
+                to={`/profile/${currentUser.id}`}
+                className="item"
+                onClick={closeMobileHeader}
+              >
+                {t('HEADER.USER.PROFILE')}
+              </Link>
 
               <Link
                 to="/account_settings"

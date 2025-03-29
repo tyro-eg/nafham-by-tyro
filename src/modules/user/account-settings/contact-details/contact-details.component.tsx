@@ -9,7 +9,7 @@ import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/material.css';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { updateUserInfo } from '../../../../redux/user/user.actions';
+import { updateTutorInfo } from '../../../../redux/user/user.actions';
 import { selectCurrentUser } from '../../../../redux/user/user.selectors';
 import { AppDispatch, RootState } from '../../../../redux/store';
 
@@ -74,13 +74,12 @@ const ContactDetails: React.FC = () => {
               phone_number: currentUser?.phone_number || '',
             }}
             validationSchema={contactDetailsSchema}
-            onSubmit={(values, { setSubmitting }) => {
+            onSubmit={async (values, { setSubmitting }) => {
               try {
-                dispatch(
-                  updateUserInfo({
-                    userData: values,
-                    id: currentUser.id,
-                    type: currentUser.type,
+                await dispatch(
+                  updateTutorInfo({
+                    userData: { tutor: values },
+                    id: currentUser?.id!,
                   }),
                 );
                 setSubmitting(false);

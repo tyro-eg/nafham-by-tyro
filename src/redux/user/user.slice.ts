@@ -7,11 +7,12 @@ import {
   getInstructors,
   getInstructorById,
   updateUserInfo,
+  updateTutorInfo,
 } from './user.actions';
-import { Instructor } from '../../assets/types';
+import { CurrentUser, Instructor } from '../../assets/types';
 
 interface UserState {
-  currentUser: any;
+  currentUser: CurrentUser | null;
   instructors: Instructor[] | null;
   instructor: Instructor | null;
   instructorsPagination: any | null;
@@ -22,6 +23,7 @@ interface UserState {
     changePasswordError: string | null;
     getInstructorsError: string | null;
     updateUserInfoError: string | null;
+    updateTutorInfoError: string | null;
     getInstructorByIdError: string | null;
   };
   loading: {
@@ -41,6 +43,7 @@ const initialState: UserState = {
     changePasswordError: null,
     getInstructorsError: null,
     updateUserInfoError: null,
+    updateTutorInfoError: null,
     getInstructorByIdError: null,
   },
   loading: {
@@ -136,6 +139,19 @@ const userSlice = createSlice({
       })
       .addCase(updateUserInfo.rejected, (state, action) => {
         setError(state, 'updateUserInfoError', action);
+      })
+      .addCase(updateTutorInfo.fulfilled, (state, action) => {
+        state.currentUser = {
+          ...state.currentUser,
+          first_name: action.payload.first_name,
+          last_name: action.payload.last_name,
+          email: action.payload.email,
+          phone_number: action.payload.phone_number,
+        } as CurrentUser;
+        state.errors.updateTutorInfoError = null;
+      })
+      .addCase(updateTutorInfo.rejected, (state, action) => {
+        setError(state, 'updateTutorInfoError', action);
       });
   },
 });
