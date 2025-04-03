@@ -25,12 +25,20 @@ axios.interceptors.request.use(
     config: InternalAxiosRequestConfig<any>,
   ): InternalAxiosRequestConfig<any> => {
     const accessToken = localStorage.getItem('tyro.token');
-    config.headers['Content-Type'] = 'application/json';
-    config.headers['Accept'] = 'application/json;odata=verbose';
-    config.headers['Lang'] = localStorage.getItem('i18nextLng') || 'en';
-    if (!!accessToken && !!config?.headers) {
-      config.headers.Authorization = accessToken;
+    const lang = localStorage.getItem('i18nextLng') || 'en';
+    const isFormData = config.data instanceof FormData;
+
+    if (!isFormData) {
+      config.headers['Content-Type'] = 'application/json';
+      config.headers['Accept'] = 'application/json;odata=verbose';
     }
+
+    config.headers['Lang'] = lang;
+
+    if (accessToken && config.headers) {
+      config.headers['Authorization'] = accessToken;
+    }
+
     return config;
   },
   (error: AxiosError) => Promise.reject(error),
@@ -39,10 +47,16 @@ axios.interceptors.request.use(
 api.interceptors.request.use(
   (config: any): any => {
     const accessToken = localStorage.getItem('tyro.token');
-    config.headers['Content-Type'] = 'application/json';
-    if (accessToken && config.headers) {
-      config.headers.Authorization = accessToken;
+
+    const isFormData = config.data instanceof FormData;
+    if (!isFormData) {
+      config.headers['Content-Type'] = 'application/json';
     }
+
+    if (accessToken && config.headers) {
+      config.headers['Authorization'] = accessToken;
+    }
+
     return config;
   },
   (error: AxiosError) => Promise.reject(error),
@@ -155,14 +169,20 @@ export const patch = (
   url: string,
   data: unknown,
   config: AxiosRequestConfig = {},
-) =>
-  axios.patch(`${baseURL}${url}`, data, {
+) => {
+  const isFormData = data instanceof FormData;
+
+  const headers = { ...(config.headers || {}) };
+
+  if (!isFormData && !headers['Content-Type']) {
+    headers['Content-Type'] = 'application/json';
+  }
+
+  return axios.patch(`${baseURL}${url}`, data, {
     ...config,
-    headers: {
-      'Content-Type': 'application/json',
-      ...config.headers,
-    },
+    headers,
   });
+};
 
 export const putRequest = (
   url: string,
