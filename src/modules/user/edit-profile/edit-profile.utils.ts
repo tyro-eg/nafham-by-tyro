@@ -17,8 +17,10 @@ export const calculateMissingProfileInformation = (
   }
   if (
     profileData?.avatar == null ||
-    profileData?.avatar?.trim() === '' ||
-    profileData?.avatar?.includes('dummy-img')
+    (profileData?.avatar instanceof String &&
+      profileData?.avatar?.trim() === '') ||
+    (profileData?.avatar instanceof String &&
+      profileData?.avatar?.includes('dummy-img'))
   ) {
     output.push({
       text: 'PROFILE.EDITPROFILE.MISSING_INFORMATION.PICTURE',

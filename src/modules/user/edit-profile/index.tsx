@@ -43,7 +43,7 @@ export type UserInfoType =
   | {
       bio?: string;
       video_url?: string;
-      avatar?: string;
+      avatar?: File | string;
       slots: any[];
     }
   | undefined;
@@ -163,7 +163,7 @@ const EditProfile: React.FC = () => {
 
   const updateProfile = () => {
     doUpdateSlots((prev) => prev + 1);
-    const { slots, avatar, ...info } = profileUserInfo || {};
+    const { slots, ...info } = profileUserInfo || {};
     dispatch(
       updateTutorInfo({
         id: +id!,
