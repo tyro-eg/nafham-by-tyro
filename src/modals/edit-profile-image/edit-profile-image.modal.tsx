@@ -7,7 +7,7 @@ import 'react-image-crop/dist/ReactCrop.css';
 interface EditProfileImageModalProps {
   onClose: () => void;
   imageUrl: string | null | undefined;
-  onSetProfileInfo: (imageData: string, type: string) => void;
+  onSetProfileInfo: (imageData: string, type: string, value?: File) => void;
 }
 
 const EditProfileImageModal: React.FC<EditProfileImageModalProps> = ({
@@ -84,13 +84,17 @@ const EditProfileImageModal: React.FC<EditProfileImageModalProps> = ({
     });
   }, []);
 
-  // Save the cropped image
   const saveImage = () => {
-    if (previewCanvasRef.current) {
-      const base64 = previewCanvasRef.current.toDataURL('image/webp');
-      onSetProfileInfo(base64, 'avatar');
-      onClose();
-    }
+    if (!previewCanvasRef.current) return;
+
+    const base64 = previewCanvasRef.current.toDataURL('image/webp');
+    previewCanvasRef.current.toBlob((blob) => {
+      if (blob) {
+        const file = new File([blob], 'avatar.webp', { type: 'image/webp' });
+        onSetProfileInfo(base64, 'avatar', file);
+        onClose();
+      }
+    }, 'image/webp');
   };
 
   return (

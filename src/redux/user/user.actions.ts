@@ -177,17 +177,39 @@ export const getInstructorById = createAsyncThunk<
 
 export const updateTutorInfo = createAsyncThunk<any, UpdateTutorInfoPayload>(
   'user/updateTutorInfo',
-  async ({ id, userData }, { rejectWithValue }) => {
+  async (
+    {
+      id,
+      userData: {
+        tutor: { avatar, ...info },
+      },
+    },
+    { rejectWithValue },
+  ) => {
     try {
+      const formData = new FormData();
+
+      Object.entries(info).forEach(([key, value]) => {
+        formData.append(`tutor[${key}]`, value);
+      });
+
+      if (avatar instanceof File) {
+        formData.append('tutor[avatar]', avatar);
+      }
+
       showSpinner();
-      const response = await patch(`/tutors/${id}`, userData);
-      hideSpinner();
+
+      const response = await patch(`/tutors/${id}`, formData, {
+        headers: {},
+      });
+
       return response?.data?.data || {};
     } catch (error) {
       const errorMessage = getErrorMessage(error);
       snackActions.error(errorMessage);
-      hideSpinner();
       return rejectWithValue(errorMessage);
+    } finally {
+      hideSpinner();
     }
   },
 );
