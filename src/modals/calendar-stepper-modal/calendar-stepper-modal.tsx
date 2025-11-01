@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { FC, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Button,
@@ -9,15 +9,14 @@ import {
   Stepper,
 } from '@mui/material';
 import { CheckCircle, Warning } from '@mui/icons-material';
-import { useSnackbar } from 'notistack';
 
 import StepperCalendar from './stepper-calendar/stepper-calendar.component';
 import RegisterModal from '../register-modal/register-modal.component';
 import LoginModal from '../login-modal/login-modal.component';
 
 import './calendar-stepper-modal.styles.scss';
-import { rtlClass } from '../../assets/utils/utils';
-import { useAppDispatch, useAppSelector } from '../../redux/store';
+import { useRtlClass } from '../../assets/utils/utils';
+import { useAppSelector } from '../../redux/store';
 import { selectCurrentUser } from '../../redux/user/user.selectors';
 import TrialSessionSuccessModal from '../trial-session-success-modal/trial-session-success-modal.component';
 import TrialBookingSuccessModal from '../trial-booking-success-modal/trial-booking-success-modal.component';
@@ -29,16 +28,12 @@ interface CalendarStepperModalProps {
   fromTrailModal?: boolean;
 }
 
-const CalendarStepperModal: React.FC<CalendarStepperModalProps> = ({
-  handleClose,
+const CalendarStepperModal: FC<CalendarStepperModalProps> = ({
   instructor,
   fromTrailModal = false,
 }) => {
   const { t } = useTranslation();
-  const { enqueueSnackbar } = useSnackbar();
-  const dispatch = useAppDispatch();
-
-  // const bookingTrailStatus = useAppSelector(selectBookingTrialStatus);
+  const rtlClass = useRtlClass();
   const currentUser = useAppSelector(selectCurrentUser);
 
   const [activeStep, setActiveStep] = useState(0);
@@ -46,19 +41,13 @@ const CalendarStepperModal: React.FC<CalendarStepperModalProps> = ({
   const [selectedSlot, setSelectedSlot] = useState<any>();
   const [openTrialBookingModal, setOpenTrialBookingModal] = useState(false);
   const [alreadyBooked, setAlreadyBooked] = useState(false);
-  const [userBooked, setUserBooked] = useState(false);
+  const [userBooked] = useState(false);
   const [openRegisterModal, setOpenRegisterModal] = useState(false);
   const [openLoginModal, setOpenLoginModal] = useState(false);
   const [openTrialSuccessModal, setOpenTrialSuccessModal] = useState(false);
-
-  let timeout: NodeJS.Timeout;
-
-  // useEffect(() => {
-  //   if (bookingTrailStatus.success) setOpenTrialBookingModal(true);
-  //   if (bookingTrailStatus.failure) {
-  //     enqueueSnackbar(bookingTrailStatus.failure, { variant: 'error' });
-  //   }
-  // }, [bookingTrailStatus]);
+  const [warningTimeout, setWarningTimeout] = useState<NodeJS.Timeout | null>(
+    null,
+  );
 
   const handleNext = () => setActiveStep((prev) => prev + 1);
   const handleBack = () => setActiveStep((prev) => prev - 1);
@@ -75,15 +64,13 @@ const CalendarStepperModal: React.FC<CalendarStepperModalProps> = ({
   const bookNow = () => {
     if (!selectedField || !selectedSlot) return;
     if (currentUser?.id) {
-      const trialObj = {
-        start_date: selectedSlot.startStr,
-        end_date: selectedSlot.endStr,
-        tutor_id: instructor.id,
-        student_id: currentUser.id,
-        field_id: +selectedField,
-        time_slots: [selectedSlot.id],
-      };
-      // dispatch(bookingTrailStart(trialObj));
+      // TODO: Implement trial booking with useBookTrialSession hook
+      // const trialData = {
+      //   start_time: selectedSlot.startStr,
+      //   tutor_id: instructor.id,
+      //   grade_subject_id: +selectedField,
+      // };
+      // bookTrialMutation.mutate(trialData);
     } else {
       setOpenRegisterModal(true);
     }
@@ -93,10 +80,13 @@ const CalendarStepperModal: React.FC<CalendarStepperModalProps> = ({
     setter: React.Dispatch<React.SetStateAction<boolean>>,
   ) => {
     setter(true);
-    clearTimeout(timeout);
-    timeout = setTimeout(() => {
+    if (warningTimeout) {
+      clearTimeout(warningTimeout);
+    }
+    const newTimeout = setTimeout(() => {
       setter(false);
     }, 5000);
+    setWarningTimeout(newTimeout);
   };
 
   return (
@@ -108,7 +98,7 @@ const CalendarStepperModal: React.FC<CalendarStepperModalProps> = ({
         <Stepper
           activeStep={activeStep}
           orientation="vertical"
-          className={rtlClass()}
+          className={rtlClass}
           sx={{ marginBottom: 2 }}
         >
           <Step key={t('CALENDAR.WIZARD.CHOOSE_FIELD')}>

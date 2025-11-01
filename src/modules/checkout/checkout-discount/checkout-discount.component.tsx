@@ -1,10 +1,9 @@
 import React from 'react';
-import { Field, Form, Formik } from 'formik';
 import { useTranslation } from 'react-i18next';
 import { Button, InputLabel, TextField } from '@mui/material';
-import * as Yup from 'yup';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../../redux/store';
+import { useForm, Controller } from 'react-hook-form';
+import { useAppSelector } from '../../../redux/store';
+import { selectCurrentUser } from '../../../redux/user/user.selectors';
 import { rtlClass } from '../../../assets/utils/utils';
 import { PromoCode } from '../index.component';
 
@@ -16,22 +15,32 @@ interface CheckoutDiscountProps {
   loginModelOut: () => void;
 }
 
+interface DiscountFormData {
+  discount: string;
+}
+
 const CheckoutDiscount: React.FC<CheckoutDiscountProps> = ({
   promoCode,
   promoCodeOut,
   loginModelOut,
 }) => {
   const { t } = useTranslation();
-  const currentUser = useSelector((state: RootState) => state.user.currentUser);
+  const currentUser = useAppSelector(selectCurrentUser);
 
-  const discountSchema = Yup.object().shape({
-    discount: Yup.string(),
+  const {
+    control,
+    handleSubmit,
+    formState: { isSubmitting },
+  } = useForm<DiscountFormData>({
+    defaultValues: {
+      discount: '',
+    },
   });
 
-  const checkPromoCode = (discount: string) => {
+  const onSubmit = (values: DiscountFormData) => {
     if (currentUser) {
-      if (discount) {
-        promoCodeOut(discount);
+      if (values.discount) {
+        promoCodeOut(values.discount);
       }
     } else {
       loginModelOut();
@@ -40,62 +49,56 @@ const CheckoutDiscount: React.FC<CheckoutDiscountProps> = ({
 
   return (
     <section className="discount">
-      <Formik
-        initialValues={{ discount: '' }}
-        validationSchema={discountSchema}
-        onSubmit={(values, { setSubmitting }) => {
-          setSubmitting(false);
-          checkPromoCode(values.discount);
-        }}
-      >
-        {({ submitForm, isSubmitting }) => (
-          <Form className="discount__form">
-            <InputLabel htmlFor="discount">
-              {t('CHECKOUT.DISCOUNT.FORM.LABEL')}
-            </InputLabel>
-            <div className={`discount__input-group ${rtlClass()}`}>
-              <Field
-                as={TextField}
-                name="discount"
+      <form onSubmit={handleSubmit(onSubmit)} className="discount__form">
+        <InputLabel htmlFor="discount">
+          {t('CHECKOUT.DISCOUNT.FORM.LABEL')}
+        </InputLabel>
+        <div className={`discount__input-group ${rtlClass()}`}>
+          <Controller
+            name="discount"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                {...field}
                 id="discount"
                 placeholder={t('CHECKOUT.DISCOUNT.FORM.LABEL')}
                 variant="outlined"
                 className="discount__input"
               />
-              {promoCode?.valueNum && (
-                <div className="discount__applied">
-                  <span className="u-font-size-14">
-                    {t('CHECKOUT.DISCOUNT.FORM.APPLIED')}
-                  </span>
-                </div>
-              )}
-              {promoCode?.errors === 'The code is wrong' && (
-                <div className="discount__invalid">
-                  <span className="u-font-size-14">
-                    {t('CHECKOUT.DISCOUNT.FORM.INVALID')}
-                  </span>
-                </div>
-              )}
-              {promoCode?.errors === 'Code has been already used' && (
-                <div className="discount__invalid">
-                  <span className="u-font-size-14">
-                    {t('CHECKOUT.DISCOUNT.FORM.USED')}
-                  </span>
-                </div>
-              )}
+            )}
+          />
+          {promoCode?.valueNum && (
+            <div className="discount__applied">
+              <span className="u-font-size-14">
+                {t('CHECKOUT.DISCOUNT.FORM.APPLIED')}
+              </span>
             </div>
-            <Button
-              variant="contained"
-              color="primary"
-              disabled={isSubmitting}
-              onClick={submitForm}
-              className="discount__submit"
-            >
-              {t('CHECKOUT.DISCOUNT.FORM.APPLY')}
-            </Button>
-          </Form>
-        )}
-      </Formik>
+          )}
+          {promoCode?.errors === 'The code is wrong' && (
+            <div className="discount__invalid">
+              <span className="u-font-size-14">
+                {t('CHECKOUT.DISCOUNT.FORM.INVALID')}
+              </span>
+            </div>
+          )}
+          {promoCode?.errors === 'Code has been already used' && (
+            <div className="discount__invalid">
+              <span className="u-font-size-14">
+                {t('CHECKOUT.DISCOUNT.FORM.USED')}
+              </span>
+            </div>
+          )}
+        </div>
+        <Button
+          variant="contained"
+          color="primary"
+          disabled={isSubmitting}
+          type="submit"
+          className="discount__submit"
+        >
+          {t('CHECKOUT.DISCOUNT.FORM.APPLY')}
+        </Button>
+      </form>
     </section>
   );
 };

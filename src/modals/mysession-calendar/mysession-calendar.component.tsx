@@ -1,10 +1,4 @@
-import React, {
-  useState,
-  useEffect,
-  useMemo,
-  useCallback,
-  useRef,
-} from 'react';
+import { FC, useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
@@ -16,20 +10,15 @@ import WarningIcon from '@mui/icons-material/Warning';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import { useSnackbar } from 'notistack';
 
 import './mysession-calendar.styles.scss';
-import { useAppDispatch, useAppSelector } from '../../redux/store';
-import {
-  selectCurrentUser,
-  selectInstructors,
-} from '../../redux/user/user.selectors';
-import { getInstructors } from '../../redux/user/user.actions';
+import { useAppSelector } from '../../redux/store';
+import { selectCurrentUser } from '../../redux/user/user.selectors';
 import { parseTimeSlotsIntoCalendarEvents } from '../../assets/utils/event.utils';
-import { rtlClass } from '../../assets/utils/utils';
+import { useRtlClass } from '../../assets/utils/utils';
 import { EventClickArg } from '@fullcalendar/core';
-import { selectBookingPrivateStatus } from '../../redux/session/session.selectors';
-import { bookingPrivateSession } from '../../redux/session/session.actions';
+import { useInstructors } from '../../hooks/useInstructors';
+import { useBookPrivateSession } from '../../hooks/useSessions';
 
 interface MySessionCalendarProps {
   rescheduleFlag?: boolean;
@@ -37,47 +26,37 @@ interface MySessionCalendarProps {
   unscheduledHours: number;
 }
 
-const MySessionCalendar: React.FC<MySessionCalendarProps> = ({
+const MySessionCalendar: FC<MySessionCalendarProps> = ({
   rescheduleFlag = false,
   unscheduledHours,
   handleClose,
 }) => {
-  const dispatch = useAppDispatch();
-  const { enqueueSnackbar } = useSnackbar();
-  const [currentEvents, handleEvents] = useState<any[]>([]);
+  const bookPrivateSessionMutation = useBookPrivateSession();
+  const [currentEvents, setCurrentEvents] = useState<any[]>([]);
   const [selectedEvents, setSelectedEvents] = useState<any[]>([]);
   const [warningSlot, setWarningSlot] = useState(false);
-  const userBooked = false;
   const { t, i18n } = useTranslation();
+  const rtlClass = useRtlClass();
   const calendarRef = useRef<FullCalendar | null>(null);
   const validDate = addDays(new Date(), 1);
-  const instructors = useAppSelector(selectInstructors);
+  const { data: instructorsData } = useInstructors(1, 1);
+  const instructors = instructorsData?.data || [];
   const currentUser = useAppSelector(selectCurrentUser);
-  const bookingPrivateStatus = useAppSelector(selectBookingPrivateStatus);
-
-  useEffect(() => {
-    dispatch(getInstructors({ pageNumber: 1, pageSize: 1 }));
-  }, [dispatch]);
 
   useEffect(() => {
     if (
       instructors &&
       instructors.length > 0 &&
       instructors[0].time_slots &&
-      instructors[0].time_slots! &&
       instructors[0].time_slots.length > 0
     ) {
-      handleEvents(parseTimeSlotsIntoCalendarEvents(instructors[0].time_slots));
+      // Ensure we pass an array
+      const timeSlots = Array.isArray(instructors[0].time_slots)
+        ? instructors[0].time_slots
+        : [];
+      setCurrentEvents(parseTimeSlotsIntoCalendarEvents(timeSlots));
     }
   }, [instructors]);
-
-  useEffect(() => {
-    if (bookingPrivateStatus.success) handleClose();
-    if (bookingPrivateStatus.failure)
-      enqueueSnackbar(bookingPrivateStatus.failure, {
-        variant: 'error',
-      });
-  }, [bookingPrivateStatus, enqueueSnackbar, handleClose]);
 
   const calculateTimeZone = useMemo(() => {
     const timeZoneArr = new Date().toTimeString().substring(9, 17).split('+');
@@ -118,6 +97,8 @@ const MySessionCalendar: React.FC<MySessionCalendarProps> = ({
     }, {});
 
   const separateEvents = () => {
+    if (selectedEvents.length === 0) return [];
+
     const eventsClone = [...selectedEvents];
     eventsClone.sort((a, b) => (a.startStr < b.startStr ? -1 : 1));
     eventsClone[0].level = 0;
@@ -143,6 +124,8 @@ const MySessionCalendar: React.FC<MySessionCalendarProps> = ({
   };
 
   const scheduleNow = () => {
+    if (!instructors[0] || !currentUser) return;
+
     const eventsChunks = separateEvents();
     eventsChunks.forEach((chunk: any) => {
       const slotsIds: number[] = [];
@@ -152,14 +135,19 @@ const MySessionCalendar: React.FC<MySessionCalendarProps> = ({
         }
       });
       const privateObj = {
-        start_date: chunk[0].startStr,
+        start_time: chunk[0].startStr,
         end_date: chunk[chunk.length - 1].endStr,
-        tutor_id: +instructors![0].id,
-        student_id: +currentUser?.id!,
-        field_id: 15,
+        tutor_id: +instructors[0].id,
+        student_id: +currentUser.id,
+        grade_subject_id: 15,
+        package_id: 1, // TODO: Get actual package_id
         time_slots: slotsIds,
       };
-      dispatch(bookingPrivateSession({ sessionData: privateObj }));
+      bookPrivateSessionMutation.mutate(privateObj, {
+        onSuccess: () => {
+          handleClose();
+        },
+      });
     });
   };
 
@@ -186,11 +174,7 @@ const MySessionCalendar: React.FC<MySessionCalendarProps> = ({
             </div>
           </div>
           <div className="calendar__warning--body">
-            <p>
-              {userBooked
-                ? t('CALENDAR.WIZARD.MESSAGES.WARNING.BODY2')
-                : t('CALENDAR.WIZARD.MESSAGES.WARNING.BODY1')}
-            </p>
+            <p>{t('CALENDAR.WIZARD.MESSAGES.WARNING.BODY1')}</p>
           </div>
         </div>
       )}
@@ -212,27 +196,27 @@ const MySessionCalendar: React.FC<MySessionCalendarProps> = ({
       <div className="calendar-container">
         <div className="calendar-container-main">
           <div className="calendar">
-            <div className={`calendar__legend ${rtlClass()}`}>
-              <div className={`calendar__legend--available ${rtlClass()}`}>
-                <div className={`color ${rtlClass()}`}></div>
+            <div className={`calendar__legend ${rtlClass}`}>
+              <div className={`calendar__legend--available ${rtlClass}`}>
+                <div className={`color ${rtlClass}`}></div>
                 <div className="title">
                   {t('CALENDAR.MYSESSION.LEGEND.AVAILABLE')}
                 </div>
               </div>
-              <div className={`calendar__legend--not__available ${rtlClass()}`}>
-                <div className={`color ${rtlClass()}`}></div>
+              <div className={`calendar__legend--not__available ${rtlClass}`}>
+                <div className={`color ${rtlClass}`}></div>
                 <div className="title">
                   {t('CALENDAR.MYSESSION.LEGEND.NOT_AVAILABLE')}
                 </div>
               </div>
-              <div className={`calendar__legend--booked ${rtlClass()}`}>
-                <div className={`color ${rtlClass()}`}></div>
+              <div className={`calendar__legend--booked ${rtlClass}`}>
+                <div className={`color ${rtlClass}`}></div>
                 <div className="title">
                   {t('CALENDAR.MYSESSION.LEGEND.RESERVED')}
                 </div>
               </div>
-              <div className={`calendar__legend--busy ${rtlClass()}`}>
-                <div className={`color ${rtlClass()}`}></div>
+              <div className={`calendar__legend--busy ${rtlClass}`}>
+                <div className={`color ${rtlClass}`}></div>
                 <div className="title">
                   {t('CALENDAR.MYSESSION.LEGEND.BUSY')}
                 </div>

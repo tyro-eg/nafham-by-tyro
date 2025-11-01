@@ -19,7 +19,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 18  # Adjust based on your project needs
+          node-version: 22.12.0  # Adjust based on your project needs
           cache: 'npm'
 
       - name: Install Dependencies
@@ -29,4 +29,4 @@ jobs:
         run: npm run lint
 
       - name: Run Formatter
-        run: npm run format:write
+        run: npm run format

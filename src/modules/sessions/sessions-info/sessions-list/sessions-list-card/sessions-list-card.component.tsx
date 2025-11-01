@@ -26,7 +26,7 @@ import { selectCurrentUser } from '../../../../../redux/user/user.selectors';
 import { rtlClass } from '../../../../../assets/utils/utils';
 
 import { useAppSelector } from '../../../../../redux/store';
-import { SessionType } from '../../../../../redux/session/session.actions';
+import { SessionType } from '../../../../../assets/types';
 
 import Profile from '../../../../../assets/images/videoSession/people/profile.png';
 

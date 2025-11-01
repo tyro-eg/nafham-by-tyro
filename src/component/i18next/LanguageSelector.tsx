@@ -1,55 +1,52 @@
-import React from 'react';
-import { Button, Box } from '@mui/material';
+import { useEffect } from 'react';
+import { Button } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 
 import './i18n';
-import { useTranslation } from 'react-i18next';
+
 /**
- * This function Change language  its display language switch button and change the selected language
+ * Language selector component that switches between English and Arabic
+ * Automatically updates document direction when language changes
  * @component
- * @see https://medium.com/@ricklee_10931/react-multi-lingual-with-react-i18next-57879f986168
  */
 function LanguageSelector() {
   const { i18n } = useTranslation();
-  const directionEle = document.getElementById('direction');
+  const currentLanguage = i18n.language;
 
-  /**
-   * This function return language selected ar or en
-   *  i18n.changeLanguage function to switch between languages
-   * @param {string} lng  language selected 'ar' , 'en'
-   * @return {string} 'en' or 'ar'
-   */
+  // Update document direction when language changes
+  useEffect(() => {
+    const directionEle = document.getElementById('direction');
+    if (directionEle) {
+      directionEle.dir = currentLanguage === 'ar' ? 'rtl' : 'ltr';
+    }
+  }, [currentLanguage]);
+
   const changeLanguage = (lng: string) => {
     i18n.changeLanguage(lng);
-    directionEle!.dir = lng === 'ar' ? 'rtl' : 'ltr';
   };
 
+  // Show Arabic button when current language is not Arabic
+  if (currentLanguage !== 'ar') {
+    return (
+      <Button
+        color="inherit"
+        onClick={() => changeLanguage('ar')}
+        sx={{ fontSize: '14px' }}
+      >
+        العربية
+      </Button>
+    );
+  }
+
+  // Show English button when current language is Arabic
   return (
-    <div>
-      <Box
-        component="div"
-        display={i18n.language === 'ar' ? 'none' : 'inherit'}
-      >
-        <Button
-          color="inherit"
-          onClick={() => changeLanguage('ar')}
-          style={{ fontSize: '14px' }}
-        >
-          العربية
-        </Button>
-      </Box>
-      <Box
-        component="div"
-        display={i18n.language === 'en' ? 'none' : 'inherit'}
-      >
-        <Button
-          color="inherit"
-          onClick={() => changeLanguage('en')}
-          style={{ fontSize: '14px' }}
-        >
-          English
-        </Button>
-      </Box>
-    </div>
+    <Button
+      color="inherit"
+      onClick={() => changeLanguage('en')}
+      sx={{ fontSize: '14px' }}
+    >
+      English
+    </Button>
   );
 }
 

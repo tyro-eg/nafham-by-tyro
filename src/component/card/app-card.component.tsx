@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@mui/material';
-import objstr from 'obj-str';
+import { cn } from '../../lib/cn';
 
 import './app-card.component.scss';
 
@@ -27,24 +27,20 @@ const AppCard: React.FC<AppCardProps> = ({
   children,
   title,
   label,
-  type,
+  type = 'primary',
   priceConfig,
   onClickButton,
 }) => {
   const { t } = useTranslation();
 
-  const buttonType = () => {
-    const classes = {
-      card__btn: true,
-      'card__btn--primary': type === 'primary' || type === 'special',
-      'card__btn--secondary': type === 'secondary',
-      'card__btn--disabled': type === 'disabled',
-      'special-btn': type === 'special',
-      'price-btn': !!priceConfig,
-    };
-
-    return classes;
-  };
+  const buttonClasses = cn({
+    card__btn: true,
+    'card__btn--primary': type === 'primary' || type === 'special',
+    'card__btn--secondary': type === 'secondary',
+    'card__btn--disabled': type === 'disabled',
+    'special-btn': type === 'special',
+    'price-btn': !!priceConfig,
+  });
 
   return (
     <div className="card">
@@ -88,7 +84,7 @@ const AppCard: React.FC<AppCardProps> = ({
       <div className="card__description">{children}</div>
       {onClickButton && (
         <Button
-          className={objstr(buttonType())}
+          className={buttonClasses}
           onClick={onClickButton}
           disabled={type === 'disabled'}
         >

@@ -1,4 +1,4 @@
-import React from 'react';
+import { FC } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import cnbc from '../../../assets/images/newLanding/cnbc.webp';
@@ -14,7 +14,7 @@ type Feature = {
   url: string;
 };
 
-const HomeFeatures: React.FC = () => {
+const HomeFeatures: FC = () => {
   const { t } = useTranslation();
 
   const features: Feature[] = [

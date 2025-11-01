@@ -7,15 +7,18 @@ interface LayoutProps {
   children: React.ReactNode;
 }
 
+// Routes where footer should not be displayed
+const ROUTES_WITHOUT_FOOTER = ['/login', '/register', '/registered'];
+
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   const location = useLocation();
+  const showFooter = !ROUTES_WITHOUT_FOOTER.includes(location.pathname);
+
   return (
     <>
       <Header />
       {children}
-      {location.pathname !== '/login' &&
-        location.pathname !== '/register' &&
-        location.pathname !== '/registered' && <Footer />}
+      {showFooter && <Footer />}
     </>
   );
 };

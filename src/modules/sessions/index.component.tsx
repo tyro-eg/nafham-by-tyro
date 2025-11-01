@@ -1,16 +1,18 @@
-import React from 'react';
+import { FC } from 'react';
+
+import { useRtlClass } from '../../assets/utils/utils';
 
 import SessionsInfo from './sessions-info/sessions-info.component';
 import SessionsOverview from './sessions-overview/sessions-overview.component';
 import SessionsSchedule from './sessions-schedule/sessions-schedule.component';
 import SessionFilter from './session-filter/session-filter.component';
 
-import { rtlClass } from '../../assets/utils/utils';
-
 import SESSIONS_SCHEDULE_DATA from './sessions-schedule/sessions-schedule-data';
 
 import './index.styles.scss';
-const Sessions = () => {
+
+const Sessions: FC = () => {
+  const rtlClass = useRtlClass();
   const overViewData = {
     previous_sessions_count: 21,
     upcoming_sessions_count: 0,
@@ -22,11 +24,11 @@ const Sessions = () => {
     <section className="sessions">
       <div className="sessions__banner">
         {overViewData && (
-          <div className={`overview ${rtlClass()}`}>
+          <div className={`overview ${rtlClass}`}>
             <SessionsOverview overViewData={overViewData} />
           </div>
         )}
-        <div className={`filter container ${rtlClass()}`}>
+        <div className={`filter container ${rtlClass}`}>
           <SessionFilter />
         </div>
       </div>

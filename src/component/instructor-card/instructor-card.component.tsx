@@ -13,7 +13,7 @@ import InstructorCalendar from '../instructor-calendar/instructor-calendar.compo
 // import SAUDI from '../../assets/images/landing/saudi-arabia-round.png';
 import Profile from '../../assets/images/videoSession/people/profile.png';
 
-import { rtlClass } from '../../assets/utils/utils';
+import { useRtlClass } from '../../assets/utils/utils';
 import './instructor-card.styles.scss';
 import { Instructor } from '../../assets/types';
 import CalendarStepperModal from '../../modals/calendar-stepper-modal/calendar-stepper-modal';
@@ -23,6 +23,7 @@ const InstructorCard: React.FC<{ instructor: Instructor }> = ({
 }) => {
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const rtlClass = useRtlClass();
   const [openCalendarStepperModal, setOpenCalendarStepperModal] =
     useState(false);
 
@@ -62,14 +63,14 @@ const InstructorCard: React.FC<{ instructor: Instructor }> = ({
 
       <div className="instructor-card__body">
         <Box
-          className={`card-details ${rtlClass()}`}
+          className={`card-details ${rtlClass}`}
           sx={{ display: 'flex', flexDirection: 'column' }}
         >
           <Box
-            className={`card-details__container ${rtlClass()}`}
+            className={`card-details__container ${rtlClass}`}
             sx={{ display: 'flex' }}
           >
-            <Box className={`image ${rtlClass()}`} sx={{ marginRight: '16px' }}>
+            <Box className={`image ${rtlClass}`} sx={{ marginRight: '16px' }}>
               <img src={instructor.avatar || Profile} alt="Instructor" />
             </Box>
 
@@ -154,7 +155,7 @@ const InstructorCard: React.FC<{ instructor: Instructor }> = ({
         ) : (
           <Button
             endIcon={<ArrowRightAlt />}
-            className={`book-now-btn ${rtlClass()}`}
+            className={`book-now-btn ${rtlClass}`}
             variant="contained"
             color="primary"
             onClick={goToProfile}

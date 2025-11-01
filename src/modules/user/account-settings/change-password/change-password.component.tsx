@@ -1,51 +1,68 @@
 /* eslint-disable camelcase */
-import React, { useState } from 'react';
+import { FC, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button, InputLabel, TextField as MuiTextField } from '@mui/material';
-import { Formik, Form, Field } from 'formik';
-import * as Yup from 'yup';
-import 'yup-phone';
-import 'react-phone-input-2/lib/material.css';
-import { changePassword } from '../../../../redux/user/user.actions';
-import {
-  selectChangePasswordError,
-  selectCurrentUser,
-} from '../../../../redux/user/user.selectors';
+import { Button, InputLabel, TextField } from '@mui/material';
+import { useForm, Controller } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 
-import { rtlClass } from '../../../../assets/utils/utils';
+import { useAppSelector } from '../../../../redux/store';
+import { selectCurrentUser } from '../../../../redux/user/user.selectors';
+import { useChangePassword } from '../../../../hooks/useAuth';
+import {
+  changePasswordSchema,
+  type ChangePasswordFormData,
+} from '../../../../schemas/authSchemas';
+import { useRtlClass } from '../../../../assets/utils/utils';
 
 import './change-password.styles.scss';
-import { useAppDispatch, useAppSelector } from '../../../../redux/store';
 
-const ChangePassword: React.FC = () => {
-  const { t, i18n } = useTranslation();
-  const dispatch = useAppDispatch();
-  const changePasswordError = useAppSelector(selectChangePasswordError);
+const ChangePassword: FC = () => {
+  const { t } = useTranslation();
+  const rtlClass = useRtlClass();
+  const changePasswordMutation = useChangePassword();
   const currentUser = useAppSelector(selectCurrentUser);
 
   const [editPasswordFlag, setEditPasswordFlag] = useState(false);
+
+  const {
+    control,
+    handleSubmit,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm<ChangePasswordFormData>({
+    resolver: zodResolver(changePasswordSchema),
+    defaultValues: {
+      current_password: '',
+      new_password: '',
+      confirm_password: '',
+    },
+  });
 
   const togglePasswordFlag = () => {
     setEditPasswordFlag((prevFlag) => !prevFlag);
   };
 
-  const cancelPasswordEdit = () => setEditPasswordFlag(false);
+  const cancelPasswordEdit = () => {
+    setEditPasswordFlag(false);
+    reset();
+  };
 
-  const ChangePasswordSchema = Yup.object().shape({
-    password: Yup.string()
-      .trim(i18n.t('GENEREL.EMPTY_SPACE'))
-      .strict()
-      .required(i18n.t('GENEREL.REQUIRED'))
-      .min(8, i18n.t('GENEREL.SHORT_PASSWORD')),
-    password_confirmation: Yup.string()
-      .trim(i18n.t('GENEREL.EMPTY_SPACE'))
-      .strict()
-      .required(i18n.t('GENEREL.REQUIRED'))
-      .oneOf(
-        [Yup.ref('password')],
-        i18n.t('GENEREL.PASSWORD_CONFIRMATION_ERROR'),
-      ),
-  });
+  const onSubmit = async (values: ChangePasswordFormData) => {
+    try {
+      await changePasswordMutation.mutateAsync({
+        type: currentUser?.type || 'users',
+        userData: {
+          old_password: values.current_password,
+          password: values.new_password,
+          password_confirmation: values.confirm_password,
+        },
+      });
+      reset();
+      cancelPasswordEdit();
+    } catch (error) {
+      console.error('Change password error:', error);
+    }
+  };
 
   return (
     <div className="container change-password">
@@ -53,35 +70,45 @@ const ChangePassword: React.FC = () => {
         {t('ACCOUNT_SETTINGS.CHANGE_PASSWORD_FORM.TITLE')}
       </h4>
       <div className="change-password__form-container">
-        <Formik
-          initialValues={{
-            password: '',
-            password_confirmation: '',
-          }}
-          validationSchema={ChangePasswordSchema}
-          onSubmit={(values, { setSubmitting, resetForm }) => {
-            try {
-              dispatch(changePassword({ ...values, type: currentUser?.type }));
-              setSubmitting(false);
-              if (!changePasswordError) {
-                resetForm();
-                cancelPasswordEdit();
-              }
-            } catch (error) {
-              setSubmitting(false);
-            }
-          }}
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className={`change-password__form ${rtlClass}`}
         >
-          {({ submitForm, isSubmitting, touched, errors }) => (
-            <Form className={`change-password__form ${rtlClass()}`}>
-              <fieldset disabled={!editPasswordFlag} className="form-inputs">
-                <div className={`form-group ${rtlClass()}`}>
-                  <InputLabel htmlFor="password">
-                    {t('ACCOUNT_SETTINGS.CHANGE_PASSWORD_FORM.NEW_PASSWORD')}
-                  </InputLabel>
-                  <Field
-                    as={MuiTextField}
-                    name="password"
+          <fieldset disabled={!editPasswordFlag} className="form-inputs">
+            <div className={`form-group ${rtlClass}`}>
+              <InputLabel htmlFor="current_password">
+                {t('ACCOUNT_SETTINGS.CHANGE_PASSWORD_FORM.CURRENT_PASSWORD')}
+              </InputLabel>
+              <Controller
+                name="current_password"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    type="password"
+                    variant="outlined"
+                    placeholder={t(
+                      'ACCOUNT_SETTINGS.CHANGE_PASSWORD_FORM.CURRENT_PASSWORD',
+                    )}
+                    fullWidth
+                    className="custom-input-style"
+                    disabled={!editPasswordFlag}
+                    error={!!errors.current_password}
+                    helperText={errors.current_password?.message}
+                  />
+                )}
+              />
+            </div>
+            <div className={`form-group ${rtlClass}`}>
+              <InputLabel htmlFor="new_password">
+                {t('ACCOUNT_SETTINGS.CHANGE_PASSWORD_FORM.NEW_PASSWORD')}
+              </InputLabel>
+              <Controller
+                name="new_password"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
                     type="password"
                     variant="outlined"
                     placeholder={t(
@@ -90,17 +117,22 @@ const ChangePassword: React.FC = () => {
                     fullWidth
                     className="custom-input-style"
                     disabled={!editPasswordFlag}
-                    error={touched.password && Boolean(errors.password)}
-                    helperText={touched.password && errors.password}
+                    error={!!errors.new_password}
+                    helperText={errors.new_password?.message}
                   />
-                </div>
-                <div className={`form-group ${rtlClass()}`}>
-                  <InputLabel htmlFor="password_confirmation">
-                    {t('ACCOUNT_SETTINGS.CHANGE_PASSWORD_FORM.VERIFY_PASSWORD')}
-                  </InputLabel>
-                  <Field
-                    as={MuiTextField}
-                    name="password_confirmation"
+                )}
+              />
+            </div>
+            <div className={`form-group ${rtlClass}`}>
+              <InputLabel htmlFor="confirm_password">
+                {t('ACCOUNT_SETTINGS.CHANGE_PASSWORD_FORM.VERIFY_PASSWORD')}
+              </InputLabel>
+              <Controller
+                name="confirm_password"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
                     type="password"
                     variant="outlined"
                     placeholder={t(
@@ -109,48 +141,35 @@ const ChangePassword: React.FC = () => {
                     fullWidth
                     className="custom-input-style"
                     disabled={!editPasswordFlag}
-                    error={
-                      touched.password_confirmation &&
-                      Boolean(errors.password_confirmation)
-                    }
-                    helperText={
-                      touched.password_confirmation &&
-                      errors.password_confirmation
-                    }
+                    error={!!errors.confirm_password}
+                    helperText={errors.confirm_password?.message}
                   />
-                </div>
-                {changePasswordError && (
-                  <div className="form-control-danger">
-                    {changePasswordError}
-                  </div>
                 )}
-              </fieldset>
-              {!!editPasswordFlag && (
-                <div className="form-actions">
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    disabled={isSubmitting}
-                    onClick={submitForm}
-                    className="btn-custom-style"
-                  >
-                    {t(
-                      'ACCOUNT_SETTINGS.CHANGE_PASSWORD_FORM.CHANGE_PASSWORD_BTN',
-                    )}
-                  </Button>
-                  <Button
-                    variant="text"
-                    disabled={isSubmitting || !editPasswordFlag}
-                    onClick={cancelPasswordEdit}
-                    className="cancel-btn"
-                  >
-                    {t('ACCOUNT_SETTINGS.CONTACT_DETAILS_FORM.CANCEL')}
-                  </Button>
-                </div>
-              )}
-            </Form>
+              />
+            </div>
+          </fieldset>
+          {!!editPasswordFlag && (
+            <div className="form-actions">
+              <Button
+                variant="contained"
+                color="primary"
+                disabled={isSubmitting}
+                type="submit"
+                className="btn-custom-style"
+              >
+                {t('ACCOUNT_SETTINGS.CHANGE_PASSWORD_FORM.CHANGE_PASSWORD_BTN')}
+              </Button>
+              <Button
+                variant="text"
+                disabled={isSubmitting || !editPasswordFlag}
+                onClick={cancelPasswordEdit}
+                className="cancel-btn"
+              >
+                {t('ACCOUNT_SETTINGS.CONTACT_DETAILS_FORM.CANCEL')}
+              </Button>
+            </div>
           )}
-        </Formik>
+        </form>
         {!editPasswordFlag && (
           <Button
             variant="text"

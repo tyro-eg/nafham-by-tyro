@@ -2,6 +2,7 @@
   "name": "tyro-by-nafham-app",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "dependencies": {
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
@@ -10,59 +11,46 @@
     "@fullcalendar/interaction": "^6.1.15",
     "@fullcalendar/react": "^6.1.15",
     "@fullcalendar/timegrid": "^6.1.15",
+    "@hookform/resolvers": "^3.9.0",
     "@mui/icons-material": "^6.1.1",
     "@mui/lab": "^6.0.0-beta.10",
     "@mui/material": "^6.1.1",
     "@reduxjs/toolkit": "^2.2.7",
-    "@testing-library/jest-dom": "^5.17.0",
-    "@testing-library/react": "^13.4.0",
-    "@testing-library/user-event": "^13.5.0",
-    "@types/jest": "^27.5.2",
-    "@types/node": "^16.18.108",
+    "@tanstack/react-query": "^5.59.0",
+    "@tanstack/react-query-devtools": "^5.59.0",
+    "@types/node": "^22.0.0",
     "@types/react": "^18.3.8",
     "@types/react-dom": "^18.3.0",
     "@types/react-slick": "^0.23.13",
     "axios": "^1.7.7",
+    "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
-    "formik": "^2.4.6",
+    "i18n-iso-countries": "^7.14.0",
     "i18next-browser-languagedetector": "^8.0.0",
-    "kitsu": "^10.1.5",
     "notistack": "^3.0.1",
-    "obj-str": "^1.1.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-hook-form": "^7.53.0",
     "react-i18next": "^15.0.2",
     "react-image-crop": "^11.0.7",
     "react-infinite-scroll-component": "^6.1.0",
     "react-phone-input-2": "^2.15.1",
     "react-redux": "^9.1.2",
     "react-router-dom": "^6.26.2",
-    "react-scripts": "5.0.1",
     "react-slick": "^0.30.2",
-    "react-tiny-popover": "^8.1.2",
     "redux-persist": "^6.0.0",
-    "reselect": "^5.1.1",
     "slick-carousel": "^1.8.1",
-    "typescript": "^4.9.5",
+    "typescript": "^5.6.0",
     "web-vitals": "^2.1.4",
-    "yup": "^0.32.11",
-    "yup-phone": "^1.3.2"
+    "zod": "^3.23.8"
   },
   "scripts": {
-    "lint": "npm run tsc && npm run format:check",
-    "tsc": "tsc",
-    "format:check": "prettier --config ./.prettierrc --list-different \"src/**/*{.ts*,.js*,.css,.scss}\"",
-    "format:write": "prettier --config ./.prettierrc --write \"src/**/*{.ts*,.js*,.json,.css,.scss}\"",
-    "start": "set PORT=4200 && react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "lint": "tsc && prettier --check \"src/**/*{.ts*,.js*,.css,.scss}\"",
+    "format": "prettier --write \"src/**/*{.ts*,.js*,.json,.css,.scss}\"",
+    "test": "vitest"
   },
   "browserslist": {
     "production": [
@@ -77,7 +65,13 @@
     ]
   },
   "devDependencies": {
+    "@types/jest": "^27.5.2",
+    "@vitejs/plugin-react": "^4.3.1",
     "prettier": "^3.3.3",
-    "sass": "^1.79.3"
+    "sass": "^1.79.3",
+    "vite": "^5.4.8",
+    "vite-plugin-svgr": "^4.5.0",
+    "vite-tsconfig-paths": "^5.0.1",
+    "vitest": "^2.1.1"
   }
 }

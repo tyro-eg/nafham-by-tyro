@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { FC, useState, useEffect, useRef } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
@@ -6,13 +6,11 @@ import interactionPlugin from '@fullcalendar/interaction';
 import arLocale from '@fullcalendar/core/locales/ar-kw';
 import { getDay, addDays } from 'date-fns';
 import { useTranslation } from 'react-i18next';
-import { rtlClass } from '../../../assets/utils/utils';
+import { useRtlClass } from '../../../assets/utils/utils';
 import { Instructor } from '../../../assets/types';
-import { getSlots } from '../../../redux/calendar/calendar.actions';
-import { useAppDispatch, useAppSelector } from '../../../redux/store';
+import { useSlots } from '../../../hooks/useCalendar';
 
 import './stepper-calendar.styles.scss';
-import { selectTimeSlots } from '../../../redux/calendar/calendar.selectors';
 
 interface StepperCalendarProps {
   instructor: Instructor;
@@ -21,34 +19,33 @@ interface StepperCalendarProps {
   hideAlreadyBooked: () => void;
 }
 
-const StepperCalendar: React.FC<StepperCalendarProps> = ({
+const StepperCalendar: FC<StepperCalendarProps> = ({
   instructor,
   onSelectSlot,
   showAlreadyBooked,
   hideAlreadyBooked,
 }) => {
-  const [currentEvents, setCurrentEvents] = useState<any[]>([]);
   const [selectedEvent, setSelectedEvent] = useState<any | null>(null);
   const { t, i18n } = useTranslation();
+  const rtlClass = useRtlClass();
   const calendarRef = useRef<FullCalendar>(null);
   const today = new Date(new Date().setHours(0, 0, 0, 0));
   const validDate = addDays(today, 1);
-  const dispatch = useAppDispatch();
 
-  const slots = useAppSelector(selectTimeSlots);
+  const [dateRange, setDateRange] = useState(() => ({
+    from: today.toISOString(),
+    to: addDays(today, 7).toISOString(),
+  }));
 
-  useEffect(() => {
-    dispatch(
-      getSlots({
-        userId: +instructor.id,
-        params: {
-          from: today.toISOString(),
-          to: addDays(today, 7).toISOString(),
-        },
-      }),
-    );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [instructor]);
+  // Fetch slots using TanStack Query
+  const { data: slots = [] } = useSlots(
+    +instructor.id,
+    dateRange.from,
+    dateRange.to,
+    !!instructor.id,
+  );
+
+  const [currentEvents, setCurrentEvents] = useState<any[]>([]);
 
   useEffect(() => {
     setCurrentEvents(slots || []);
@@ -90,15 +87,10 @@ const StepperCalendar: React.FC<StepperCalendarProps> = ({
           ? { start: view.activeStart, end: view.activeEnd }
           : { start: new Date(), end: addDays(new Date(), 7) };
       if (instructor?.id) {
-        dispatch(
-          getSlots({
-            userId: +instructor.id,
-            params: {
-              from: start.toISOString(),
-              to: end.toISOString(),
-            },
-          }),
-        );
+        setDateRange({
+          from: start.toISOString(),
+          to: end.toISOString(),
+        });
       }
     }
   };
@@ -113,30 +105,30 @@ const StepperCalendar: React.FC<StepperCalendarProps> = ({
     <div className="stepper-calendar">
       <div className="stepper-calendar__container">
         <div className="calendar">
-          <div className={`calendar__legend ${rtlClass()}`}>
-            <div className={`calendar__legend--available ${rtlClass()}`}>
-              <div className={`color ${rtlClass()}`}></div>
+          <div className={`calendar__legend ${rtlClass}`}>
+            <div className={`calendar__legend--available ${rtlClass}`}>
+              <div className={`color ${rtlClass}`}></div>
               <div className="title">
                 {t('CALENDAR.MYSESSION.LEGEND.AVAILABLE')}
               </div>
             </div>
 
-            <div className={`calendar__legend--not__available ${rtlClass()}`}>
-              <div className={`color ${rtlClass()}`}></div>
+            <div className={`calendar__legend--not__available ${rtlClass}`}>
+              <div className={`color ${rtlClass}`}></div>
               <div className="title">
                 {t('CALENDAR.MYSESSION.LEGEND.NOT_AVAILABLE')}
               </div>
             </div>
 
-            <div className={`calendar__legend--booked ${rtlClass()}`}>
-              <div className={`color ${rtlClass()}`}></div>
+            <div className={`calendar__legend--booked ${rtlClass}`}>
+              <div className={`color ${rtlClass}`}></div>
               <div className="title">
                 {t('CALENDAR.MYSESSION.LEGEND.RESERVED')}
               </div>
             </div>
 
-            <div className={`calendar__legend--busy ${rtlClass()}`}>
-              <div className={`color ${rtlClass()}`}></div>
+            <div className={`calendar__legend--busy ${rtlClass}`}>
+              <div className={`color ${rtlClass}`}></div>
               <div className="title">{t('CALENDAR.MYSESSION.LEGEND.BUSY')}</div>
             </div>
           </div>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { FC, useState, useEffect } from 'react';
 import {
   Button,
   FormControl,
@@ -12,7 +12,8 @@ import {
 import { Search } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 
-import { rtlClass } from '../../../assets/utils/utils';
+import { useRtlClass } from '../../../assets/utils/utils';
+
 import SearchIcon from '../../../assets/images/Icon.png';
 
 import './session-filter.styles.scss';
@@ -22,10 +23,11 @@ interface Option {
   display: string;
 }
 
-const SessionFilter: React.FC = () => {
+const SessionFilter: FC = () => {
   const { t } = useTranslation();
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+  const rtlClass = useRtlClass();
 
   const sessionTypeOptions: Option[] = [
     { id: 'all', display: t('MYSESSIONS.FILTERS.ALL') },
@@ -85,8 +87,8 @@ const SessionFilter: React.FC = () => {
         <div
           className={`session-filter__dropdown-container ${listBody ? 'visible' : 'hidden'}`}
         >
-          <div className={`session-filter__dropdown-group ${rtlClass()}`}>
-            <div className={`session-filter__field ${rtlClass()}`}>
+          <div className={`session-filter__dropdown-group ${rtlClass}`}>
+            <div className={`session-filter__field ${rtlClass}`}>
               <InputLabel id="type-label">
                 {t('MYSESSIONS.FILTERS.SESSIONTYPE')}
               </InputLabel>
@@ -110,7 +112,7 @@ const SessionFilter: React.FC = () => {
               </FormControl>
             </div>
 
-            <div className={`session-filter__field ${rtlClass()}`}>
+            <div className={`session-filter__field ${rtlClass}`}>
               <InputLabel id="date-label">
                 {t('MYSESSIONS.FILTERS.SESSIONDATE')}
               </InputLabel>
@@ -134,7 +136,7 @@ const SessionFilter: React.FC = () => {
               </FormControl>
             </div>
 
-            <div className={`session-filter__field ${rtlClass()}`}>
+            <div className={`session-filter__field ${rtlClass}`}>
               <InputLabel id="state-label">
                 {t('MYSESSIONS.FILTERS.SESSIONSTATE')}
               </InputLabel>
@@ -160,9 +162,9 @@ const SessionFilter: React.FC = () => {
           </div>
         </div>
 
-        <div className={`session-filter__field--search ${rtlClass()}`}>
+        <div className={`session-filter__field--search ${rtlClass}`}>
           <input
-            className={rtlClass()}
+            className={rtlClass}
             type="search"
             placeholder={t('COURSES.COURSE_FILTER.SEARCH_PLACEHOLDER')}
           />
@@ -171,7 +173,7 @@ const SessionFilter: React.FC = () => {
           </Button>
         </div>
 
-        <div className={`session-filter__field--filter ${rtlClass()}`}>
+        <div className={`session-filter__field--filter ${rtlClass}`}>
           <Button
             onClick={toggleListBody}
             startIcon={<Search />}

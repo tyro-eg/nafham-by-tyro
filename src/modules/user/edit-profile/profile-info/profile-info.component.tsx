@@ -1,19 +1,19 @@
-import React, { useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { Button, IconButton, Dialog, Rating } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import { useTranslation } from 'react-i18next';
 
+import { useRtlClass } from '../../../../assets/utils/utils';
 import { getYoutubeId } from '../edit-profile.utils';
-import { rtlClass } from '../../../../assets/utils/utils';
-import thumbnailPlaceholder from '../../../../assets/images/video-edit-placeholder_16@2x.png';
-import { ReactComponent as ProfileImgPlaceholder } from '../../../../assets/images/img-placeholder_23@2x.svg';
-
-import './profile-info.styles.scss';
+import { ProfileInfoType, UserInfoType } from '..';
 import ReadMore from '../../../../component/read-more/read-more.component';
 import EditProfileVideoModal from '../../../../modals/edit-profile-video/edit-profile-video.modal';
 import EditProfileImageModal from '../../../../modals/edit-profile-image/edit-profile-image.modal';
-import { ProfileInfoType, UserInfoType } from '..';
+import { ReactComponent as ProfileImgPlaceholder } from '../../../../assets/images/img-placeholder_23@2x.svg';
+import thumbnailPlaceholder from '../../../../assets/images/video-edit-placeholder_16@2x.png';
 import Avatar from '../../../../assets/images/Avatar.png';
+
+import './profile-info.styles.scss';
 
 interface ProfileInfoProps {
   data: ProfileInfoType;
@@ -21,12 +21,13 @@ interface ProfileInfoProps {
   getProfileInfo: (updatedData: Partial<UserInfoType>) => void;
 }
 
-const ProfileInfo: React.FC<ProfileInfoProps> = ({
+const ProfileInfo: FC<ProfileInfoProps> = ({
   data,
   editMode,
   getProfileInfo,
 }) => {
   const { t } = useTranslation();
+  const rtlClass = useRtlClass();
   const [videoUrl, setVideoUrl] = useState<string | null>(null);
   const [youtubeThumbnail, setYoutubeThumbnail] =
     useState<string>(thumbnailPlaceholder);
@@ -88,7 +89,7 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({
   };
 
   return (
-    <section className={`profile-info ${rtlClass()}`}>
+    <section className={`profile-info ${rtlClass}`}>
       {data && (
         <>
           <div className="profile-info__container container">
