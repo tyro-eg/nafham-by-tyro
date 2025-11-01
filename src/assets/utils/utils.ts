@@ -1,10 +1,18 @@
-/* eslint-disable react-hooks/rules-of-hooks */
 import { useTranslation } from 'react-i18next';
 
-export const rtlClass = () => {
+/**
+ * Custom hook to determine if the current language direction is RTL
+ * @returns 'rtl' if the current language is RTL, empty string otherwise
+ */
+export const useRtlClass = () => {
   const { i18n } = useTranslation();
   return i18n.dir() === 'rtl' ? 'rtl' : '';
 };
+
+/**
+ * @deprecated Use useRtlClass() instead. This function violates React hooks rules.
+ */
+export const rtlClass = useRtlClass;
 
 export const tabsProps = (index: number) => ({
   id: `full-width-tab-${index}`,

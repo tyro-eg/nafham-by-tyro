@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { IconButton } from '@mui/material';
@@ -6,13 +5,14 @@ import { Facebook, Instagram, Shop, Twitter } from '@mui/icons-material';
 
 import { useAppSelector } from '../../redux/store';
 import { selectCurrentUser } from '../../redux/user/user.selectors';
-import { rtlClass } from '../../assets/utils/utils';
+import { useRtlClass } from '../../assets/utils/utils';
 import logo from '../../assets/images/logo.png';
 
 import './footer.styles.scss';
 
 const Footer = () => {
   const { t } = useTranslation();
+  const rtlClass = useRtlClass();
   const currentUser = useAppSelector(selectCurrentUser);
 
   return (
@@ -21,7 +21,7 @@ const Footer = () => {
         <Link to="/" className="logo">
           <img src={logo} alt="tyro logo" />
         </Link>
-        <div className={`footer-navbar ${rtlClass()}`}>
+        <div className={`footer-navbar ${rtlClass}`}>
           <NavLink
             className={({ isActive }) =>
               isActive ? 'menu-item active' : 'menu-item'

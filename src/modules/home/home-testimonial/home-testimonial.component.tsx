@@ -1,9 +1,12 @@
+import { FC } from 'react';
 import { useTranslation } from 'react-i18next';
-import { rtlClass } from '../../../assets/utils/utils';
 
-import './home-testimonial.styles.scss';
+import { useRtlClass } from '../../../assets/utils/utils';
+
 import ReadMore from '../../../component/read-more/read-more.component';
 import Carousel from '../../../component/carousel/carousel';
+
+import './home-testimonial.styles.scss';
 
 const testimonials = [
   {
@@ -109,11 +112,13 @@ const testimonialsArabic = [
   },
 ];
 
-const HomeTestimonial = () => {
+const HomeTestimonial: FC = () => {
   const { t, i18n } = useTranslation();
+  const rtlClass = useRtlClass();
+
   return (
     <div className="landing__testimonials">
-      <div className={`testimonials-image-container ${rtlClass()}`}>
+      <div className={`testimonials-image-container ${rtlClass}`}>
         <div className="container">
           <Carousel small arrows={false}>
             {(i18n.dir() === 'rtl' ? testimonialsArabic : testimonials).map(

@@ -1,15 +1,16 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Dialog, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
+
+import { useAppSelector } from '../../redux/store';
 import { selectCurrentUser } from '../../redux/user/user.selectors';
 import MainHeader from './main-header/main-header.component';
 import MobileHeader from './mobile-header/mobile-header.component';
-
-import './index.styles.scss';
-import { useAppSelector } from '../../redux/store';
 import EmailConfirmationModal from '../../modals/email-confirmation-modal/email-confirmation-modal.component';
 import RegisterModal from '../../modals/register-modal/register-modal.component';
 import LoginModal from '../../modals/login-modal/login-modal.component';
+
+import './index.styles.scss';
 
 const Header = () => {
   const theme = useTheme();

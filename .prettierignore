@@ -1,3 +1,18 @@
+# Build outputs
 build/
+dist/
+
+# Dependencies
 node_modules/
+
+# Public static assets
 public/
+
+# Generated files
+*.min.js
+*.min.css
+
+# Package lock files
+package-lock.json
+yarn.lock
+pnpm-lock.yaml

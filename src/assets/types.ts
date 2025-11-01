@@ -1,4 +1,4 @@
-type TutorReview = {
+export type TutorReview = {
   id: number;
   student: string;
   rating: number;
@@ -6,12 +6,12 @@ type TutorReview = {
   created_at: string;
 };
 
-type FreeTrial = {
+export type FreeTrial = {
   enabled: boolean;
   claimed: boolean;
 };
 
-type TutorPackage = {
+export type TutorPackage = {
   id: number;
   type: string;
   minutes: number;
@@ -22,7 +22,7 @@ type TutorPackage = {
   deleted_at?: string;
 };
 
-type Schedule = {
+export type Schedule = {
   id: number;
   from: string;
   to: string;
@@ -96,4 +96,44 @@ export type CurrentUser = {
   type: 'Tutor' | 'Student';
   updated_at: string;
   email_confirmed: boolean;
+};
+
+export type SessionType = {
+  id: number;
+  created_at: string;
+  end_time: string;
+  grade_subject: {
+    id: number;
+    created_at: string;
+    full_course_name: string;
+    updated_at: string;
+  };
+  session_type: 'regular' | 'trial' | 'group';
+  start_time: string;
+  status: 'open' | 'scheduled' | 'completed' | 'missed' | 'canceled';
+  student: {
+    id: number;
+    created_at: string;
+    email: string;
+    first_name: string;
+    last_name: string;
+    phone_number: string;
+    type: 'Student' | 'Tutor';
+    updated_at: string;
+    image: string;
+  };
+  tutor: {
+    id: number;
+    created_at: string;
+    email: string;
+    first_name: string;
+    last_name: string;
+    phone_number: string;
+    type: 'Tutor' | 'Student';
+    updated_at: string;
+    image: string;
+    rating: number;
+    reviews: number;
+  };
+  updated_at: string;
 };

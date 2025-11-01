@@ -1,21 +1,14 @@
-import { useEffect } from 'react';
+import { FC } from 'react';
 import { useTranslation } from 'react-i18next';
 import TrailModalCard from '../../component/trail-modal-card/trail-modal-card.component';
-import { useAppDispatch, useAppSelector } from '../../redux/store';
+import { useInstructors } from '../../hooks/useInstructors';
 
 import './free-trail-modal.styles.scss';
-import { selectInstructors } from '../../redux/user/user.selectors';
-import { getInstructors } from '../../redux/user/user.actions';
 
-const FreeTrailModal = () => {
+const FreeTrailModal: FC = () => {
   const { t } = useTranslation();
-  const dispatch = useAppDispatch();
-  const instructors = useAppSelector(selectInstructors);
-
-  useEffect(() => {
-    dispatch(getInstructors({ pageNumber: 1, pageSize: 10 }));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const { data } = useInstructors(1, 10);
+  const instructors = data?.data || [];
 
   return (
     <div className="instructor-trial-modal">

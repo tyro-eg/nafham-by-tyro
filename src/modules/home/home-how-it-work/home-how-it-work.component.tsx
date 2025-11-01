@@ -1,13 +1,13 @@
-import React from 'react';
+import { FC } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import chat from '../../../assets/images/newLanding/chat.svg';
-import clock from '../../../assets/images/newLanding/clock.svg';
-import shareup from '../../../assets/images/newLanding/shareup.svg';
+import chat from '../../../assets/images/newLanding/chat.svg?url';
+import clock from '../../../assets/images/newLanding/clock.svg?url';
+import shareup from '../../../assets/images/newLanding/shareup.svg?url';
 
 import './home-how-it-work.styles.scss';
 
-const HomeHowItWork: React.FC = () => {
+const HomeHowItWork: FC = () => {
   const { t } = useTranslation();
 
   return (

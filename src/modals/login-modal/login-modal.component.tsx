@@ -8,20 +8,17 @@ import {
   TextField,
 } from '@mui/material';
 import { Close, ExitToApp } from '@mui/icons-material';
-import { Formik, Form, Field } from 'formik';
-import * as Yup from 'yup';
+import { useForm, Controller } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useNavigate } from 'react-router-dom';
 
 import ResetPasswordModal from '../reset-password/reset-password-modal.component';
-
-// import { ReactComponent as Facebook } from '../../../assets/images/auth/Facebook.svg';
-// import { ReactComponent as Google } from '../../../assets/images/auth/google.svg';
-
+import { loginSchema, type LoginFormData } from '../../schemas/authSchemas';
 import './login-modal.styles.scss';
 import { selectCurrentUser } from '../../redux/user/user.selectors';
-import { useAppDispatch, useAppSelector } from '../../redux/store';
-import { signInWithEmail } from '../../redux/user/user.actions';
-import { rtlClass } from '../../assets/utils/utils';
+import { useAppSelector } from '../../redux/store';
+import { useRtlClass } from '../../assets/utils/utils';
+import { useSignIn } from '../../hooks/useAuth';
 
 interface LoginModalProps {
   onClose: () => void;
@@ -39,21 +36,23 @@ const LoginModal: FC<LoginModalProps> = ({
   openJoinCourseModal,
   modalData,
 }) => {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const navigate = useNavigate();
-  const dispatch = useAppDispatch();
   const currentUser = useAppSelector(selectCurrentUser);
+  const signInMutation = useSignIn();
+  const rtlClass = useRtlClass();
 
-  const LoginSchema = (t: any) =>
-    Yup.object().shape({
-      email: Yup.string()
-        .email(i18n.t('GENEREL.INVALID_EMAIL'))
-        .required(i18n.t('GENEREL.REQUIRED')),
-      password: Yup.string()
-        .trim(i18n.t('GENEREL.EMPTY_SPACE'))
-        .strict()
-        .required(i18n.t('GENEREL.REQUIRED')),
-    });
+  const {
+    control,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<LoginFormData>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: '',
+      password: '',
+    },
+  });
 
   const [openForgetPasswordModal, setOpenForgetPasswordModal] = useState(false);
 
@@ -71,10 +70,24 @@ const LoginModal: FC<LoginModalProps> = ({
     onClose();
   };
 
+  const onSubmit = async (values: LoginFormData) => {
+    try {
+      const userData = await signInMutation.mutateAsync(values);
+      if (userData?.id) {
+        navigate('/home');
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+    }
+  };
+
   const handleOpenForgetPassword = () => setOpenForgetPasswordModal(true);
   const handleCloseForgetPasswordModal = () =>
     setOpenForgetPasswordModal(false);
-  const goToTerms = () => navigate('/terms');
+  const goToTerms = () => {
+    navigate('/terms');
+    onClose();
+  };
 
   const onRegister = () => {
     openRegisterModal();
@@ -87,7 +100,7 @@ const LoginModal: FC<LoginModalProps> = ({
         <div className="login-modal__card-icon">
           <ExitToApp />
         </div>
-        <div className={`login-modal__card-body ${rtlClass()}`}>
+        <div className={`login-modal__card-body ${rtlClass}`}>
           <p className="login-modal__card-body__header">
             {modalData.courseItem
               ? t('LOGIN.LOGIN_TITLE_1')
@@ -100,108 +113,83 @@ const LoginModal: FC<LoginModalProps> = ({
       </div>
 
       <hr className="full-line" />
-      <Formik
-        initialValues={{ email: '', password: '' }}
-        validationSchema={LoginSchema(i18n)}
-        onSubmit={async (values, { setSubmitting }) => {
-          try {
-            const loginResponse = await dispatch(
-              signInWithEmail({
-                payload: values,
-              }),
-            );
-
-            if (loginResponse?.payload?.id) {
-              navigate('/home');
-            }
-            setSubmitting(false);
-          } catch (error) {
-            setSubmitting(false);
-          }
-        }}
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className={`login-modal__form ${rtlClass}`}
       >
-        {({ submitForm, isSubmitting, errors, touched }) => (
-          <Form className={`login-modal__form ${rtlClass()}`}>
-            <InputLabel htmlFor="email">{t('LOGIN.LOGIN_EMAIL')}</InputLabel>
-            <Field
-              as={TextField}
+        <InputLabel htmlFor="email">{t('LOGIN.LOGIN_EMAIL')}</InputLabel>
+        <Controller
+          name="email"
+          control={control}
+          render={({ field }) => (
+            <TextField
+              {...field}
               placeholder={t('LOGIN.LOGIN_EMAIL_INPUT_PLACEHOLDER')}
-              name="email"
               type="email"
               variant="outlined"
               className="custom-input-style"
               id="email"
-              error={touched.email && Boolean(errors.email)}
-              helperText={touched.email && errors.email}
+              error={!!errors.email}
+              helperText={errors.email?.message && t(errors.email.message)}
               fullWidth
             />
-            <div className="forget-password-label">
-              <InputLabel htmlFor="password">
-                {t('LOGIN.LOGIN_PASSWORD')}
-              </InputLabel>
-              <Button
-                variant="text"
-                onClick={handleOpenForgetPassword}
-                className={`forget-password-btn ${rtlClass()}`}
-              >
-                {t('LOGIN.FORGET_PASSWORD')}
-              </Button>
-            </div>
-            <Field
-              as={TextField}
+          )}
+        />
+        <div className="forget-password-label">
+          <InputLabel htmlFor="password">
+            {t('LOGIN.LOGIN_PASSWORD')}
+          </InputLabel>
+          <Button
+            variant="text"
+            onClick={handleOpenForgetPassword}
+            className={`forget-password-btn ${rtlClass}`}
+          >
+            {t('LOGIN.FORGET_PASSWORD')}
+          </Button>
+        </div>
+        <Controller
+          name="password"
+          control={control}
+          render={({ field }) => (
+            <TextField
+              {...field}
               placeholder={t('LOGIN.LOGIN_PASSWORD_INPUT_PLACEHOLDER')}
               variant="outlined"
-              name="password"
               type="password"
               className="custom-input-style"
               id="password"
-              error={touched.password && Boolean(errors.password)}
-              helperText={touched.password && errors.password}
+              error={!!errors.password}
+              helperText={
+                errors.password?.message && t(errors.password.message)
+              }
               fullWidth
             />
-            <Button
-              variant="contained"
-              color="primary"
-              disabled={isSubmitting}
-              onClick={submitForm}
-              className="btn-custom-style"
-            >
-              {t('LOGIN.LOGIN_SUBMIT_BTN')}
+          )}
+        />
+        <Button
+          type="submit"
+          variant="contained"
+          color="primary"
+          disabled={isSubmitting}
+          className="btn-custom-style"
+        >
+          {t('LOGIN.LOGIN_SUBMIT_BTN')}
+        </Button>
+        <div className="no-account">
+          <p className="register-text">
+            {t('LOGIN.NO_ACCOUNT')}
+            <Button onClick={onRegister} className="register-link">
+              {t('LOGIN.REGISTER')}
             </Button>
-            <div className="no-account">
-              <p className="register-text">
-                {t('LOGIN.NO_ACCOUNT')}
-                <Button onClick={onRegister} className="register-link">
-                  {t('LOGIN.REGISTER')}
-                </Button>
-              </p>
-            </div>
-            {/* <div className="social-login">
-              <p className="or-text">{t('LOGIN.OR')}</p>
-              <Button
-                variant="outlined"
-                startIcon={<Facebook />}
-                className="social-btn"
-              >
-                Facebook
-              </Button>
-              <Button
-                variant="outlined"
-                startIcon={<Google />}
-                className="social-btn"
-              >
-                Google
-              </Button>
-            </div> */}
-            <div className="term-body">
-              <p className="term-first-text">{t('REGISTER.TERMS')}</p>
-              <Button onClick={goToTerms} variant="text">
-                <p className="term-second-text">{t('REGISTER.TERMS_GREEN')}</p>
-              </Button>
-            </div>
-          </Form>
-        )}
-      </Formik>
+          </p>
+        </div>
+        <div className="term-body">
+          <p className="term-first-text">{t('REGISTER.TERMS')}</p>
+          <Button onClick={goToTerms} variant="text">
+            <p className="term-second-text">{t('REGISTER.TERMS_GREEN')}</p>
+          </Button>
+        </div>
+      </form>
 
       {openForgetPasswordModal && (
         <Dialog

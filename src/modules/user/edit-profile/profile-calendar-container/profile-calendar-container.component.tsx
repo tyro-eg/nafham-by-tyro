@@ -1,38 +1,27 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { FC, useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import arLocale from '@fullcalendar/core/locales/ar-kw';
-
+import { addDays, getDay } from 'date-fns';
 import { useTranslation } from 'react-i18next';
 import { Button, Dialog } from '@mui/material';
+import { DateSelectArg, EventAddArg } from '@fullcalendar/core';
 
-import {
-  RootState,
-  useAppDispatch,
-  useAppSelector,
-} from '../../../../redux/store';
-import {
-  selectCreateSlotsStatus,
-  selectDeleteSlotsStatus,
-  selectTimeSlots,
-} from '../../../../redux/calendar/calendar.selectors';
+import { RootState, useAppSelector } from '../../../../redux/store';
 import { selectCurrentUser } from '../../../../redux/user/user.selectors';
-
-import { rtlClass } from '../../../../assets/utils/utils';
+import {
+  useSlots,
+  useCreateSlots,
+  useDeleteSlots,
+} from '../../../../hooks/useCalendar';
+import { useRtlClass } from '../../../../assets/utils/utils';
+import { UserInfoType } from '..';
+import ProfileModal from '../../../../modals/profile-modal/profile-modal.component';
 
 import './profile-calendar-container.styles.scss';
-import {
-  createSlots,
-  deleteSlots,
-  getSlots,
-} from '../../../../redux/calendar/calendar.actions';
-import { addDays, getDay } from 'date-fns';
-import ProfileModal from '../../../../modals/profile-modal/profile-modal.component';
-import { DateSelectArg, EventAddArg } from '@fullcalendar/core';
-import { UserInfoType } from '..';
 
 interface ProfileCalendarProps {
   showEditMode: boolean;
@@ -43,7 +32,7 @@ interface ProfileCalendarProps {
   instructorId: string;
 }
 
-const ProfileCalendar: React.FC<ProfileCalendarProps> = ({
+const ProfileCalendar: FC<ProfileCalendarProps> = ({
   showEditMode,
   editModeFlag,
   toggleEditMode,
@@ -54,20 +43,34 @@ const ProfileCalendar: React.FC<ProfileCalendarProps> = ({
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
-  const dispatch = useAppDispatch();
+  const rtlClass = useRtlClass();
 
   const calendarRef = useRef<FullCalendar | null>(null);
 
-  const slots = useAppSelector(selectTimeSlots);
   const currentUser = useAppSelector((state: RootState) =>
     selectCurrentUser(state),
   );
-  const createSlotsStatus = useAppSelector((state: RootState) =>
-    selectCreateSlotsStatus(state),
+
+  const today = new Date(new Date().setHours(0, 0, 0, 0));
+  const validDate = addDays(today, 1);
+
+  // Memoize date range to prevent infinite re-renders
+  const [dateRange, setDateRange] = useState(() => ({
+    from: today.toISOString(),
+    to: addDays(today, 7).toISOString(),
+  }));
+
+  // Fetch slots using TanStack Query
+  const { data: slots = [] } = useSlots(
+    +instructorId,
+    dateRange.from,
+    dateRange.to,
+    !!instructorId,
   );
-  const deleteSlotsStatus = useAppSelector((state: RootState) =>
-    selectDeleteSlotsStatus(state),
-  );
+
+  // Mutations for create and delete
+  const createSlotsMutation = useCreateSlots();
+  const deleteSlotsMutation = useDeleteSlots();
 
   const [currentEvents, setCurrentEvents] = useState<any[]>([]);
   const [addedEvents, setAddedEvents] = useState<
@@ -78,22 +81,6 @@ const ProfileCalendar: React.FC<ProfileCalendarProps> = ({
   >([]);
   const [userSlots, setUserSlots] = useState<any[]>([]);
   const [openProfileModal, setOpenProfileModal] = useState(false);
-
-  const today = new Date(new Date().setHours(0, 0, 0, 0));
-  const validDate = addDays(today, 1);
-
-  useEffect(() => {
-    dispatch(
-      getSlots({
-        userId: +instructorId,
-        params: {
-          from: today.toISOString(),
-          to: addDays(today, 7).toISOString(),
-        },
-      }),
-    );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id]);
 
   useEffect(() => {
     setCurrentEvents(slots || []);
@@ -110,42 +97,17 @@ const ProfileCalendar: React.FC<ProfileCalendarProps> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [updateSlots]);
 
-  useEffect(() => {
-    if (
-      calendarRef.current &&
-      (createSlotsStatus.success || deleteSlotsStatus.success)
-    ) {
-      const calendarApi = calendarRef.current?.getApi();
-      const view = calendarApi?.view;
-
-      const { start, end } =
-        view?.activeStart && view?.activeEnd
-          ? { start: view.activeStart, end: view.activeEnd }
-          : { start: new Date(), end: addDays(new Date(), 7) };
-      dispatch(
-        getSlots({
-          userId: +instructorId,
-          params: {
-            from: start.toISOString(),
-            to: end.toISOString(),
-          },
-        }),
-      );
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [createSlotsStatus, deleteSlotsStatus, id]);
-
-  const handleSaveChanges = () => {
+  const handleSaveChanges = async () => {
     if (calendarRef.current) {
       const calendarApi = calendarRef.current.getApi();
       if (addedEvents.length > 0) {
         calendarApi.removeAllEvents();
-        dispatch(createSlots({ slots: addedEvents }));
+        await createSlotsMutation.mutateAsync(addedEvents);
         setAddedEvents([]);
       }
       if (deletedEvents.length > 0) {
         const ids = deletedEvents.map((event) => +event.id);
-        dispatch(deleteSlots({ ids }));
+        await deleteSlotsMutation.mutateAsync(ids);
         setDeletedEvents([]);
       }
     }
@@ -224,15 +186,10 @@ const ProfileCalendar: React.FC<ProfileCalendarProps> = ({
           ? { start: view.activeStart, end: view.activeEnd }
           : { start: new Date(), end: addDays(new Date(), 7) };
       if (currentUser?.id) {
-        dispatch(
-          getSlots({
-            userId: +instructorId,
-            params: {
-              from: start.toISOString(),
-              to: end.toISOString(),
-            },
-          }),
-        );
+        setDateRange({
+          from: start.toISOString(),
+          to: end.toISOString(),
+        });
       }
     }
   };
@@ -262,30 +219,30 @@ const ProfileCalendar: React.FC<ProfileCalendarProps> = ({
     <div className="profile-calendar">
       <div className="profile-calendar__container">
         <div className="calendar">
-          <div className={`calendar__legend ${rtlClass()}`}>
-            <div className={`calendar__legend--available ${rtlClass()}`}>
-              <div className={`color ${rtlClass()}`}></div>
+          <div className={`calendar__legend ${rtlClass}`}>
+            <div className={`calendar__legend--available ${rtlClass}`}>
+              <div className={`color ${rtlClass}`}></div>
               <div className="title">
                 {t('CALENDAR.MYSESSION.LEGEND.AVAILABLE')}
               </div>
             </div>
 
-            <div className={`calendar__legend--not__available ${rtlClass()}`}>
-              <div className={`color ${rtlClass()}`}></div>
+            <div className={`calendar__legend--not__available ${rtlClass}`}>
+              <div className={`color ${rtlClass}`}></div>
               <div className="title">
                 {t('CALENDAR.MYSESSION.LEGEND.NOT_AVAILABLE')}
               </div>
             </div>
 
-            <div className={`calendar__legend--booked ${rtlClass()}`}>
-              <div className={`color ${rtlClass()}`}></div>
+            <div className={`calendar__legend--booked ${rtlClass}`}>
+              <div className={`color ${rtlClass}`}></div>
               <div className="title">
                 {t('CALENDAR.MYSESSION.LEGEND.RESERVED')}
               </div>
             </div>
 
-            <div className={`calendar__legend--busy ${rtlClass()}`}>
-              <div className={`color ${rtlClass()}`}></div>
+            <div className={`calendar__legend--busy ${rtlClass}`}>
+              <div className={`color ${rtlClass}`}></div>
               <div className="title">{t('CALENDAR.MYSESSION.LEGEND.BUSY')}</div>
             </div>
           </div>

@@ -1,66 +1,35 @@
-import React, { useEffect } from 'react';
+import { FC, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Pagination } from '@mui/material';
 
-import {
-  selectInstructors,
-  selectInstructorsPagination,
-} from '../../redux/user/user.selectors';
+import { useInstructors } from '../../hooks/useInstructors';
+
 import { ReactComponent as EmptyImg } from '../../assets/images/empty.svg';
 import PrivateSessionsFilter from './private-sessions-filter/private-sessions-filter.component';
-// import Group from '../../assets/images/landing/feature_3.png';
-
-import './index.styles.scss';
-import { getInstructors } from '../../redux/user/user.actions';
-import { useAppDispatch, useAppSelector } from '../../redux/store';
 import InstructorCard from '../../component/instructor-card/instructor-card.component';
 
-const PrivateSessions: React.FC = () => {
+import './index.styles.scss';
+
+const PrivateSessions: FC = () => {
   const { t } = useTranslation();
-  const dispatch = useAppDispatch();
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 10;
 
-  const instructors = useAppSelector(selectInstructors);
-  const instructorsPagination = useAppSelector(selectInstructorsPagination);
-
-  useEffect(() => {
-    dispatch(getInstructors({ pageNumber: 1, pageSize: 10 }));
-  }, [dispatch]);
+  const { data } = useInstructors(currentPage, pageSize);
+  const instructors = data?.data || [];
+  const instructorsPagination = data?.pagination;
 
   const handlePageChange = (
     _event: React.ChangeEvent<unknown>,
     value: number,
   ) => {
-    dispatch(getInstructors({ pageNumber: value, pageSize: 10 }));
+    setCurrentPage(value);
     scrollToTop();
   };
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
-
-  // const renderBanner = () => (
-  //   <div className="banner">
-  //     <div className="banner__container container">
-  //       <div className="banner__block1">
-  //         <h5 className="title1">{t('HOME.BANNER.TITLE1')}</h5>
-  //         <h2 className="title2">{t('HOME.BANNER.TITLE2')}</h2>
-  //         <p className="description">{t('HOME.BANNER.DESCRIPTION')}</p>
-  //       </div>
-  //       <div className="banner__block2">
-  //         <img className="image" src={Group} alt="feature_1" />
-  //         <Button
-  //           size="large"
-  //           className="button"
-  //           variant="contained"
-  //           color="primary"
-  //           onClick={() => {}}
-  //         >
-  //           {t('HOME.BANNER.ACTION')}
-  //         </Button>
-  //       </div>
-  //     </div>
-  //   </div>
-  // );
 
   const renderNoResults = () => (
     <div className="no_results container">
@@ -92,6 +61,7 @@ const PrivateSessions: React.FC = () => {
         <Pagination
           color="primary"
           size="large"
+          page={currentPage}
           count={Number(instructorsPagination['total-pages'])}
           onChange={handlePageChange}
         />

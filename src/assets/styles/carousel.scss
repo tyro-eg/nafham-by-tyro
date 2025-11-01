@@ -1,5 +1,5 @@
-@import '~slick-carousel/slick/slick.css';
-@import '~slick-carousel/slick/slick-theme.css';
+// Slick carousel styles are imported in src/component/carousel/carousel.tsx
+// to avoid charset conflicts with Vite
 
 .slick-slider {
   width: calc(100% + 15px);

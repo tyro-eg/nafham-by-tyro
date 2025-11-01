@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { Button } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 
@@ -8,7 +8,7 @@ interface EditProfileVideoModalProps {
   onSetProfileInfo: (videoUrl: string, type: string) => void;
 }
 
-const EditProfileVideoModal: React.FC<EditProfileVideoModalProps> = ({
+const EditProfileVideoModal: FC<EditProfileVideoModalProps> = ({
   onClose,
   dataUrl,
   onSetProfileInfo,

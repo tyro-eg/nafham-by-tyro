@@ -1,14 +1,18 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@mui/material';
 import { Check, Edit } from '@mui/icons-material';
 import { useParams } from 'react-router-dom';
 
+import { useAppSelector } from '../../../redux/store';
+import { selectCurrentUser } from '../../../redux/user/user.selectors';
 import {
-  selectCurrentUser,
-  selectInstructor,
-} from '../../../redux/user/user.selectors';
-
+  useInstructor,
+  useUpdateTutorProfile,
+} from '../../../hooks/useInstructors';
+import { useSlots } from '../../../hooks/useCalendar';
+import { Instructor } from '../../../assets/types';
+import AppCard from '../../../component/card/app-card.component';
 import ProfileCalendar from './profile-calendar-container/profile-calendar-container.component';
 import ProfileMissingInfoBanner from './profile-missing-info-banner/profile-missing-info-banner.component';
 import ProfileReviewsList from './profile-reviews-list/profile-reviews-list.component';
@@ -17,14 +21,6 @@ import ProfileFields from './profile-fields/profile-fields.component';
 import { getYoutubeId } from './edit-profile.utils';
 
 import './index.scss';
-import { useAppDispatch, useAppSelector } from '../../../redux/store';
-import {
-  getInstructorById,
-  updateTutorInfo,
-} from '../../../redux/user/user.actions';
-import AppCard from '../../../component/card/app-card.component';
-import { selectTimeSlots } from '../../../redux/calendar/calendar.selectors';
-import { Instructor } from '../../../assets/types';
 
 export type ProfileInfoType = {
   full_name?: string;
@@ -48,14 +44,12 @@ export type UserInfoType =
     }
   | undefined;
 
-const EditProfile: React.FC = () => {
+const EditProfile: FC = () => {
   const { t } = useTranslation();
-  const dispatch = useAppDispatch();
   const { id } = useParams<{ id: string }>();
 
   const currentUser = useAppSelector(selectCurrentUser);
-  const instructor = useAppSelector(selectInstructor);
-  const slots = useAppSelector(selectTimeSlots);
+  const updateTutorProfileMutation = useUpdateTutorProfile();
 
   const [showEditMode, setShowEditMode] = useState(false);
   const [editMode, setEditMode] = useState(false);
@@ -67,13 +61,27 @@ const EditProfile: React.FC = () => {
   const [updateSlots, doUpdateSlots] = useState(0);
   const [profileUserInfo, setProfileUserInfo] = useState<UserInfoType>();
 
+  // Memoize dates to prevent infinite re-fetches
+  const dateRange = useMemo(() => {
+    const from = new Date().toISOString();
+    const to = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
+    return { from, to };
+  }, []); // Empty deps array means this only runs once on mount
+
+  // Use TanStack Query hooks
+  const { data: instructor } = useInstructor(id!, !!id);
+  const { data: slots = [] } = useSlots(
+    Number(id),
+    dateRange.from,
+    dateRange.to,
+    !!id,
+  );
+
   useEffect(() => {
     onBlockingMissingInformation(false);
-    dispatch(getInstructorById({ id: +id! }));
     if (currentUser && currentUser.id) {
       setShowEditMode(Number(currentUser.id) === Number(id));
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, currentUser]);
 
   useEffect(() => {
@@ -81,13 +89,11 @@ const EditProfile: React.FC = () => {
       setProfileData({ ...instructor, slots: slots || [] });
       setProfileReviewsData(instructor?.tutor_reviews!);
       setProfileInfoData(initProfileInfoObj(instructor));
-      // setProfilePackagesData(initProfilePackagesObj())
       if (instructor.tutor_packages) {
         setProfilePackagesData(instructor.tutor_packages);
       }
       setProfileUserInfo(initProfileUserInfoObj(instructor, slots || []));
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [instructor, slots]);
 
   const initProfileInfoObj = (
@@ -161,15 +167,13 @@ const EditProfile: React.FC = () => {
 
   const toggleEditMode = () => setEditMode((prevState) => !prevState);
 
-  const updateProfile = () => {
+  const updateProfile = async () => {
     doUpdateSlots((prev) => prev + 1);
     const { slots, ...info } = profileUserInfo || {};
-    dispatch(
-      updateTutorInfo({
-        id: +id!,
-        userData: { tutor: info },
-      }),
-    );
+    await updateTutorProfileMutation.mutateAsync({
+      id: +id!,
+      userData: { tutor: info },
+    });
   };
 
   const onBlockingMissingInformation = (flag: boolean) =>

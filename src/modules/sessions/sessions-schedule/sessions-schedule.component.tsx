@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+
 import SessionsScheduleCard from './sessions-schedule-card/sessions-schedule-card.component';
-import './sessions-schedule.styles.scss';
 import Carousel from '../../../component/carousel/carousel';
+
+import './sessions-schedule.styles.scss';
 
 interface UnscheduledSession {
   instructor_id: number;
@@ -39,7 +41,7 @@ interface SessionsScheduleProps {
   unscheduledSessionsData: UnscheduledSession[];
 }
 
-const SessionsSchedule: React.FC<SessionsScheduleProps> = ({
+const SessionsSchedule: FC<SessionsScheduleProps> = ({
   unscheduledSessionsData,
 }) => {
   const { t } = useTranslation();

@@ -2,15 +2,13 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 import { Dialog } from '@mui/material';
-import { selectInstructor } from '../../redux/user/user.selectors';
-import { getInstructorById } from '../../redux/user/user.actions';
 import AvailablePackages from './available-packages/available-packages.component';
 
 import './index.styles.scss';
-import { useAppDispatch, useAppSelector } from '../../redux/store';
 import RegisterModal from '../../modals/register-modal/register-modal.component';
 import LoginModal from '../../modals/login-modal/login-modal.component';
 import CheckoutDiscount from './checkout-discount/checkout-discount.component';
+import { useInstructor } from '../../hooks/useInstructors';
 
 const course = {
   id: 176,
@@ -66,26 +64,22 @@ export interface PromoCode {
 }
 
 const Checkout = () => {
-  const dispatch = useAppDispatch();
   const { t } = useTranslation();
   const { search } = useLocation();
 
-  const instructor = useAppSelector(selectInstructor);
-
   const isCourse = new URLSearchParams(search).get('course') === 'true';
   const instructorId = new URLSearchParams(search).get('id');
+
+  const { data: instructor } = useInstructor(
+    instructorId || '',
+    !!instructorId,
+  );
 
   const [tutorFields, setTutorFields] = useState<TutorField[]>([]);
   const [tutorPackages, setTutorPackages] = useState<TutorPackage[]>([]);
   const [promoCode, setPromoCode] = useState<PromoCode>();
   const [openRegisterModal, setOpenRegisterModal] = useState<boolean>(false);
   const [openLoginModal, setOpenLoginModal] = useState<boolean>(false);
-
-  useEffect(() => {
-    if (instructorId) {
-      dispatch(getInstructorById({ id: +instructorId }));
-    }
-  }, [instructorId, dispatch]);
 
   useEffect(() => {
     if (instructor) {
