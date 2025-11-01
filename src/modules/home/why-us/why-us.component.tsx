@@ -1,15 +1,17 @@
-import React from 'react';
+import { FC } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import rafiki from '../../../assets/images/newLanding/rafiki.svg';
-import notes from '../../../assets/images/newLanding/notes.svg';
-import programming from '../../../assets/images/newLanding/programming.svg';
+import { useRtlClass } from '../../../assets/utils/utils';
+
+import rafiki from '../../../assets/images/newLanding/rafiki.svg?url';
+import notes from '../../../assets/images/newLanding/notes.svg?url';
+import programming from '../../../assets/images/newLanding/programming.svg?url';
 
 import './why-us.styles.scss';
-import { rtlClass } from '../../../assets/utils/utils';
 
-const HomeWhyUs: React.FC = () => {
+const HomeWhyUs: FC = () => {
   const { t } = useTranslation();
+  const rtlClass = useRtlClass();
 
   return (
     <div className="landing__why-us">
@@ -18,7 +20,7 @@ const HomeWhyUs: React.FC = () => {
           <p className="why-us-header">{t('LANDING.BLOCK7.TITLE')}</p>
           <p className="why-us-description">
             <span>{t('LANDING.BLOCK7.DESCRIPTION.PART1')}</span>
-            <span className={`parallelogram ${rtlClass()}`}>
+            <span className={`parallelogram ${rtlClass}`}>
               {t('LANDING.BLOCK7.DESCRIPTION.PART2')}
             </span>
           </p>

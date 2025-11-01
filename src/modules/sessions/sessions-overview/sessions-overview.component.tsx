@@ -1,4 +1,4 @@
-import React from 'react';
+import { FC } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import './sessions-overview.styles.scss';
@@ -11,9 +11,7 @@ interface SessionsOverviewProps {
   };
 }
 
-const SessionsOverview: React.FC<SessionsOverviewProps> = ({
-  overViewData,
-}) => {
+const SessionsOverview: FC<SessionsOverviewProps> = ({ overViewData }) => {
   const { t } = useTranslation();
 
   return (
@@ -34,7 +32,7 @@ const SessionsOverview: React.FC<SessionsOverviewProps> = ({
   );
 };
 
-const SessionCard: React.FC<{ title: string; value: number }> = ({
+const SessionCard: FC<{ title: string; value: number }> = ({
   title,
   value,
 }) => (

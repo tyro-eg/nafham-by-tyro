@@ -1,23 +1,31 @@
-import React from 'react';
+import { FC } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Button } from '@mui/material';
 
 import './email-confirmation-modal.styles.scss';
+
 interface EmailConfirmationModalProps {
   email: string;
   onClose: () => void;
 }
 
-const EmailConfirmationModal: React.FC<EmailConfirmationModalProps> = ({
+const EmailConfirmationModal: FC<EmailConfirmationModalProps> = ({
   email,
   onClose,
 }) => {
-  const confirm = () => {};
+  const { t } = useTranslation();
+
+  const handleConfirm = () => {
+    // TODO: Implement email confirmation resend API call
+    console.log('Resend confirmation email to:', email);
+    onClose();
+  };
+
   return (
     <div className="email-confirm">
       <div>
         <h5>
-          Are you sure you want to resend the confirmation email to your email:{' '}
-          <b>{email}</b>
+          {t('EMAIL_CONFIRMATION.MESSAGE')} <b>{email}</b>
         </h5>
       </div>
 
@@ -28,15 +36,15 @@ const EmailConfirmationModal: React.FC<EmailConfirmationModalProps> = ({
           color="error"
           onClick={onClose}
         >
-          Close
+          {t('MODALS.ACTIONS.CANCEL')}
         </Button>
         <Button
           className="button-wrapper__action"
           variant="contained"
           color="primary"
-          onClick={confirm}
+          onClick={handleConfirm}
         >
-          Send Confirmation
+          {t('EMAIL_CONFIRMATION.SEND')}
         </Button>
       </div>
     </div>

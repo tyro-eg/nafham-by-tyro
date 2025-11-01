@@ -3,11 +3,15 @@ import { useTranslation } from 'react-i18next';
 import { Button } from '@mui/material';
 import Rating from '@mui/material/Rating';
 import StarRounded from '@mui/icons-material/StarRounded';
-import { Formik, Form } from 'formik';
-import * as Yup from 'yup';
+import { useForm, Controller } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 import { rtlClass } from '../../../../../assets/utils/utils';
 import './sessions-student-rate.component.scss';
+import {
+  studentRateSchema,
+  type StudentRateFormData,
+} from '../../../../../schemas/sessionSchemas';
 
 interface SessionsStudentRateProps {
   onClose: () => void;
@@ -17,10 +21,25 @@ const SessionsStudentRate: React.FC<SessionsStudentRateProps> = ({
   onClose,
 }) => {
   const { t } = useTranslation();
-  const studentRateSchema = Yup.object().shape({
-    rate: Yup.number().required(),
-    feedback: Yup.string(),
+
+  const {
+    control,
+    handleSubmit,
+    formState: { isValid, isDirty },
+  } = useForm<StudentRateFormData>({
+    resolver: zodResolver(studentRateSchema),
+    defaultValues: {
+      rate: 0,
+      feedback: '',
+    },
+    mode: 'onChange',
   });
+
+  const onSubmit = (values: StudentRateFormData) => {
+    values.rate = Number(values.rate);
+    // Handle submit logic here
+    console.log(values);
+  };
 
   return (
     <section className="studentRateModal">
@@ -32,60 +51,49 @@ const SessionsStudentRate: React.FC<SessionsStudentRateProps> = ({
           {t('MYSESSIONS.RATE.FEEDBACK.SUBTITLE')}
         </p>
       </div>
-      <Formik
-        initialValues={{
-          rate: 0,
-          feedback: '',
-        }}
-        validationSchema={studentRateSchema}
-        onSubmit={(values) => {
-          values.rate = Number(values.rate);
-        }}
-      >
-        {({ values, handleChange, handleBlur, submitForm, isValid, dirty }) => (
-          <Form>
-            <div className="studentRateModal__textarea">
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <div className="studentRateModal__textarea">
+          <Controller
+            name="rate"
+            control={control}
+            render={({ field }) => (
               <Rating
-                name="rate"
-                onChange={handleChange}
-                onBlur={handleBlur}
-                value={Number(values.rate)}
+                {...field}
+                value={Number(field.value)}
+                onChange={(_, value) => field.onChange(value)}
                 icon={<StarRounded fontSize="inherit" />}
               />
-              <p className="u-color-title">
-                {t('MYSESSIONS.RATE.FEEDBACK.EXPERIENCE')}
-              </p>
-              <textarea
-                name="feedback"
-                rows={6}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                value={values.feedback}
-              />
-            </div>
-            <div className="studentRateModal__actions-container">
-              <Button
-                type="button"
-                variant="outlined"
-                color="error"
-                onClick={onClose}
-                className={rtlClass()}
-              >
-                {t('MYSESSIONS.RATE.FEEDBACK.CANCEL')}
-              </Button>
-              <Button
-                type="submit"
-                variant="contained"
-                color="primary"
-                disabled={!dirty || (!!dirty && !isValid)}
-                onClick={submitForm}
-              >
-                {t('MYSESSIONS.RATE.FEEDBACK.SUBMIT')}
-              </Button>
-            </div>
-          </Form>
-        )}
-      </Formik>
+            )}
+          />
+          <p className="u-color-title">
+            {t('MYSESSIONS.RATE.FEEDBACK.EXPERIENCE')}
+          </p>
+          <Controller
+            name="feedback"
+            control={control}
+            render={({ field }) => <textarea {...field} rows={6} />}
+          />
+        </div>
+        <div className="studentRateModal__actions-container">
+          <Button
+            type="button"
+            variant="outlined"
+            color="error"
+            onClick={onClose}
+            className={rtlClass()}
+          >
+            {t('MYSESSIONS.RATE.FEEDBACK.CANCEL')}
+          </Button>
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            disabled={!isDirty || (!!isDirty && !isValid)}
+          >
+            {t('MYSESSIONS.RATE.FEEDBACK.SUBMIT')}
+          </Button>
+        </div>
+      </form>
     </section>
   );
 };

@@ -1,63 +1,33 @@
 import { createSelector } from '@reduxjs/toolkit';
-import { RootState } from '../store'; // Import RootState
 
+import { RootState } from '../store';
+
+/**
+ * Base User Selector
+ *
+ * Selects the entire user slice from the Redux store.
+ *
+ * @param state - Root Redux state
+ * @returns User slice state
+ */
 const selectUser = (state: RootState) => state.user;
 
+/**
+ * Select Current User
+ *
+ * Memoized selector that returns the current authenticated user.
+ * Uses createSelector for memoization to prevent unnecessary re-renders.
+ *
+ * @returns Current user object or null if not authenticated
+ *
+ * @example
+ * const currentUser = useAppSelector(selectCurrentUser);
+ *
+ * if (currentUser) {
+ *   console.log(`Welcome, ${currentUser.first_name}!`);
+ * }
+ */
 export const selectCurrentUser = createSelector(
   [selectUser],
   (user) => user?.currentUser,
-);
-
-export const selectSignInError = createSelector([selectUser], (user) => {
-  return user?.errors.signInError;
-});
-
-export const selectSignUpError = createSelector(
-  [selectUser],
-  (user) => user?.errors.signUpError,
-);
-
-export const selectChangePasswordError = createSelector(
-  [selectUser],
-  (user) => user?.errors.changePasswordError,
-);
-
-export const selectInstructors = createSelector(
-  [selectUser],
-  (user) => user?.instructors,
-);
-
-export const selectInstructor = createSelector(
-  [selectUser],
-  (user) => user?.instructor,
-);
-
-export const selectInstructorsPagination = createSelector(
-  [selectUser],
-  (user) => user?.instructorsPagination,
-);
-
-export const selectInstructorsLoading = createSelector(
-  [selectUser],
-  (user) => user?.loading?.getInstructorsLoading,
-);
-
-export const selectInstructorsError = createSelector(
-  [selectUser],
-  (user) => user?.errors.getInstructorsError,
-);
-
-export const selectInstructorByIdError = createSelector(
-  [selectUser],
-  (user) => user?.errors.getInstructorByIdError,
-);
-
-export const selectUpdateUserInfoError = createSelector(
-  [selectUser],
-  (user) => user?.errors.updateUserInfoError,
-);
-
-export const selectUpdateTutorInfoError = createSelector(
-  [selectUser],
-  (user) => user?.errors.updateTutorInfoError,
 );

@@ -1,8 +1,9 @@
-import React from 'react';
+import { FC } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@mui/material';
 
-import { rtlClass } from '../../../assets/utils/utils';
+import { useRtlClass } from '../../../assets/utils/utils';
+
 import startLearning from '../../../assets/images/newLanding/start-learning.webp';
 
 import './home-ready-for-learning.styles.scss';
@@ -10,18 +11,20 @@ import './home-ready-for-learning.styles.scss';
 interface HomeReadyForLearningProps {
   openFreeTrail: () => void;
 }
-const HomeReadyForLearning: React.FC<HomeReadyForLearningProps> = ({
+
+const HomeReadyForLearning: FC<HomeReadyForLearningProps> = ({
   openFreeTrail,
 }) => {
   const { t } = useTranslation();
+  const rtlClass = useRtlClass();
 
   return (
     <div className="landing__start-learning">
       <div className="container">
-        <div className={`col-2-of-4 col-1-of-1-md col-1-of-1-sm ${rtlClass()}`}>
+        <div className={`col-2-of-4 col-1-of-1-md col-1-of-1-sm ${rtlClass}`}>
           <div className="learning-content">
             <p className="learning-content__title">
-              <span className={`parallelogram gold ${rtlClass()}`}>
+              <span className={`parallelogram gold ${rtlClass}`}>
                 {t('LANDING.BLOCK6.TITLE.PART1')}
               </span>
               {t('LANDING.BLOCK6.TITLE.PART2')}
@@ -30,7 +33,7 @@ const HomeReadyForLearning: React.FC<HomeReadyForLearningProps> = ({
               {t('LANDING.BLOCK6.DESCRIPTION')}
             </p>
             <Button
-              className={`custom-button learning-content__button ${rtlClass()}`}
+              className={`custom-button learning-content__button ${rtlClass}`}
               onClick={openFreeTrail}
             >
               {t('LANDING.BLOCK6.ACTION')}
@@ -39,7 +42,7 @@ const HomeReadyForLearning: React.FC<HomeReadyForLearningProps> = ({
         </div>
         <div className="image-container col-2-of-4 col-1-of-1-md  col-1-of-1-sm">
           <img
-            className={`image ${rtlClass()}`}
+            className={`image ${rtlClass}`}
             src={startLearning}
             alt="start-learning"
           />

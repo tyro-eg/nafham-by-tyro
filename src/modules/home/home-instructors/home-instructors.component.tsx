@@ -1,20 +1,23 @@
-import React from 'react';
+import { FC } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import './home-instructors.styles.scss';
+import { useRtlClass } from '../../../assets/utils/utils';
 
 import instructor1 from '../../../assets/images/newLanding/instructor1.webp';
 import instructor2 from '../../../assets/images/newLanding/instructor2.webp';
 import instructor3 from '../../../assets/images/newLanding/instructor3.webp';
 import instructor4 from '../../../assets/images/newLanding/instructor4.webp';
-import { rtlClass } from '../../../assets/utils/utils';
+
+import './home-instructors.styles.scss';
 
 interface InstructorCard {
   image: string;
   alt: string;
 }
-const HomeInstructors: React.FC = () => {
+
+const HomeInstructors: FC = () => {
   const { t } = useTranslation();
+  const rtlClass = useRtlClass();
 
   const instructors: InstructorCard[] = [
     { image: instructor1, alt: 'instructor1' },
@@ -30,7 +33,7 @@ const HomeInstructors: React.FC = () => {
           <p className="best-instructors-header">{t('LANDING.BLOCK3.TITLE')}</p>
           <p className="best-instructors-description">
             <span>{t('LANDING.BLOCK3.DESCRIPTION.PART1')}</span>
-            <span className={`parallelogram ${rtlClass()}`}>
+            <span className={`parallelogram ${rtlClass}`}>
               {t('LANDING.BLOCK3.DESCRIPTION.PART2')}
             </span>
           </p>

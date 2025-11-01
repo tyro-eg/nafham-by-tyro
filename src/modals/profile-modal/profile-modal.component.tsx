@@ -1,4 +1,4 @@
-import React from 'react';
+import { FC } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
@@ -9,7 +9,7 @@ interface ProfileModalProps {
   instructorId: string;
 }
 
-const ProfileModal: React.FC<ProfileModalProps> = ({ instructorId }) => {
+const ProfileModal: FC<ProfileModalProps> = ({ instructorId }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
 

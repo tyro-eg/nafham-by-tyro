@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useMemo } from 'react';
 import { Rating } from '@mui/material';
 import { format, parseISO } from 'date-fns';
 import { useTranslation } from 'react-i18next';
@@ -12,30 +12,34 @@ interface ReviewCardProps {
   data: ReviewData;
 }
 
+/**
+ * Extracts plain text content from HTML string
+ * @param html - HTML string to extract text from
+ * @returns Plain text content
+ */
+const extractTextFromHtml = (html: string): string => {
+  if (typeof window === 'undefined') return html; // SSR safety
+
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(html, 'text/html');
+  return (doc.body.textContent || '')
+    .replace('Powered by Froala Editor', '')
+    .trim();
+};
+
 const ReviewCard: React.FC<ReviewCardProps> = ({ data }) => {
   const { i18n } = useTranslation();
-  const [reviewText, setReviewText] = useState<string>('');
 
-  useEffect(() => {
-    if (data?.text) {
-      const cleanedText = extractContent(data.text).replace(
-        'Powered by Froala Editor',
-        '',
-      );
-      setReviewText(cleanedText);
-    }
-  }, [data]);
+  // Extract review text once when data changes
+  const reviewText = useMemo(
+    () => (data?.text ? extractTextFromHtml(data.text) : ''),
+    [data?.text],
+  );
 
   const locales = { ar: arSA, en: enUS };
   const myDateFormatter = (dateStr: string): string => {
     const locale = locales[i18n.language as 'ar' | 'en'] || enUS;
     return format(parseISO(dateStr), 'LLLL do, y', { locale });
-  };
-
-  const extractContent = (htmlString: string): string => {
-    const span = document.createElement('span');
-    span.innerHTML = htmlString;
-    return span.textContent || span.innerText || '';
   };
 
   return (

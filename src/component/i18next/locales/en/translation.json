@@ -779,6 +779,10 @@
     "REGISTER_PHONE_NUMBER_INPUT_PLACEHOLDER": "Enter your Phone number",
     "REGISTER_PHONE_NUMBER": "Phone Number",
     "REGISTER_PHONE_NUMBER_CODE_VALIDATION": "Phone Number is invalid.",
+    "COUNTRY": "Country",
+    "SELECT_COUNTRY": "Select Country",
+    "NATIONALITY": "Nationality",
+    "SELECT_NATIONALITY": "Select Nationality",
     "REGISTER_GENDER": "Gender",
     "REGISTER_GENDER_MALE": "Male",
     "REGISTER_GENDER_FEMALE": "Female",
@@ -850,6 +854,10 @@
     "TITLE": "Your account has been confirmed ",
     "TEXT": "Welcome to Tyro! Your go-to marketplace to find qualified instructors. For info on how to book your first session, click here.",
     "START_LEARNING_BTN": "Start Learning"
+  },
+  "EMAIL_CONFIRMATION": {
+    "MESSAGE": "A confirmation email has been sent to your email address. Please check your inbox and follow the instructions to verify your account.",
+    "SEND": "Resend Email"
   },
   "SUCCESS_MODAL": {
     "CLOSE": "Close",
@@ -940,6 +948,8 @@
     "INVALID_PHONE_NUMBER": "Invalid phone number",
     "EMPTY_SPACE": "Please remove empty spaces",
     "PASSWORD_CONFIRMATION_ERROR": "Confirmation doesn't match your password!",
+    "PASSWORD_MISMATCH": "Passwords do not match",
+    "PASSWORD_MIN_LENGTH": "Password must be at least 6 characters",
     "SHORT_PASSWORD": "is too short (minimum is 8 characters)",
     "FIRST_NAME_BLANK": "First name can't be blank!",
     "LAST_NAME_BLANK": "Last name can't be blank!",

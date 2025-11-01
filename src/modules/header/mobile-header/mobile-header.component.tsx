@@ -1,34 +1,29 @@
-import React, { useState } from 'react';
-import { Link, NavLink, useNavigate } from 'react-router-dom';
+import { FC, useState } from 'react';
+import { Link, NavLink } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Button, IconButton } from '@mui/material';
 import { Menu, Info } from '@mui/icons-material';
-import { useAppDispatch, useAppSelector } from '../../../redux/store'; // Adjust import based on your store setup
-import LanguageSelector from '../../../component/i18next/LanguageSelector';
-import { selectCurrentUser } from '../../../redux/user/user.selectors';
-import { signOut } from '../../../redux/user/user.actions';
-import logo from '../../../assets/images/logo.png';
 
-import './mobile-header.styles.scss';
+import { useAppSelector } from '../../../redux/store';
+import { selectCurrentUser } from '../../../redux/user/user.selectors';
+import { useSignOut } from '../../../hooks/useAuth';
+import LanguageSelector from '../../../component/i18next/LanguageSelector';
+import logo from '../../../assets/images/logo.png';
 import { HeaderProps } from '../main-header/main-header.component';
 
-const MobileHeader = ({ openFreeTrail, openEmailConfirm }: HeaderProps) => {
+import './mobile-header.styles.scss';
+
+const MobileHeader: FC<HeaderProps> = ({ openFreeTrail, openEmailConfirm }) => {
   const { t } = useTranslation();
-  const navigate = useNavigate();
-  const dispatch = useAppDispatch(); // Using typed dispatch hook
+  const signOutMutation = useSignOut();
 
-  const currentUser = useAppSelector(selectCurrentUser); // Using typed selector hook
+  const currentUser = useAppSelector(selectCurrentUser);
   const [mobileHeader, toggleMobileHeader] = useState(false);
-  // const [country, setCountry] = useState('en');
 
-  // const handleChange = (event: SelectChangeEvent<string>) => {
-  //   setCountry(event.target.value as string);
-  // };
-
-  const handleLogOut = () => {
+  const handleLogOut = async () => {
     if (currentUser) {
-      dispatch(signOut()).unwrap();
-      navigate('/');
+      await signOutMutation.mutateAsync();
+      // Navigate is handled in the useSignOut hook
     }
   };
 
@@ -83,26 +78,7 @@ const MobileHeader = ({ openFreeTrail, openEmailConfirm }: HeaderProps) => {
           )}
 
           <LanguageSelector />
-          {/* <div>
-            <FormControl>
-              <Select
-                sx={{
-                  margin: (theme) => theme.spacing(1),
-                  minWidth: 120,
-                }}
-                id="demo-simple-select"
-                value={country}
-                onChange={(event) => {
-                  handleChange(event);
-                  closeMobileHeader();
-                }}
-              >
-                <MenuItem value="en">Global</MenuItem>
-                <MenuItem value="eg">مصر</MenuItem>
-                <MenuItem value="sa">السعودية</MenuItem>
-              </Select>
-            </FormControl>
-          </div> */}
+
           {!currentUser && (
             <div className="app-header-mobile__body-links">
               <Link className="link" to="/login" onClick={closeMobileHeader}>

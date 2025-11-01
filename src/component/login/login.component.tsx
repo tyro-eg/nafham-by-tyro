@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import {
@@ -9,34 +9,33 @@ import {
   TextField as MuiTextField,
 } from '@mui/material';
 import { Close } from '@mui/icons-material';
-import { Formik, Form, Field } from 'formik';
-import { object, string } from 'yup';
-import { rtlClass } from '../../assets/utils/utils';
-
-// import { ReactComponent as Facebook } from '../../assets/images/auth/Facebook.svg';
-// import { ReactComponent as Google } from '../../assets/images/auth/google.svg';
+import { useForm, Controller } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { loginSchema, type LoginFormData } from '../../schemas/authSchemas';
+import { useRtlClass } from '../../assets/utils/utils';
 
 import './login.styles.scss';
-import { useAppDispatch, useAppSelector } from '../../redux/store';
-import { signInWithEmail } from '../../redux/user/user.actions';
-import { selectSignInError } from '../../redux/user/user.selectors';
 import ResetPasswordModal from '../../modals/reset-password/reset-password-modal.component';
+import { useSignIn } from '../../hooks/useAuth';
 
 const Login = () => {
   const navigate = useNavigate();
-  const { t, i18n } = useTranslation();
-  const dispatch = useAppDispatch();
-  const signInError = useAppSelector(selectSignInError);
+  const { t } = useTranslation();
+  const rtlClass = useRtlClass();
   const [openForgetPasswordModal, setOpenForgetPasswordModal] = useState(false);
 
-  const LoginSchema = object().shape({
-    email: string()
-      .email(i18n.t('GENEREL.INVALID_EMAIL'))
-      .required(i18n.t('GENEREL.REQUIRED')),
-    password: string()
-      .trim(i18n.t('GENEREL.EMPTY_SPACE'))
-      .strict()
-      .required(i18n.t('GENEREL.REQUIRED')),
+  const signInMutation = useSignIn();
+
+  const {
+    control,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<LoginFormData>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: '',
+      password: '',
+    },
   });
 
   const handleCloseForgetPasswordModal = () => {
@@ -45,91 +44,91 @@ const Login = () => {
 
   const goToTerms = () => navigate('/terms');
 
+  const onSubmit = async (values: LoginFormData) => {
+    try {
+      const userData = await signInMutation.mutateAsync(values);
+      if (userData?.id) {
+        navigate('/home');
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+    }
+  };
+
   return (
     <div className="login-container">
       <h3 className="title">{t('LOGIN.MAIN.TITLE')}</h3>
       <p className="sub-title">{t('LOGIN.MAIN.SUBTITLE')}</p>
-      <Formik
-        initialValues={{
-          email: '',
-          password: '',
-        }}
-        validationSchema={LoginSchema}
-        onSubmit={async (values, { setSubmitting }) => {
-          try {
-            const loginResponse = await dispatch(
-              signInWithEmail({
-                payload: values,
-              }),
-            );
-
-            if (loginResponse?.payload?.id) {
-              navigate('/home');
-            }
-            setSubmitting(false);
-          } catch (error) {
-            setSubmitting(false);
-          }
-        }}
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className={`login-container__form  ${rtlClass}`}
       >
-        {({ submitForm, isSubmitting, errors, touched }) => (
-          <Form className={`login-container__form  ${rtlClass()}`}>
-            <InputLabel htmlFor="email">{t('LOGIN.LOGIN_EMAIL')}</InputLabel>
-            <Field
-              as={MuiTextField}
+        <InputLabel htmlFor="email">{t('LOGIN.LOGIN_EMAIL')}</InputLabel>
+        <Controller
+          name="email"
+          control={control}
+          render={({ field }) => (
+            <MuiTextField
+              {...field}
               placeholder={t('LOGIN.LOGIN_EMAIL_INPUT_PLACEHOLDER')}
-              name="email"
               type="email"
               variant="outlined"
               className="custom-input-style"
               id="email"
-              error={touched.email && Boolean(errors.email)}
-              helperText={touched.email && errors.email}
+              error={!!errors.email}
+              helperText={errors.email?.message}
               fullWidth
             />
-            <div className="forget-password-label">
-              <InputLabel htmlFor="password">
-                {t('LOGIN.LOGIN_PASSWORD')}
-              </InputLabel>
-              <Button
-                variant="text"
-                className={`forget-password-btn ${rtlClass()}`}
-                onClick={() => setOpenForgetPasswordModal(true)}
-              >
-                <span>{t('LOGIN.FORGET_PASSWORD')}</span>
-              </Button>
-            </div>
-            <Field
-              as={MuiTextField}
+          )}
+        />
+        <div className="forget-password-label">
+          <InputLabel htmlFor="password">
+            {t('LOGIN.LOGIN_PASSWORD')}
+          </InputLabel>
+          <Button
+            variant="text"
+            className={`forget-password-btn ${rtlClass}`}
+            onClick={() => setOpenForgetPasswordModal(true)}
+          >
+            <span>{t('LOGIN.FORGET_PASSWORD')}</span>
+          </Button>
+        </div>
+        <Controller
+          name="password"
+          control={control}
+          render={({ field }) => (
+            <MuiTextField
+              {...field}
               placeholder={t('LOGIN.LOGIN_PASSWORD_INPUT_PLACEHOLDER')}
               variant="outlined"
-              name="password"
               type="password"
               className="custom-input-style"
               id="password"
-              error={touched.password && Boolean(errors.password)}
-              helperText={touched.password && errors.password}
+              error={!!errors.password}
+              helperText={errors.password?.message}
               fullWidth
             />
-            <Button
-              variant="contained"
-              color="primary"
-              disabled={isSubmitting}
-              onClick={submitForm}
-              className="btn-custom-style"
-              fullWidth
-            >
-              {t('LOGIN.LOGIN_SUBMIT_BTN')}
-            </Button>
-            <div className="no-account">
-              <p className="register-text">
-                {t('LOGIN.NO_ACCOUNT')}{' '}
-                <Link to="/register" className="register-link">
-                  {t('LOGIN.REGISTER')}
-                </Link>
-              </p>
-            </div>
-            {/* <div className="social-login">
+          )}
+        />
+        <Button
+          type="submit"
+          variant="contained"
+          color="primary"
+          disabled={isSubmitting}
+          className="btn-custom-style"
+          fullWidth
+        >
+          {t('LOGIN.LOGIN_SUBMIT_BTN')}
+        </Button>
+        <div className="no-account">
+          <p className="register-text">
+            {t('LOGIN.NO_ACCOUNT')}{' '}
+            <Link to="/register" className="register-link">
+              {t('LOGIN.REGISTER')}
+            </Link>
+          </p>
+        </div>
+        {/* <div className="social-login">
               <p className="or-text">{t('LOGIN.OR')}</p>
               <Button
                 variant="outlined"
@@ -148,15 +147,13 @@ const Login = () => {
                 Google
               </Button>
             </div> */}
-            <div className="term-body">
-              <p className="term-first-text">{t('REGISTER.TERMS')}</p>
-              <Button onClick={goToTerms} variant="text">
-                <p className="term-second-text">{t('REGISTER.TERMS_GREEN')}</p>
-              </Button>
-            </div>
-          </Form>
-        )}
-      </Formik>
+        <div className="term-body">
+          <p className="term-first-text">{t('REGISTER.TERMS')}</p>
+          <Button onClick={goToTerms} variant="text">
+            <p className="term-second-text">{t('REGISTER.TERMS_GREEN')}</p>
+          </Button>
+        </div>
+      </form>
       {openForgetPasswordModal && (
         <Dialog
           maxWidth="xs"

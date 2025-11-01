@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { FC, useState, useEffect } from 'react';
 import {
   Button,
   Container,
@@ -13,11 +13,13 @@ import { Search } from '@mui/icons-material';
 import { useTheme } from '@mui/material/styles';
 import { useTranslation } from 'react-i18next';
 
-import { rtlClass } from '../../../assets/utils/utils';
+import { useRtlClass } from '../../../assets/utils/utils';
+
 import SearchIcon from '../../../assets/images/Icon.png';
 
 import './private-sessions-filter.styles.scss';
 
+// TODO: These categories should be fetched from the API
 const CATEGORIES = [
   { id: 1, name: 'Languages', visible: true },
   { id: 2, name: 'Business', visible: true },
@@ -35,10 +37,11 @@ const CATEGORIES = [
   { id: 291, name: 'Primary', visible: true },
 ];
 
-const PrivateSessionsFilter = () => {
+const PrivateSessionsFilter: FC = () => {
   const { t } = useTranslation();
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+  const rtlClass = useRtlClass();
 
   const [category, setCategory] = useState('');
   const [field, setField] = useState('');
@@ -68,7 +71,7 @@ const PrivateSessionsFilter = () => {
               listBody ? 'visible' : 'hidden'
             }`}
           >
-            <div className={`home-filter__dropdown-group ${rtlClass()}`}>
+            <div className={`home-filter__dropdown-group ${rtlClass}`}>
               <FormControl variant="outlined" sx={{ width: '100%', mb: 2 }}>
                 <InputLabel id="category-label">
                   {t('COURSES.COURSE_FILTER.CATEGORY.PLACEHOLDER')}
@@ -114,22 +117,22 @@ const PrivateSessionsFilter = () => {
             </div>
           </div>
 
-          <div className={`home-filter__field--search ${rtlClass()}`}>
+          <div className={`home-filter__field--search ${rtlClass}`}>
             <input
               type="search"
               placeholder={t('COURSES.COURSE_FILTER.SEARCH_PLACEHOLDER')}
-              className={rtlClass()}
+              className={rtlClass}
             />
-            <Button className={rtlClass()} type="button">
+            <Button className={rtlClass} type="button">
               <img src={SearchIcon} alt="Search" />
             </Button>
           </div>
 
-          <div className={`home-filter__field--filter ${rtlClass()}`}>
+          <div className={`home-filter__field--filter ${rtlClass}`}>
             <Button
               onClick={toggleListBody}
               startIcon={<Search />}
-              className={`${listBody ? 'active' : ''} ${rtlClass()}`}
+              className={`${listBody ? 'active' : ''} ${rtlClass}`}
               type="button"
             >
               {t('COURSES.COURSE_FILTER.FILTERS')}

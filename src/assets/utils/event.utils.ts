@@ -1,17 +1,11 @@
-export const INITIAL_EVENTS = [];
+import { EventInput } from '@fullcalendar/core/index.js';
 
-export type TimeSlotType = {
-  id: number;
-  start: string;
-  end: string;
-  status: string;
-  color: string;
-};
+export const INITIAL_EVENTS = [];
 
 export const parseTimeSlotsIntoCalendarEvents = (timeSlots: any[]) => {
   const parsedSlots = timeSlots.map((event: any) => {
-    const eventObj: TimeSlotType = {
-      id: event.id ? event.id : undefined,
+    const eventObj: EventInput = {
+      id: event.id ? event.id.toString() : undefined,
       start: event.start_time ? event.start_time : undefined,
       end: event.end_time ? event.end_time : undefined,
       status: event.status ? event.status : undefined,

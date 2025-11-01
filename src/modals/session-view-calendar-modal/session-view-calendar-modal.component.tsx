@@ -1,16 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { differenceInMinutes, format, parseISO } from 'date-fns';
 
 import './session-view-calendar-modal.styles.scss';
 import SessionListCard from '../../modules/sessions/sessions-info/sessions-list/sessions-list-card/sessions-list-card.component';
-import { SessionType } from '../../redux/session/session.actions';
+import { SessionType } from '../../assets/types';
 
 interface SessionViewCalendarModalProps {
   sessions: SessionType[];
   handleClose: () => void;
 }
 
-const SessionViewCalendarModal: React.FC<SessionViewCalendarModalProps> = ({
+const SessionViewCalendarModal: FC<SessionViewCalendarModalProps> = ({
   sessions,
 }) => {
   const [sessionsArr, setSessionsArr] = useState<SessionType[]>([]);

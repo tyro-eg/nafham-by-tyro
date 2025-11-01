@@ -1,11 +1,11 @@
-import React, { FC, useState } from 'react';
+import { FC, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Rating from '@mui/material/Rating';
 import { Button, Dialog, DialogContent } from '@mui/material';
-// import AddIcon from '@mui/icons-material/Add';
+
+import MySessionCalendar from '../../../../modals/mysession-calendar/mysession-calendar.component';
 
 import './sessions-schedule-card.styles.scss';
-import MySessionCalendar from '../../../../modals/mysession-calendar/mysession-calendar.component';
 
 interface SessionData {
   user_image: string;

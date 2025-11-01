@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
@@ -6,14 +6,12 @@ import interactionPlugin from '@fullcalendar/interaction';
 import arLocale from '@fullcalendar/core/locales/ar-kw';
 import { useTranslation } from 'react-i18next';
 import Dialog from '@mui/material/Dialog';
-import { selectTimeSlots } from '../../../../redux/calendar/calendar.selectors';
 import { selectCurrentUser } from '../../../../redux/user/user.selectors';
-import { useAppDispatch, useAppSelector } from '../../../../redux/store';
-import { getSlots } from '../../../../redux/calendar/calendar.actions';
+import { useAppSelector } from '../../../../redux/store';
 import { addDays, getDay } from 'date-fns';
 import SessionViewCalendarModal from '../../../../modals/session-view-calendar-modal/session-view-calendar-modal.component';
-import { selectSessions } from '../../../../redux/session/session.selectors';
-import { getSessions } from '../../../../redux/session/session.actions';
+import { useSlots } from '../../../../hooks/useCalendar';
+import { useSessions } from '../../../../hooks/useSessions';
 
 import './sessions-calendar-container.styles.scss';
 
@@ -22,39 +20,31 @@ interface SessionsCalendarContainerProps {}
 const SessionsCalendarContainer: React.FC<
   SessionsCalendarContainerProps
 > = () => {
-  const [currentEvents, setCurrentEvents] = useState<any[]>([]);
   const [openViewCalendarModal, setOpenViewCalendarModal] = useState(false);
+  const [dateRange, setDateRange] = useState(() => {
+    const today = new Date(new Date().setHours(0, 0, 0, 0));
+    return {
+      from: today.toISOString(),
+      to: addDays(today, 30).toISOString(),
+    };
+  });
+
   const { t, i18n } = useTranslation();
-  const today = new Date(new Date().setHours(0, 0, 0, 0));
   const calendarRef = useRef<FullCalendar>(null);
 
-  const dispatch = useAppDispatch();
-  const slots = useAppSelector(selectTimeSlots);
-  const sessions = useAppSelector(selectSessions);
   const currentUser = useAppSelector(selectCurrentUser);
 
-  useEffect(() => {
-    dispatch(
-      getSlots({
-        userId: currentUser?.id!,
-        params: {
-          from: today.toISOString(),
-          to: addDays(today, 30).toISOString(),
-        },
-      }),
-    );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch, currentUser?.id]);
+  // Fetch slots with TanStack Query
+  const { data: slots = [] } = useSlots(
+    currentUser?.id!,
+    dateRange.from,
+    dateRange.to,
+    !!currentUser?.id,
+  );
 
-  useEffect(() => {
-    setCurrentEvents(slots!);
-  }, [slots]);
-
-  useEffect(() => {
-    if (currentUser?.id) {
-      dispatch(getSessions({ pageNumber: 1, pageSize: 100 }));
-    }
-  }, [dispatch, currentUser?.id]);
+  // Fetch sessions with TanStack Query
+  const { data: sessionsData } = useSessions(1, 100);
+  const sessions = sessionsData?.data ?? [];
 
   const handleDateChange = (direction?: 'next' | 'prev') => {
     const calendarApi = calendarRef.current?.getApi();
@@ -68,17 +58,12 @@ const SessionsCalendarContainer: React.FC<
         view?.activeStart && view?.activeEnd
           ? { start: view.activeStart, end: view.activeEnd }
           : { start: new Date(), end: addDays(new Date(), 7) };
-      if (currentUser?.id) {
-        dispatch(
-          getSlots({
-            userId: currentUser.id,
-            params: {
-              from: start.toISOString(),
-              to: end.toISOString(),
-            },
-          }),
-        );
-      }
+
+      // Update date range to trigger refetch
+      setDateRange({
+        from: start.toISOString(),
+        to: end.toISOString(),
+      });
     }
   };
 
@@ -153,7 +138,7 @@ const SessionsCalendarContainer: React.FC<
         }}
         direction={i18n.dir()}
         validRange={{ start: new Date() }}
-        events={currentEvents}
+        events={slots}
         eventContent={renderEventContent}
         locale={i18n.language === 'ar' ? arLocale : undefined}
       />

@@ -1,60 +1,78 @@
 /* eslint-disable camelcase */
-import React, { useState } from 'react';
+import { FC, useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button, InputLabel, TextField as MuiTextField } from '@mui/material';
-import { Formik, Form, Field } from 'formik';
-import * as Yup from 'yup';
-import 'yup-phone';
+import { Button, InputLabel, TextField } from '@mui/material';
+import { useForm, Controller } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/material.css';
-import { useDispatch, useSelector } from 'react-redux';
 
-import { updateTutorInfo } from '../../../../redux/user/user.actions';
+import { useAppSelector } from '../../../../redux/store';
 import { selectCurrentUser } from '../../../../redux/user/user.selectors';
-import { AppDispatch, RootState } from '../../../../redux/store';
-
-import { rtlClass } from '../../../../assets/utils/utils';
+import { useUpdateTutorProfile } from '../../../../hooks/useInstructors';
+import {
+  contactDetailsSchema,
+  type ContactDetailsFormData,
+} from '../../../../schemas/userSchemas';
+import { useRtlClass } from '../../../../assets/utils/utils';
 
 import './contact-details.styles.scss';
 
-const ContactDetails: React.FC = () => {
-  const { t, i18n } = useTranslation();
-  const dispatch = useDispatch<AppDispatch>();
-  const currentUser = useSelector((state: RootState) =>
-    selectCurrentUser(state),
-  );
+const ContactDetails: FC = () => {
+  const { t } = useTranslation();
+  const rtlClass = useRtlClass();
+  const updateTutorProfileMutation = useUpdateTutorProfile();
+  const currentUser = useAppSelector(selectCurrentUser);
 
   const [editInfoFlag, setEditInfoFlag] = useState(false);
 
-  const contactDetailsSchema = Yup.object().shape({
-    first_name: Yup.string()
-      .required(i18n.t('GENEREL.REQUIRED'))
-      .trim(i18n.t('GENEREL.FIRST_NAME_BLANK'))
-      .strict(),
-    last_name: Yup.string()
-      .required(i18n.t('GENEREL.REQUIRED'))
-      .trim(i18n.t('GENEREL.LAST_NAME_BLANK'))
-      .strict(),
-    email: Yup.string()
-      .email(i18n.t('GENEREL.INVALID_EMAIL'))
-      .required(i18n.t('GENEREL.REQUIRED')),
-    phone_number: Yup.string()
-      .required(i18n.t('GENEREL.REQUIRED'))
-      .test(
-        'isValidPhoneNumber',
-        i18n.t('GENEREL.INVALID_PHONE_NUMBER'),
-        function (value) {
-          const { countryCode } = this.parent;
-
-          return value && value.length > 0
-            ? Yup.string().phone(countryCode, true).isValidSync(value)
-            : false;
-        },
-      ),
+  const {
+    control,
+    handleSubmit,
+    setValue,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm<ContactDetailsFormData>({
+    resolver: zodResolver(contactDetailsSchema),
+    defaultValues: {
+      first_name: currentUser?.first_name || '',
+      last_name: currentUser?.last_name || '',
+      email: currentUser?.email || '',
+      phone_number: currentUser?.phone_number || '',
+      country_code: '',
+    },
   });
 
+  // Update form when currentUser changes
+  useEffect(() => {
+    if (currentUser) {
+      reset({
+        first_name: currentUser.first_name || '',
+        last_name: currentUser.last_name || '',
+        email: currentUser.email || '',
+        phone_number: currentUser.phone_number || '',
+        country_code: '',
+      });
+    }
+  }, [currentUser, reset]);
+
   const toggleInfoFlag = () => setEditInfoFlag((prev) => !prev);
-  const cancelInfoEdit = () => setEditInfoFlag(false);
+  const cancelInfoEdit = () => {
+    setEditInfoFlag(false);
+    reset();
+  };
+
+  const onSubmit = async (values: ContactDetailsFormData) => {
+    try {
+      await updateTutorProfileMutation.mutateAsync({
+        userData: { tutor: values },
+        id: currentUser?.id!,
+      });
+      cancelInfoEdit();
+    } catch (error) {
+      console.error('Update error:', error);
+    }
+  };
 
   return (
     <div className="contact-details">
@@ -66,41 +84,23 @@ const ContactDetails: React.FC = () => {
           {t('ACCOUNT_SETTINGS.CONTACT_DETAILS_FORM.TITLE')}
         </h4>
         <div className="contact-details__form-container">
-          <Formik
-            initialValues={{
-              first_name: currentUser?.first_name || '',
-              last_name: currentUser?.last_name || '',
-              email: currentUser?.email || '',
-              phone_number: currentUser?.phone_number || '',
-            }}
-            validationSchema={contactDetailsSchema}
-            onSubmit={async (values, { setSubmitting }) => {
-              try {
-                await dispatch(
-                  updateTutorInfo({
-                    userData: { tutor: values },
-                    id: currentUser?.id!,
-                  }),
-                );
-                setSubmitting(false);
-                cancelInfoEdit();
-              } catch (error) {
-                setSubmitting(false);
-              }
-            }}
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className={`contact-details__form ${rtlClass}`}
           >
-            {({ submitForm, isSubmitting, errors, touched }) => (
-              <Form className={`contact-details__form ${rtlClass()}`}>
-                <fieldset disabled={!editInfoFlag} className="form-inputs">
-                  <div className={`form-group ${rtlClass()}`}>
-                    <InputLabel htmlFor="first_name">
-                      {t(
-                        'ACCOUNT_SETTINGS.CONTACT_DETAILS_FORM.FIRST_NAME_PLACEHOLDER',
-                      )}
-                    </InputLabel>
-                    <Field
-                      as={MuiTextField}
-                      name="first_name"
+            <fieldset disabled={!editInfoFlag} className="form-inputs">
+              <div className={`form-group ${rtlClass}`}>
+                <InputLabel htmlFor="first_name">
+                  {t(
+                    'ACCOUNT_SETTINGS.CONTACT_DETAILS_FORM.FIRST_NAME_PLACEHOLDER',
+                  )}
+                </InputLabel>
+                <Controller
+                  name="first_name"
+                  control={control}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
                       variant="outlined"
                       placeholder={t(
                         'ACCOUNT_SETTINGS.CONTACT_DETAILS_FORM.FIRST_NAME_PLACEHOLDER',
@@ -108,19 +108,24 @@ const ContactDetails: React.FC = () => {
                       className="custom-input-style"
                       disabled={!editInfoFlag}
                       fullWidth
-                      error={touched.first_name && Boolean(errors.first_name)}
-                      helperText={touched.first_name && errors.first_name}
+                      error={!!errors.first_name}
+                      helperText={errors.first_name?.message}
                     />
-                  </div>
-                  <div className={`form-group ${rtlClass()}`}>
-                    <InputLabel htmlFor="last_name">
-                      {t(
-                        'ACCOUNT_SETTINGS.CONTACT_DETAILS_FORM.LAST_NAME_PLACEHOLDER',
-                      )}
-                    </InputLabel>
-                    <Field
-                      as={MuiTextField}
-                      name="last_name"
+                  )}
+                />
+              </div>
+              <div className={`form-group ${rtlClass}`}>
+                <InputLabel htmlFor="last_name">
+                  {t(
+                    'ACCOUNT_SETTINGS.CONTACT_DETAILS_FORM.LAST_NAME_PLACEHOLDER',
+                  )}
+                </InputLabel>
+                <Controller
+                  name="last_name"
+                  control={control}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
                       variant="outlined"
                       placeholder={t(
                         'ACCOUNT_SETTINGS.CONTACT_DETAILS_FORM.LAST_NAME_PLACEHOLDER',
@@ -128,19 +133,22 @@ const ContactDetails: React.FC = () => {
                       className="custom-input-style"
                       disabled={!editInfoFlag}
                       fullWidth
-                      error={touched.last_name && Boolean(errors.last_name)}
-                      helperText={touched.last_name && errors.last_name}
+                      error={!!errors.last_name}
+                      helperText={errors.last_name?.message}
                     />
-                  </div>
-                  <div className={`form-group ${rtlClass()}`}>
-                    <InputLabel htmlFor="email">
-                      {t(
-                        'ACCOUNT_SETTINGS.CONTACT_DETAILS_FORM.EMAIL_PLACEHOLDER',
-                      )}
-                    </InputLabel>
-                    <Field
-                      as={MuiTextField}
-                      name="email"
+                  )}
+                />
+              </div>
+              <div className={`form-group ${rtlClass}`}>
+                <InputLabel htmlFor="email">
+                  {t('ACCOUNT_SETTINGS.CONTACT_DETAILS_FORM.EMAIL_PLACEHOLDER')}
+                </InputLabel>
+                <Controller
+                  name="email"
+                  control={control}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
                       type="email"
                       variant="outlined"
                       placeholder={t(
@@ -149,65 +157,62 @@ const ContactDetails: React.FC = () => {
                       fullWidth
                       className="custom-input-style"
                       disabled={!editInfoFlag}
-                      error={touched.email && Boolean(errors.email)}
-                      helperText={touched.email && errors.email}
+                      error={!!errors.email}
+                      helperText={errors.email?.message}
                     />
-                  </div>
-                  <div className={`phone-input form-group ${rtlClass()}`}>
-                    <InputLabel htmlFor="phone_number">
-                      {t(
-                        'ACCOUNT_SETTINGS.CONTACT_DETAILS_FORM.PHONE_PLACEHOLDER',
-                      )}
-                    </InputLabel>
-                    <Field name="phone_number">
-                      {({ field, form: { setFieldValue } }: any) => (
-                        <PhoneInput
-                          {...field}
-                          country="ae"
-                          preferredCountries={['ae', 'eg', 'sa']}
-                          specialLabel={false}
-                          inputStyle={{ width: '100%' }}
-                          onChange={(phoneNumber: string, countryData: any) => {
-                            setFieldValue('phone_number', phoneNumber);
-                            setFieldValue(
-                              'countryCode',
-                              countryData.countryCode,
-                            );
-                          }}
-                        />
-                      )}
-                    </Field>
-                    {errors.phone_number && touched.phone_number && (
-                      <div className="form-control-danger">
-                        {errors.phone_number as string}
-                      </div>
-                    )}
-                  </div>
-                </fieldset>
-                {editInfoFlag && (
-                  <div className="form-actions">
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      onClick={submitForm}
-                      disabled={isSubmitting}
-                      className="btn-custom-style"
-                    >
-                      {t('ACCOUNT_SETTINGS.CONTACT_DETAILS_FORM.SUBMIT_BTN')}
-                    </Button>
-                    <Button
-                      variant="text"
-                      onClick={cancelInfoEdit}
-                      disabled={isSubmitting}
-                      className="cancel-btn"
-                    >
-                      {t('ACCOUNT_SETTINGS.CONTACT_DETAILS_FORM.CANCEL')}
-                    </Button>
+                  )}
+                />
+              </div>
+              <div className={`phone-input form-group ${rtlClass}`}>
+                <InputLabel htmlFor="phone_number">
+                  {t('ACCOUNT_SETTINGS.CONTACT_DETAILS_FORM.PHONE_PLACEHOLDER')}
+                </InputLabel>
+                <Controller
+                  name="phone_number"
+                  control={control}
+                  render={({ field }) => (
+                    <PhoneInput
+                      {...field}
+                      country="ae"
+                      preferredCountries={['ae', 'eg', 'sa']}
+                      specialLabel=""
+                      inputStyle={{ width: '100%' }}
+                      onChange={(phoneNumber: string, countryData: any) => {
+                        setValue('phone_number', phoneNumber);
+                        setValue('country_code', countryData.countryCode);
+                      }}
+                    />
+                  )}
+                />
+                {errors.phone_number && (
+                  <div className="form-control-danger">
+                    {errors.phone_number.message}
                   </div>
                 )}
-              </Form>
+              </div>
+            </fieldset>
+            {editInfoFlag && (
+              <div className="form-actions">
+                <Button
+                  variant="contained"
+                  color="primary"
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="btn-custom-style"
+                >
+                  {t('ACCOUNT_SETTINGS.CONTACT_DETAILS_FORM.SUBMIT_BTN')}
+                </Button>
+                <Button
+                  variant="text"
+                  onClick={cancelInfoEdit}
+                  disabled={isSubmitting}
+                  className="cancel-btn"
+                >
+                  {t('ACCOUNT_SETTINGS.CONTACT_DETAILS_FORM.CANCEL')}
+                </Button>
+              </div>
             )}
-          </Formik>
+          </form>
           {!editInfoFlag && (
             <Button
               variant="text"

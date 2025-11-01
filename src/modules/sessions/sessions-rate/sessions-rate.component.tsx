@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import { FC, useState, useEffect } from 'react';
+
 import SessionsRateCard from './sessions-rate-card/sessions-rate-card.component';
+
 import './sessions-rate.styles.scss';
 
 export type RateSession = {
@@ -55,7 +57,7 @@ interface SessionsRateProps {
   unratedSessions: RateSession[];
 }
 
-const SessionsRate: React.FC<SessionsRateProps> = ({ unratedSessions }) => {
+const SessionsRate: FC<SessionsRateProps> = ({ unratedSessions }) => {
   const [sessions, setSessions] = useState<RateSession[]>([]);
 
   useEffect(() => {

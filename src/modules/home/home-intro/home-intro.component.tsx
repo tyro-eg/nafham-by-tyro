@@ -1,7 +1,8 @@
-import React from 'react';
+import { FC } from 'react';
 import { useTranslation } from 'react-i18next';
 import Button from '@mui/material/Button';
-import { rtlClass } from '../../../assets/utils/utils';
+
+import { useRtlClass } from '../../../assets/utils/utils';
 
 import main from '../../../assets/images/newLanding/macbook.webp';
 
@@ -11,13 +12,14 @@ interface HomeIntroProps {
   openFreeTrail: () => void;
 }
 
-const HomeIntro: React.FC<HomeIntroProps> = ({ openFreeTrail }) => {
+const HomeIntro: FC<HomeIntroProps> = ({ openFreeTrail }) => {
   const { t } = useTranslation();
+  const rtlClass = useRtlClass();
 
   return (
     <div className="landing__image-container">
       <div className="container">
-        <div className={`col-2-of-4 col-1-of-1-md col-1-of-1-sm ${rtlClass()}`}>
+        <div className={`col-2-of-4 col-1-of-1-md col-1-of-1-sm ${rtlClass}`}>
           <div className="landing-header">
             <p className="landing-header__subtitle">
               {t('LANDING.BLOCK1.SUBTITLE')}
@@ -27,7 +29,7 @@ const HomeIntro: React.FC<HomeIntroProps> = ({ openFreeTrail }) => {
               {t('LANDING.BLOCK1.DESCRIPTION')}
             </p>
             <Button
-              className={`custom-button landing-header__button ${rtlClass()}`}
+              className={`custom-button landing-header__button ${rtlClass}`}
               onClick={openFreeTrail}
             >
               {t('LANDING.BLOCK1.ACTION')}

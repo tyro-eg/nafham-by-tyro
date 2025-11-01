@@ -1,8 +1,8 @@
-import React from 'react';
+import { FC } from 'react';
 
 import './index.styles.scss';
 
-const Terms = () => (
+const Terms: FC = () => (
   <div className="terms-container container">
     <h2 className="terms-title">
       <strong>Terms and Conditions</strong>

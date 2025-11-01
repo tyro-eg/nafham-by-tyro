@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { FC, useCallback, useEffect, useRef, useState } from 'react';
 import { Button } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import ReactCrop, { Crop, PixelCrop } from 'react-image-crop';
@@ -10,7 +10,7 @@ interface EditProfileImageModalProps {
   onSetProfileInfo: (imageData: string, type: string, value?: File) => void;
 }
 
-const EditProfileImageModal: React.FC<EditProfileImageModalProps> = ({
+const EditProfileImageModal: FC<EditProfileImageModalProps> = ({
   onClose,
   imageUrl,
   onSetProfileInfo,

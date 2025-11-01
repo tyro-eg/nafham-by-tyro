@@ -1,27 +1,28 @@
-import React, { useState } from 'react';
+import { FC, useState } from 'react';
 import { Dialog, IconButton } from '@mui/material';
 import { Close } from '@mui/icons-material';
+
+import { useAppSelector } from '../../redux/store';
+import { selectCurrentUser } from '../../redux/user/user.selectors';
+import { useRtlClass } from '../../assets/utils/utils';
 
 import HomeIntro from './home-intro/home-intro.component';
 import HomeFields from './home-fields/home-fields.component';
 import HomeInstructors from './home-instructors/home-instructors.component';
 import HomeStatistics from './home-statistics/home-statistics.component';
-import HomeHowItWork from './home-how-it-work/home-how-it-work.component';
 import HomeTestimonial from './home-testimonial/home-testimonial.component';
+import HomeHowItWork from './home-how-it-work/home-how-it-work.component';
 import HomeWhyUs from './why-us/why-us.component';
 import HomeReadyForLearning from './home-ready-for-learning/home-ready-for-learning.component';
 import HomeFeatures from './home-features/home-features.component';
 import FreeTrailModal from '../../modals/free-trail-modal/free-trail-modal.component';
 import RegisterModal from '../../modals/register-modal/register-modal.component';
 import LoginModal from '../../modals/login-modal/login-modal.component';
-import { useAppSelector } from '../../redux/store';
-import { selectCurrentUser } from '../../redux/user/user.selectors';
-
-import { rtlClass } from '../../assets/utils/utils';
 
 import './index.scss';
 
-const Home: React.FC = () => {
+const Home: FC = () => {
+  const rtlClass = useRtlClass();
   const [openFreeTrailModal, setOpenFreeTrailModal] = useState(false);
   const [openRegisterModal, setOpenRegisterModal] = useState(false);
   const [openLoginModal, setOpenLoginModal] = useState(false);
@@ -41,7 +42,7 @@ const Home: React.FC = () => {
   };
 
   return (
-    <div className={`home ${rtlClass()}`}>
+    <div className={`home ${rtlClass}`}>
       <HomeIntro openFreeTrail={triggerOpenFreeTrailModal} />
       <HomeFields />
       <HomeInstructors />

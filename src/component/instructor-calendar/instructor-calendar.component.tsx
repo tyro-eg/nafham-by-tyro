@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
@@ -7,39 +7,29 @@ import arLocale from '@fullcalendar/core/locales/ar-kw';
 import { useTranslation } from 'react-i18next';
 
 import './instructor-calendar.component.scss';
-import { useAppDispatch } from '../../redux/store';
 import { addDays, getDay } from 'date-fns';
 import { EventContentArg } from '@fullcalendar/core';
-import { getSlots } from '../../redux/calendar/calendar.actions';
+import { useSlots } from '../../hooks/useCalendar';
 
 const InstructorCalendar: React.FC<{ instructorId: number }> = ({
   instructorId,
 }) => {
   const { t, i18n } = useTranslation();
-  const dispatch = useAppDispatch();
   const calendarRef = useRef<FullCalendar>(null);
   const today = new Date(new Date().setHours(0, 0, 0, 0));
 
-  const [slots, setSlots] = useState([]);
+  const [dateRange, setDateRange] = useState(() => ({
+    from: today.toISOString(),
+    to: addDays(today, 1).toISOString(),
+  }));
 
-  useEffect(() => {
-    if (instructorId) {
-      dispatch(
-        getSlots({
-          userId: instructorId,
-          params: {
-            from: today.toISOString(),
-            to: addDays(today, 1).toISOString(),
-          },
-        }),
-      ).then((action: any) => {
-        if (action.payload) {
-          setSlots(action.payload);
-        }
-      });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [instructorId]);
+  // Fetch slots using TanStack Query
+  const { data: slots = [] } = useSlots(
+    instructorId,
+    dateRange.from,
+    dateRange.to,
+    !!instructorId,
+  );
 
   const handleDateChange = (direction?: 'next' | 'prev') => {
     const calendarApi = calendarRef.current?.getApi();
@@ -55,18 +45,9 @@ const InstructorCalendar: React.FC<{ instructorId: number }> = ({
           : { start: new Date(), end: addDays(new Date(), 7) };
 
       if (instructorId) {
-        dispatch(
-          getSlots({
-            userId: instructorId,
-            params: {
-              from: start.toISOString(),
-              to: end.toISOString(),
-            },
-          }),
-        ).then((action: any) => {
-          if (action.payload) {
-            setSlots(action.payload);
-          }
+        setDateRange({
+          from: start.toISOString(),
+          to: end.toISOString(),
         });
       }
     }

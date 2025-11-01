@@ -1,93 +1,291 @@
-# Nafham By Tyro
+# Tyro by Nafham - English Learning Platform
 
+A modern React application for online English learning with one-to-one and group sessions.
 
+## 🚀 Quick Start
 
-## Getting started
+```bash
+# Clone and install
+git clone https://gitlab.com/alzizoomar/nafham-by-nafham-app.git
+cd tyro-by-nafham-app
+npm install
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+# Setup environment
+cp .env.example .env.local
+# Edit .env.local with your API URL
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+# Start development server
+npm run dev
+# Opens at http://localhost:4200
+```
 
-## Add your files
+## 📚 Documentation
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
+- **[Architecture Guide](./ARCHITECTURE.md)** - System architecture and folder structure
+- **[Configuration Guide](./ROOT_CONFIG.md)** - Setup and configuration details
+
+## 🛠️ Tech Stack
+
+### Core
+- **React 18.3** - UI library with hooks and concurrent features
+- **TypeScript 5.6** - Type-safe JavaScript
+- **Vite 5.4** - Lightning-fast build tool and dev server
+- **SCSS** - Advanced CSS with variables and nesting
+
+### State Management (Hybrid Approach)
+- **Redux Toolkit 2.2** with Redux Persist - Authentication state only
+- **TanStack Query 5.59** - All server state (auto-caching, background refetching)
+
+### Forms & Validation
+- **React Hook Form 7.53** - Performant form handling
+- **Zod 3.23** - TypeScript-first schema validation
+
+### UI & Components
+- **Material-UI 6.1** - Comprehensive component library
+- **FullCalendar 6.1** - Advanced calendar functionality
+- **React Slick** - Carousel components
+- **Notistack 3.0** - Snackbar notifications
+
+### Internationalization
+- **react-i18next 15.1** - Multi-language support (English/Arabic with RTL)
+
+### API & Networking
+- **Axios 1.7** - Promise-based HTTP client
+- **Kitsu 10.1** - JSON:API client
+
+## ✨ Key Features
+
+### For Students
+- 🔍 Browse qualified English tutors with profiles and reviews
+- 📅 Book one-to-one and group sessions
+- 🎁 Free trial sessions for new students
+- 📊 Session history and rating system
+- 🗓️ Personal calendar management
+
+### For Tutors
+- 👤 Profile and bio management
+- 🕐 Availability calendar with time slots
+- 📝 Session scheduling and management
+- 👥 Student management and ratings
+- ⭐ Review system
+
+## 🏗️ Project Structure
 
 ```
-cd existing_repo
-git remote add origin https://gitlab.com/alzizoomar/nafham-by-tyro.git
-git branch -M main
-git push -uf origin main
+src/
+├── assets/          # Images, styles, utilities
+├── component/       # Shared components (Layout, Cards, etc.)
+├── hooks/           # Custom React hooks (TanStack Query)
+├── lib/             # Core utilities (query client, helpers)
+├── modals/          # Modal components
+├── modules/         # Feature modules (pages)
+│   ├── home/        # Landing page
+│   ├── auth/        # Login, Register
+│   ├── sessions/    # Session management
+│   ├── user/        # User profile & settings
+│   └── ...
+├── redux/           # Redux store (auth only)
+├── schemas/         # Zod validation schemas
+└── vite-env.d.ts    # Vite type definitions
 ```
 
-## Integrate with your tools
+See [ARCHITECTURE.md](./ARCHITECTURE.md) for detailed documentation.
 
-- [ ] [Set up project integrations](https://gitlab.com/alzizoomar/nafham-by-tyro/-/settings/integrations)
+## 🎯 Architecture Decisions
 
-## Collaborate with your team
+### Why Vite over Create React App?
+- ⚡ 10-20x faster dev server startup
+- 🔥 Instant Hot Module Replacement (HMR)
+- 📦 50%+ faster builds
+- 🌳 Better tree-shaking = smaller bundles
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Set auto-merge](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
+### Why TanStack Query?
+- 🗄️ Automatic caching reduces API calls
+- 🔄 Request deduplication (multiple requests = single API call)
+- 📡 Background refetching keeps data fresh
+- ⚙️ Built-in loading/error states
+- ⚡ Optimistic updates for better UX
 
-## Test and Deploy
+### Why React Hook Form + Zod?
+- 🚀 Better performance (less re-renders)
+- 📦 Smaller bundle size
+- 🎯 Excellent TypeScript support
+- ✅ Type-safe validation with Zod
+- 🎨 Simpler API
 
-Use the built-in continuous integration in GitLab.
+### Hybrid State Management Approach
+- **Redux** → Authentication state only (persisted with Redux Persist)
+- **TanStack Query** → All server data (instructors, sessions, calendar)
+- **React State** → Local UI state
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+**Benefits**:
+- Simple, reliable auth persistence
+- Automatic server state synchronization
+- Minimal Redux boilerplate
+- Better performance overall
 
-***
+## 📝 Development Scripts
 
-# Editing this README
+```bash
+# Development
+npm run dev              # Start dev server (port 4200)
+npm run build            # Production build
+npm run preview          # Preview production build
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
+# Code Quality
+npm run lint             # Run ESLint
+npm run lint:fix         # Auto-fix ESLint issues
+npm run format           # Format code with Prettier
+npm run format:check     # Check formatting without fixing
 
-## Suggestions for a good README
+# Type Checking
+npm run tsc              # TypeScript type check
+```
 
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+## 🔧 Environment Variables
 
-## Name
-Choose a self-explaining name for your project.
+Create a `.env.local` file:
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+```bash
+# Required: API Base URL
+VITE_API_BASE_URL=https://tyro-backend.onrender.com/api/v1
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+# Optional: Feature flags
+# VITE_ENABLE_ANALYTICS=false
+# VITE_ENABLE_DEV_TOOLS=true
+```
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+**Important**: All Vite environment variables must be prefixed with `VITE_` to be accessible in the application.
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+## 📖 Usage Examples
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+### TanStack Query Hooks
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+**Fetch Instructors:**
+```typescript
+import { useInstructors, useInstructor } from './hooks/useInstructors';
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+// List with pagination
+const { data, isLoading } = useInstructors(pageNumber, pageSize);
 
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
+// Single instructor
+const { data: instructor } = useInstructor(instructorId);
+```
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+**Manage Sessions:**
+```typescript
+import { useSessions, useBookTrialSession } from './hooks/useSessions';
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
+// Fetch sessions
+const { data: sessions } = useSessions(pageNumber, pageSize);
 
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+// Book trial session
+const bookTrial = useBookTrialSession();
+bookTrial.mutate(sessionData);
+```
 
-## License
-For open source projects, say how it is licensed.
+**Calendar Management:**
+```typescript
+import { useSlots, useCreateSlots } from './hooks/useCalendar';
 
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+// Fetch availability slots
+const { data: slots } = useSlots(userId, fromDate, toDate);
+
+// Create new slots
+const createSlots = useCreateSlots();
+createSlots.mutate(slotsArray);
+```
+
+### Form Validation with Zod
+
+```typescript
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { loginSchema, type LoginFormData } from './schemas/authSchemas';
+
+const {
+  control,
+  handleSubmit,
+  formState: { errors },
+} = useForm<LoginFormData>({
+  resolver: zodResolver(loginSchema),
+});
+```
+
+Validation schemas are located in `src/schemas/`:
+- `authSchemas.ts` - Login, register, password operations
+- `userSchemas.ts` - Profile updates, contact details
+- `sessionSchemas.ts` - Session booking and rating forms
+
+### Internationalization
+
+```typescript
+import { useTranslation } from 'react-i18next';
+
+function Component() {
+  const { t, i18n } = useTranslation();
+
+  return (
+    <div dir={i18n.dir()}>
+      <h1>{t('HEADER.WELCOME')}</h1>
+      <button onClick={() => i18n.changeLanguage('ar')}>
+        العربية
+      </button>
+    </div>
+  );
+}
+```
+
+Translation files: `src/component/i18next/locales/`
+
+## 🎨 Styling
+
+- **SCSS** for component styles
+- **Material-UI** theme with RTL support
+- **Responsive design** with breakpoints
+- **CSS Modules** naming: `component-name.styles.scss`
+
+## 🚀 Performance Optimizations
+
+1. **Code Splitting** - Lazy-loaded routes with `React.lazy()`
+2. **Smart Caching** - TanStack Query caches all API responses
+3. **Request Deduplication** - Multiple identical requests = one API call
+4. **Optimized Builds** - Vite's efficient bundling and tree-shaking
+5. **Background Refetching** - Keeps data fresh without blocking UI
+6. **Memoization** - `useMemo` and `useCallback` for expensive operations
+
+## 🌐 Browser Support
+
+**Development**:
+- Chrome (latest)
+- Firefox (latest)
+- Safari (latest)
+- Edge (latest)
+
+**Production**:
+- Modern browsers (>0.2% market share)
+- No IE11 support
+
+## 🤝 Contributing
+
+1. Create a feature branch from `development`
+2. Make your changes following the established patterns
+3. Run `npm run lint` to ensure code quality
+4. Run `npm run format` to format code
+5. Create a merge request to `development`
+
+## 📦 Deployment
+
+The application is deployed on render.com with automatic deployments from the `main` branch.
+
+## 📄 License
+
+Proprietary - All rights reserved
+
+## 💬 Support
+
+For issues, questions, or contributions, contact the development team.
+
+---
+
+**Built with ❤️ using React, TypeScript, and TanStack Query**

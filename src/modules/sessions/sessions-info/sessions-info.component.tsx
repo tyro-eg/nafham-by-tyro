@@ -1,26 +1,28 @@
-import React from 'react';
+import { FC, useState, SyntheticEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Tabs, Tab, Box } from '@mui/material';
 
 import { tabsProps } from '../../../assets/utils/utils';
-import TabPanel from '../../../component/tabs/tab-banal.component';
 
-import UNRATED_SESSIONS_DATA from '../sessions-rate/unrated-sessions-data';
-import './sessions-info.styles.scss';
+import TabPanel from '../../../component/tabs/tab-banal.component';
 import SessionsList from './sessions-list/sessions-list.component';
 import SessionsRate, {
   RateSession,
 } from '../sessions-rate/sessions-rate.component';
 import SessionsCalendarContainer from './sessions-calendar-container/sessions-calendar-container.component';
 
-const SessionsInfo = () => {
-  const { t, i18n } = useTranslation();
-  const [tab1, setTab1] = React.useState(1);
-  const [tab2, setTab2] = React.useState(0);
+import UNRATED_SESSIONS_DATA from '../sessions-rate/unrated-sessions-data';
 
-  const handleTab1Change = (_event: React.SyntheticEvent, newValue: number) =>
+import './sessions-info.styles.scss';
+
+const SessionsInfo: FC = () => {
+  const { t, i18n } = useTranslation();
+  const [tab1, setTab1] = useState(1);
+  const [tab2, setTab2] = useState(0);
+
+  const handleTab1Change = (_event: SyntheticEvent, newValue: number) =>
     setTab1(newValue);
-  const handleTab2Change = (_event: React.SyntheticEvent, newValue: number) =>
+  const handleTab2Change = (_event: SyntheticEvent, newValue: number) =>
     setTab2(newValue);
 
   return (

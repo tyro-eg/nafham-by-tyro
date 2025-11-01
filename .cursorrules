@@ -1,0 +1,770 @@
+# Tyro Application - Cursor AI Rules
+
+## 📋 Project Overview
+- **Stack**: React 18 + TypeScript 5.6 + Vite 5.4
+- **State Management**: TanStack Query 5 (server state) + Redux Toolkit 2 (auth only)
+- **Styling**: SCSS + Material-UI 6
+- **Forms**: React Hook Form 7 + Zod 3
+- **i18n**: react-i18next 15 (English/Arabic with RTL support)
+
+---
+
+## 🎯 Core Principles
+
+### 1. Type Safety First
+- ✅ Use TypeScript strict mode
+- ✅ NO `any` types unless absolutely necessary
+- ✅ Define interfaces for all props, API responses, and complex types
+- ✅ Use proper type imports (`import type` for type-only imports)
+
+### 2. Server State with TanStack Query
+- ✅ ALL server data fetching via TanStack Query hooks
+- ✅ NO Redux for server state
+- ✅ Use custom hooks in `src/hooks/`
+- ✅ Centralized query keys in `src/lib/queryKeys.ts`
+
+### 3. Code Consistency
+- ✅ Follow existing patterns strictly
+- ✅ Use Prettier (auto-format on save)
+- ✅ Use ESLint (fix all warnings)
+- ✅ Write JSDoc comments for exported functions/hooks
+
+---
+
+## 📁 File Naming Conventions
+
+### Components
+```
+✅ kebab-case.component.tsx      (e.g., instructor-card.component.tsx)
+✅ kebab-case.styles.scss         (e.g., instructor-card.styles.scss)
+✅ index.component.tsx            (for module main files)
+❌ InstructorCard.tsx             (PascalCase - DON'T USE)
+❌ instructorCard.tsx             (camelCase - DON'T USE)
+```
+
+### Hooks
+```
+✅ useXxxYyy.ts                   (e.g., useAuth.ts, useInstructors.ts)
+❌ authHook.ts                    (DON'T USE)
+```
+
+### Utilities
+```
+✅ kebab-case.ts                  (e.g., api.ts, countries.ts)
+❌ apiUtils.ts                    (DON'T USE)
+```
+
+### Schemas
+```
+✅ camelCaseSchemas.ts            (e.g., authSchemas.ts, userSchemas.ts)
+```
+
+### Styles
+```
+✅ component-name.styles.scss     (preferred)
+✅ component-name.component.scss  (acceptable)
+✅ index.scss                     (for modules)
+```
+
+---
+
+## 🏗️ Component Structure
+
+### Standard Component Template
+
+```typescript
+import { FC, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Button } from '@mui/material';
+
+import { useRtlClass } from '../../assets/utils/utils';
+
+import './component-name.styles.scss';
+
+interface ComponentNameProps {
+  id: number;
+  name: string;
+  onAction?: () => void;
+}
+
+/**
+ * ComponentName - Brief description
+ * 
+ * Detailed description of what this component does.
+ * 
+ * @example
+ * <ComponentName id={1} name="Test" onAction={handleAction} />
+ */
+const ComponentName: FC<ComponentNameProps> = ({ id, name, onAction }) => {
+  const { t } = useTranslation();
+  const rtlClass = useRtlClass();
+  const [isOpen, setIsOpen] = useState(false);
+
+  const handleClick = () => {
+    // Logic here
+    onAction?.();
+  };
+
+  return (
+    <div className={`component-name ${rtlClass}`}>
+      <h2>{t('COMPONENT.TITLE')}</h2>
+      <Button onClick={handleClick}>{t('COMPONENT.ACTION')}</Button>
+    </div>
+  );
+};
+
+export default ComponentName;
+```
+
+### Import Order (STRICT)
+1. **React & React-related** (react, react hooks)
+2. **Third-party libraries** (react-router, @mui, etc.)
+3. **Internal hooks** (from `src/hooks/`)
+4. **Internal utilities** (from `src/assets/utils/`)
+5. **Components** (local and shared)
+6. **Types** (from `src/assets/types.ts`)
+7. **Styles** (ALWAYS LAST)
+
+```typescript
+// ✅ CORRECT ORDER
+import { FC, useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Button, Box } from '@mui/material';
+
+import { useInstructors } from '../../hooks/useInstructors';
+import { useRtlClass } from '../../assets/utils/utils';
+import InstructorCard from '../instructor-card/instructor-card.component';
+import { Instructor } from '../../assets/types';
+
+import './component.styles.scss';
+
+// ❌ WRONG - Mixed order
+import './component.styles.scss';
+import { Button } from '@mui/material';
+import { FC } from 'react';
+```
+
+---
+
+## 🪝 Custom Hooks Patterns
+
+### Hook Template (TanStack Query)
+
+```typescript
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { get, post, patch, remove } from '../assets/utils/api';
+import { queryKeys } from '../lib/queryKeys';
+import { snackActions } from '../assets/utils/toaster';
+
+/**
+ * Fetch items with pagination
+ */
+export const useItems = (page: number = 1, size: number = 10) => {
+  return useQuery({
+    queryKey: queryKeys.items.list({ pageNumber: page, pageSize: size }),
+    queryFn: async () => {
+      const response = await get('/items', {
+        params: { page_number: page, page_size: size },
+      });
+      return response.data.data;
+    },
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  });
+};
+
+/**
+ * Create new item
+ */
+export const useCreateItem = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (itemData: CreateItemData) => {
+      const response = await post('/items', itemData);
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.items.all() });
+      snackActions.success('Item created successfully!');
+    },
+    onError: (error: any) => {
+      snackActions.error(
+        error.response?.data?.error || 'Failed to create item'
+      );
+    },
+  });
+};
+```
+
+### Key Hook Patterns
+- ✅ Use `useQuery` for GET requests
+- ✅ Use `useMutation` for POST/PUT/DELETE
+- ✅ ALWAYS invalidate queries on mutation success
+- ✅ Add error handling with `onError`
+- ✅ Use centralized query keys from `queryKeys`
+- ✅ Show user feedback with toaster
+
+---
+
+## 🔍 Type Definitions
+
+### Naming Conventions
+```typescript
+// ✅ API fields - snake_case (matches backend)
+interface UserData {
+  user_id: number;
+  first_name: string;
+  last_name: string;
+  email_address: string;
+  created_at: string;
+}
+
+// ✅ React props - PascalCase for interfaces
+interface InstructorCardProps {
+  instructor: Instructor;
+  onBook: () => void;
+}
+
+// ✅ Form data types
+export type LoginFormData = z.infer<typeof loginSchema>;
+
+// ❌ DON'T mix snake_case and camelCase in same type
+interface BadType {
+  userId: number;        // camelCase
+  first_name: string;    // snake_case - INCONSISTENT!
+}
+```
+
+### Always Define Types For:
+- Component props
+- API request/response payloads
+- Form data (infer from Zod schemas)
+- Hook parameters
+- Utility function parameters and returns
+
+---
+
+## 📝 Zod Schema Patterns
+
+### Schema Template
+
+```typescript
+import { z } from 'zod';
+import i18n from '../component/i18next/i18n';
+
+/**
+ * Item Schema
+ *
+ * Validates item form data.
+ *
+ * Fields:
+ * - name: Required, min 2 characters
+ * - description: Optional, max 500 characters
+ * - price: Required, positive number
+ *
+ * @example
+ * const { register, handleSubmit } = useForm<ItemFormData>({
+ *   resolver: zodResolver(itemSchema),
+ * });
+ */
+export const itemSchema = z.object({
+  name: z
+    .string()
+    .min(1, { message: i18n.t('GENEREL.REQUIRED') })
+    .min(2, { message: 'Name must be at least 2 characters' }),
+  description: z.string().max(500).optional(),
+  price: z.number().positive({ message: 'Price must be positive' }),
+});
+
+export type ItemFormData = z.infer<typeof itemSchema>;
+```
+
+### Schema Patterns
+- ✅ Use i18n for error messages
+- ✅ Document all fields with JSDoc
+- ✅ Export inferred types
+- ✅ Use descriptive schema names (e.g., `createItemSchema`, `updateItemSchema`)
+- ✅ Keep schemas in `src/schemas/` folder
+
+---
+
+## 🎨 Styling Guidelines
+
+### SCSS Structure
+```scss
+// ✅ BEM-like naming
+.instructor-card {
+  display: flex;
+  padding: 1rem;
+
+  &__header {
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+
+  &__content {
+    margin-top: 1rem;
+  }
+
+  &--featured {
+    border: 2px solid gold;
+  }
+
+  // RTL support
+  &.rtl {
+    direction: rtl;
+    text-align: right;
+  }
+}
+
+// ❌ DON'T use camelCase or random naming
+.instructorCard {  // WRONG
+  .header {}       // WRONG - too generic
+}
+```
+
+### Material-UI + Custom Styles
+```typescript
+// ✅ Use className for custom styles
+<Box className={`instructor-card ${rtlClass}`}>
+  <Button className="instructor-card__button">
+    Book Now
+  </Button>
+</Box>
+
+// ✅ Use sx prop for one-off styles
+<Box sx={{ padding: 2, marginTop: 1 }}>
+  Content
+</Box>
+
+// ❌ DON'T use inline styles for complex styling
+<div style={{ padding: '1rem', color: 'blue' }}> // AVOID
+```
+
+---
+
+## 🌐 Internationalization (i18n)
+
+### Usage Pattern
+```typescript
+import { useTranslation } from 'react-i18next';
+
+const Component: FC = () => {
+  const { t, i18n } = useTranslation();
+
+  return (
+    <div dir={i18n.dir()}>
+      <h1>{t('HOME.WELCOME')}</h1>
+      <p>{t('HOME.DESCRIPTION')}</p>
+    </div>
+  );
+};
+```
+
+### Translation Keys Structure
+```json
+{
+  "HOME": {
+    "WELCOME": "Welcome to Tyro",
+    "DESCRIPTION": "Learn English online"
+  },
+  "INSTRUCTOR": {
+    "BOOK_NOW": "Book Now",
+    "VIEW_PROFILE": "View Profile"
+  },
+  "GENEREL": {
+    "REQUIRED": "This field is required",
+    "INVALID_EMAIL": "Invalid email address"
+  }
+}
+```
+
+### i18n Rules
+- ✅ ALWAYS use translation keys (never hardcoded strings)
+- ✅ Use UPPERCASE for translation keys
+- ✅ Group related translations in objects
+- ✅ Add translations to BOTH `en/translation.json` AND `ar/translation.json`
+- ✅ Use `useRtlClass()` hook for RTL support in components
+
+---
+
+## 🔄 State Management
+
+### When to Use What
+
+#### TanStack Query (Server State)
+```typescript
+// ✅ Use for ALL server data
+const { data: instructors, isLoading } = useInstructors(1, 10);
+const createMutation = useCreateSession();
+```
+
+#### Redux (Client State - Auth ONLY)
+```typescript
+// ✅ ONLY for authentication
+import { useAppSelector, useAppDispatch } from '../../redux/store';
+import { selectCurrentUser } from '../../redux/user/user.selectors';
+import { setCurrentUser } from '../../redux/user/user.slice';
+
+const currentUser = useAppSelector(selectCurrentUser);
+const dispatch = useAppDispatch();
+```
+
+#### Local State (UI State)
+```typescript
+// ✅ Use for component-specific UI state
+const [isOpen, setIsOpen] = useState(false);
+const [selectedTab, setSelectedTab] = useState(0);
+```
+
+### State Management Rules
+- ❌ NEVER use Redux for server data (instructors, sessions, etc.)
+- ❌ NEVER create new Redux slices
+- ✅ Use TanStack Query for all API calls
+- ✅ Use local state for UI toggles, modals, tabs, etc.
+
+---
+
+## 🚨 Error Handling
+
+### API Error Handling
+```typescript
+// ✅ In hooks
+export const useCreateItem = () => {
+  return useMutation({
+    mutationFn: async (data: ItemData) => {
+      const response = await post('/items', data);
+      return response.data;
+    },
+    onSuccess: () => {
+      snackActions.success('Item created!');
+    },
+    onError: (error: any) => {
+      const message = error.response?.data?.error || 'Failed to create item';
+      snackActions.error(message);
+    },
+  });
+};
+
+// ✅ In components
+const createMutation = useCreateItem();
+
+const handleSubmit = (data: ItemFormData) => {
+  createMutation.mutate(data, {
+    onSuccess: () => {
+      navigate('/success');
+    },
+  });
+};
+```
+
+### Form Validation Errors
+```typescript
+// ✅ React Hook Form handles validation errors
+const {
+  register,
+  handleSubmit,
+  formState: { errors },
+} = useForm<FormData>({
+  resolver: zodResolver(schema),
+});
+
+// Display errors
+{errors.email && <span className="error">{errors.email.message}</span>}
+```
+
+---
+
+## 📚 Documentation Standards
+
+### Component Documentation
+```typescript
+/**
+ * InstructorCard Component
+ * 
+ * Displays instructor information with booking functionality.
+ * Supports both trial and private session booking.
+ * 
+ * @param instructor - The instructor data object
+ * @param onBook - Optional callback when booking is initiated
+ * 
+ * @example
+ * <InstructorCard 
+ *   instructor={instructor} 
+ *   onBook={() => console.log('Booked!')} 
+ * />
+ */
+const InstructorCard: FC<InstructorCardProps> = ({ instructor, onBook }) => {
+  // ...
+};
+```
+
+### Hook Documentation
+```typescript
+/**
+ * useInstructors Hook
+ * 
+ * Fetches paginated list of instructors with TanStack Query.
+ * Automatically caches results for 5 minutes.
+ * 
+ * @param pageNumber - Page number to fetch (default: 1)
+ * @param pageSize - Number of items per page (default: 10)
+ * @returns Query result with instructors data
+ * 
+ * @example
+ * const { data, isLoading, error } = useInstructors(1, 10);
+ */
+export const useInstructors = (pageNumber: number, pageSize: number) => {
+  // ...
+};
+```
+
+### When to Add JSDoc
+- ✅ ALL exported functions/hooks
+- ✅ ALL component interfaces
+- ✅ Complex utility functions
+- ✅ Zod schemas
+- ❌ Simple internal helper functions
+
+---
+
+## ⚡ Performance Best Practices
+
+### Memoization
+```typescript
+// ✅ Memoize expensive calculations
+const sortedItems = useMemo(() => {
+  return items.sort((a, b) => a.name.localeCompare(b.name));
+}, [items]);
+
+// ✅ Memoize callbacks passed to children
+const handleClick = useCallback(() => {
+  doSomething(id);
+}, [id]);
+
+// ✅ Memoize heavy list components
+const InstructorCard = memo(({ instructor }) => {
+  return <div>{instructor.name}</div>;
+});
+```
+
+### Query Configuration
+```typescript
+// ✅ Set appropriate stale times
+useQuery({
+  queryKey: queryKeys.instructors.list({ page: 1 }),
+  queryFn: fetchInstructors,
+  staleTime: 5 * 60 * 1000, // 5 minutes for lists
+  // OR
+  staleTime: 10 * 60 * 1000, // 10 minutes for rarely changing data
+});
+```
+
+---
+
+## 🚫 Common Mistakes to Avoid
+
+### ❌ DON'T DO THIS:
+
+```typescript
+// ❌ Using any types
+const handleData = (data: any) => { ... }
+
+// ❌ Redux for server state
+const instructors = useAppSelector(selectInstructors);
+
+// ❌ Hardcoded strings
+<h1>Welcome to Tyro</h1>
+
+// ❌ console.log in production code
+console.log('Debug info:', data);
+
+// ❌ Mixing import order
+import './styles.scss';
+import { FC } from 'react';
+
+// ❌ Inline styles for complex styling
+<div style={{ padding: '20px', backgroundColor: '#fff' }}>
+
+// ❌ Not using centralized query keys
+useQuery({ queryKey: ['instructors', page], ... })
+
+// ❌ Direct API calls in components
+const fetchData = async () => {
+  const res = await axios.get('/api/data');
+};
+```
+
+### ✅ DO THIS INSTEAD:
+
+```typescript
+// ✅ Proper types
+interface DataPayload {
+  id: number;
+  name: string;
+}
+const handleData = (data: DataPayload) => { ... }
+
+// ✅ TanStack Query for server state
+const { data: instructors } = useInstructors(1, 10);
+
+// ✅ i18n for all text
+<h1>{t('HOME.WELCOME')}</h1>
+
+// ✅ Remove debug logs or use proper logger
+// (nothing in production)
+
+// ✅ Correct import order
+import { FC } from 'react';
+import { Button } from '@mui/material';
+import './styles.scss';
+
+// ✅ SCSS classes
+<div className="welcome-container">
+
+// ✅ Centralized query keys
+useQuery({ 
+  queryKey: queryKeys.instructors.list({ pageNumber: page }), 
+  ... 
+})
+
+// ✅ Custom hooks for API
+const { data } = useInstructors();
+```
+
+---
+
+## 🧪 Testing Patterns (Future)
+
+### Unit Test Template
+```typescript
+// component.test.tsx
+import { render, screen } from '@testing-library/react';
+import { InstructorCard } from './instructor-card.component';
+
+describe('InstructorCard', () => {
+  it('renders instructor name', () => {
+    const instructor = { id: 1, name: 'John Doe' };
+    render(<InstructorCard instructor={instructor} />);
+    expect(screen.getByText('John Doe')).toBeInTheDocument();
+  });
+});
+```
+
+---
+
+## 📦 Adding New Features
+
+### Checklist for New Features
+1. ✅ Create TanStack Query hook in `src/hooks/`
+2. ✅ Add query keys to `src/lib/queryKeys.ts`
+3. ✅ Add Zod schema if form involved in `src/schemas/`
+4. ✅ Create component in appropriate folder
+5. ✅ Add corresponding SCSS file
+6. ✅ Add translation keys to both EN and AR
+7. ✅ Add JSDoc documentation
+8. ✅ Test in both LTR and RTL modes
+9. ✅ Run `npm run lint` to check for errors
+10. ✅ Run `npm run format` to format code
+
+---
+
+## 🔧 Utility Functions
+
+### Common Utilities Location
+- `src/assets/utils/api.ts` - API calls (get, post, patch, remove)
+- `src/assets/utils/utils.ts` - General utilities (useRtlClass, etc.)
+- `src/assets/utils/toaster.ts` - Notification utilities
+- `src/assets/utils/countries.ts` - Country/nationality helpers
+- `src/assets/utils/event.utils.ts` - Event transformation
+
+### API Utility Usage
+```typescript
+import { get, post, patch, remove } from '../assets/utils/api';
+
+// ✅ GET with params
+const response = await get('/instructors', {
+  params: { page: 1, size: 10 },
+});
+
+// ✅ POST with data
+const response = await post('/sessions', sessionData);
+
+// ✅ PATCH for updates
+const response = await patch(`/users/${id}`, updateData);
+
+// ✅ DELETE
+const response = await remove(`/sessions/${id}`);
+```
+
+---
+
+## 🎯 Code Review Checklist
+
+Before submitting code, ensure:
+- [ ] No TypeScript errors (`npm run lint`)
+- [ ] All files formatted (`npm run format`)
+- [ ] Proper imports order
+- [ ] JSDoc for exported functions
+- [ ] Translation keys for all strings
+- [ ] Proper type definitions (no `any`)
+- [ ] TanStack Query for API calls
+- [ ] Error handling in place
+- [ ] Tested in both English and Arabic
+- [ ] Follows file naming conventions
+- [ ] SCSS follows BEM-like naming
+
+---
+
+## 📖 Quick Reference
+
+### File Structure
+```
+src/
+├── assets/          # Images, styles, types, utilities
+├── component/       # Shared components
+├── hooks/           # TanStack Query hooks (use* pattern)
+├── lib/             # Core utilities (queryClient, queryKeys, cn)
+├── modals/          # Modal components
+├── modules/         # Feature modules (pages)
+├── redux/           # Redux (auth only)
+├── schemas/         # Zod validation schemas
+├── App.tsx          # Main app component
+└── index.tsx        # App entry point
+```
+
+### Key Commands
+```bash
+npm run dev          # Start development server
+npm run build        # Production build
+npm run lint         # Check for errors
+npm run format       # Format all files
+```
+
+### Key Libraries
+- **React Router**: Navigation and routing
+- **TanStack Query**: Server state management
+- **React Hook Form**: Form handling
+- **Zod**: Schema validation
+- **Material-UI**: UI components
+- **i18next**: Internationalization
+- **Notistack**: Toast notifications
+
+---
+
+## 🚀 Remember
+
+1. **Type Safety**: No `any` types
+2. **TanStack Query**: All server state
+3. **i18n**: All user-facing text
+4. **Consistency**: Follow existing patterns
+5. **Documentation**: JSDoc for exports
+6. **Testing**: LTR and RTL modes
+7. **Performance**: useMemo, useCallback where needed
+
+---
+
+**Last Updated**: October 31, 2025
+**Status**: Production-Ready Conventions
+**Maintained By**: Development Team
+

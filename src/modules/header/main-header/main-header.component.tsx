@@ -1,48 +1,38 @@
-import React, { useState } from 'react';
-import { Link, NavLink, useNavigate } from 'react-router-dom';
+import { FC, useState } from 'react';
+import { Link, NavLink } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { AppBar, Button, Container, Toolbar } from '@mui/material';
-import { Popover as TinyPopover } from 'react-tiny-popover';
+import { AppBar, Button, Container, Toolbar, Popover } from '@mui/material';
 import { ExpandMore, Info } from '@mui/icons-material';
-import { useSelector } from 'react-redux';
 
+import { useAppSelector } from '../../../redux/store';
 import { selectCurrentUser } from '../../../redux/user/user.selectors';
+import { useSignOut } from '../../../hooks/useAuth';
+import { useRtlClass } from '../../../assets/utils/utils';
 import LanguageSelector from '../../../component/i18next/LanguageSelector';
 import logo from '../../../assets/images/logo.png';
-import { rtlClass } from '../../../assets/utils/utils';
 import Profile from '../../../assets/images/videoSession/people/profile.png';
 
 import './main-header.styles.scss';
-import { signOut } from '../../../redux/user/user.actions';
-import { useAppDispatch } from '../../../redux/store';
 
 export interface HeaderProps {
   openFreeTrail: () => void;
   openEmailConfirm?: () => void;
 }
 
-const Popover = TinyPopover as React.FC<any>;
-
-const MainHeader: React.FC<HeaderProps> = ({
-  openFreeTrail,
-  openEmailConfirm,
-}) => {
+const MainHeader: FC<HeaderProps> = ({ openFreeTrail, openEmailConfirm }) => {
   const { t } = useTranslation();
-  const navigate = useNavigate();
-  const dispatch = useAppDispatch();
+  const signOutMutation = useSignOut();
+  const rtlClass = useRtlClass();
 
-  const currentUser = useSelector(selectCurrentUser);
+  const currentUser = useAppSelector(selectCurrentUser);
 
-  // const [country, setCountry] = useState('en');
-  // const handleChange = (event: any) => {
-  //   setCountry(event?.target?.value);
-  // };
-
-  const [isProfilePopoverOpen, setProfilePopoverOpen] = useState(false);
+  const [profileAnchorEl, setProfileAnchorEl] = useState<null | HTMLElement>(
+    null,
+  );
+  const isProfilePopoverOpen = Boolean(profileAnchorEl);
 
   const handleLogOut = async () => {
-    await dispatch(signOut());
-    navigate('/');
+    await signOutMutation.mutateAsync();
   };
 
   return (
@@ -68,7 +58,7 @@ const MainHeader: React.FC<HeaderProps> = ({
       <Toolbar>
         <Container maxWidth="lg">
           <div className="container header-container">
-            <div className={`app-header__top ${rtlClass()}`}>
+            <div className={`app-header__top ${rtlClass}`}>
               <div className="contact-menu">
                 <a className="item" href="tel:+971507105394">
                   (+971) 50 710 5394
@@ -92,27 +82,10 @@ const MainHeader: React.FC<HeaderProps> = ({
                 <div>
                   <LanguageSelector />
                 </div>
-                {/* <div className="app-header__top-links--lang">
-                  <FormControl>
-                    <Select
-                      sx={{
-                        margin: (theme) => theme.spacing(1),
-                        minWidth: 120,
-                      }}
-                      id="demo-simple-select"
-                      value={country}
-                      onChange={handleChange}
-                    >
-                      <MenuItem value="en">Global</MenuItem>
-                      <MenuItem value="eg">مصر</MenuItem>
-                      <MenuItem value="sa">السعودية</MenuItem>
-                    </Select>
-                  </FormControl>
-                </div> */}
               </div>
             </div>
 
-            <div className={`app-header__bottom ${rtlClass()}`}>
+            <div className={`app-header__bottom ${rtlClass}`}>
               <Link to="/">
                 <img src={logo} alt="tyro logo" />
               </Link>
@@ -161,56 +134,9 @@ const MainHeader: React.FC<HeaderProps> = ({
               )}
 
               {!!currentUser && (
-                <Popover
-                  isOpen={isProfilePopoverOpen}
-                  positions={['bottom']}
-                  onClickOutside={() => setProfilePopoverOpen(false)}
-                  content={
-                    <div className="profile-popover">
-                      <div className="title">
-                        <div className="name">
-                          {currentUser?.first_name +
-                            ' ' +
-                            currentUser?.last_name}
-                        </div>
-                        <span>{currentUser?.email}</span>
-                      </div>
-
-                      {currentUser?.type === 'Tutor' && (
-                        <>
-                          <Link
-                            onClick={() => setProfilePopoverOpen(false)}
-                            to={`/profile/${currentUser?.id}`}
-                            className="item"
-                          >
-                            {t('HEADER.USER.PROFILE')}
-                          </Link>
-
-                          <Link
-                            onClick={() => setProfilePopoverOpen(false)}
-                            to="/account_settings"
-                            className="item"
-                          >
-                            {t('HEADER.USER.SETTINGS')}
-                          </Link>
-                        </>
-                      )}
-
-                      <Button
-                        onClick={() => {
-                          handleLogOut();
-                          setProfilePopoverOpen(false);
-                        }}
-                        variant="contained"
-                        color="primary"
-                      >
-                        {t('HEADER.USER.LOGOUT')}
-                      </Button>
-                    </div>
-                  }
-                >
+                <>
                   <Button
-                    onClick={() => setProfilePopoverOpen(!isProfilePopoverOpen)}
+                    onClick={(e) => setProfileAnchorEl(e.currentTarget)}
                     className="app-header__user"
                     endIcon={<ExpandMore />}
                   >
@@ -225,7 +151,63 @@ const MainHeader: React.FC<HeaderProps> = ({
                       </div>
                     </div>
                   </Button>
-                </Popover>
+                  <Popover
+                    elevation={0}
+                    open={isProfilePopoverOpen}
+                    anchorEl={profileAnchorEl}
+                    onClose={() => setProfileAnchorEl(null)}
+                    anchorOrigin={{
+                      vertical: 'bottom',
+                      horizontal: 'right',
+                    }}
+                    transformOrigin={{
+                      vertical: 'top',
+                      horizontal: 'right',
+                    }}
+                  >
+                    <div className="profile-popover">
+                      <div className="title">
+                        <div className="name">
+                          {currentUser?.first_name +
+                            ' ' +
+                            currentUser?.last_name}
+                        </div>
+                        <span>{currentUser?.email}</span>
+                      </div>
+
+                      {currentUser?.type === 'Tutor' && (
+                        <>
+                          <Link
+                            onClick={() => setProfileAnchorEl(null)}
+                            to={`/profile/${currentUser?.id}`}
+                            className="item"
+                          >
+                            {t('HEADER.USER.PROFILE')}
+                          </Link>
+
+                          <Link
+                            onClick={() => setProfileAnchorEl(null)}
+                            to="/account_settings"
+                            className="item"
+                          >
+                            {t('HEADER.USER.SETTINGS')}
+                          </Link>
+                        </>
+                      )}
+
+                      <Button
+                        onClick={() => {
+                          handleLogOut();
+                          setProfileAnchorEl(null);
+                        }}
+                        variant="contained"
+                        color="primary"
+                      >
+                        {t('HEADER.USER.LOGOUT')}
+                      </Button>
+                    </div>
+                  </Popover>
+                </>
               )}
             </div>
           </div>

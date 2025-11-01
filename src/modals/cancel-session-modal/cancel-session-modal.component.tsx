@@ -1,13 +1,10 @@
-// cancel-session-modal.component.tsx
-
-import React from 'react';
+import { FC } from 'react';
 import { Button } from '@mui/material';
 import { Warning } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 
 import './cancel-session-modal.styles.scss';
-import { useAppDispatch } from '../../redux/store';
-import { cancelSession, endSession } from '../../redux/session/session.actions';
+import { useCancelSession, useEndSession } from '../../hooks/useSessions';
 
 interface CancelSessionModalProps {
   type: 'cancel' | 'end';
@@ -15,21 +12,27 @@ interface CancelSessionModalProps {
   handleClose: () => void;
 }
 
-const CancelSessionModal: React.FC<CancelSessionModalProps> = ({
+const CancelSessionModal: FC<CancelSessionModalProps> = ({
   type,
   sessionId,
   handleClose,
 }) => {
   const { t } = useTranslation();
-  const dispatch = useAppDispatch();
+  const cancelSessionMutation = useCancelSession();
+  const endSessionMutation = useEndSession();
 
-  const cancelThisSession = () => {
-    if (type === 'cancel') {
-      dispatch(cancelSession({ sessionId }));
-    } else {
-      dispatch(endSession({ sessionId }));
+  const cancelThisSession = async () => {
+    try {
+      if (type === 'cancel') {
+        await cancelSessionMutation.mutateAsync(sessionId);
+      } else {
+        await endSessionMutation.mutateAsync(sessionId);
+      }
+      handleClose();
+    } catch (error) {
+      console.error('Session action error:', error);
+      // Error is already handled by the hook via snackbar
     }
-    handleClose();
   };
 
   return (
