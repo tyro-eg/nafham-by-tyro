@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, memo } from 'react';
 import { Rating } from '@mui/material';
 import { format, parseISO } from 'date-fns';
 import { useTranslation } from 'react-i18next';
@@ -27,7 +27,15 @@ const extractTextFromHtml = (html: string): string => {
     .trim();
 };
 
-const ReviewCard: React.FC<ReviewCardProps> = ({ data }) => {
+/**
+ * ReviewCard Component
+ *
+ * Displays a single review with rating, date, and feedback.
+ * Memoized to prevent unnecessary re-renders when used in lists.
+ *
+ * @param data - The review data to display
+ */
+const ReviewCard: React.FC<ReviewCardProps> = memo(({ data }) => {
   const { i18n } = useTranslation();
 
   // Extract review text once when data changes
@@ -68,6 +76,8 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ data }) => {
       )}
     </>
   );
-};
+});
+
+ReviewCard.displayName = 'ReviewCard';
 
 export default ReviewCard;

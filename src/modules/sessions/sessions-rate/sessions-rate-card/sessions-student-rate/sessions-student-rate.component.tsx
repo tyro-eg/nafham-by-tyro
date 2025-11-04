@@ -37,8 +37,8 @@ const SessionsStudentRate: React.FC<SessionsStudentRateProps> = ({
 
   const onSubmit = (values: StudentRateFormData) => {
     values.rate = Number(values.rate);
+    // TODO: Implement student rating submission API call
     // Handle submit logic here
-    console.log(values);
   };
 
   return (

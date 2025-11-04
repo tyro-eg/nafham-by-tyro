@@ -1,10 +1,40 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { get, patch } from '../assets/utils/api';
 import { queryKeys } from '../lib/queryKeys';
-import { Instructor } from '../assets/types';
+import { Instructor, ApiError } from '../assets/types';
 import { snackActions } from '../assets/utils/toaster';
 import { useAppDispatch } from '../redux/store';
 import { setCurrentUser } from '../redux/user/user.slice';
+
+/**
+ * Tutor profile update data
+ */
+interface TutorProfileUpdateData {
+  tutor: {
+    first_name?: string;
+    last_name?: string;
+    phone_number?: string;
+    email?: string;
+    video_url?: string;
+    bio?: string;
+    avatar?: File | string;
+  };
+}
+
+/**
+ * Generic user information update data
+ * Can be for either user or tutor endpoints
+ */
+interface UserInfoUpdateData {
+  [key: string]:
+    | string
+    | number
+    | boolean
+    | File
+    | null
+    | undefined
+    | Record<string, unknown>;
+}
 
 /**
  * Fetch paginated list of instructors
@@ -58,17 +88,7 @@ export function useUpdateTutorProfile() {
       userData,
     }: {
       id: number;
-      userData: {
-        tutor: {
-          first_name?: string;
-          last_name?: string;
-          phone_number?: string;
-          email?: string;
-          video_url?: string;
-          bio?: string;
-          avatar?: any;
-        };
-      };
+      userData: TutorProfileUpdateData;
     }) => {
       const { tutor } = userData;
       const { avatar, ...info } = tutor;
@@ -107,7 +127,7 @@ export function useUpdateTutorProfile() {
       });
       snackActions.success('Profile updated successfully');
     },
-    onError: (error: any) => {
+    onError: (error: ApiError) => {
       const errorMessage =
         error.response?.data?.error ||
         error.message ||
@@ -131,7 +151,7 @@ export function useUpdateUserInfo() {
     }: {
       id: number; // Used in onSuccess via variables.id
       type: string;
-      userData: any;
+      userData: UserInfoUpdateData;
     }) => {
       const endpoint = type === 'users' ? 'user' : 'tutor';
       const response = await patch(`/${endpoint}`, userData);
@@ -154,7 +174,7 @@ export function useUpdateUserInfo() {
       }
       snackActions.success('Information updated successfully');
     },
-    onError: (error: any) => {
+    onError: (error: ApiError) => {
       const errorMessage =
         error.response?.data?.error ||
         error.message ||

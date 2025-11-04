@@ -1,0 +1,4 @@
+# Warn about invalid branch names (informational only)
+# Note: This runs AFTER checkout, so it can't prevent branch creation
+# The pre-push hook will block invalid branches from being pushed
+sh .husky/validate-branch-name.sh || true

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { Button, Dialog, Box, Rating } from '@mui/material';
@@ -18,16 +18,23 @@ import './instructor-card.styles.scss';
 import { Instructor } from '../../assets/types';
 import CalendarStepperModal from '../../modals/calendar-stepper-modal/calendar-stepper-modal';
 
-const InstructorCard: React.FC<{ instructor: Instructor }> = ({
-  instructor,
-}) => {
-  const navigate = useNavigate();
-  const { t } = useTranslation();
-  const rtlClass = useRtlClass();
-  const [openCalendarStepperModal, setOpenCalendarStepperModal] =
-    useState(false);
+/**
+ * InstructorCard Component
+ *
+ * Displays instructor information in a card format.
+ * Memoized to prevent unnecessary re-renders when used in lists.
+ *
+ * @param instructor - The instructor data to display
+ */
+const InstructorCard: React.FC<{ instructor: Instructor }> = memo(
+  ({ instructor }) => {
+    const navigate = useNavigate();
+    const { t } = useTranslation();
+    const rtlClass = useRtlClass();
+    const [openCalendarStepperModal, setOpenCalendarStepperModal] =
+      useState(false);
 
-  const videoHtml = `
+    const videoHtml = `
     <style>
       * { padding: 0; margin: 0; overflow: hidden }
       html, body { height: 100% }
@@ -35,80 +42,84 @@ const InstructorCard: React.FC<{ instructor: Instructor }> = ({
       span { height: 1.5em; text-align: center; font: 48px/1.5 sans-serif; color: white; text-shadow: 0 0 0.5em black }
     </style>
     <a href=https://www.youtube.com/embed/${instructor.video_url}?autoplay=1>
-      <img src=https://i.ytimg.com/vi_webp/${instructor.video_url}/hqdefault.webp>
+      <img src=https://i.ytimg.com/vi_webp/${instructor.video_url}/hqdefault.webp loading="lazy">
       <span>&#x25BA;</span>
     </a>`;
 
-  const goToProfile = () => navigate(`/profile/${instructor.id}`);
-  const openTrialModal = () => setOpenCalendarStepperModal(true);
-  // const navigateToCheckout = () =>
-  //   navigate(`/checkout?id=${instructor.id}&course=false`);
-  const handleCloseCalendarStepperModal = () =>
-    setOpenCalendarStepperModal(false);
+    const goToProfile = () => navigate(`/profile/${instructor.id}`);
+    const openTrialModal = () => setOpenCalendarStepperModal(true);
+    // const navigateToCheckout = () =>
+    //   navigate(`/checkout?id=${instructor.id}&course=false`);
+    const handleCloseCalendarStepperModal = () =>
+      setOpenCalendarStepperModal(false);
 
-  const isTrialAvailable = () =>
-    instructor.free_trial?.enabled && !instructor.free_trial.claimed;
+    const isTrialAvailable = () =>
+      instructor.free_trial?.enabled && !instructor.free_trial.claimed;
 
-  return (
-    <div className="instructor-card">
-      <div className="instructor-card__video">
-        <iframe
-          title="youtube-video"
-          src={instructor.video_url}
-          loading="lazy"
-          frameBorder="0"
-          srcDoc={videoHtml}
-        ></iframe>
-      </div>
+    return (
+      <div className="instructor-card">
+        <div className="instructor-card__video">
+          <iframe
+            title="youtube-video"
+            src={instructor.video_url}
+            loading="lazy"
+            frameBorder="0"
+            srcDoc={videoHtml}
+          ></iframe>
+        </div>
 
-      <div className="instructor-card__body">
-        <Box
-          className={`card-details ${rtlClass}`}
-          sx={{ display: 'flex', flexDirection: 'column' }}
-        >
+        <div className="instructor-card__body">
           <Box
-            className={`card-details__container ${rtlClass}`}
-            sx={{ display: 'flex' }}
+            className={`card-details ${rtlClass}`}
+            sx={{ display: 'flex', flexDirection: 'column' }}
           >
-            <Box className={`image ${rtlClass}`} sx={{ marginRight: '16px' }}>
-              <img src={instructor.avatar || Profile} alt="Instructor" />
+            <Box
+              className={`card-details__container ${rtlClass}`}
+              sx={{ display: 'flex' }}
+            >
+              <Box className={`image ${rtlClass}`} sx={{ marginRight: '16px' }}>
+                <img
+                  src={instructor.avatar || Profile}
+                  alt="Instructor"
+                  loading="lazy"
+                />
+              </Box>
+
+              <Button onClick={goToProfile} className="info">
+                <h6>
+                  {instructor.first_name} {instructor.last_name}
+                </h6>
+                <Box
+                  className="review"
+                  sx={{ display: 'flex', alignItems: 'center' }}
+                >
+                  <Rating
+                    name="instructor rating"
+                    value={+Number(instructor.average_rating).toPrecision(2)}
+                    precision={0.1}
+                    readOnly
+                  />
+                  <span className="review-numbers">
+                    {instructor.average_rating
+                      ? +Number(instructor.average_rating).toPrecision(2)
+                      : 0}{' '}
+                    (5.0)
+                  </span>
+                </Box>
+              </Button>
             </Box>
 
-            <Button onClick={goToProfile} className="info">
-              <h6>
-                {instructor.first_name} {instructor.last_name}
-              </h6>
-              <Box
-                className="review"
-                sx={{ display: 'flex', alignItems: 'center' }}
-              >
-                <Rating
-                  name="instructor rating"
-                  value={+Number(instructor.average_rating).toPrecision(2)}
-                  precision={0.1}
-                  readOnly
-                />
-                <span className="review-numbers">
-                  {instructor.average_rating
-                    ? +Number(instructor.average_rating).toPrecision(2)
-                    : 0}{' '}
-                  (5.0)
-                </span>
-              </Box>
-            </Button>
-          </Box>
+            {!!instructor.grade_subjects?.length && (
+              <div className="instructor-card__fields">
+                {instructor.grade_subjects.map((subject) => (
+                  <div key={subject.id} className="instructor-card__field">
+                    {subject.full_course_name}
+                  </div>
+                ))}
+              </div>
+            )}
 
-          {!!instructor.grade_subjects?.length && (
-            <div className="instructor-card__fields">
-              {instructor.grade_subjects.map((subject) => (
-                <div key={subject.id} className="instructor-card__field">
-                  {subject.full_course_name}
-                </div>
-              ))}
-            </div>
-          )}
-
-          {/* <div className="price">
+            {/* <div className="price">
             {instructor.rate_to_display > 0 ? (
               <span className="new-price">
                 {instructor.rate_to_display} {t('GENEREL.EGP_PER_HOUR')}
@@ -117,18 +128,18 @@ const InstructorCard: React.FC<{ instructor: Instructor }> = ({
               <span className="new-price">{t('COURSES.COURSE_CARD.FREE')}</span>
             )}
           </div> */}
-        </Box>
+          </Box>
 
-        <div className="instructor-card__about">
-          <ReadMore
-            text={instructor.bio || ''}
-            maxLength={95}
-            readonly
-            onClick={goToProfile}
-          />
-        </div>
+          <div className="instructor-card__about">
+            <ReadMore
+              text={instructor.bio || ''}
+              maxLength={95}
+              readonly
+              onClick={goToProfile}
+            />
+          </div>
 
-        {/* <div className="instructor-card__curriculum">
+          {/* <div className="instructor-card__curriculum">
           {[UAE, SAT, EGYPT, SAUDI].map((src, index) => (
             <img
               key={index}
@@ -138,48 +149,51 @@ const InstructorCard: React.FC<{ instructor: Instructor }> = ({
             />
           ))}
         </div> */}
-      </div>
+        </div>
 
-      <div className="instructor-card__footer">
-        <InstructorCalendar instructorId={instructor.id} />
+        <div className="instructor-card__footer">
+          <InstructorCalendar instructorId={instructor.id} />
 
-        {isTrialAvailable() ? (
-          <Button
-            className="book-now-btn"
-            variant="contained"
-            color="primary"
-            onClick={openTrialModal}
+          {isTrialAvailable() ? (
+            <Button
+              className="book-now-btn"
+              variant="contained"
+              color="primary"
+              onClick={openTrialModal}
+            >
+              {t('DIRECTORY.FREETRIAL')}
+            </Button>
+          ) : (
+            <Button
+              endIcon={<ArrowRightAlt />}
+              className={`book-now-btn ${rtlClass}`}
+              variant="contained"
+              color="primary"
+              onClick={goToProfile}
+            >
+              {t('DIRECTORY.OPENPROFILE')}
+            </Button>
+          )}
+        </div>
+
+        {openCalendarStepperModal && (
+          <Dialog
+            maxWidth="lg"
+            fullWidth
+            onClose={handleCloseCalendarStepperModal}
+            open={openCalendarStepperModal}
           >
-            {t('DIRECTORY.FREETRIAL')}
-          </Button>
-        ) : (
-          <Button
-            endIcon={<ArrowRightAlt />}
-            className={`book-now-btn ${rtlClass}`}
-            variant="contained"
-            color="primary"
-            onClick={goToProfile}
-          >
-            {t('DIRECTORY.OPENPROFILE')}
-          </Button>
+            <CalendarStepperModal
+              instructor={instructor}
+              handleClose={handleCloseCalendarStepperModal}
+            />
+          </Dialog>
         )}
       </div>
+    );
+  },
+);
 
-      {openCalendarStepperModal && (
-        <Dialog
-          maxWidth="lg"
-          fullWidth
-          onClose={handleCloseCalendarStepperModal}
-          open={openCalendarStepperModal}
-        >
-          <CalendarStepperModal
-            instructor={instructor}
-            handleClose={handleCloseCalendarStepperModal}
-          />
-        </Dialog>
-      )}
-    </div>
-  );
-};
+InstructorCard.displayName = 'InstructorCard';
 
 export default InstructorCard;

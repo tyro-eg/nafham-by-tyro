@@ -87,7 +87,7 @@ const MainHeader: FC<HeaderProps> = ({ openFreeTrail, openEmailConfirm }) => {
 
             <div className={`app-header__bottom ${rtlClass}`}>
               <Link to="/">
-                <img src={logo} alt="tyro logo" />
+                <img src={logo} alt="tyro logo" loading="lazy" />
               </Link>
               <div className="links">
                 <div>
@@ -141,9 +141,13 @@ const MainHeader: FC<HeaderProps> = ({ openFreeTrail, openEmailConfirm }) => {
                     endIcon={<ExpandMore />}
                   >
                     {currentUser?.avatar ? (
-                      <img src={currentUser?.avatar} alt="profile" />
+                      <img
+                        src={currentUser?.avatar}
+                        alt="profile"
+                        loading="lazy"
+                      />
                     ) : (
-                      <img src={Profile} alt="profile" />
+                      <img src={Profile} alt="profile" loading="lazy" />
                     )}
                     <div className="app-header__user-center">
                       <div className="name">

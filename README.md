@@ -4,10 +4,22 @@ A modern React application for online English learning with one-to-one and group
 
 ## 🚀 Quick Start
 
+### Prerequisites
+
+- **Node.js**: v18.20.0+ or v20.0.0+ (recommended: v20.18.0)
+- **npm**: v9.0.0+
+
+> 💡 **Tip**: Use [nvm](https://github.com/nvm-sh/nvm) for easy Node version management. Run `nvm use` in the project root to automatically switch to the correct version.
+
 ```bash
 # Clone and install
 git clone https://gitlab.com/alzizoomar/nafham-by-nafham-app.git
 cd tyro-by-nafham-app
+
+# If using nvm (recommended)
+nvm use
+
+# Install dependencies
 npm install
 
 # Setup environment
@@ -21,41 +33,62 @@ npm run dev
 
 ## 📚 Documentation
 
+### Getting Started
+
+- **[Setup Guides Index](./SETUP_GUIDES_INDEX.md)** - 📑 Complete guide index and quick reference
+- **[Contributing Guide](./CONTRIBUTING.md)** - Development workflow and commit conventions
+- **[Coding Standards](./.cursorrules)** - Project coding standards and best practices
+
+### Feature Setup (Optional)
+
+- **[Sentry Setup Guide](./SENTRY_SETUP_GUIDE.md)** - 🛡️ Error tracking and monitoring (10 min setup)
+- **[Google Analytics Setup](./GOOGLE_ANALYTICS_SETUP_GUIDE.md)** - 📊 User analytics and insights (10 min setup)
+
+### Project Documentation
+
 - **[Architecture Guide](./ARCHITECTURE.md)** - System architecture and folder structure
 - **[Configuration Guide](./ROOT_CONFIG.md)** - Setup and configuration details
+- **[Branch & PR Conventions](./BRANCH_AND_PR_CONVENTIONS.md)** - Branch naming and PR title rules
 
 ## 🛠️ Tech Stack
 
 ### Core
+
 - **React 18.3** - UI library with hooks and concurrent features
 - **TypeScript 5.6** - Type-safe JavaScript
 - **Vite 5.4** - Lightning-fast build tool and dev server
 - **SCSS** - Advanced CSS with variables and nesting
 
 ### State Management (Hybrid Approach)
+
 - **Redux Toolkit 2.2** with Redux Persist - Authentication state only
 - **TanStack Query 5.59** - All server state (auto-caching, background refetching)
 
 ### Forms & Validation
+
 - **React Hook Form 7.53** - Performant form handling
 - **Zod 3.23** - TypeScript-first schema validation
 
 ### UI & Components
+
 - **Material-UI 6.1** - Comprehensive component library
 - **FullCalendar 6.1** - Advanced calendar functionality
 - **React Slick** - Carousel components
 - **Notistack 3.0** - Snackbar notifications
 
 ### Internationalization
+
 - **react-i18next 15.1** - Multi-language support (English/Arabic with RTL)
 
 ### API & Networking
+
 - **Axios 1.7** - Promise-based HTTP client
 - **Kitsu 10.1** - JSON:API client
 
 ## ✨ Key Features
 
 ### For Students
+
 - 🔍 Browse qualified English tutors with profiles and reviews
 - 📅 Book one-to-one and group sessions
 - 🎁 Free trial sessions for new students
@@ -63,6 +96,7 @@ npm run dev
 - 🗓️ Personal calendar management
 
 ### For Tutors
+
 - 👤 Profile and bio management
 - 🕐 Availability calendar with time slots
 - 📝 Session scheduling and management
@@ -94,12 +128,14 @@ See [ARCHITECTURE.md](./ARCHITECTURE.md) for detailed documentation.
 ## 🎯 Architecture Decisions
 
 ### Why Vite over Create React App?
+
 - ⚡ 10-20x faster dev server startup
 - 🔥 Instant Hot Module Replacement (HMR)
 - 📦 50%+ faster builds
 - 🌳 Better tree-shaking = smaller bundles
 
 ### Why TanStack Query?
+
 - 🗄️ Automatic caching reduces API calls
 - 🔄 Request deduplication (multiple requests = single API call)
 - 📡 Background refetching keeps data fresh
@@ -107,6 +143,7 @@ See [ARCHITECTURE.md](./ARCHITECTURE.md) for detailed documentation.
 - ⚡ Optimistic updates for better UX
 
 ### Why React Hook Form + Zod?
+
 - 🚀 Better performance (less re-renders)
 - 📦 Smaller bundle size
 - 🎯 Excellent TypeScript support
@@ -114,11 +151,13 @@ See [ARCHITECTURE.md](./ARCHITECTURE.md) for detailed documentation.
 - 🎨 Simpler API
 
 ### Hybrid State Management Approach
+
 - **Redux** → Authentication state only (persisted with Redux Persist)
 - **TanStack Query** → All server data (instructors, sessions, calendar)
 - **React State** → Local UI state
 
 **Benefits**:
+
 - Simple, reliable auth persistence
 - Automatic server state synchronization
 - Minimal Redux boilerplate
@@ -162,6 +201,7 @@ VITE_API_BASE_URL=https://tyro-backend.onrender.com/api/v1
 ### TanStack Query Hooks
 
 **Fetch Instructors:**
+
 ```typescript
 import { useInstructors, useInstructor } from './hooks/useInstructors';
 
@@ -173,6 +213,7 @@ const { data: instructor } = useInstructor(instructorId);
 ```
 
 **Manage Sessions:**
+
 ```typescript
 import { useSessions, useBookTrialSession } from './hooks/useSessions';
 
@@ -185,6 +226,7 @@ bookTrial.mutate(sessionData);
 ```
 
 **Calendar Management:**
+
 ```typescript
 import { useSlots, useCreateSlots } from './hooks/useCalendar';
 
@@ -213,6 +255,7 @@ const {
 ```
 
 Validation schemas are located in `src/schemas/`:
+
 - `authSchemas.ts` - Login, register, password operations
 - `userSchemas.ts` - Profile updates, contact details
 - `sessionSchemas.ts` - Session booking and rating forms
@@ -257,12 +300,14 @@ Translation files: `src/component/i18next/locales/`
 ## 🌐 Browser Support
 
 **Development**:
+
 - Chrome (latest)
 - Firefox (latest)
 - Safari (latest)
 - Edge (latest)
 
 **Production**:
+
 - Modern browsers (>0.2% market share)
 - No IE11 support
 

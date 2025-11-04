@@ -6,15 +6,21 @@ import {
 } from '@tanstack/react-query';
 import { get, post } from '../assets/utils/api';
 import { queryKeys } from '../lib/queryKeys';
-import { SessionType } from '../assets/types';
+import { SessionType, ApiError } from '../assets/types';
 import { snackActions } from '../assets/utils/toaster';
 
+/**
+ * Trial session booking data
+ */
 export interface TrialSessionData {
   tutor_id: number;
   start_time: string;
   grade_subject_id: number;
 }
 
+/**
+ * Private session booking data
+ */
 export interface PrivateSessionData {
   tutor_id: number;
   start_time: string;
@@ -93,7 +99,7 @@ export function useCancelSession() {
       });
       snackActions.success('Session cancelled successfully');
     },
-    onError: (error: any) => {
+    onError: (error: ApiError) => {
       const errorMessage =
         error.response?.data?.error ||
         error.message ||
@@ -119,7 +125,7 @@ export function useEndSession() {
       });
       snackActions.success('Session ended successfully');
     },
-    onError: (error: any) => {
+    onError: (error: ApiError) => {
       const errorMessage =
         error.response?.data?.error || error.message || 'Failed to end session';
       snackActions.error(errorMessage);
@@ -146,7 +152,7 @@ export function useBookTrialSession() {
       });
       snackActions.success('Trial session booked successfully');
     },
-    onError: (error: any) => {
+    onError: (error: ApiError) => {
       const errorMessage =
         error.response?.data?.error ||
         error.message ||
@@ -175,7 +181,7 @@ export function useBookPrivateSession() {
       });
       snackActions.success('Private session booked successfully');
     },
-    onError: (error: any) => {
+    onError: (error: ApiError) => {
       const errorMessage =
         error.response?.data?.error ||
         error.message ||
