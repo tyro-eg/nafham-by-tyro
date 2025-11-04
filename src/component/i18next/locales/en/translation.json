@@ -1,4 +1,10 @@
 {
+  "ERROR": {
+    "TITLE": "Oops! Something went wrong",
+    "DESCRIPTION": "We're sorry for the inconvenience. An unexpected error occurred.",
+    "RELOAD": "Reload Page",
+    "GO_HOME": "Go to Home"
+  },
   "HEADER": {
     "BANNER_UNCONFIRMED": {
       "TEXT1": "Your email",

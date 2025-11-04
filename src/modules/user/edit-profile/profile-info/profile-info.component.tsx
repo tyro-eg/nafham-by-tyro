@@ -111,9 +111,15 @@ const ProfileInfo: FC<ProfileInfoProps> = ({
                           className="clickable-img"
                           src={croppedImg || data.avatar}
                           alt="Profile"
+                          loading="lazy"
                         />
                       ) : (
-                        <img className="avatar" src={Avatar} alt="Profile" />
+                        <img
+                          className="avatar"
+                          src={Avatar}
+                          alt="Profile"
+                          loading="lazy"
+                        />
                       )}
                     </Button>
                   )}
@@ -121,7 +127,11 @@ const ProfileInfo: FC<ProfileInfoProps> = ({
                     <>
                       {data.avatar || croppedImg ? (
                         <>
-                          <img src={croppedImg || data.avatar} alt="Profile" />
+                          <img
+                            src={croppedImg || data.avatar}
+                            alt="Profile"
+                            loading="lazy"
+                          />
                           <IconButton
                             className="edit-icon"
                             onClick={() => setOpenImageEditModal(true)}
@@ -279,7 +289,7 @@ const ProfileInfo: FC<ProfileInfoProps> = ({
         onClose={() => setOpenImageViewModal(false)}
       >
         <div className="profile-info__img-viewer-modal">
-          <img src={croppedImg || data.avatar} alt="Profile" />
+          <img src={croppedImg || data.avatar} alt="Profile" loading="lazy" />
         </div>
       </Dialog>
     </section>

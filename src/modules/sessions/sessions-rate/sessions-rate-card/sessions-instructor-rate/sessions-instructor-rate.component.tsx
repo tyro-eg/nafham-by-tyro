@@ -123,8 +123,8 @@ const SessionsInstructorRate = ({
     if ('rating' in values) {
       values.rating = Number(values.rating);
     }
+    // TODO: Implement instructor rating submission API call
     // Handle submit logic here
-    console.log(values);
   };
 
   return (

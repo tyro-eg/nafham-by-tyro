@@ -3,7 +3,11 @@ import { get, post, remove } from '../assets/utils/api';
 import { queryKeys } from '../lib/queryKeys';
 import { parseTimeSlotsIntoCalendarEvents } from '../assets/utils/event.utils';
 import { snackActions } from '../assets/utils/toaster';
+import { ApiError } from '../assets/types';
 
+/**
+ * Availability slot data structure
+ */
 export interface AvailabilitySlot {
   start_time: string;
   end_time: string;
@@ -71,7 +75,7 @@ export function useCreateSlots() {
       });
       snackActions.success('Availability slots created successfully');
     },
-    onError: (error: any) => {
+    onError: (error: ApiError) => {
       const errorMessage =
         error.response?.data?.error ||
         error.message ||
@@ -99,7 +103,7 @@ export function useDeleteSlots() {
       });
       snackActions.success('Availability slots deleted successfully');
     },
-    onError: (error: any) => {
+    onError: (error: ApiError) => {
       const errorMessage =
         error.response?.data?.error ||
         error.message ||
