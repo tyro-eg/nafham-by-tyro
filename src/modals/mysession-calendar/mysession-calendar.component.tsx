@@ -19,6 +19,10 @@ import { useRtlClass } from '../../assets/utils/utils';
 import { EventClickArg } from '@fullcalendar/core';
 import { useInstructors } from '../../hooks/useInstructors';
 import { useBookPrivateSession } from '../../hooks/useSessions';
+import {
+  DEFAULT_SUBJECT_ID,
+  DEFAULT_PACKAGE_ID,
+} from '../../constants/defaults';
 
 interface MySessionCalendarProps {
   rescheduleFlag?: boolean;
@@ -139,8 +143,8 @@ const MySessionCalendar: FC<MySessionCalendarProps> = ({
         end_date: chunk[chunk.length - 1].endStr,
         tutor_id: +instructors[0].id,
         student_id: +currentUser.id,
-        grade_subject_id: 15,
-        package_id: 1, // TODO: Get actual package_id
+        grade_subject_id: DEFAULT_SUBJECT_ID,
+        package_id: DEFAULT_PACKAGE_ID,
         time_slots: slotsIds,
       };
       bookPrivateSessionMutation.mutate(privateObj, {

@@ -190,6 +190,35 @@
       height: 2em;
     }
 
+    // ====== PAST EVENTS STYLING ======
+    // Style for events (user-added slots) that are in the past
+    .fc-timegrid-event.fc-event-past {
+      opacity: 0.5 !important;
+      cursor: not-allowed !important;
+      pointer-events: none !important;
+      background-color: #cccccc !important;
+      border-color: #999999 !important;
+      color: #666666 !important;
+
+      // Remove any blue styling from past events
+      &.fc-event {
+        background-color: #cccccc !important;
+        border-color: #999999 !important;
+      }
+
+      // Override FullCalendar's inline styles
+      &[style*='background'] {
+        background-color: #cccccc !important;
+        border-color: #999999 !important;
+      }
+    }
+
+    // Style for past day cells (in case user switches to day grid view)
+    .fc-day-past {
+      background-color: #fafafa !important;
+      opacity: 0.8 !important;
+    }
+
     .fc-timegrid-col-events {
       margin: 0;
       text-align: center;

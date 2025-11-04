@@ -28,9 +28,10 @@ const ResetPasswordModal: FC<ResetPasswordModalProps> = ({ handleClose }) => {
     },
   });
 
-  const onSubmit = async (values: ResetPasswordFormData) => {
+  const onSubmit = async (_values: ResetPasswordFormData) => {
     // TODO: Implement password reset API call
-    console.log('Reset password for:', values.email);
+    // When backend is ready, use: useRequestPasswordReset hook
+    // Example: resetMutation.mutate(_values.email);
     // if no error after submit
     handleClose();
   };

@@ -17,7 +17,7 @@ const EmailConfirmationModal: FC<EmailConfirmationModalProps> = ({
 
   const handleConfirm = () => {
     // TODO: Implement email confirmation resend API call
-    console.log('Resend confirmation email to:', email);
+    // When backend is ready, use: useResendEmailConfirmation hook
     onClose();
   };
 

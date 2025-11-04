@@ -1,0 +1,3 @@
+# Validate branch name before pushing
+sh .husky/validate-branch-name.sh
+

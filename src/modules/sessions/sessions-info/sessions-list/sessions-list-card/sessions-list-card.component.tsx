@@ -132,9 +132,13 @@ const SessionListCard: React.FC<SessionListCardProps> = ({ session }) => {
             {isInstructorAndNotGroup() && (
               <div className="card-img">
                 {session.student?.image ? (
-                  <img src={session.student?.image} alt="student" />
+                  <img
+                    src={session.student?.image}
+                    alt="student"
+                    loading="lazy"
+                  />
                 ) : (
-                  <img src={Profile} alt="student" />
+                  <img src={Profile} alt="student" loading="lazy" />
                 )}
               </div>
             )}
@@ -144,9 +148,13 @@ const SessionListCard: React.FC<SessionListCardProps> = ({ session }) => {
                 onClick={() => navigate(`/profile/${session.tutor?.id}`)}
               >
                 {session.tutor?.image ? (
-                  <img src={session.tutor?.image} alt="instructor" />
+                  <img
+                    src={session.tutor?.image}
+                    alt="instructor"
+                    loading="lazy"
+                  />
                 ) : (
-                  <img src={Profile} alt="instructor" />
+                  <img src={Profile} alt="instructor" loading="lazy" />
                 )}
               </Button>
             )}

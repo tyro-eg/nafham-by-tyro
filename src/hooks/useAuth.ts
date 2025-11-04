@@ -5,12 +5,19 @@ import { showSpinner, hideSpinner } from '../assets/utils/utils';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '../redux/store';
 import { setCurrentUser, clearCurrentUser } from '../redux/user/user.slice';
+import { CurrentUser, ApiError, AuthHeaders } from '../assets/types';
 
+/**
+ * Sign in payload
+ */
 interface SignInPayload {
   email: string;
   password: string;
 }
 
+/**
+ * Sign up payload
+ */
 interface SignUpPayload {
   email: string;
   password: string;
@@ -23,6 +30,9 @@ interface SignUpPayload {
   nationality?: string;
 }
 
+/**
+ * Change password payload
+ */
 interface ChangePasswordPayload {
   type: string;
   userData: {
@@ -32,17 +42,23 @@ interface ChangePasswordPayload {
   };
 }
 
-const saveUserDataToLocalStorage = (userData: any, headers: any) => {
+/**
+ * Save user authentication data to local storage
+ */
+const saveUserDataToLocalStorage = (
+  userData: CurrentUser,
+  headers: AuthHeaders,
+) => {
   const {
     'access-token': accessToken,
     'refresh-token': refreshToken,
     'expire-at': expireAt,
   } = headers;
 
-  localStorage.setItem('tyro.token', accessToken);
-  localStorage.setItem('tyro.refreshToken', refreshToken);
-  localStorage.setItem('tyro.expireAt', expireAt);
-  localStorage.setItem('tyro.id', userData.id);
+  if (accessToken) localStorage.setItem('tyro.token', accessToken);
+  if (refreshToken) localStorage.setItem('tyro.refreshToken', refreshToken);
+  if (expireAt) localStorage.setItem('tyro.expireAt', expireAt);
+  localStorage.setItem('tyro.id', String(userData.id));
 };
 
 /**
@@ -64,7 +80,7 @@ export function useSignIn() {
           throw new Error('Invalid user data received');
         }
 
-        saveUserDataToLocalStorage(userData, headers);
+        saveUserDataToLocalStorage(userData, headers as AuthHeaders);
         return userData;
       } finally {
         hideSpinner();
@@ -74,7 +90,7 @@ export function useSignIn() {
       dispatch(setCurrentUser(userData));
       snackActions.success('Signed in successfully');
     },
-    onError: (error: any) => {
+    onError: (error: ApiError) => {
       const errorMessage =
         error.response?.data?.error || error.message || 'Sign in failed';
       snackActions.error(errorMessage);
@@ -101,7 +117,7 @@ export function useSignUp() {
           throw new Error('Invalid user data received');
         }
 
-        saveUserDataToLocalStorage(userData, headers);
+        saveUserDataToLocalStorage(userData, headers as AuthHeaders);
         return userData;
       } finally {
         hideSpinner();
@@ -111,7 +127,7 @@ export function useSignUp() {
       dispatch(setCurrentUser(userData));
       snackActions.success('Account created successfully');
     },
-    onError: (error: any) => {
+    onError: (error: ApiError) => {
       const errorMessage =
         error.response?.data?.error || error.message || 'Sign up failed';
       snackActions.error(errorMessage);
@@ -153,7 +169,7 @@ export function useSignOut() {
       navigate('/home');
       snackActions.success('Signed out successfully');
     },
-    onError: (error: any) => {
+    onError: (error: ApiError) => {
       const errorMessage =
         error.response?.data?.error || error.message || 'Sign out failed';
       snackActions.error(errorMessage);
@@ -177,7 +193,7 @@ export function useChangePassword() {
     onSuccess: () => {
       snackActions.success('Password changed successfully');
     },
-    onError: (error: any) => {
+    onError: (error: ApiError) => {
       const errorMessage =
         error.response?.data?.error ||
         error.message ||

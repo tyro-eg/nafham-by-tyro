@@ -1,3 +1,27 @@
+/**
+ * API Error structure from backend
+ * Used consistently across all hooks for error handling
+ */
+export interface ApiError {
+  response?: {
+    data?: {
+      error?: string;
+    };
+  };
+  message?: string;
+}
+
+/**
+ * Authentication API response headers
+ * Extracted from Axios response headers during sign in/sign up
+ */
+export interface AuthHeaders {
+  'access-token'?: string;
+  'refresh-token'?: string;
+  'expire-at'?: string;
+  [key: string]: string | number | boolean | string[] | null | undefined;
+}
+
 export type TutorReview = {
   id: number;
   student: string;
