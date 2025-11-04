@@ -46,13 +46,47 @@ const ProfileCalendar: FC<ProfileCalendarProps> = ({
   const rtlClass = useRtlClass();
 
   const calendarRef = useRef<FullCalendar | null>(null);
+  const hasScrolledToInitialEvent = useRef(false);
 
   const currentUser = useAppSelector((state: RootState) =>
     selectCurrentUser(state),
   );
 
   const today = new Date(new Date().setHours(0, 0, 0, 0));
-  const validDate = addDays(today, 1);
+
+  /**
+   * Calculate the next half-hour slot from current time
+   * This ensures the entire current slot is disabled, not just up to the current minute
+   * Examples:
+   * - 15:03 -> 15:30
+   * - 15:45 -> 16:00
+   * - 23:45 -> next day 00:00
+   */
+  const getNextHalfHourSlot = () => {
+    const now = new Date();
+    const minutes = now.getMinutes();
+    const hours = now.getHours();
+
+    // Round up to next 30-minute interval
+    if (minutes < 30) {
+      // If before :30, set to :30 of current hour
+      now.setMinutes(30, 0, 0);
+    } else {
+      // If after :30, set to :00 of next hour
+      now.setHours(hours + 1, 0, 0, 0);
+    }
+
+    return now;
+  };
+
+  /**
+   * Get the valid range start (today's date + next half-hour slot time)
+   * This ensures the calendar can't navigate or select before this moment
+   */
+  const getValidRangeStart = () => {
+    const nextSlot = getNextHalfHourSlot();
+    return nextSlot.toISOString();
+  };
 
   // Memoize date range to prevent infinite re-renders
   const [dateRange, setDateRange] = useState(() => ({
@@ -97,6 +131,51 @@ const ProfileCalendar: FC<ProfileCalendarProps> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [updateSlots]);
 
+  /**
+   * Scroll to the earliest user event when events are loaded
+   * This runs once after the initial events are fetched
+   * Finds the earliest TIME across all visible days (not earliest date-time)
+   */
+  useEffect(() => {
+    if (
+      currentEvents.length > 0 &&
+      calendarRef.current &&
+      !hasScrolledToInitialEvent.current
+    ) {
+      const calendarApi = calendarRef.current.getApi();
+
+      // Filter out past events (only include today and future events)
+      const now = new Date();
+      const todayStart = new Date(now.setHours(0, 0, 0, 0));
+
+      const futureEvents = currentEvents.filter((event: any) => {
+        if (!event.start) return false;
+        const eventDate = new Date(event.start);
+        return eventDate >= todayStart;
+      });
+
+      // Extract all times (HH:mm) from future events
+      const times = futureEvents.map((event: any) => {
+        const eventDate = new Date(event.start);
+        return eventDate.toTimeString().slice(0, 5); // "HH:mm"
+      });
+
+      // Find the earliest TIME (not earliest date-time)
+      // Sort times as strings in HH:mm format (e.g., "03:00" < "19:00")
+      const earliestTime = times.sort((a, b) => a.localeCompare(b))[0];
+
+      if (earliestTime) {
+        // Use setTimeout to ensure calendar is fully rendered
+        setTimeout(() => {
+          if (calendarRef.current) {
+            calendarApi.scrollToTime(earliestTime);
+            hasScrolledToInitialEvent.current = true;
+          }
+        }, 300);
+      }
+    }
+  }, [currentEvents]);
+
   const handleSaveChanges = async () => {
     if (calendarRef.current) {
       const calendarApi = calendarRef.current.getApi();
@@ -111,6 +190,26 @@ const ProfileCalendar: FC<ProfileCalendarProps> = ({
         setDeletedEvents([]);
       }
     }
+  };
+
+  /**
+   * Prevent selection of past time slots (including current slot)
+   * Returns false for slots before the next half-hour slot
+   */
+  const handleSelectAllow = (selectInfo: any) => {
+    return selectInfo.start >= getNextHalfHourSlot();
+  };
+
+  /**
+   * Add CSS classes to events based on whether they're in the past
+   */
+  const handleEventClassNames = (arg: any) => {
+    const eventStart = new Date(arg.event.start);
+    // Add past class to events before next half-hour slot
+    if (eventStart < getNextHalfHourSlot()) {
+      return ['fc-event-past'];
+    }
+    return [];
   };
 
   const handleDateSelect = (selectInfo: DateSelectArg) => {
@@ -141,7 +240,12 @@ const ProfileCalendar: FC<ProfileCalendarProps> = ({
   };
 
   const handleEventClick = ({ event }: any) => {
+    // Block interaction with reserved slots
     if (event.extendedProps.status === 'reserved') return;
+
+    // Block interaction with past events (before next half-hour slot)
+    const eventStart = new Date(event.start);
+    if (eventStart < getNextHalfHourSlot()) return;
     if (!currentUser) {
       navigate('/login');
     } else if (Number(currentUser.id) !== Number(id)) {
@@ -319,15 +423,14 @@ const ProfileCalendar: FC<ProfileCalendarProps> = ({
             day: t('CALENDAR.BUTTONS.DAY'),
           }}
           direction={i18n.dir()}
-          validRange={{ start: validDate }}
-          // businessHours={[
-          //   {
-          //     startTime: '08:00',
-          //     daysOfWeek: [0, 1, 2, 3, 4, 5, 6],
-          //   },
-          // ]}
+          validRange={{
+            start: getValidRangeStart(), // Prevent navigation and selection before next half-hour slot
+          }}
+          selectAllow={handleSelectAllow}
+          scrollTimeReset={false}
           selectable={!!showEditMode}
           selectMirror={!!showEditMode}
+          eventClassNames={handleEventClassNames}
           events={currentEvents}
           select={handleDateSelect}
           eventContent={renderEventContent}

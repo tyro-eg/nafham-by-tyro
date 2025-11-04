@@ -40,6 +40,17 @@ export default defineConfig({
     outDir: 'build',
     sourcemap: true, // Generate source maps for production debugging
   },
+  css: {
+    preprocessorOptions: {
+      scss: {
+        // Suppress Sass deprecation warnings
+        // TODO: Migrate from @import to @use/@forward before Dart Sass 3.0
+        // TODO: Migrate global built-in functions to use sass:map, sass:color, etc.
+        // See: https://sass-lang.com/documentation/at-rules/import
+        silenceDeprecations: ['import', 'global-builtin'],
+      },
+    },
+  },
   define: {
     'process.env': {},
   },
