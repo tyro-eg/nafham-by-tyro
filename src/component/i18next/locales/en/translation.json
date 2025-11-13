@@ -594,6 +594,30 @@
       "MONTH": "month",
       "WEEK": "week",
       "DAY": "day"
+    },
+    "DUPLICATE": {
+      "TITLE": "Duplicate This Week",
+      "DESCRIPTION": "This will copy all available slots from the currently viewed week to the next selected weeks.",
+      "CURRENT_WEEK_INFO": "Current week has {{count}} available slot",
+      "CURRENT_WEEK_INFO_plural": "Current week has {{count}} available slots",
+      "CURRENT_WEEK_INFO_BEFORE": "Current week has",
+      "CURRENT_WEEK_INFO_AFTER": "available slot(s)",
+      "SELECT_WEEKS": "Duplicate to",
+      "WEEKS_1": "1 week ahead",
+      "WEEKS_2": "2 weeks ahead",
+      "WEEKS_3": "3 weeks ahead",
+      "WEEKS_4": "4 weeks ahead",
+      "PREVIEW": "This will create {{total}} new slot across {{weeks}} week",
+      "PREVIEW_plural": "This will create {{total}} new slots across {{weeks}} weeks",
+      "PREVIEW_BEFORE": "This will create",
+      "PREVIEW_MIDDLE": "new slot(s) across",
+      "PREVIEW_AFTER": "week(s)",
+      "NOTE": "Note: Reserved slots will be skipped automatically",
+      "BUTTON": "Duplicate Slots",
+      "DUPLICATING": "Duplicating...",
+      "NO_SLOTS_TOOLTIP": "No available slots in this week to duplicate",
+      "ALL_EXIST": "All slots already exist in the target weeks. No new slots created.",
+      "PARTIAL_SUCCESS": "Created {{created}} slot(s), skipped {{skipped}} slot(s) that already existed"
     }
   },
   "MYSESSIONS": {

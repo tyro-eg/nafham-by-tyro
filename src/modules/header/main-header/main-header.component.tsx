@@ -206,6 +206,7 @@ const MainHeader: FC<HeaderProps> = ({ openFreeTrail, openEmailConfirm }) => {
                         }}
                         variant="contained"
                         color="primary"
+                        className="logout-button"
                       >
                         {t('HEADER.USER.LOGOUT')}
                       </Button>
