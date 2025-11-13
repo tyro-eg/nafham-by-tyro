@@ -202,7 +202,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin-bottom: 1.8rem;
+    margin-bottom: 1.2rem;
 
     .name {
       color: $color-title;
@@ -225,11 +225,15 @@
     line-height: 2.2rem;
     border-radius: 0.6rem;
     padding: 0.5rem 0.8rem;
-    margin-bottom: 2rem;
+    margin-bottom: 0;
 
     &:hover {
       background-color: $color-grey-light-1;
     }
+  }
+
+  .logout-button {
+    margin-top: 1.2rem;
   }
 
   &::before {
