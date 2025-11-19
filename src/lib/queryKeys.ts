@@ -15,6 +15,13 @@ export interface PaginationParams {
   pageSize?: number;
 }
 
+export interface SessionFilters {
+  status?: string;
+  tutor_id?: number;
+  pageNumber?: number;
+  pageSize?: number;
+}
+
 export interface CalendarParams {
   userId: number;
   from: string;
@@ -57,9 +64,10 @@ export const queryKeys = {
   sessions: {
     all: ['sessions'] as const,
     lists: () => [...queryKeys.sessions.all, 'list'] as const,
-    list: (params?: PaginationParams) =>
+    list: (params?: PaginationParams | SessionFilters) =>
       [...queryKeys.sessions.lists(), params] as const,
-    infinite: () => [...queryKeys.sessions.all, 'infinite'] as const,
+    infinite: (filters?: SessionFilters) =>
+      [...queryKeys.sessions.all, 'infinite', filters] as const,
     details: () => [...queryKeys.sessions.all, 'detail'] as const,
     detail: (id: number) => [...queryKeys.sessions.details(), id] as const,
   },
@@ -74,5 +82,15 @@ export const queryKeys = {
       [...queryKeys.calendar.all, 'availabilities'] as const,
     availability: (params: AvailabilityParams) =>
       [...queryKeys.calendar.availabilities(), params] as const,
+  },
+
+  // Package keys
+  packages: {
+    all: ['packages'] as const,
+    lists: () => [...queryKeys.packages.all, 'list'] as const,
+    list: (params?: PaginationParams) =>
+      [...queryKeys.packages.lists(), params] as const,
+    details: () => [...queryKeys.packages.all, 'detail'] as const,
+    detail: (id: number) => [...queryKeys.packages.details(), id] as const,
   },
 } as const;
