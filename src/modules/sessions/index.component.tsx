@@ -1,18 +1,33 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
 
 import { useRtlClass } from '../../assets/utils/utils';
+import { SessionFilters } from '../../lib/queryKeys';
+import { usePackages } from '../../hooks/usePackages';
 
 import SessionsInfo from './sessions-info/sessions-info.component';
 import SessionsOverview from './sessions-overview/sessions-overview.component';
 import SessionsSchedule from './sessions-schedule/sessions-schedule.component';
 import SessionFilter from './session-filter/session-filter.component';
 
-import SESSIONS_SCHEDULE_DATA from './sessions-schedule/sessions-schedule-data';
-
 import './index.styles.scss';
 
+/**
+ * Sessions Page Component
+ *
+ * Main sessions page that manages filter state and coordinates
+ * between SessionFilter, SessionsInfo, and other session-related components.
+ */
 const Sessions: FC = () => {
   const rtlClass = useRtlClass();
+  const [filters, setFilters] = useState<SessionFilters>({});
+
+  // Fetch packages with unscheduled sessions
+  const { data: packagesResponse, isLoading: isLoadingPackages } = usePackages(
+    1,
+    20,
+  );
+  const packages = packagesResponse?.data || [];
+
   const overViewData = {
     previous_sessions_count: 21,
     upcoming_sessions_count: 0,
@@ -20,6 +35,11 @@ const Sessions: FC = () => {
     total_unscheduled_time_in_hours: 15.5,
     canceled_sessions_count: 5,
   };
+
+  const handleFiltersChange = (newFilters: SessionFilters) => {
+    setFilters(newFilters);
+  };
+
   return (
     <section className="sessions">
       <div className="sessions__banner">
@@ -29,15 +49,15 @@ const Sessions: FC = () => {
           </div>
         )}
         <div className={`filter container ${rtlClass}`}>
-          <SessionFilter />
+          <SessionFilter onFiltersChange={handleFiltersChange} />
         </div>
       </div>
       <div className="sessions__container container">
-        <SessionsInfo />
+        <SessionsInfo filters={filters} />
       </div>
       <div className="sessions__container container">
-        {SESSIONS_SCHEDULE_DATA && (
-          <SessionsSchedule unscheduledSessionsData={SESSIONS_SCHEDULE_DATA} />
+        {!isLoadingPackages && packages.length > 0 && (
+          <SessionsSchedule packages={packages} />
         )}
       </div>
     </section>

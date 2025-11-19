@@ -624,6 +624,10 @@
     "NO_SESSIONS_TITLE": "لا توجد جلسات مجدولة",
     "NO_SESSIONS_SUBTITLE": "ليس لديك دروس مجدولة اختر مدرسًا للبدء.",
     "NO_SESSIONS_ACTION": "جدولة جلسة",
+    "LOADING_SESSIONS": "جاري تحميل الجلسات...",
+    "LOADING_MORE": "جاري تحميل المزيد من الجلسات...",
+    "ERROR_TITLE": "خطأ في تحميل الجلسات",
+    "ERROR_SUBTITLE": "تعذر تحميل الجلسات. يرجى المحاولة مرة أخرى لاحقًا.",
     "TABS": {
       "SESSIONS": "المحاضرات",
       "UNSCHEDULED": "غير المجدولة",
@@ -646,7 +650,16 @@
       "TODAYSESSIONS": "جلسات اليوم",
       "NEXTWEEKSESSIONS": "جلسات الإسبوع القادم",
       "LASTWEEKSESSIONS": "جلسات الإسبوع الماضي",
-      "SEARCH": "بحث"
+      "SEARCH": "بحث",
+      "INSTRUCTOR": "المدرس",
+      "SELECT_INSTRUCTOR": "اختر المدرس",
+      "SEARCH_INSTRUCTOR": "ابحث عن مدرس...",
+      "NO_INSTRUCTORS_FOUND": "لم يتم العثور على مدرسين",
+      "LOADING_INSTRUCTORS": "جاري تحميل المدرسين...",
+      "SCHEDULED": "مجدول",
+      "OPEN": "مفتوح",
+      "COMPLETED": "مكتمل",
+      "CANCELLED": "ملغي"
     },
     "MAIN": {
       "LIST": "قائمة",

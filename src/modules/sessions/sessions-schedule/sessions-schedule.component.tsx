@@ -1,83 +1,74 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import SessionsScheduleCard from './sessions-schedule-card/sessions-schedule-card.component';
 import Carousel from '../../../component/carousel/carousel';
+import { useAppSelector } from '../../../redux/store';
+import { selectCurrentUser } from '../../../redux/user/user.selectors';
+import type { Package } from '../../../assets/types';
+import defaultProfileImage from '../../../assets/images/videoSession/people/profile.png';
 
 import './sessions-schedule.styles.scss';
 
-interface UnscheduledSession {
-  instructor_id: number;
-  instructor_image: string;
-  instructor_name: string;
-  package_clone_field: string;
-  package_clone_field_id: number;
-  instructor_rating: number;
-  instructor_reviews: number;
-  package_clone_id: number;
-  minutes: number;
-  original_minutes: number;
-}
-
-interface PackageClone {
-  id: number;
-  minutes: number;
-  original_minutes: number;
-}
-
-interface PackageData {
+interface UserPackageData {
   user_id: number;
   user_image: string;
   user_name: string;
-  field: string;
-  field_id: number;
-  total_minutes: number;
-  package_clones: PackageClone[];
-  instructor_rating: number;
-  instructor_reviews: number;
+  user_rating: number;
+  user_reviews: number;
+  total_hours: number;
+  packages: Package[];
 }
 
 interface SessionsScheduleProps {
-  unscheduledSessionsData: UnscheduledSession[];
+  packages: Package[];
 }
 
-const SessionsSchedule: FC<SessionsScheduleProps> = ({
-  unscheduledSessionsData,
-}) => {
+const SessionsSchedule: FC<SessionsScheduleProps> = ({ packages }) => {
   const { t } = useTranslation();
-  const [packageData, setPackageData] = useState<PackageData[]>([]);
+  const currentUser = useAppSelector(selectCurrentUser);
 
-  useEffect(() => {
-    const unscheduled: Record<number, PackageData> = {};
+  /**
+   * Group packages by the other user (tutor if current user is student, or student if current user is tutor)
+   * and calculate total remaining hours
+   * Transforms Package[] into UserPackageData[] for display
+   */
+  const userPackages = useMemo(() => {
+    if (!currentUser || packages.length === 0) return [];
 
-    unscheduledSessionsData.forEach((session) => {
-      const instructorId = session.instructor_id;
+    const grouped: Record<number, UserPackageData> = {};
 
-      if (!unscheduled[instructorId]) {
-        unscheduled[instructorId] = {
-          user_id: session.instructor_id,
-          user_image: session.instructor_image,
-          user_name: session.instructor_name,
-          field: session.package_clone_field,
-          field_id: session.package_clone_field_id,
-          total_minutes: 0,
-          package_clones: [],
-          instructor_rating: session.instructor_rating,
-          instructor_reviews: session.instructor_reviews,
+    packages.forEach((pkg) => {
+      // Determine which user to display based on current user
+      // If current user is the tutor, show student; otherwise show tutor
+      const isCurrentUserTutor = currentUser.id === pkg.tutor.id;
+      const displayUser = isCurrentUserTutor ? pkg.student : pkg.tutor;
+      const userId = displayUser.id;
+
+      if (!grouped[userId]) {
+        grouped[userId] = {
+          user_id: displayUser.id,
+          user_image: displayUser.avatar || defaultProfileImage,
+          user_name: `${displayUser.first_name} ${displayUser.last_name}`,
+          user_rating:
+            'average_rating' in displayUser
+              ? displayUser.average_rating || 0
+              : 0,
+          user_reviews:
+            'number_of_reviews' in displayUser
+              ? displayUser.number_of_reviews || 0
+              : 0,
+          total_hours: 0,
+          packages: [],
         };
       }
 
-      unscheduled[instructorId].package_clones.push({
-        id: session.package_clone_id,
-        minutes: session.minutes,
-        original_minutes: session.original_minutes,
-      });
-
-      unscheduled[instructorId].total_minutes += session.minutes;
+      grouped[userId].packages.push(pkg);
+      grouped[userId].total_hours += pkg.remaining_hours;
     });
 
-    setPackageData(Object.values(unscheduled));
-  }, [unscheduledSessionsData]);
+    return Object.values(grouped);
+  }, [packages, currentUser]);
 
   return (
     <section className="sessions-schedule">
@@ -86,9 +77,9 @@ const SessionsSchedule: FC<SessionsScheduleProps> = ({
       </h2>
       <div className="sessions-schedule__container">
         <Carousel small>
-          {packageData.map((unscheduledSession) => (
-            <div key={unscheduledSession.user_id} className="unscheduled-card">
-              <SessionsScheduleCard data={unscheduledSession} />
+          {userPackages.map((userPackage) => (
+            <div key={userPackage.user_id} className="unscheduled-card">
+              <SessionsScheduleCard data={userPackage} />
             </div>
           ))}
         </Carousel>

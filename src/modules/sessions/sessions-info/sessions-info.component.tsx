@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Tabs, Tab, Box } from '@mui/material';
 
 import { tabsProps } from '../../../assets/utils/utils';
+import { SessionFilters } from '../../../lib/queryKeys';
 
 import TabPanel from '../../../component/tabs/tab-banal.component';
 import SessionsList from './sessions-list/sessions-list.component';
@@ -15,7 +16,20 @@ import UNRATED_SESSIONS_DATA from '../sessions-rate/unrated-sessions-data';
 
 import './sessions-info.styles.scss';
 
-const SessionsInfo: FC = () => {
+interface SessionsInfoProps {
+  filters?: SessionFilters;
+}
+
+/**
+ * SessionsInfo Component
+ *
+ * Manages the sessions view with tabs for Calendar/List views
+ * and nested tabs for Sessions/Rate views.
+ * Passes filters down to SessionsList component.
+ *
+ * @param filters - Session filters from parent component
+ */
+const SessionsInfo: FC<SessionsInfoProps> = ({ filters }) => {
   const { t, i18n } = useTranslation();
   const [tab1, setTab1] = useState(1);
   const [tab2, setTab2] = useState(0);
@@ -73,7 +87,7 @@ const SessionsInfo: FC = () => {
 
           <Box className="session-list-tabs">
             <TabPanel value={tab2} index={0} dir={i18n.dir()}>
-              <SessionsList />
+              <SessionsList filters={filters} />
             </TabPanel>
             <TabPanel value={tab2} index={1} dir={i18n.dir()}>
               {UNRATED_SESSIONS_DATA && (

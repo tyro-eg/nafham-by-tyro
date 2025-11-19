@@ -1,4 +1,9 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import {
+  useQuery,
+  useMutation,
+  useQueryClient,
+  useInfiniteQuery,
+} from '@tanstack/react-query';
 import { get, patch } from '../assets/utils/api';
 import { queryKeys } from '../lib/queryKeys';
 import { Instructor, ApiError } from '../assets/types';
@@ -72,6 +77,39 @@ export function useInstructor(id: number | string, enabled: boolean = true) {
       return response.data.data as Instructor;
     },
     enabled: enabled && !!id,
+  });
+}
+
+/**
+ * Fetch instructors with infinite scroll
+ *
+ * @param pageSize - Number of items per page
+ */
+export function useInfiniteInstructors(pageSize: number = 20) {
+  return useInfiniteQuery({
+    queryKey: [...queryKeys.instructors.all, 'infinite'],
+    queryFn: async ({ pageParam = 1 }) => {
+      const response = await get(`/tutors`, {
+        params: {
+          per_page: pageSize,
+          page: pageParam,
+        },
+      });
+      return {
+        data: response.data.data as Instructor[],
+        pagination: response.headers,
+        nextPage: pageParam + 1,
+      };
+    },
+    getNextPageParam: (lastPage) => {
+      const totalCount = Number(lastPage.pagination['total-count']);
+      const allLoadedSoFar = lastPage.nextPage - 1;
+      const totalPages = Math.ceil(totalCount / pageSize);
+      const hasMore = allLoadedSoFar < totalPages;
+      return hasMore ? lastPage.nextPage : undefined;
+    },
+    initialPageParam: 1,
+    staleTime: 10 * 60 * 1000, // 10 minutes - instructors don't change often
   });
 }
 

@@ -46,6 +46,59 @@ export type TutorPackage = {
   deleted_at?: string;
 };
 
+export type GradeSubject = {
+  id: number;
+  full_course_name: string;
+  created_at: string;
+  updated_at: string;
+};
+
+export type PackageStudent = {
+  id: number;
+  country_code: string;
+  created_at: string;
+  email: string;
+  first_name: string;
+  last_name: string;
+  nationality: string;
+  phone_number: string;
+  type: 'Student';
+  updated_at: string;
+  avatar?: string;
+};
+
+export type PackageTutor = {
+  id: number;
+  created_at: string;
+  email: string;
+  first_name: string;
+  last_name: string;
+  phone_number: string;
+  type: 'Tutor';
+  updated_at: string;
+  avatar?: string;
+  average_rating?: number;
+  number_of_reviews?: number;
+};
+
+export type Package = {
+  id: number;
+  amount_paid: number;
+  created_at: string;
+  grade_subject: GradeSubject;
+  initial_hours: number;
+  original_hours: number;
+  package_type: 'private_session' | 'trial_session';
+  payment_method: string;
+  remaining_hours: number;
+  slug: string;
+  source: string;
+  student: PackageStudent;
+  tutor: PackageTutor;
+  tutor_rate: number;
+  updated_at: string;
+};
+
 export type Schedule = {
   id: number;
   from: string;
