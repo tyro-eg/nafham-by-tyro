@@ -4,18 +4,21 @@ import Rating from '@mui/material/Rating';
 import { Button, Dialog, DialogContent } from '@mui/material';
 
 import MySessionCalendar from '../../../../modals/mysession-calendar/mysession-calendar.component';
+import defaultProfileImage from '../../../../assets/images/videoSession/people/profile.png';
 
 import './sessions-schedule-card.styles.scss';
 
-interface SessionData {
+interface UserData {
+  user_id: number;
   user_image: string;
   user_name: string;
-  instructor_rating: number;
-  total_minutes: number;
+  user_rating: number;
+  user_reviews: number;
+  total_hours: number;
 }
 
 interface SessionsScheduleCardProps {
-  data: SessionData;
+  data: UserData;
 }
 
 const cardImageStyles = {
@@ -41,9 +44,13 @@ const SessionsScheduleCard: FC<SessionsScheduleCardProps> = ({ data }) => {
     <div className="schedule-card">
       <Button sx={{ padding: 0 }} onClick={gotoInstructorProfile}>
         <img
-          src={data.user_image}
+          src={data.user_image || defaultProfileImage}
           alt={`${data.user_name}'s profile`}
           style={{ ...cardImageStyles }}
+          onError={(e) => {
+            const target = e.target as HTMLImageElement;
+            target.src = defaultProfileImage;
+          }}
         />
       </Button>
       <div className="schedule-card__container">
@@ -53,7 +60,7 @@ const SessionsScheduleCard: FC<SessionsScheduleCardProps> = ({ data }) => {
             <div className="review">
               <Rating
                 name="sessions-schedule-card-rating"
-                value={Math.round(data.instructor_rating)}
+                value={Math.round(data.user_rating)}
                 readOnly
               />
             </div>
@@ -70,7 +77,7 @@ const SessionsScheduleCard: FC<SessionsScheduleCardProps> = ({ data }) => {
         </div>
         <div className="unscheduled">
           <p>{t('MYSESSIONS.SCHEDULE.CARD.UNSCHEDULED')}</p>
-          <p className="hours">{data.total_minutes / 60}</p>
+          <p className="hours">{data.total_hours}</p>
         </div>
       </div>
       <Dialog
@@ -81,7 +88,7 @@ const SessionsScheduleCard: FC<SessionsScheduleCardProps> = ({ data }) => {
       >
         <DialogContent>
           <MySessionCalendar
-            unscheduledHours={data.total_minutes / 60}
+            unscheduledHours={data.total_hours}
             handleClose={handleCloseScheduleModal}
           />
         </DialogContent>

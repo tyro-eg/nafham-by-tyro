@@ -4,12 +4,25 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import { CalendarToday } from '@mui/icons-material';
 
 import { useInfiniteSessions } from '../../../../hooks/useSessions';
+import { SessionFilters } from '../../../../lib/queryKeys';
 
 import SessionListCard from './sessions-list-card/sessions-list-card.component';
 
 import './sessions-list.styles.scss';
 
-const SessionsList: FC = () => {
+interface SessionsListProps {
+  filters?: SessionFilters;
+}
+
+/**
+ * SessionsList Component
+ *
+ * Displays paginated list of sessions with infinite scroll.
+ * Supports filtering by status and tutor_id.
+ *
+ * @param filters - Session filters (status, tutor_id)
+ */
+const SessionsList: FC<SessionsListProps> = ({ filters }) => {
   const { t } = useTranslation();
 
   const {
@@ -19,7 +32,7 @@ const SessionsList: FC = () => {
     isFetchingNextPage,
     isLoading,
     isError,
-  } = useInfiniteSessions(10);
+  } = useInfiniteSessions(10, filters);
 
   // Flatten all pages into a single array
   const sessions = data?.pages.flatMap((page) => page.data) ?? [];
@@ -39,7 +52,16 @@ const SessionsList: FC = () => {
   if (isLoading) {
     return (
       <div className="sessions-list-container">
-        <p>Loading sessions...</p>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            padding: '40px',
+          }}
+        >
+          <p>{t('MYSESSIONS.LOADING_SESSIONS')}</p>
+        </div>
       </div>
     );
   }
@@ -51,7 +73,11 @@ const SessionsList: FC = () => {
           dataLength={sessions.length}
           next={fetchNextPage}
           hasMore={!!hasNextPage}
-          loader={<p>{isFetchingNextPage ? 'Loading more...' : ''}</p>}
+          loader={
+            <div style={{ textAlign: 'center', padding: '10px' }}>
+              {isFetchingNextPage ? t('MYSESSIONS.LOADING_MORE') : ''}
+            </div>
+          }
         >
           <div className="sessions-list">
             {sessions.map((session) =>

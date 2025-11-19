@@ -5,7 +5,7 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 import { get, post } from '../assets/utils/api';
-import { queryKeys } from '../lib/queryKeys';
+import { queryKeys, SessionFilters } from '../lib/queryKeys';
 import { SessionType, ApiError } from '../assets/types';
 import { snackActions } from '../assets/utils/toaster';
 
@@ -50,18 +50,32 @@ export function useSessions(pageNumber: number = 1, pageSize: number = 10) {
 }
 
 /**
- * Infinite scroll sessions
+ * Infinite scroll sessions with filters
+ *
+ * @param pageSize - Number of items per page
+ * @param filters - Optional filters (status, tutor_id)
  */
-export function useInfiniteSessions(pageSize: number = 10) {
+export function useInfiniteSessions(
+  pageSize: number = 10,
+  filters?: SessionFilters,
+) {
   return useInfiniteQuery({
-    queryKey: queryKeys.sessions.infinite(),
+    queryKey: queryKeys.sessions.infinite(filters),
     queryFn: async ({ pageParam = 1 }) => {
-      const response = await get(`/sessions`, {
-        params: {
-          per_page: pageSize,
-          page: pageParam,
-        },
-      });
+      const params: Record<string, any> = {
+        per_page: pageSize,
+        page: pageParam,
+      };
+
+      // Add filters if provided
+      if (filters?.status && filters.status !== 'all') {
+        params.status = filters.status;
+      }
+      if (filters?.tutor_id) {
+        params.tutor_id = filters.tutor_id;
+      }
+
+      const response = await get(`/sessions`, { params });
       return {
         data: (response.data.data || response.data) as SessionType[],
         pagination: response.headers,

@@ -624,6 +624,10 @@
     "NO_SESSIONS_TITLE": "No Sessions Scheduled",
     "NO_SESSIONS_SUBTITLE": "You have no scheduled lessons, Select a teacher to get started.",
     "NO_SESSIONS_ACTION": "Schedule a Session",
+    "LOADING_SESSIONS": "Loading sessions...",
+    "LOADING_MORE": "Loading more sessions...",
+    "ERROR_TITLE": "Error Loading Sessions",
+    "ERROR_SUBTITLE": "Unable to load sessions. Please try again later.",
     "TABS": {
       "SESSIONS": "Sessions",
       "UNSCHEDULED": "Unscheduled",
@@ -635,7 +639,7 @@
       "1TO1SESSION": "1-1 Private Session",
       "GROUPSESSION": "Group Session",
       "FREETRIALSESSION": "Free Trial Session",
-      "SESSIONSTATE": "Session State",
+      "SESSIONSTATE": "Session Status",
       "SESSIONDATE": "Session Date",
       "MISSEDSESSIONS": "Missed Sessions",
       "COMPLETEDSESSIONS": "Completed Sessions",
@@ -646,7 +650,16 @@
       "TODAYSESSIONS": "Today's Sessions",
       "NEXTWEEKSESSIONS": "Next Week's Sessions",
       "LASTWEEKSESSIONS": "Last Week's Sessions",
-      "SEARCH": "Search"
+      "SEARCH": "Search",
+      "INSTRUCTOR": "Instructor",
+      "SELECT_INSTRUCTOR": "Select Instructor",
+      "SEARCH_INSTRUCTOR": "Search instructor...",
+      "NO_INSTRUCTORS_FOUND": "No instructors found",
+      "LOADING_INSTRUCTORS": "Loading instructors...",
+      "SCHEDULED": "Scheduled",
+      "OPEN": "Open",
+      "COMPLETED": "Completed",
+      "CANCELLED": "Cancelled"
     },
     "MAIN": {
       "LIST": "List",
