@@ -98,15 +98,16 @@ export function useInfiniteInstructors(pageSize: number = 20) {
       return {
         data: response.data.data as Instructor[],
         pagination: response.headers,
-        nextPage: pageParam + 1,
+        currentPage: pageParam,
       };
     },
     getNextPageParam: (lastPage) => {
-      const totalCount = Number(lastPage.pagination['total-count']);
-      const allLoadedSoFar = lastPage.nextPage - 1;
-      const totalPages = Math.ceil(totalCount / pageSize);
-      const hasMore = allLoadedSoFar < totalPages;
-      return hasMore ? lastPage.nextPage : undefined;
+      const currentPage = Number(lastPage.pagination['current-page']);
+      const totalPages = Number(lastPage.pagination['total-pages']);
+
+      // If current page is less than total pages, fetch next page
+      const hasMore = currentPage < totalPages;
+      return hasMore ? currentPage + 1 : undefined;
     },
     initialPageParam: 1,
     staleTime: 10 * 60 * 1000, // 10 minutes - instructors don't change often
