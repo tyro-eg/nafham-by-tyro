@@ -1,0 +1,22 @@
+@import '../../../assets/styles/mixins.scss';
+
+.impersonate-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 80vh;
+  width: 99vw;
+  gap: 2rem;
+  background: linear-gradient(135deg, #667eea 0%, #3ac5f1 100%);
+
+  .impersonate-text {
+    color: #ffffff;
+    font-weight: 500;
+    text-align: center;
+  }
+
+  .MuiCircularProgress-root {
+    color: #ffffff;
+  }
+}

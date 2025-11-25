@@ -12,6 +12,9 @@ const Register = lazy(
 const Registered = lazy(
   () => import('../../modules/auth/registered/registered.component'),
 );
+const Impersonate = lazy(
+  () => import('../../modules/auth/impersonate/impersonate.component'),
+);
 const AccountSettings = lazy(
   () => import('../../modules/user/account-settings/index'),
 );
@@ -50,6 +53,7 @@ const RoutesComponent: React.FC<RoutesProps> = ({ currentUser }) => (
         path="/registered"
         element={<GuardedRoute element={<Registered />} auth={!!currentUser} />}
       />
+      <Route path="/impersonate" element={<Impersonate />} />
       <Route
         path="/account_settings"
         element={

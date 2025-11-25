@@ -803,6 +803,9 @@
       "INSTRUCTOR": "Instructor"
     }
   },
+  "IMPERSONATE": {
+    "LOADING": "Logging you in..."
+  },
   "REGISTER": {
     "REGISTER_TITLE": "Register to complete the scheduling process",
     "REGISTER_TITLE_1": "Register to complete the joining process",

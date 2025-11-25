@@ -803,6 +803,9 @@
       "INSTRUCTOR": "مدرس"
     }
   },
+  "IMPERSONATE": {
+    "LOADING": "جاري تسجيل الدخول..."
+  },
   "REGISTER": {
     "REGISTER_TITLE": "إنشاء حساب",
     "REGISTER_TITLE_1": "إنشاء حساب",
