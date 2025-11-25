@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { post, patch, remove } from '../assets/utils/api';
+import { post, patch, remove, get } from '../assets/utils/api';
 import { snackActions } from '../assets/utils/toaster';
 import { showSpinner, hideSpinner } from '../assets/utils/utils';
 import { useNavigate } from 'react-router-dom';
@@ -198,6 +198,60 @@ export function useChangePassword() {
         error.response?.data?.error ||
         error.message ||
         'Password change failed';
+      snackActions.error(errorMessage);
+    },
+  });
+}
+
+/**
+ * Impersonate user
+ *
+ * Used by admin to log in as another user using a token.
+ * Clears existing user data and replaces with impersonated user.
+ */
+export function useImpersonate() {
+  const dispatch = useAppDispatch();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (payload: { token: string }) => {
+      showSpinner();
+      try {
+        // Clear existing user data
+        localStorage.clear();
+        dispatch(clearCurrentUser());
+        queryClient.clear();
+
+        // Set temporary token for /me request
+        localStorage.setItem('tyro.token', payload.token);
+
+        // Fetch user data with the new token
+        const { data: userData, headers } = await get('/me');
+
+        if (!userData || !userData.id) {
+          throw new Error('Invalid user data received');
+        }
+
+        // Save new user data (token is already set above)
+        saveUserDataToLocalStorage(userData, headers as AuthHeaders);
+        return userData;
+      } catch (error) {
+        // Clear token on error
+        localStorage.clear();
+        throw error;
+      } finally {
+        hideSpinner();
+      }
+    },
+    onSuccess: (userData) => {
+      dispatch(setCurrentUser(userData));
+      snackActions.success('Impersonation successful');
+    },
+    onError: (error: ApiError) => {
+      const errorMessage =
+        error.response?.data?.error ||
+        error.message ||
+        'Impersonation failed. Invalid or expired token.';
       snackActions.error(errorMessage);
     },
   });

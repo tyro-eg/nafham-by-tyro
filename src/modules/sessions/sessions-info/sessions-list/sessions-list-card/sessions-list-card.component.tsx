@@ -23,7 +23,7 @@ import { arSA } from 'date-fns/locale/ar-SA';
 import { enUS } from 'date-fns/locale/en-US';
 import { Rating } from '@mui/material';
 import { selectCurrentUser } from '../../../../../redux/user/user.selectors';
-import { rtlClass } from '../../../../../assets/utils/utils';
+import { useRtlClass } from '../../../../../assets/utils/utils';
 
 import { useAppSelector } from '../../../../../redux/store';
 import { SessionType } from '../../../../../assets/types';
@@ -40,6 +40,7 @@ const SessionListCard: React.FC<SessionListCardProps> = ({ session }) => {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const currentUser = useAppSelector(selectCurrentUser);
+  const rtlClass = useRtlClass();
 
   const [isInstructor, setIsInstructor] = useState(false);
   const [sessionName, setSessionName] = useState('');
@@ -193,7 +194,7 @@ const SessionListCard: React.FC<SessionListCardProps> = ({ session }) => {
               )}
             </div>
           </div>
-          <div className={`sessions-card__actions ${rtlClass()}`}>
+          <div className={`sessions-card__actions ${rtlClass}`}>
             {/* {(session.state === 'scheduled' ||
               session.state === 'rescheduled') &&
               isWithinTwelveHours && (
@@ -265,21 +266,21 @@ const SessionListCard: React.FC<SessionListCardProps> = ({ session }) => {
           </div>
         </div>
         <div className="sessions-card__content-middle">
-          <div className={`prop-card ${rtlClass()}`}>
+          <div className={`prop-card ${rtlClass}`}>
             <p className="title">{t('MYSESSIONS.MAIN.CARD.TYPE')}</p>
             <p className="value">
               {session.session_type === 'group' ? <Group /> : <Person />}
               {sessionName}
             </p>
           </div>
-          <div className={`prop-card ${rtlClass()}`}>
+          <div className={`prop-card ${rtlClass}`}>
             <p className="title">{t('MYSESSIONS.MAIN.CARD.DURATION')}</p>
             <p className="value">
               <TimerTwoTone />
               {sessionDuration} {t('MYSESSIONS.MAIN.CARD.MINUTE')}
             </p>
           </div>
-          <div className={`prop-card ${rtlClass()}`}>
+          <div className={`prop-card ${rtlClass}`}>
             <p className="title">{t('MYSESSIONS.MAIN.CARD.TIME')}</p>
             <p className="value">
               <Schedule />
@@ -288,15 +289,15 @@ const SessionListCard: React.FC<SessionListCardProps> = ({ session }) => {
               })}
             </p>
           </div>
-          <div className={`prop-card ${rtlClass()}`}>
-            <p className="title">{t('MYSESSIONS.MAIN.CARD.SUBJECT')}</p>
+          <div className={`prop-card ${rtlClass}`}>
+            <p className="title">{t('MYSESSIONS.MAIN.CARD.COURSE')}</p>
             <p className="value field">
               {session?.grade_subject
-                ? session.grade_subject.full_course_name.split(' - ')[2]
+                ? session.grade_subject.full_course_name
                 : ''}
             </p>
           </div>
-          <div className={`prop-card ${rtlClass()}`}>
+          <div className={`prop-card ${rtlClass}`}>
             <p className="title">{t('MYSESSIONS.MAIN.CARD.DATE')}</p>
             <p className="value">
               <CalendarToday />
