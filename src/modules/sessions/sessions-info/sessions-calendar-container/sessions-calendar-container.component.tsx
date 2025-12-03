@@ -1,170 +1,186 @@
-import React, { useState, useRef } from 'react';
+import React, { useRef, useMemo, useEffect } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
-import timeGridPlugin from '@fullcalendar/timegrid';
-import interactionPlugin from '@fullcalendar/interaction';
 import arLocale from '@fullcalendar/core/locales/ar-kw';
 import { useTranslation } from 'react-i18next';
-import Dialog from '@mui/material/Dialog';
-import { selectCurrentUser } from '../../../../redux/user/user.selectors';
-import { useAppSelector } from '../../../../redux/store';
-import { addDays, getDay } from 'date-fns';
-import SessionViewCalendarModal from '../../../../modals/session-view-calendar-modal/session-view-calendar-modal.component';
-import { useSlots } from '../../../../hooks/useCalendar';
-import { useSessions } from '../../../../hooks/useSessions';
+import { useInfiniteSessions } from '../../../../hooks/useSessions';
+import type { EventInput } from '@fullcalendar/core';
 
 import './sessions-calendar-container.styles.scss';
 
-interface SessionsCalendarContainerProps {}
+interface SessionsCalendarContainerProps {
+  filters?: {
+    status?: string;
+    tutor_id?: number;
+  };
+}
 
-const SessionsCalendarContainer: React.FC<
-  SessionsCalendarContainerProps
-> = () => {
-  const [openViewCalendarModal, setOpenViewCalendarModal] = useState(false);
-  const [dateRange, setDateRange] = useState(() => {
-    const today = new Date(new Date().setHours(0, 0, 0, 0));
-    return {
-      from: today.toISOString(),
-      to: addDays(today, 30).toISOString(),
-    };
-  });
+/**
+ * Get background color for a session based on its status
+ * Handles both 'canceled' and 'cancelled' spellings
+ */
+const getStatusColor = (status: string): string => {
+  const normalizedStatus = status.toLowerCase();
+  if (normalizedStatus === 'completed') return '#4caf50'; // green
+  if (normalizedStatus === 'canceled' || normalizedStatus === 'cancelled')
+    return '#f44336'; // red
+  if (normalizedStatus === 'missed') return '#9e9e9e'; // gray
+  if (normalizedStatus === 'open' || normalizedStatus === 'scheduled')
+    return '#ff9800'; // orange
+  return '#3ac5f1'; // default blue
+};
 
+const SessionsCalendarContainer: React.FC<SessionsCalendarContainerProps> = ({
+  filters,
+}) => {
   const { t, i18n } = useTranslation();
   const calendarRef = useRef<FullCalendar>(null);
 
-  const currentUser = useAppSelector(selectCurrentUser);
+  // Fetch ALL sessions using infinite query
+  const {
+    data: infiniteData,
+    isLoading,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useInfiniteSessions(100, filters);
 
-  // Fetch slots with TanStack Query
-  const { data: slots = [] } = useSlots(
-    currentUser?.id!,
-    dateRange.from,
-    dateRange.to,
-    !!currentUser?.id,
-  );
-
-  // Fetch sessions with TanStack Query
-  const { data: sessionsData } = useSessions(1, 100);
-  const sessions = sessionsData?.data ?? [];
-
-  const handleDateChange = (direction?: 'next' | 'prev') => {
-    const calendarApi = calendarRef.current?.getApi();
-    const view = calendarApi?.view;
-    if (calendarApi) {
-      if (direction) {
-        direction === 'next' ? calendarApi.next() : calendarApi.prev();
-      }
-
-      const { start, end } =
-        view?.activeStart && view?.activeEnd
-          ? { start: view.activeStart, end: view.activeEnd }
-          : { start: new Date(), end: addDays(new Date(), 7) };
-
-      // Update date range to trigger refetch
-      setDateRange({
-        from: start.toISOString(),
-        to: end.toISOString(),
-      });
+  // Fetch all pages on mount
+  useEffect(() => {
+    if (hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
     }
-  };
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
-  const handleCloseViewCalendarModal = () => {
-    setOpenViewCalendarModal(false);
-  };
+  // Flatten all pages into a single array
+  const sessions = useMemo(() => {
+    if (!infiniteData?.pages) return [];
+    return infiniteData.pages.flatMap((page) => page.data);
+  }, [infiniteData]);
+
+  // Transform sessions to FullCalendar events
+  const calendarEvents: EventInput[] = useMemo(() => {
+    return sessions.map((session) => {
+      // Determine session color based on status
+      const status = session.status as string;
+      const backgroundColor = getStatusColor(status);
+
+      // Get session title
+      const tutorName = session.tutor
+        ? `${session.tutor.first_name} ${session.tutor.last_name}`
+        : 'N/A';
+      const studentName = session.student
+        ? `${session.student.first_name} ${session.student.last_name}`
+        : 'N/A';
+
+      return {
+        id: session.id.toString(),
+        title: `${tutorName} - ${studentName}`,
+        start: session.start_time,
+        end: session.end_time,
+        backgroundColor,
+        borderColor: backgroundColor,
+        textColor: '#ffffff',
+        classNames: [
+          `session-calendar-event`,
+          `session-status-${session.status}`,
+        ],
+        extendedProps: {
+          status: session.status,
+          tutor: tutorName,
+          student: studentName,
+          gradeSubject: session.grade_subject?.full_course_name || 'N/A',
+          backgroundColor, // Store for CSS fallback
+        },
+      };
+    });
+  }, [sessions]);
 
   return (
     <div className="session-calendar">
-      <FullCalendar
-        ref={calendarRef}
-        plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-        customButtons={{
-          next: { text: 'next', click: () => handleDateChange('next') },
-          prev: { text: 'prev', click: () => handleDateChange('prev') },
-          today: {
-            text: i18n.language === 'ar' ? 'اليوم' : 'today',
-            click: () => {
-              calendarRef.current?.getApi().today();
-              handleDateChange();
-            },
-          },
-          day: {
-            text: i18n.language === 'ar' ? 'يوم' : 'day',
-            click: () => {
-              calendarRef.current?.getApi().changeView('timeGridDay');
-              handleDateChange();
-            },
-          },
-          week: {
-            text: i18n.language === 'ar' ? 'أسبوع' : 'week',
-            click: () => {
-              calendarRef.current?.getApi().changeView('timeGridWeek');
-              handleDateChange();
-            },
-          },
-          month: {
-            text: i18n.language === 'ar' ? 'شهر' : 'month',
-            click: () => {
-              calendarRef.current?.getApi().changeView('dayGridMonth');
-              handleDateChange();
-            },
-          },
-        }}
-        headerToolbar={{
-          left: 'prev,next today',
-          center: 'title',
-          right: 'day,week,month',
-        }}
-        firstDay={getDay(new Date())}
-        initialView="dayGridMonth"
-        eventColor="#3ac5f1"
-        allDaySlot={false}
-        slotLabelInterval="00:30"
-        slotLabelFormat={{
-          hour: '2-digit',
-          minute: '2-digit',
-          omitZeroMinute: false,
-          meridiem: true,
-        }}
-        dayHeaderFormat={{
-          weekday: 'short',
-          month: 'short',
-          day: 'numeric',
-          omitCommas: true,
-        }}
-        buttonText={{
-          today: t('CALENDAR.BUTTONS.TODAY'),
-          month: t('CALENDAR.BUTTONS.MONTH'),
-          week: t('CALENDAR.BUTTONS.WEEK'),
-          day: t('CALENDAR.BUTTONS.DAY'),
-        }}
-        direction={i18n.dir()}
-        validRange={{ start: new Date() }}
-        events={slots}
-        eventContent={renderEventContent}
-        locale={i18n.language === 'ar' ? arLocale : undefined}
-      />
-      {openViewCalendarModal && (
-        <Dialog
-          maxWidth="md"
-          fullWidth
-          onClose={handleCloseViewCalendarModal}
-          aria-labelledby="view-calendar-dialog"
-          open={openViewCalendarModal}
-          sx={{ '& .MuiDialog-paper': { width: '100%', margin: 0 } }}
-        >
-          <SessionViewCalendarModal
-            sessions={sessions!}
-            handleClose={handleCloseViewCalendarModal}
-          />
-        </Dialog>
+      {(isLoading || isFetchingNextPage) && sessions.length === 0 ? (
+        <div className="session-calendar__loading">
+          <p>{t('MYSESSIONS.LOADING_SESSIONS')}</p>
+        </div>
+      ) : (
+        <FullCalendar
+          ref={calendarRef}
+          plugins={[dayGridPlugin]}
+          headerToolbar={{
+            left: 'prev,next today',
+            center: 'title',
+            right: '',
+          }}
+          initialView="dayGridMonth"
+          dayHeaderFormat={{
+            weekday: 'short',
+            month: 'short',
+            day: 'numeric',
+            omitCommas: true,
+          }}
+          buttonText={{
+            today: t('CALENDAR.BUTTONS.TODAY'),
+            month: t('CALENDAR.BUTTONS.MONTH'),
+          }}
+          direction={i18n.dir()}
+          locale={i18n.language === 'ar' ? arLocale : undefined}
+          events={calendarEvents}
+          eventContent={renderEventContent}
+          eventClick={() => {}} // Disable event clicks
+          editable={false}
+          selectable={false}
+          selectMirror={false}
+          height="auto"
+        />
       )}
     </div>
   );
 };
 
-const renderEventContent = (eventInfo: any) => (
-  <div>
-    <i>{eventInfo.event.title}</i>
-  </div>
-);
+interface EventInfo {
+  event: {
+    start: Date;
+    title: string;
+    extendedProps: {
+      status: string;
+      tutor: string;
+      student: string;
+      gradeSubject: string;
+      backgroundColor?: string;
+    };
+  };
+}
+
+/**
+ * Render custom content for calendar events
+ */
+const renderEventContent = (eventInfo: EventInfo) => {
+  const { event } = eventInfo;
+  const { status, tutor, student, gradeSubject, backgroundColor } =
+    event.extendedProps;
+
+  // Use stored backgroundColor or calculate from status
+  const bgColor = backgroundColor || getStatusColor(status);
+
+  return (
+    <div
+      className="session-event"
+      style={{
+        backgroundColor: bgColor,
+        color: '#ffffff',
+      }}
+      title={`${tutor} - ${student}\n${gradeSubject}\nStatus: ${status}`}
+    >
+      <div className="session-event__time">
+        {event.start.toLocaleTimeString([], {
+          hour: '2-digit',
+          minute: '2-digit',
+        })}
+      </div>
+      <div className="session-event__title">{event.title}</div>
+      <div className="session-event__status">{status}</div>
+    </div>
+  );
+};
 
 export default SessionsCalendarContainer;

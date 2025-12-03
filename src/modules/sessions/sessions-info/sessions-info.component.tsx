@@ -100,7 +100,7 @@ const SessionsInfo: FC<SessionsInfoProps> = ({ filters }) => {
         </TabPanel>
 
         <TabPanel value={tab1} index={0} dir={i18n.dir()}>
-          <SessionsCalendarContainer />
+          <SessionsCalendarContainer filters={filters} />
         </TabPanel>
       </Box>
     </Box>
