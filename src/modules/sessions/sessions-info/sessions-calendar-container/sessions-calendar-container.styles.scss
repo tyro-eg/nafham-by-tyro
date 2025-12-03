@@ -5,27 +5,161 @@
     max-width: 1100px;
     margin: 0 auto;
   }
+
+  // Ensure all days (past, present, future) have the same background
   .fc-day-today,
-  .fc-day-future {
+  .fc-day-future,
+  .fc-day-past {
     background-color: #ffffff !important;
   }
 
-  .fc-direction-ltr .fc-timegrid-slot-label-frame {
-    text-align: start;
-  }
-  .fc .fc-timegrid-slot {
-    height: 2em;
-  }
-  .fc-timegrid-col-events {
-    margin: 0;
-    text-align: center;
-    .fc-timegrid-event {
-      margin: 0;
-      border-radius: 0.6rem;
+  // Remove disabled styling from past dates
+  .fc-day-past {
+    opacity: 1 !important;
+    color: inherit !important;
+
+    .fc-daygrid-day-frame {
+      opacity: 1 !important;
+    }
+
+    .fc-daygrid-day-number {
+      color: inherit !important;
+      opacity: 1 !important;
     }
   }
+
+  // Ensure past month cells look the same
+  .fc-day-other {
+    background-color: #ffffff !important;
+    opacity: 1 !important;
+
+    .fc-daygrid-day-frame {
+      opacity: 1 !important;
+    }
+
+    .fc-daygrid-day-number {
+      color: inherit !important;
+      opacity: 1 !important;
+    }
+  }
+
+  // Ensure events are visible with proper colors
+  .fc-daygrid-event,
+  .session-calendar-event {
+    padding: 0 !important; // Remove padding so inner div fills it
+    border-radius: 0.3rem !important;
+    cursor: default !important;
+    border: none !important;
+    opacity: 1 !important;
+    display: block !important;
+    min-height: 1.5rem !important;
+    // Don't set background here - let inner div handle it
+    background-color: transparent !important;
+  }
+
+  // Apply background colors based on status classes
+  // Target both the event wrapper and the event itself
+  .fc-daygrid-event.session-status-completed,
+  .fc-event.session-status-completed {
+    background-color: #4caf50 !important;
+    border-color: #4caf50 !important;
+  }
+
+  .fc-daygrid-event.session-status-canceled,
+  .fc-event.session-status-canceled,
+  .fc-daygrid-event.session-status-cancelled,
+  .fc-event.session-status-cancelled {
+    background-color: #f44336 !important;
+    border-color: #f44336 !important;
+  }
+
+  .fc-daygrid-event.session-status-missed,
+  .fc-event.session-status-missed {
+    background-color: #9e9e9e !important;
+    border-color: #9e9e9e !important;
+  }
+
+  .fc-daygrid-event.session-status-open,
+  .fc-event.session-status-open,
+  .fc-daygrid-event.session-status-scheduled,
+  .fc-event.session-status-scheduled {
+    background-color: #ff9800 !important;
+    border-color: #ff9800 !important;
+  }
+
+  // Default color for other statuses
+  .fc-daygrid-event.session-calendar-event:not(.session-status-completed):not(
+      .session-status-canceled
+    ):not(.session-status-cancelled):not(.session-status-missed):not(
+      .session-status-open
+    ):not(.session-status-scheduled),
+  .fc-event.session-calendar-event:not(.session-status-completed):not(
+      .session-status-canceled
+    ):not(.session-status-cancelled):not(.session-status-missed):not(
+      .session-status-open
+    ):not(.session-status-scheduled) {
+    background-color: #3ac5f1 !important;
+    border-color: #3ac5f1 !important;
+  }
+
+  // Ensure event colors are visible
+  .fc-event {
+    color: #ffffff !important;
+    opacity: 1 !important;
+  }
+
+  // Ensure event background shows through
   .fc-daygrid-event {
-    padding: 0.5rem;
-    background-color: $color-primary;
+    // Ensure text is visible
+    .fc-event-title,
+    .fc-event-title-container {
+      color: #ffffff !important;
+    }
+  }
+
+  &__loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 400px;
+
+    p {
+      font-size: 1.2rem;
+      color: $color-title;
+    }
+  }
+}
+
+.session-event {
+  padding: 0.25rem;
+  font-size: 0.875rem;
+  line-height: 1.2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #ffffff !important;
+  width: 100%;
+  height: 100%;
+  border-radius: 0.3rem;
+  // Background color is applied via inline style from component
+
+  &__time {
+    font-weight: 600;
+    font-size: 0.8rem;
+    margin-bottom: 0.1rem;
+    color: #ffffff !important;
+  }
+
+  &__title {
+    font-weight: 500;
+    margin-bottom: 0.1rem;
+    color: #ffffff !important;
+  }
+
+  &__status {
+    font-size: 0.75rem;
+    opacity: 0.95;
+    text-transform: capitalize;
+    color: #ffffff !important;
   }
 }

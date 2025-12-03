@@ -31,16 +31,28 @@ export interface PrivateSessionData {
 /**
  * Fetch paginated sessions
  */
-export function useSessions(pageNumber: number = 1, pageSize: number = 10) {
+export function useSessions(
+  pageNumber: number = 1,
+  pageSize: number = 10,
+  filters?: SessionFilters,
+) {
   return useQuery({
-    queryKey: queryKeys.sessions.list({ pageNumber, pageSize }),
+    queryKey: queryKeys.sessions.list({ pageNumber, pageSize, ...filters }),
     queryFn: async () => {
-      const response = await get(`/sessions`, {
-        params: {
-          per_page: pageSize,
-          page: pageNumber,
-        },
-      });
+      const params: Record<string, any> = {
+        per_page: pageSize,
+        page: pageNumber,
+      };
+
+      // Add filters if provided
+      if (filters?.status && filters.status !== 'all') {
+        params.status = filters.status;
+      }
+      if (filters?.tutor_id) {
+        params.tutor_id = filters.tutor_id;
+      }
+
+      const response = await get(`/sessions`, { params });
       return {
         data: (response.data.data || response.data) as SessionType[],
         pagination: response.headers,
