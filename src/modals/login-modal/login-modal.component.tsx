@@ -1,18 +1,24 @@
-import { useEffect, useState, FC } from 'react';
+import { useEffect, FC } from 'react';
+// TODO: Uncomment when backend is ready
+// import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Button,
-  Dialog,
-  IconButton,
+  // TODO: Uncomment when backend is ready
+  // Dialog,
+  // IconButton,
   InputLabel,
   TextField,
 } from '@mui/material';
-import { Close, ExitToApp } from '@mui/icons-material';
+import { ExitToApp } from '@mui/icons-material';
+// TODO: Uncomment when backend is ready
+// import { Close } from '@mui/icons-material';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useNavigate } from 'react-router-dom';
 
-import ResetPasswordModal from '../reset-password/reset-password-modal.component';
+// TODO: Uncomment when backend is ready
+// import ResetPasswordModal from '../reset-password/reset-password-modal.component';
 import { loginSchema, type LoginFormData } from '../../schemas/authSchemas';
 import './login-modal.styles.scss';
 import { selectCurrentUser } from '../../redux/user/user.selectors';
@@ -54,7 +60,8 @@ const LoginModal: FC<LoginModalProps> = ({
     },
   });
 
-  const [openForgetPasswordModal, setOpenForgetPasswordModal] = useState(false);
+  // TODO: Uncomment when backend is ready
+  // const [openForgetPasswordModal, setOpenForgetPasswordModal] = useState(false);
 
   useEffect(() => {
     if (currentUser) {
@@ -81,9 +88,10 @@ const LoginModal: FC<LoginModalProps> = ({
     }
   };
 
-  const handleOpenForgetPassword = () => setOpenForgetPasswordModal(true);
-  const handleCloseForgetPasswordModal = () =>
-    setOpenForgetPasswordModal(false);
+  // TODO: Uncomment when backend is ready
+  // const handleOpenForgetPassword = () => setOpenForgetPasswordModal(true);
+  // const handleCloseForgetPasswordModal = () =>
+  //   setOpenForgetPasswordModal(false);
   const goToTerms = () => {
     navigate('/terms');
     onClose();
@@ -139,13 +147,14 @@ const LoginModal: FC<LoginModalProps> = ({
           <InputLabel htmlFor="password">
             {t('LOGIN.LOGIN_PASSWORD')}
           </InputLabel>
-          <Button
+          {/* TODO: Uncomment when backend is ready */}
+          {/* <Button
             variant="text"
             onClick={handleOpenForgetPassword}
             className={`forget-password-btn ${rtlClass}`}
           >
             {t('LOGIN.FORGET_PASSWORD')}
-          </Button>
+          </Button> */}
         </div>
         <Controller
           name="password"
@@ -191,7 +200,8 @@ const LoginModal: FC<LoginModalProps> = ({
         </div>
       </form>
 
-      {openForgetPasswordModal && (
+      {/* TODO: Uncomment when backend is ready */}
+      {/* {openForgetPasswordModal && (
         <Dialog
           maxWidth="xs"
           fullWidth
@@ -213,7 +223,7 @@ const LoginModal: FC<LoginModalProps> = ({
           </IconButton>
           <ResetPasswordModal handleClose={handleCloseForgetPasswordModal} />
         </Dialog>
-      )}
+      )} */}
     </div>
   );
 };

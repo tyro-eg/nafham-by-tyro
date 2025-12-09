@@ -1,8 +1,12 @@
-import { FC, useState } from 'react';
+import { FC, useState, useMemo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Pagination } from '@mui/material';
 
-import { useInstructors } from '../../hooks/useInstructors';
+import {
+  useInstructors,
+  useInfiniteInstructors,
+} from '../../hooks/useInstructors';
+import { Instructor } from '../../assets/types';
 
 import { ReactComponent as EmptyImg } from '../../assets/images/empty.svg';
 import PrivateSessionsFilter from './private-sessions-filter/private-sessions-filter.component';
@@ -13,11 +17,89 @@ import './index.styles.scss';
 const PrivateSessions: FC = () => {
   const { t } = useTranslation();
   const [currentPage, setCurrentPage] = useState(1);
+  const [searchQuery, setSearchQuery] = useState('');
   const pageSize = 10;
 
-  const { data } = useInstructors(currentPage, pageSize);
-  const instructors = data?.data || [];
-  const instructorsPagination = data?.pagination;
+  // Use infinite query when searching to get all instructors across all pages
+  const hasSearchQuery = !!searchQuery.trim();
+  const { data: paginatedData } = useInstructors(currentPage, pageSize);
+  const {
+    data: infiniteData,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useInfiniteInstructors(pageSize);
+
+  // Fetch all pages when searching to enable searching across all instructors
+  useEffect(() => {
+    if (hasSearchQuery && hasNextPage && !isFetchingNextPage) {
+      // Keep fetching until all pages are loaded
+      fetchNextPage();
+    }
+  }, [
+    hasSearchQuery,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+    infiniteData,
+  ]);
+
+  // Get all instructors from infinite query when searching, otherwise use paginated data
+  const allInstructors = useMemo(() => {
+    if (hasSearchQuery && infiniteData?.pages) {
+      // Flatten all pages from infinite query
+      return infiniteData.pages.flatMap((page) => page.data);
+    }
+    return paginatedData?.data || [];
+  }, [hasSearchQuery, infiniteData, paginatedData]);
+
+  const instructorsPagination = paginatedData?.pagination;
+
+  // Reset to page 1 when search query changes
+  useEffect(() => {
+    if (hasSearchQuery && currentPage !== 1) {
+      setCurrentPage(1);
+    }
+  }, [hasSearchQuery, currentPage]);
+
+  /**
+   * Filter instructors client-side based on search query
+   * Searches in: first_name, last_name, bio, and grade_subjects
+   */
+  const filteredInstructors = useMemo(() => {
+    if (!hasSearchQuery) {
+      return allInstructors;
+    }
+
+    const query = searchQuery.toLowerCase().trim();
+
+    return allInstructors.filter((instructor: Instructor) => {
+      // Search in name
+      const fullName =
+        `${instructor.first_name} ${instructor.last_name}`.toLowerCase();
+      if (fullName.includes(query)) {
+        return true;
+      }
+
+      // Search in bio
+      if (instructor.bio?.toLowerCase().includes(query)) {
+        return true;
+      }
+
+      // Search in grade_subjects (course names)
+      if (
+        instructor.grade_subjects?.some((subject) =>
+          subject.full_course_name?.toLowerCase().includes(query),
+        )
+      ) {
+        return true;
+      }
+
+      return false;
+    });
+  }, [allInstructors, searchQuery, hasSearchQuery]);
+
+  const instructors = filteredInstructors;
 
   const handlePageChange = (
     _event: React.ChangeEvent<unknown>,
@@ -45,7 +127,10 @@ const PrivateSessions: FC = () => {
 
   return (
     <div>
-      <PrivateSessionsFilter />
+      <PrivateSessionsFilter
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+      />
       <section className="instructor-list">
         <div className="instructor-list__container container">
           {instructors?.map((instructor) => (
@@ -57,15 +142,18 @@ const PrivateSessions: FC = () => {
           renderNoResults()}
       </section>
 
-      {instructors?.length && instructorsPagination?.['total-pages'] && (
-        <Pagination
-          color="primary"
-          size="large"
-          page={currentPage}
-          count={Number(instructorsPagination['total-pages'])}
-          onChange={handlePageChange}
-        />
-      )}
+      {/* Hide pagination when searching since we're filtering only current page */}
+      {!searchQuery.trim() &&
+        instructors?.length &&
+        instructorsPagination?.['total-pages'] && (
+          <Pagination
+            color="primary"
+            size="large"
+            page={currentPage}
+            count={Number(instructorsPagination['total-pages'])}
+            onChange={handlePageChange}
+          />
+        )}
     </div>
   );
 };

@@ -1,16 +1,5 @@
-import { FC, useState, useEffect } from 'react';
-import {
-  Button,
-  Container,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-  SelectChangeEvent,
-  useMediaQuery,
-} from '@mui/material';
-import { Search } from '@mui/icons-material';
-import { useTheme } from '@mui/material/styles';
+import { FC, ChangeEvent } from 'react';
+import { Button, Container } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 
 import { useRtlClass } from '../../../assets/utils/utils';
@@ -20,53 +9,68 @@ import SearchIcon from '../../../assets/images/Icon.png';
 import './private-sessions-filter.styles.scss';
 
 // TODO: These categories should be fetched from the API
-const CATEGORIES = [
-  { id: 1, name: 'Languages', visible: true },
-  { id: 2, name: 'Business', visible: true },
-  { id: 4, name: 'Exam Preparation', visible: true },
-  { id: 5, name: 'Math', visible: true },
-  { id: 256, name: 'Science', visible: true },
-  { id: 260, name: 'Soft Skills', visible: true },
-  { id: 265, name: 'IG-', visible: true },
-  { id: 267, name: 'National-English', visible: true },
-  { id: 270, name: 'Programming', visible: true },
-  { id: 274, name: 'SEO', visible: true },
-  { id: 281, name: 'Arabic', visible: true },
-  { id: 283, name: 'ACT English', visible: true },
-  { id: 287, name: 'IG Arabic', visible: true },
-  { id: 291, name: 'Primary', visible: true },
-];
+// TODO: Uncomment when backend is ready
+// const CATEGORIES = [
+//   { id: 1, name: 'Languages', visible: true },
+//   { id: 2, name: 'Business', visible: true },
+//   { id: 4, name: 'Exam Preparation', visible: true },
+//   { id: 5, name: 'Math', visible: true },
+//   { id: 256, name: 'Science', visible: true },
+//   { id: 260, name: 'Soft Skills', visible: true },
+//   { id: 265, name: 'IG-', visible: true },
+//   { id: 267, name: 'National-English', visible: true },
+//   { id: 270, name: 'Programming', visible: true },
+//   { id: 274, name: 'SEO', visible: true },
+//   { id: 281, name: 'Arabic', visible: true },
+//   { id: 283, name: 'ACT English', visible: true },
+//   { id: 287, name: 'IG Arabic', visible: true },
+//   { id: 291, name: 'Primary', visible: true },
+// ];
 
-const PrivateSessionsFilter: FC = () => {
+interface PrivateSessionsFilterProps {
+  searchQuery: string;
+  onSearchChange: (query: string) => void;
+}
+
+const PrivateSessionsFilter: FC<PrivateSessionsFilterProps> = ({
+  searchQuery,
+  onSearchChange,
+}) => {
   const { t } = useTranslation();
-  const theme = useTheme();
-  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const rtlClass = useRtlClass();
 
-  const [category, setCategory] = useState('');
-  const [field, setField] = useState('');
-  const [listBody, setListBody] = useState(!isSmallScreen);
+  // TODO: Uncomment when backend is ready
+  // const theme = useTheme();
+  // const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+  // const [category, setCategory] = useState('');
+  // const [field, setField] = useState('');
+  // const [listBody, setListBody] = useState(!isSmallScreen);
 
-  useEffect(() => {
-    setListBody(!isSmallScreen);
-  }, [isSmallScreen]);
+  // useEffect(() => {
+  //   setListBody(!isSmallScreen);
+  // }, [isSmallScreen]);
 
-  const handleCategoryChange = (event: SelectChangeEvent<string>) => {
-    if (event.target.value === '') setField('');
-    setCategory(event.target.value);
+  // const handleCategoryChange = (event: SelectChangeEvent<string>) => {
+  //   if (event.target.value === '') setField('');
+  //   setCategory(event.target.value);
+  // };
+
+  // const handleFieldChange = (event: SelectChangeEvent<string>) => {
+  //   setField(event.target.value);
+  // };
+
+  // const toggleListBody = () => setListBody((prev) => !prev);
+
+  const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) => {
+    onSearchChange(event.target.value);
   };
-
-  const handleFieldChange = (event: SelectChangeEvent<string>) => {
-    setField(event.target.value);
-  };
-
-  const toggleListBody = () => setListBody((prev) => !prev);
 
   return (
     <div className="home-filter">
       <Container maxWidth="lg">
         <div className="home-filter__container">
-          <div
+          {/* TODO: Uncomment when backend is ready */}
+          {/* <div
             className={`home-filter__dropdown-container ${
               listBody ? 'visible' : 'hidden'
             }`}
@@ -115,20 +119,23 @@ const PrivateSessionsFilter: FC = () => {
                 </Select>
               </FormControl>
             </div>
-          </div>
+          </div> */}
 
           <div className={`home-filter__field--search ${rtlClass}`}>
             <input
               type="search"
               placeholder={t('COURSES.COURSE_FILTER.SEARCH_PLACEHOLDER')}
               className={rtlClass}
+              value={searchQuery}
+              onChange={handleSearchChange}
             />
             <Button className={rtlClass} type="button">
               <img src={SearchIcon} alt="Search" />
             </Button>
           </div>
 
-          <div className={`home-filter__field--filter ${rtlClass}`}>
+          {/* TODO: Uncomment when backend is ready */}
+          {/* <div className={`home-filter__field--filter ${rtlClass}`}>
             <Button
               onClick={toggleListBody}
               startIcon={<Search />}
@@ -137,7 +144,7 @@ const PrivateSessionsFilter: FC = () => {
             >
               {t('COURSES.COURSE_FILTER.FILTERS')}
             </Button>
-          </div>
+          </div> */}
         </div>
       </Container>
     </div>
