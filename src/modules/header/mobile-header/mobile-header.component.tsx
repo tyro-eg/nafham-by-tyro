@@ -2,7 +2,9 @@ import { FC, useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Button, IconButton } from '@mui/material';
-import { Menu, Info } from '@mui/icons-material';
+import { Menu } from '@mui/icons-material';
+// TODO: Uncomment when backend is ready
+// import { Info } from '@mui/icons-material';
 
 import { useAppSelector } from '../../../redux/store';
 import { selectCurrentUser } from '../../../redux/user/user.selectors';
@@ -13,7 +15,9 @@ import { HeaderProps } from '../main-header/main-header.component';
 
 import './mobile-header.styles.scss';
 
-const MobileHeader: FC<HeaderProps> = ({ openFreeTrail, openEmailConfirm }) => {
+const MobileHeader: FC<HeaderProps> = ({ openFreeTrail }) => {
+  // TODO: Uncomment when backend is ready
+  // const MobileHeader: FC<HeaderProps> = ({ openFreeTrail, openEmailConfirm }) => {
   const { t } = useTranslation();
   const signOutMutation = useSignOut();
 
@@ -38,7 +42,8 @@ const MobileHeader: FC<HeaderProps> = ({ openFreeTrail, openEmailConfirm }) => {
         className={`app-header-mobile__overlay ${mobileHeader ? 'active' : ''}`}
       ></div>
       <div className={`app-header-mobile ${mobileHeader ? 'active' : ''}`}>
-        {currentUser && !currentUser.email_confirmed && (
+        {/* TODO: Uncomment when backend is ready */}
+        {/* {currentUser && !currentUser.email_confirmed && (
           <div className="header__banner">
             <Info />
             <span className="header__banner-text">
@@ -53,7 +58,7 @@ const MobileHeader: FC<HeaderProps> = ({ openFreeTrail, openEmailConfirm }) => {
               </button>
             </span>
           </div>
-        )}
+        )} */}
         <div className="app-header-mobile__top">
           <Link to="/" onClick={closeMobileHeader}>
             <img src={logo} alt="tyro logo" />

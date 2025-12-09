@@ -713,7 +713,8 @@
       "TITLE": "Sessions Overview",
       "UPCOMING": "Upcoming Sessions",
       "UNSCHEDULED": "Unscheduled Hours",
-      "PREVIOUS": "Previous Sessions"
+      "PREVIOUS": "Previous Sessions",
+      "CANCELLED": "Cancelled Sessions"
     },
     "SCHEDULE": {
       "TITLE": "Unscheduled Sessions",

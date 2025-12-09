@@ -105,7 +105,9 @@ const SessionListCard: React.FC<SessionListCardProps> = ({ session }) => {
   };
 
   const goToSession = () => {
-    navigate(`/session-network-test/${session.id}`);
+    if (session.session_link) {
+      window.open(session.session_link, '_blank');
+    }
   };
 
   // const openCancelModal = (type: 'cancel' | 'end') => {
@@ -258,6 +260,7 @@ const SessionListCard: React.FC<SessionListCardProps> = ({ session }) => {
                   color="primary"
                   variant="contained"
                   onClick={goToSession}
+                  disabled={!session.session_link}
                 >
                   {t('MYSESSIONS.MAIN.CARD.GOTO')}
                 </Button>

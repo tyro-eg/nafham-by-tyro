@@ -2,11 +2,12 @@ import { useState } from 'react';
 import { Dialog, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 
-import { useAppSelector } from '../../redux/store';
-import { selectCurrentUser } from '../../redux/user/user.selectors';
+// import { useAppSelector } from '../../redux/store';
+// import { selectCurrentUser } from '../../redux/user/user.selectors';
 import MainHeader from './main-header/main-header.component';
 import MobileHeader from './mobile-header/mobile-header.component';
-import EmailConfirmationModal from '../../modals/email-confirmation-modal/email-confirmation-modal.component';
+// TODO: Uncomment when backend is ready
+// import EmailConfirmationModal from '../../modals/email-confirmation-modal/email-confirmation-modal.component';
 import RegisterModal from '../../modals/register-modal/register-modal.component';
 import LoginModal from '../../modals/login-modal/login-modal.component';
 
@@ -16,42 +17,48 @@ const Header = () => {
   const theme = useTheme();
   const isXs = useMediaQuery(theme.breakpoints.down('sm'));
 
-  const currentUser = useAppSelector(selectCurrentUser);
+  // const currentUser = useAppSelector(selectCurrentUser);
 
   const [openRegisterModal, setOpenRegisterModal] = useState(false);
   const [openLoginModal, setOpenLoginModal] = useState(false);
-  const [openEmailConfirmModal, setOpenEmailConfirmModal] = useState(false);
+  // TODO: Uncomment when backend is ready
+  // const [openEmailConfirmModal, setOpenEmailConfirmModal] = useState(false);
 
   const triggerOpenFreeTrailModal = () => {
     setOpenRegisterModal(true);
   };
 
-  const handleCloseEmailConfirmModal = () => {
-    setOpenEmailConfirmModal(false);
-  };
+  // TODO: Uncomment when backend is ready
+  // const handleCloseEmailConfirmModal = () => {
+  //   setOpenEmailConfirmModal(false);
+  // };
 
-  const triggerOpenEmailConfirmModal = () => {
-    setOpenEmailConfirmModal(true);
-  };
+  // const triggerOpenEmailConfirmModal = () => {
+  //   setOpenEmailConfirmModal(true);
+  // };
 
   return (
     <div
       className={`header ${
-        !!currentUser && !!currentUser.id && !currentUser.email_confirmed
-          ? 'header__withBanner'
-          : ''
+        // TODO: Uncomment when backend is ready
+        // !!currentUser && !!currentUser.id && !currentUser.email_confirmed
+        //   ? 'header__withBanner'
+        //   : ''
+        ''
       }`}
     >
       {!isXs && (
         <MainHeader
           openFreeTrail={triggerOpenFreeTrailModal}
-          openEmailConfirm={triggerOpenEmailConfirmModal}
+          // TODO: Uncomment when backend is ready
+          // openEmailConfirm={triggerOpenEmailConfirmModal}
         />
       )}
       {isXs && (
         <MobileHeader
           openFreeTrail={triggerOpenFreeTrailModal}
-          openEmailConfirm={triggerOpenEmailConfirmModal}
+          // TODO: Uncomment when backend is ready
+          // openEmailConfirm={triggerOpenEmailConfirmModal}
         />
       )}
       {openRegisterModal && (
@@ -82,7 +89,8 @@ const Header = () => {
           />
         </Dialog>
       )}
-      {openEmailConfirmModal && currentUser && currentUser.email && (
+      {/* TODO: Uncomment when backend is ready */}
+      {/* {openEmailConfirmModal && currentUser && currentUser.email && (
         <Dialog
           maxWidth="sm"
           fullWidth
@@ -102,7 +110,7 @@ const Header = () => {
             onClose={handleCloseEmailConfirmModal}
           />
         </Dialog>
-      )}
+      )} */}
     </div>
   );
 };

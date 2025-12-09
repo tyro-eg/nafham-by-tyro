@@ -713,7 +713,8 @@
       "TITLE": "تقرير الجلسات",
       "UPCOMING": "جلسات قادمة",
       "UNSCHEDULED": "ساعة غير محجوزة",
-      "PREVIOUS": "جلسات سابقة"
+      "PREVIOUS": "جلسات سابقة",
+      "CANCELLED": "جلسات ملغاة"
     },
     "SCHEDULE": {
       "TITLE": "إحجز جلستك",
