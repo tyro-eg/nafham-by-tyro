@@ -2,7 +2,9 @@ import { FC, useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { AppBar, Button, Container, Toolbar, Popover } from '@mui/material';
-import { ExpandMore, Info } from '@mui/icons-material';
+import { ExpandMore } from '@mui/icons-material';
+// TODO: Uncomment when backend is ready
+// import { Info } from '@mui/icons-material';
 
 import { useAppSelector } from '../../../redux/store';
 import { selectCurrentUser } from '../../../redux/user/user.selectors';
@@ -16,10 +18,13 @@ import './main-header.styles.scss';
 
 export interface HeaderProps {
   openFreeTrail: () => void;
-  openEmailConfirm?: () => void;
+  // TODO: Uncomment when backend is ready
+  // openEmailConfirm?: () => void;
 }
 
-const MainHeader: FC<HeaderProps> = ({ openFreeTrail, openEmailConfirm }) => {
+const MainHeader: FC<HeaderProps> = ({ openFreeTrail }) => {
+  // TODO: Uncomment when backend is ready
+  // const MainHeader: FC<HeaderProps> = ({ openFreeTrail, openEmailConfirm }) => {
   const { t } = useTranslation();
   const signOutMutation = useSignOut();
   const rtlClass = useRtlClass();
@@ -37,7 +42,8 @@ const MainHeader: FC<HeaderProps> = ({ openFreeTrail, openEmailConfirm }) => {
 
   return (
     <AppBar sx={{ backgroundColor: '#fffffff7' }} position="fixed">
-      {!!currentUser &&
+      {/* TODO: Uncomment when backend is ready */}
+      {/* {!!currentUser &&
         !!currentUser?.email &&
         !currentUser?.email_confirmed && (
           <div className="header__banner">
@@ -54,7 +60,7 @@ const MainHeader: FC<HeaderProps> = ({ openFreeTrail, openEmailConfirm }) => {
               </button>
             </span>
           </div>
-        )}
+        )} */}
       <Toolbar>
         <Container maxWidth="lg">
           <div className="container header-container">

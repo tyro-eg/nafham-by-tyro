@@ -1,28 +1,33 @@
-import { useState } from 'react';
+// TODO: Uncomment when backend is ready
+// import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import {
   Button,
-  Dialog,
-  IconButton,
+  // TODO: Uncomment when backend is ready
+  // Dialog,
+  // IconButton,
   InputLabel,
   TextField as MuiTextField,
 } from '@mui/material';
-import { Close } from '@mui/icons-material';
+// TODO: Uncomment when backend is ready
+// import { Close } from '@mui/icons-material';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { loginSchema, type LoginFormData } from '../../schemas/authSchemas';
 import { useRtlClass } from '../../assets/utils/utils';
 
 import './login.styles.scss';
-import ResetPasswordModal from '../../modals/reset-password/reset-password-modal.component';
+// TODO: Uncomment when backend is ready
+// import ResetPasswordModal from '../../modals/reset-password/reset-password-modal.component';
 import { useSignIn } from '../../hooks/useAuth';
 
 const Login = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const rtlClass = useRtlClass();
-  const [openForgetPasswordModal, setOpenForgetPasswordModal] = useState(false);
+  // TODO: Uncomment when backend is ready
+  // const [openForgetPasswordModal, setOpenForgetPasswordModal] = useState(false);
 
   const signInMutation = useSignIn();
 
@@ -38,9 +43,10 @@ const Login = () => {
     },
   });
 
-  const handleCloseForgetPasswordModal = () => {
-    setOpenForgetPasswordModal(false);
-  };
+  // TODO: Uncomment when backend is ready
+  // const handleCloseForgetPasswordModal = () => {
+  //   setOpenForgetPasswordModal(false);
+  // };
 
   const goToTerms = () => navigate('/terms');
 
@@ -85,13 +91,14 @@ const Login = () => {
           <InputLabel htmlFor="password">
             {t('LOGIN.LOGIN_PASSWORD')}
           </InputLabel>
-          <Button
+          {/* TODO: Uncomment when backend is ready */}
+          {/* <Button
             variant="text"
             className={`forget-password-btn ${rtlClass}`}
             onClick={() => setOpenForgetPasswordModal(true)}
           >
             <span>{t('LOGIN.FORGET_PASSWORD')}</span>
-          </Button>
+          </Button> */}
         </div>
         <Controller
           name="password"
@@ -154,7 +161,8 @@ const Login = () => {
           </Button>
         </div>
       </form>
-      {openForgetPasswordModal && (
+      {/* TODO: Uncomment when backend is ready */}
+      {/* {openForgetPasswordModal && (
         <Dialog
           maxWidth="xs"
           fullWidth
@@ -178,7 +186,7 @@ const Login = () => {
           </IconButton>
           <ResetPasswordModal handleClose={handleCloseForgetPasswordModal} />
         </Dialog>
-      )}
+      )} */}
     </div>
   );
 };

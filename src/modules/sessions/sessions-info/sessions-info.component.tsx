@@ -7,12 +7,14 @@ import { SessionFilters } from '../../../lib/queryKeys';
 
 import TabPanel from '../../../component/tabs/tab-banal.component';
 import SessionsList from './sessions-list/sessions-list.component';
-import SessionsRate, {
-  RateSession,
-} from '../sessions-rate/sessions-rate.component';
+// TODO: Uncomment when backend is ready
+// import SessionsRate, {
+//   RateSession,
+// } from '../sessions-rate/sessions-rate.component';
 import SessionsCalendarContainer from './sessions-calendar-container/sessions-calendar-container.component';
 
-import UNRATED_SESSIONS_DATA from '../sessions-rate/unrated-sessions-data';
+// TODO: Uncomment when backend is ready
+// import UNRATED_SESSIONS_DATA from '../sessions-rate/unrated-sessions-data';
 
 import './sessions-info.styles.scss';
 
@@ -24,7 +26,7 @@ interface SessionsInfoProps {
  * SessionsInfo Component
  *
  * Manages the sessions view with tabs for Calendar/List views
- * and nested tabs for Sessions/Rate views.
+ * and nested tabs for Sessions views.
  * Passes filters down to SessionsList component.
  *
  * @param filters - Session filters from parent component
@@ -78,24 +80,26 @@ const SessionsInfo: FC<SessionsInfoProps> = ({ filters }) => {
               label={t('MYSESSIONS.TABS.SESSIONS')}
               {...tabsProps(0)}
             />
-            <Tab
+            {/* TODO: Uncomment when backend is ready */}
+            {/* <Tab
               className="tab2"
               label={t('MYSESSIONS.TABS.RATE')}
               {...tabsProps(1)}
-            />
+            /> */}
           </Tabs>
 
           <Box className="session-list-tabs">
             <TabPanel value={tab2} index={0} dir={i18n.dir()}>
               <SessionsList filters={filters} />
             </TabPanel>
-            <TabPanel value={tab2} index={1} dir={i18n.dir()}>
+            {/* TODO: Uncomment when backend is ready */}
+            {/* <TabPanel value={tab2} index={1} dir={i18n.dir()}>
               {UNRATED_SESSIONS_DATA && (
                 <SessionsRate
                   unratedSessions={UNRATED_SESSIONS_DATA as RateSession[]}
                 />
               )}
-            </TabPanel>
+            </TabPanel> */}
           </Box>
         </TabPanel>
 

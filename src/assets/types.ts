@@ -213,4 +213,5 @@ export type SessionType = {
     reviews: number;
   };
   updated_at: string;
+  session_link: string;
 };

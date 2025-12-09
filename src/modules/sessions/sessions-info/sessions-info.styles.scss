@@ -44,7 +44,9 @@
 
     .session-tab2 {
       .MuiTabs-flexContainer {
-        width: 35rem;
+        // TODO undo this when backend rate is ready
+        // width: 35rem;
+        width: 17.5rem;
         background-color: #eaeef1;
         color: $color-body;
         border-radius: 16px 2px;
@@ -56,7 +58,9 @@
           font-size: 2rem;
           line-height: 40px;
           padding: 1rem 2rem;
-          width: 50%;
+          // TODO undo this when backend rate is ready
+          // width: 50%;
+          width: 100%;
           border-radius: 16px 2px;
 
           @include respond(phone) {
