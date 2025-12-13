@@ -2,12 +2,10 @@ import { FC, useState, useMemo, useEffect } from 'react';
 
 import { useRtlClass } from '../../assets/utils/utils';
 import { SessionFilters } from '../../lib/queryKeys';
-import { usePackages } from '../../hooks/usePackages';
 import { useInfiniteSessions } from '../../hooks/useSessions';
 
 import SessionsInfo from './sessions-info/sessions-info.component';
 import SessionsOverview from './sessions-overview/sessions-overview.component';
-import SessionsSchedule from './sessions-schedule/sessions-schedule.component';
 import SessionFilter from './session-filter/session-filter.component';
 
 import './index.styles.scss';
@@ -21,13 +19,6 @@ import './index.styles.scss';
 const Sessions: FC = () => {
   const rtlClass = useRtlClass();
   const [filters, setFilters] = useState<SessionFilters>({});
-
-  // Fetch packages with unscheduled sessions
-  const { data: packagesResponse, isLoading: isLoadingPackages } = usePackages(
-    1,
-    20,
-  );
-  const packages = packagesResponse?.data || [];
 
   // Fetch all sessions to calculate overview statistics
   const {
@@ -75,19 +66,13 @@ const Sessions: FC = () => {
       (session) => session.status === 'canceled',
     );
 
-    // Calculate total unscheduled time from packages
-    const totalUnscheduledHours = packages.reduce(
-      (total, pkg) => total + (pkg.remaining_hours || 0),
-      0,
-    );
-
     return {
       previous_sessions_count: previousSessions.length,
       upcoming_sessions_count: upcomingSessions.length,
-      total_unscheduled_time_in_hours: totalUnscheduledHours,
+      total_unscheduled_time_in_hours: 0, // Packages moved to separate page
       canceled_sessions_count: canceledSessions.length,
     };
-  }, [allSessions, packages]);
+  }, [allSessions]);
 
   const handleFiltersChange = (newFilters: SessionFilters) => {
     setFilters(newFilters);
@@ -107,11 +92,6 @@ const Sessions: FC = () => {
       </div>
       <div className="sessions__container container">
         <SessionsInfo filters={filters} />
-      </div>
-      <div className="sessions__container container">
-        {!isLoadingPackages && packages.length > 0 && (
-          <SessionsSchedule packages={packages} />
-        )}
       </div>
     </section>
   );

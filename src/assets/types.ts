@@ -88,7 +88,7 @@ export type Package = {
   grade_subject: GradeSubject;
   initial_hours: number;
   original_hours: number;
-  package_type: 'private_session' | 'trial_session';
+  package_type: 'private_session' | 'trial_session' | 'group_course';
   payment_method: string;
   remaining_hours: number;
   slug: string;

@@ -90,6 +90,8 @@ export const queryKeys = {
     lists: () => [...queryKeys.packages.all, 'list'] as const,
     list: (params?: PaginationParams) =>
       [...queryKeys.packages.lists(), params] as const,
+    infinite: (params?: PaginationParams) =>
+      [...queryKeys.packages.all, 'infinite', params] as const,
     details: () => [...queryKeys.packages.all, 'detail'] as const,
     detail: (id: number) => [...queryKeys.packages.details(), id] as const,
   },
