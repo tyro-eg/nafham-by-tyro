@@ -160,6 +160,16 @@ const MobileHeader: FC<HeaderProps> = ({ openFreeTrail }) => {
               >
                 {t('NAVIGATION.SESSIONS')}
               </NavLink>
+
+              <NavLink
+                className={({ isActive }) =>
+                  isActive ? 'menu-item active' : 'menu-item'
+                }
+                to="/my_packages"
+                onClick={closeMobileHeader}
+              >
+                {t('NAVIGATION.PACKAGES')}
+              </NavLink>
             </>
           )}
 

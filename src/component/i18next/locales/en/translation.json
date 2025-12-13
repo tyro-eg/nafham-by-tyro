@@ -34,6 +34,7 @@
     "IELTS": "IELTS",
     "ACT": "ACT",
     "SESSIONS": "My Sessions",
+    "PACKAGES": "My Packages",
     "TERMS": "Terms & Conditions",
     "FUNDS": "Add Funds"
   },
@@ -748,6 +749,40 @@
         "THANKYOU": "Thank You",
         "THANKYOU2": "Your rating submitted successfully. Thank you for your cooperation with us"
       }
+    }
+  },
+  "MYPACKAGES": {
+    "TITLE": "My Packages",
+    "NO_PACKAGES_TITLE": "No Packages Found",
+    "NO_PACKAGES_SUBTITLE": "You don't have any packages yet.",
+    "LOADING_PACKAGES": "Loading packages...",
+    "LOADING_MORE": "Loading more packages...",
+    "ERROR_TITLE": "Error Loading Packages",
+    "ERROR_SUBTITLE": "Failed to load packages. Please try again.",
+    "CARD": {
+      "TYPE": "Package Type",
+      "TRIAL_SESSION": "Trial Session",
+      "PRIVATE_SESSION": "Private Session",
+      "GROUP_COURSE": "Group Course",
+      "REMAINING_HOURS": "Remaining Hours",
+      "ORIGINAL_HOURS": "Original Hours",
+      "HOURS": "Hours",
+      "COURSE": "Course",
+      "AMOUNT_PAID": "Amount Paid",
+      "PAYMENT_METHOD": "Payment Method",
+      "PAYMENT_METHODS": {
+        "CASH": "Cash",
+        "CREDIT_CARD": "Credit Card",
+        "VODAFONE_CASH": "Vodafone Cash",
+        "BANK_TRANSFER": "Bank Transfer",
+        "FAWRY": "Fawry",
+        "WESTERN_UNION": "Western Union"
+      },
+      "CREATED_DATE": "Created Date",
+      "UPDATED_DATE": "Updated Date",
+      "CURRENCY": "EGP",
+      "OTHER": "Other",
+      "NOT_AVAILABLE": "Not Available"
     }
   },
   "DIRECTORY": {

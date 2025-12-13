@@ -29,6 +29,7 @@ const PrivateSessions = lazy(
 //   () => import('../../modules/courses/course-details/index.component'),
 // );
 const Sessions = lazy(() => import('../../modules/sessions/index.component'));
+const Packages = lazy(() => import('../../modules/packages/index.component'));
 const Checkout = lazy(() => import('../../modules/checkout/index.component'));
 const Terms = lazy(() => import('../../modules/terms/index.component'));
 const NotFound404 = lazy(() => import('../../modules/404/index.component'));
@@ -74,6 +75,10 @@ const RoutesComponent: React.FC<RoutesProps> = ({ currentUser }) => (
       <Route
         path="/my_sessions"
         element={<GuardedRoute element={<Sessions />} auth={!!currentUser} />}
+      />
+      <Route
+        path="/my_packages"
+        element={<GuardedRoute element={<Packages />} auth={!!currentUser} />}
       />
       <Route
         path="/profile/:id"
