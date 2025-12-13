@@ -124,6 +124,15 @@ const MainHeader: FC<HeaderProps> = ({ openFreeTrail }) => {
                       >
                         {t('NAVIGATION.SESSIONS')}
                       </NavLink>
+
+                      <NavLink
+                        className={({ isActive }) =>
+                          isActive ? 'menu-item active' : 'menu-item'
+                        }
+                        to="/my_packages"
+                      >
+                        {t('NAVIGATION.PACKAGES')}
+                      </NavLink>
                     </>
                   )}
                 </div>

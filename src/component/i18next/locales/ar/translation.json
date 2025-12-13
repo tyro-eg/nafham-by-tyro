@@ -34,6 +34,7 @@
     "IELTS": "IELTS",
     "ACT": "ACT",
     "SESSIONS": "محاضراتي",
+    "PACKAGES": "باقاتي",
     "TERMS": "الأحكام والشروط",
     "FUNDS": "إضافة الأموال"
   },
@@ -748,6 +749,40 @@
         "THANKYOU": "شكراً",
         "THANKYOU2": "تم إرسال تقييمك بنجاح. شكرا لتعاونكم معنا"
       }
+    }
+  },
+  "MYPACKAGES": {
+    "TITLE": "باقاتي",
+    "NO_PACKAGES_TITLE": "لا توجد باقات",
+    "NO_PACKAGES_SUBTITLE": "ليس لديك أي باقات حتى الآن.",
+    "LOADING_PACKAGES": "جاري تحميل الباقات...",
+    "LOADING_MORE": "جاري تحميل المزيد من الباقات...",
+    "ERROR_TITLE": "خطأ في تحميل الباقات",
+    "ERROR_SUBTITLE": "فشل تحميل الباقات. يرجى المحاولة مرة أخرى.",
+    "CARD": {
+      "TYPE": "نوع الباقة",
+      "TRIAL_SESSION": "جلسة تجريبية",
+      "PRIVATE_SESSION": "جلسة خاصة",
+      "GROUP_COURSE": "دورة جماعية",
+      "REMAINING_HOURS": "الساعات المتبقية",
+      "ORIGINAL_HOURS": "الساعات الأصلية",
+      "HOURS": "ساعات",
+      "COURSE": "المادة",
+      "AMOUNT_PAID": "المبلغ المدفوع",
+      "PAYMENT_METHOD": "طريقة الدفع",
+      "PAYMENT_METHODS": {
+        "CASH": "نقدي",
+        "CREDIT_CARD": "بطاقة ائتمانية",
+        "VODAFONE_CASH": "فودافون كاش",
+        "BANK_TRANSFER": "تحويل بنكي",
+        "FAWRY": "فوري",
+        "WESTERN_UNION": "ويسترن يونيون"
+      },
+      "CREATED_DATE": "تاريخ الإنشاء",
+      "UPDATED_DATE": "تاريخ التحديث",
+      "CURRENCY": "جنيه",
+      "OTHER": "أخرى",
+      "NOT_AVAILABLE": "غير متاح"
     }
   },
   "DIRECTORY": {
