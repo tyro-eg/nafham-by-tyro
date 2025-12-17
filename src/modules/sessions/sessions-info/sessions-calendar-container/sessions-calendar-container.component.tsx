@@ -1,10 +1,14 @@
-import React, { useRef, useMemo, useEffect } from 'react';
+import React, { useRef, useMemo, useEffect, useState } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import arLocale from '@fullcalendar/core/locales/ar-kw';
 import { useTranslation } from 'react-i18next';
+import { Popover } from '@mui/material';
+import type { EventClickArg } from '@fullcalendar/core';
 import { useInfiniteSessions } from '../../../../hooks/useSessions';
 import type { EventInput } from '@fullcalendar/core';
+import { SessionType } from '../../../../assets/types';
+import SessionCalendarDetailsModal from '../../../../modals/session-calendar-details-modal/session-calendar-details-modal.component';
 
 import './sessions-calendar-container.styles.scss';
 
@@ -35,6 +39,10 @@ const SessionsCalendarContainer: React.FC<SessionsCalendarContainerProps> = ({
 }) => {
   const { t, i18n } = useTranslation();
   const calendarRef = useRef<FullCalendar>(null);
+  const [selectedSession, setSelectedSession] = useState<SessionType | null>(
+    null,
+  );
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
   // Fetch ALL sessions using infinite query
   const {
@@ -91,10 +99,36 @@ const SessionsCalendarContainer: React.FC<SessionsCalendarContainerProps> = ({
           student: studentName,
           gradeSubject: session.grade_subject?.full_course_name || 'N/A',
           backgroundColor, // Store for CSS fallback
+          sessionLink: session.session_link,
+          sessionId: session.id, // For finding session in array
         },
       };
     });
-  }, [sessions]);
+  }, [sessions, t]);
+
+  /**
+   * Handle event click - open popover with session details
+   */
+  const handleEventClick = (clickInfo: EventClickArg) => {
+    const sessionId = parseInt(clickInfo.event.id, 10);
+    const session = sessions.find((s) => s.id === sessionId);
+
+    if (session) {
+      setSelectedSession(session);
+      // Use the click event's target as anchor for positioning
+      setAnchorEl(clickInfo.jsEvent.target as HTMLElement);
+    }
+  };
+
+  /**
+   * Handle popover close
+   */
+  const handleClosePopover = () => {
+    setAnchorEl(null);
+    setSelectedSession(null);
+  };
+
+  const isPopoverOpen = Boolean(anchorEl);
 
   return (
     <div className="session-calendar">
@@ -126,12 +160,46 @@ const SessionsCalendarContainer: React.FC<SessionsCalendarContainerProps> = ({
           locale={i18n.language === 'ar' ? arLocale : undefined}
           events={calendarEvents}
           eventContent={renderEventContent}
-          eventClick={() => {}} // Disable event clicks
+          eventClick={handleEventClick}
           editable={false}
           selectable={false}
           selectMirror={false}
           height="auto"
         />
+      )}
+
+      {/* Session Details Popover */}
+      {selectedSession && (
+        <Popover
+          open={isPopoverOpen}
+          anchorEl={anchorEl}
+          onClose={handleClosePopover}
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: i18n.dir() === 'rtl' ? 'right' : 'left',
+          }}
+          transformOrigin={{
+            vertical: 'top',
+            horizontal: i18n.dir() === 'rtl' ? 'right' : 'left',
+          }}
+          slotProps={{
+            paper: {
+              sx: {
+                borderRadius: '12px',
+                boxShadow: '0 8px 24px rgba(0, 0, 0, 0.12)',
+                marginTop: '0.8rem',
+                marginLeft: i18n.dir() === 'rtl' ? '0' : '0.8rem',
+                marginRight: i18n.dir() === 'rtl' ? '0.8rem' : '0',
+              },
+            },
+          }}
+          disableRestoreFocus
+        >
+          <SessionCalendarDetailsModal
+            session={selectedSession}
+            handleClose={handleClosePopover}
+          />
+        </Popover>
       )}
     </div>
   );

@@ -48,13 +48,21 @@
   .session-calendar-event {
     padding: 0 !important; // Remove padding so inner div fills it
     border-radius: 0.3rem !important;
-    cursor: default !important;
+    cursor: pointer !important;
     border: none !important;
     opacity: 1 !important;
     display: block !important;
     min-height: 1.5rem !important;
+    transition:
+      opacity 0.2s ease,
+      transform 0.2s ease !important;
     // Don't set background here - let inner div handle it
     background-color: transparent !important;
+
+    &:hover {
+      opacity: 0.9 !important;
+      transform: scale(1.02);
+    }
   }
 
   // Apply background colors based on status classes
