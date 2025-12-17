@@ -1,0 +1,171 @@
+@import '../../assets/styles/variables.scss';
+@import '../../assets/styles/mixins.scss';
+
+.session-calendar-details-modal {
+  padding: 0;
+  min-width: 36rem;
+  max-width: 42rem;
+  background-color: $color-white;
+  border-radius: 12px;
+  overflow: hidden;
+
+  @include respond(phone) {
+    min-width: auto;
+    max-width: 32rem;
+    padding: 0;
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 2rem 2.4rem;
+    background-color: $color-grey-light-0;
+    border-bottom: 1px solid $color-grey-light-2;
+
+    &.rtl {
+      flex-direction: row-reverse;
+    }
+
+    @include respond(phone) {
+      padding: 1.6rem 2rem;
+    }
+  }
+
+  &__title {
+    font-weight: 700;
+    color: $color-title;
+    font-size: 1.8rem;
+
+    @include respond(phone) {
+      font-size: 1.6rem;
+    }
+  }
+
+  &__close-btn {
+    color: $color-body;
+    padding: 0.4rem;
+
+    &:hover {
+      background-color: $color-grey-light-1;
+    }
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    gap: 1.8rem;
+    padding: 2rem 2.4rem;
+
+    @include respond(phone) {
+      gap: 1.6rem;
+      padding: 1.6rem 2rem;
+    }
+  }
+
+  &__field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+
+  &__field-label {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+
+    &.rtl {
+      flex-direction: row-reverse;
+    }
+  }
+
+  &__field-icon {
+    font-size: 1.8rem;
+    color: $color-primary;
+    flex-shrink: 0;
+  }
+
+  &__label-text {
+    font-weight: 600;
+    color: $color-title;
+    font-size: 1.4rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  &__field-value {
+    color: $color-title;
+    font-size: 1.5rem;
+    font-weight: 500;
+    margin-left: 2.6rem;
+    line-height: 1.4;
+
+    @include respond(phone) {
+      font-size: 1.4rem;
+      margin-left: 2.2rem;
+    }
+
+    .rtl & {
+      margin-left: 0;
+      margin-right: 2.6rem;
+
+      @include respond(phone) {
+        margin-right: 2.2rem;
+      }
+    }
+  }
+
+  &__field-value-secondary {
+    color: $color-body;
+    font-size: 1.3rem;
+    margin-left: 2.6rem;
+    margin-top: 0.2rem;
+    font-weight: 400;
+
+    @include respond(phone) {
+      font-size: 1.2rem;
+      margin-left: 2.2rem;
+    }
+
+    .rtl & {
+      margin-left: 0;
+      margin-right: 2.6rem;
+
+      @include respond(phone) {
+        margin-right: 2.2rem;
+      }
+    }
+  }
+
+  &__actions {
+    padding: 1.6rem 2.4rem 2rem;
+    background-color: $color-grey-light-0;
+    border-top: 1px solid $color-grey-light-2;
+
+    @include respond(phone) {
+      padding: 1.4rem 2rem 1.6rem;
+    }
+  }
+
+  &__join-btn {
+    min-height: 4.4rem;
+    font-size: 1.6rem;
+    font-weight: 600;
+    text-transform: none;
+    border-radius: 0.8rem;
+
+    @include respond(phone) {
+      min-height: 4rem;
+      font-size: 1.4rem;
+    }
+
+    .MuiButton-startIcon {
+      margin-right: 0.8rem;
+
+      .rtl & {
+        margin-right: 0;
+        margin-left: 0.8rem;
+      }
+    }
+  }
+}

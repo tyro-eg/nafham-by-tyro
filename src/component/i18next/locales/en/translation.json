@@ -1142,5 +1142,17 @@
   },
   "NO_INTERNET": {
     "TITLE": "You are offline. Check your internet connection."
+  },
+  "SESSION_CALENDAR_MODAL": {
+    "TITLE": "Session Details",
+    "JOIN_BUTTON": "Join Meeting",
+    "DATE_TIME": "Date & Time",
+    "COURSE": "Course",
+    "STATUS": "Status",
+    "TUTOR": "Tutor",
+    "STUDENT": "Student",
+    "MEETING_LOCATION": "Meeting Location",
+    "ONLINE_MEETING": "Online Meeting",
+    "NOT_AVAILABLE": "Not Available"
   }
 }

@@ -1138,5 +1138,17 @@
   },
   "NO_INTERNET": {
     "TITLE": "انت غير متصل. تحقق من اتصالك بالإنترنت."
+  },
+  "SESSION_CALENDAR_MODAL": {
+    "TITLE": "تفاصيل الجلسة",
+    "JOIN_BUTTON": "انضم إلى الاجتماع",
+    "DATE_TIME": "التاريخ والوقت",
+    "COURSE": "الدورة",
+    "STATUS": "الحالة",
+    "TUTOR": "المعلم",
+    "STUDENT": "الطالب",
+    "MEETING_LOCATION": "مكان الاجتماع",
+    "ONLINE_MEETING": "اجتماع عبر الإنترنت",
+    "NOT_AVAILABLE": "غير متاح"
   }
 }
