@@ -188,7 +188,8 @@ const PackageListCard: FC<PackageListCardProps> = ({ packageData }) => {
             <p className="title">{t('MYPACKAGES.CARD.AMOUNT_PAID')}</p>
             <p className="value">
               <Payment />
-              {packageData.amount_paid ?? 0} {t('MYPACKAGES.CARD.CURRENCY')}
+              {packageData.amount_paid ?? 0}{' '}
+              {packageData.amount_paid_currency || ''}
             </p>
           </div>
           <div className={`prop-card ${rtlClass}`}>

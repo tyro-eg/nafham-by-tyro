@@ -1,8 +1,9 @@
-import { FC, useState, useMemo, useEffect } from 'react';
+import { FC, useState, useMemo } from 'react';
 
 import { useRtlClass } from '../../assets/utils/utils';
 import { SessionFilters } from '../../lib/queryKeys';
-import { useInfiniteSessions } from '../../hooks/useSessions';
+import { useAppSelector } from '../../redux/store';
+import { selectCurrentUser } from '../../redux/user/user.selectors';
 
 import SessionsInfo from './sessions-info/sessions-info.component';
 import SessionsOverview from './sessions-overview/sessions-overview.component';
@@ -19,60 +20,17 @@ import './index.styles.scss';
 const Sessions: FC = () => {
   const rtlClass = useRtlClass();
   const [filters, setFilters] = useState<SessionFilters>({});
+  const currentUser = useAppSelector(selectCurrentUser);
 
-  // Fetch all sessions to calculate overview statistics
-  const {
-    data: sessionsData,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-  } = useInfiniteSessions(100); // Fetch large pages to get all sessions
-
-  // Fetch all pages on mount to get complete session data for calculations
-  useEffect(() => {
-    if (hasNextPage && !isFetchingNextPage) {
-      fetchNextPage();
-    }
-  }, [hasNextPage, isFetchingNextPage, fetchNextPage, sessionsData]);
-
-  // Flatten all sessions from all pages
-  const allSessions = useMemo(() => {
-    if (!sessionsData?.pages) return [];
-    return sessionsData.pages.flatMap((page) => page.data);
-  }, [sessionsData]);
-
-  // Calculate overview data from actual sessions and packages
+  // Get overview data from current user
   const overViewData = useMemo(() => {
-    const now = new Date();
-
-    // Calculate session counts by status
-    const previousSessions = allSessions.filter((session) => {
-      const sessionDate = new Date(session.end_time);
-      return (
-        (session.status === 'completed' || session.status === 'missed') &&
-        sessionDate < now
-      );
-    });
-
-    const upcomingSessions = allSessions.filter((session) => {
-      const sessionDate = new Date(session.start_time);
-      return (
-        (session.status === 'scheduled' || session.status === 'open') &&
-        sessionDate >= now
-      );
-    });
-
-    const canceledSessions = allSessions.filter(
-      (session) => session.status === 'canceled',
-    );
-
     return {
-      previous_sessions_count: previousSessions.length,
-      upcoming_sessions_count: upcomingSessions.length,
-      total_unscheduled_time_in_hours: 0, // Packages moved to separate page
-      canceled_sessions_count: canceledSessions.length,
+      previous_sessions_count: currentUser?.previous_sessions_count ?? 0,
+      upcoming_sessions_count: currentUser?.upcoming_sessions_count ?? 0,
+      total_unscheduled_time_in_hours: currentUser?.unscheduled_hours ?? 0,
+      canceled_sessions_count: 0, // Not available in user data
     };
-  }, [allSessions]);
+  }, [currentUser]);
 
   const handleFiltersChange = (newFilters: SessionFilters) => {
     setFilters(newFilters);
