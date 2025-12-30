@@ -84,6 +84,7 @@ export type PackageTutor = {
 export type Package = {
   id: number;
   amount_paid: number;
+  amount_paid_currency?: string;
   created_at: string;
   grade_subject: GradeSubject;
   initial_hours: number;
@@ -164,7 +165,8 @@ export type InstructorProfile = {
 
 export type CurrentUser = {
   id: number;
-  avatar: string;
+  avatar?: string;
+  bio?: string;
   created_at: string;
   email: string;
   first_name: string;
@@ -172,7 +174,18 @@ export type CurrentUser = {
   phone_number: string;
   type: 'Tutor' | 'Student';
   updated_at: string;
-  email_confirmed: boolean;
+  email_confirmed?: boolean;
+  grade_subjects?: Array<{
+    id: number;
+    created_at: string;
+    full_course_name: string;
+    updated_at: string;
+  }>;
+  previous_sessions_count?: number;
+  recommended?: boolean;
+  unscheduled_hours?: number;
+  upcoming_sessions_count?: number;
+  video_url?: string;
 };
 
 export type SessionType = {
