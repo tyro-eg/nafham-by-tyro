@@ -72,15 +72,27 @@ export function useSignIn() {
       showSpinner();
       try {
         const {
-          data: { data: userData },
+          data: { data: signInUserData },
           headers,
         } = await post('/users/sign_in', payload);
 
-        if (!userData || !userData.id) {
+        if (!signInUserData || !signInUserData.id) {
           throw new Error('Invalid user data received');
         }
 
-        saveUserDataToLocalStorage(userData, headers as AuthHeaders);
+        // Save initial auth data to localStorage
+        saveUserDataToLocalStorage(signInUserData, headers as AuthHeaders);
+
+        // Fetch complete user data from /me endpoint
+        const { data: userData, headers: meHeaders } = await get('/me');
+
+        if (!userData || !userData.id) {
+          throw new Error('Invalid user data received from /me');
+        }
+
+        // Update localStorage with complete user data and any updated headers
+        saveUserDataToLocalStorage(userData, meHeaders as AuthHeaders);
+
         return userData;
       } finally {
         hideSpinner();
@@ -109,15 +121,27 @@ export function useSignUp() {
       showSpinner();
       try {
         const {
-          data: { data: userData },
+          data: { data: signUpUserData },
           headers,
         } = await post('/users/sign_up', payload);
 
-        if (!userData || !userData.id) {
+        if (!signUpUserData || !signUpUserData.id) {
           throw new Error('Invalid user data received');
         }
 
-        saveUserDataToLocalStorage(userData, headers as AuthHeaders);
+        // Save initial auth data to localStorage
+        saveUserDataToLocalStorage(signUpUserData, headers as AuthHeaders);
+
+        // Fetch complete user data from /me endpoint
+        const { data: userData, headers: meHeaders } = await get('/me');
+
+        if (!userData || !userData.id) {
+          throw new Error('Invalid user data received from /me');
+        }
+
+        // Update localStorage with complete user data and any updated headers
+        saveUserDataToLocalStorage(userData, meHeaders as AuthHeaders);
+
         return userData;
       } finally {
         hideSpinner();

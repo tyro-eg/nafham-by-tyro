@@ -148,9 +148,6 @@ const SessionsCalendarContainer: React.FC<SessionsCalendarContainerProps> = ({
           initialView="dayGridMonth"
           dayHeaderFormat={{
             weekday: 'short',
-            month: 'short',
-            day: 'numeric',
-            omitCommas: true,
           }}
           buttonText={{
             today: t('CALENDAR.BUTTONS.TODAY'),
