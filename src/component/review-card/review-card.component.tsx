@@ -58,17 +58,19 @@ const ReviewCard: React.FC<ReviewCardProps> = memo(({ data }) => {
           <div className="profile-review__date">
             {myDateFormatter(data.created_at)}
           </div>
-          <div className="profile-review__rating-stars">
-            <Rating
-              name="profile-review"
-              value={Math.round(data.rating)}
-              readOnly
-              size="large"
-            />
-            <span className="review-numbers">
-              {data.rating.toFixed(1)} (5.0)
-            </span>
-          </div>
+          {data.rating && (
+            <div className="profile-review__rating-stars">
+              <Rating
+                name="profile-review"
+                value={Math.round(data.rating)}
+                readOnly
+                size="large"
+              />
+              <span className="review-numbers">
+                {data.rating.toFixed(1)} (5.0)
+              </span>
+            </div>
+          )}
           <div className="profile-review__text">
             <p>{reviewText}</p>
           </div>

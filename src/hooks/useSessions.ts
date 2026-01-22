@@ -51,6 +51,9 @@ export function useSessions(
       if (filters?.tutor_id) {
         params.tutor_id = filters.tutor_id;
       }
+      if (filters?.grade_subject_id) {
+        params.grade_subject_id = filters.grade_subject_id;
+      }
 
       const response = await get(`/sessions`, { params });
       return {
@@ -85,6 +88,9 @@ export function useInfiniteSessions(
       }
       if (filters?.tutor_id) {
         params.tutor_id = filters.tutor_id;
+      }
+      if (filters?.grade_subject_id) {
+        params.grade_subject_id = filters.grade_subject_id;
       }
 
       const response = await get(`/sessions`, { params });

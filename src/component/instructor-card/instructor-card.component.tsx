@@ -89,23 +89,25 @@ const InstructorCard: React.FC<{ instructor: Instructor }> = memo(
                 <h6>
                   {instructor.first_name} {instructor.last_name}
                 </h6>
-                <Box
-                  className="review"
-                  sx={{ display: 'flex', alignItems: 'center' }}
-                >
-                  <Rating
-                    name="instructor rating"
-                    value={+Number(instructor.average_rating).toPrecision(2)}
-                    precision={0.1}
-                    readOnly
-                  />
-                  <span className="review-numbers">
-                    {instructor.average_rating
-                      ? +Number(instructor.average_rating).toPrecision(2)
-                      : 0}{' '}
-                    (5.0)
-                  </span>
-                </Box>
+                {instructor.average_rating && (
+                  <Box
+                    className="review"
+                    sx={{ display: 'flex', alignItems: 'center' }}
+                  >
+                    <Rating
+                      name="instructor rating"
+                      value={+Number(instructor.average_rating).toPrecision(2)}
+                      precision={0.1}
+                      readOnly
+                    />
+                    <span className="review-numbers">
+                      {instructor.average_rating
+                        ? +Number(instructor.average_rating).toPrecision(2)
+                        : 0}{' '}
+                      (5.0)
+                    </span>
+                  </Box>
+                )}
               </Button>
             </Box>
 

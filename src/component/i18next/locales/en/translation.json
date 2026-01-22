@@ -27,7 +27,8 @@
   },
   "NAVIGATION": {
     "HOME": "Home",
-    "FIND_INSTRUCTOR": "Private Sessions",
+    "INSTRUCTORS": "Instructors",
+    "MY_INSTRUCTORS": "My Instructors",
     "COURSES": "Group Sessions",
     "CONTACT": "Contact",
     "BLOG": "Blog",
@@ -271,7 +272,7 @@
     },
     "BANNER": {
       "TITLE1": "Nafham also provides",
-      "TITLE2": "Private Sessions",
+      "TITLE2": "Instructors",
       "DESCRIPTION": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation",
       "ACTION": "Book Free Trail"
     },
@@ -657,6 +658,10 @@
       "SEARCH_INSTRUCTOR": "Search instructor...",
       "NO_INSTRUCTORS_FOUND": "No instructors found",
       "LOADING_INSTRUCTORS": "Loading instructors...",
+      "COURSE": "Course",
+      "SELECT_COURSE": "Select Course",
+      "NO_COURSES_FOUND": "No courses found",
+      "LOADING_COURSES": "Loading courses...",
       "SCHEDULED": "Scheduled",
       "OPEN": "Open",
       "COMPLETED": "Completed",
@@ -1098,7 +1103,7 @@
       "DECLINE": {
         "TITLE": "Payment Declined!",
         "MESSAGE": "We are unable to process your online payment from the credit card provided. Please resubmit your payment using another credit card or use another payment method.",
-        "BUTTON": "Go to private sessions"
+        "BUTTON": "Go to instructors"
       },
       "COMPLETE_REGISTER": {
         "TITLE": "Registration Completed!",
@@ -1154,5 +1159,12 @@
     "MEETING_LOCATION": "Meeting Location",
     "ONLINE_MEETING": "Online Meeting",
     "NOT_AVAILABLE": "Not Available"
+  },
+  "MYINSTRUCTORS": {
+    "LOADING": "Loading instructors...",
+    "EMPTY": {
+      "FIRST_P": "You haven't booked any sessions yet",
+      "SECOND_P": "Start booking sessions to see your instructors here!"
+    }
   }
 }

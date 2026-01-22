@@ -51,6 +51,18 @@ export type GradeSubject = {
   full_course_name: string;
   created_at: string;
   updated_at: string;
+  curriculum: {
+    id: number;
+    name: string;
+  };
+  grade: {
+    id: number;
+    name: string;
+  };
+  subject: {
+    id: number;
+    name: string;
+  };
 };
 
 export type PackageStudent = {

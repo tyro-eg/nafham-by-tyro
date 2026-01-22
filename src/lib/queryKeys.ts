@@ -18,6 +18,7 @@ export interface PaginationParams {
 export interface SessionFilters {
   status?: string;
   tutor_id?: number;
+  grade_subject_id?: number;
   pageNumber?: number;
   pageSize?: number;
 }
@@ -94,5 +95,10 @@ export const queryKeys = {
       [...queryKeys.packages.all, 'infinite', params] as const,
     details: () => [...queryKeys.packages.all, 'detail'] as const,
     detail: (id: number) => [...queryKeys.packages.details(), id] as const,
+  },
+
+  // Grade Subject keys
+  gradeSubjects: {
+    all: ['grade_subjects'] as const,
   },
 } as const;

@@ -177,6 +177,23 @@ export function useUpdateTutorProfile() {
 }
 
 /**
+ * Fetch user's instructors (instructors they've booked sessions with)
+ * Endpoint: /me/instructors
+ */
+export function useMyInstructors() {
+  return useQuery({
+    queryKey: [...queryKeys.instructors.all, 'my-instructors'],
+    queryFn: async () => {
+      const response = await get(`/me/instructors`);
+      return {
+        data: (response.data.data || response.data) as Instructor[],
+      };
+    },
+    staleTime: 5 * 60 * 1000, // 5 minutes - user's instructors may change
+  });
+}
+
+/**
  * Update user information (generic)
  */
 export function useUpdateUserInfo() {

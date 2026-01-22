@@ -38,7 +38,16 @@ const Footer = () => {
                 }
                 to="/home"
               >
-                {t('NAVIGATION.FIND_INSTRUCTOR')}
+                {t('NAVIGATION.INSTRUCTORS')}
+              </NavLink>
+
+              <NavLink
+                className={({ isActive }) =>
+                  isActive ? 'menu-item active' : 'menu-item'
+                }
+                to="/my_instructors"
+              >
+                {t('NAVIGATION.MY_INSTRUCTORS')}
               </NavLink>
 
               <NavLink
