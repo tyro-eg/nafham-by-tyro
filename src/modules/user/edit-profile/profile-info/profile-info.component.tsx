@@ -155,24 +155,26 @@ const ProfileInfo: FC<ProfileInfoProps> = ({
                   <div className="profile-info__instructor-name">
                     {data.full_name || '-'}
                   </div>
-                  <div className="profile-info__instructor-stars">
-                    <Rating
-                      name="profile-info-review"
-                      value={
-                        data.average_rating
+                  {data.average_rating && (
+                    <div className="profile-info__instructor-stars">
+                      <Rating
+                        name="profile-info-review"
+                        value={
+                          data.average_rating
+                            ? Number(data.average_rating?.toPrecision(2))
+                            : 0
+                        }
+                        precision={0.1}
+                        readOnly
+                      />
+                      <span className="review-numbers">
+                        {data.average_rating
                           ? Number(data.average_rating?.toPrecision(2))
-                          : 0
-                      }
-                      precision={0.1}
-                      readOnly
-                    />
-                    <span className="review-numbers">
-                      {data.average_rating
-                        ? Number(data.average_rating?.toPrecision(2))
-                        : 0}{' '}
-                      (5.0)
-                    </span>
-                  </div>
+                          : 0}{' '}
+                        (5.0)
+                      </span>
+                    </div>
+                  )}
                 </div>
               </div>
               <div className="profile-info__about">

@@ -46,12 +46,16 @@ const PackageListCard: FC<PackageListCardProps> = ({ packageData }) => {
 
   const locales = { ar: arSA, en: enUS };
 
+  // Determine if current user is the tutor
+  const isCurrentUserTutor = useMemo(() => {
+    return currentUser?.id === packageData.tutor.id;
+  }, [currentUser, packageData]);
+
   // Determine which user to display based on current user role
   const displayUser = useMemo(() => {
     if (!currentUser) return null;
-    const isCurrentUserTutor = currentUser.id === packageData.tutor.id;
     return isCurrentUserTutor ? packageData.student : packageData.tutor;
-  }, [currentUser, packageData]);
+  }, [currentUser, packageData, isCurrentUserTutor]);
 
   const packageTypeLabel = useMemo(() => {
     if (packageData.package_type === 'group_course') {
@@ -184,21 +188,25 @@ const PackageListCard: FC<PackageListCardProps> = ({ packageData }) => {
             <p className="title">{t('MYPACKAGES.CARD.COURSE')}</p>
             <p className="value field">{courseName}</p>
           </div>
-          <div className={`prop-card ${rtlClass}`}>
-            <p className="title">{t('MYPACKAGES.CARD.AMOUNT_PAID')}</p>
-            <p className="value">
-              <Payment />
-              {packageData.amount_paid ?? 0}{' '}
-              {packageData.amount_paid_currency || ''}
-            </p>
-          </div>
-          <div className={`prop-card ${rtlClass}`}>
-            <p className="title">{t('MYPACKAGES.CARD.PAYMENT_METHOD')}</p>
-            <p className="value">
-              <Payment />
-              {paymentMethodLabel}
-            </p>
-          </div>
+          {!isCurrentUserTutor && (
+            <>
+              <div className={`prop-card ${rtlClass}`}>
+                <p className="title">{t('MYPACKAGES.CARD.AMOUNT_PAID')}</p>
+                <p className="value">
+                  <Payment />
+                  {packageData.amount_paid ?? 0}{' '}
+                  {packageData.amount_paid_currency || ''}
+                </p>
+              </div>
+              <div className={`prop-card ${rtlClass}`}>
+                <p className="title">{t('MYPACKAGES.CARD.PAYMENT_METHOD')}</p>
+                <p className="value">
+                  <Payment />
+                  {paymentMethodLabel}
+                </p>
+              </div>
+            </>
+          )}
           <div className={`prop-card ${rtlClass}`}>
             <p className="title">{t('MYPACKAGES.CARD.CREATED_DATE')}</p>
             <p className="value">
