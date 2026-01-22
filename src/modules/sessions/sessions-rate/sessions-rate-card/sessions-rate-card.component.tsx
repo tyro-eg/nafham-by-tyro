@@ -147,19 +147,21 @@ const SessionsRateCard: React.FC<SessionsRateCardProps> = ({ session }) => {
                   {session.course?.data?.course_name || ''}
                 </p>
               ) : (
-                <div className="review">
-                  <div className="review-stars">
-                    <Rating
-                      name="instructor rating"
-                      value={session.tutor?.data?.rating || 0}
-                      precision={0.1}
-                      readOnly
-                    />
-                    <span className="review-numbers">
-                      {session.tutor?.data?.rating || 0} (5.0)
-                    </span>
+                session.tutor?.data?.rating && (
+                  <div className="review">
+                    <div className="review-stars">
+                      <Rating
+                        name="instructor rating"
+                        value={session.tutor?.data?.rating || 0}
+                        precision={0.1}
+                        readOnly
+                      />
+                      <span className="review-numbers">
+                        {session.tutor?.data?.rating || 0} (5.0)
+                      </span>
+                    </div>
                   </div>
-                </div>
+                )
               )}
             </div>
           </div>

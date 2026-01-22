@@ -176,7 +176,7 @@ const SessionListCard: React.FC<SessionListCardProps> = ({ session }) => {
                     : ''}
                 </p>
               )}
-              {session.session_type !== 'group' && (
+              {session.session_type !== 'group' && session.tutor?.rating && (
                 <div className="review">
                   <div className="review-stars">
                     <Rating

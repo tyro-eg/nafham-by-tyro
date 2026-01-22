@@ -22,6 +22,9 @@ const EditProfile = lazy(() => import('../../modules/user/edit-profile'));
 const PrivateSessions = lazy(
   () => import('../../modules/private-sessions/index.component'),
 );
+const MyInstructors = lazy(
+  () => import('../../modules/my-instructors/index.component'),
+);
 // const CoursesList = lazy(
 //   () => import('../../modules/courses/courses-list/courses-list.component'),
 // );
@@ -68,6 +71,12 @@ const RoutesComponent: React.FC<RoutesProps> = ({ currentUser }) => (
         path="/home"
         element={
           <GuardedRoute element={<PrivateSessions />} auth={!!currentUser} />
+        }
+      />
+      <Route
+        path="/my_instructors"
+        element={
+          <GuardedRoute element={<MyInstructors />} auth={!!currentUser} />
         }
       />
       {/* <Route path="/courses" element={<CoursesList />} />

@@ -57,13 +57,15 @@ const SessionsScheduleCard: FC<SessionsScheduleCardProps> = ({ data }) => {
         <div className="schedule-card__info">
           <div className="instructor-info">
             <h3 className="name">{data.user_name}</h3>
-            <div className="review">
-              <Rating
-                name="sessions-schedule-card-rating"
-                value={Math.round(data.user_rating)}
-                readOnly
-              />
-            </div>
+            {data.user_rating && (
+              <div className="review">
+                <Rating
+                  name="sessions-schedule-card-rating"
+                  value={Math.round(data.user_rating)}
+                  readOnly
+                />
+              </div>
+            )}
           </div>
           {/* <Button
             variant="contained"

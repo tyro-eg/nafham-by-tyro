@@ -43,13 +43,16 @@ const TrailModalCard: FC<TrailModalCardProps> = ({ instructor }) => {
                 {instructorField}
               </h4>
             ))}
-            <div className="trail-modal-card__body-stars">
-              <Rating
-                name="instructor-rating"
-                value={Math.round(instructor?.average_rating!)}
-                readOnly
-              />
-            </div>
+            {instructor.average_rating && (
+              <div className="trail-modal-card__body-stars">
+                <Rating
+                  name="instructor-rating"
+                  value={+Number(instructor.average_rating).toPrecision(2)}
+                  precision={0.1}
+                  readOnly
+                />
+              </div>
+            )}
             <div className="trail-modal-card__body-separator"></div>
             <div className="trail-modal-card__body-about">
               {(instructor?.bio?.length ?? 0) > 100

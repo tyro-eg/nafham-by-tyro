@@ -20,8 +20,9 @@ import { useTranslation } from 'react-i18next';
 
 import { useRtlClass } from '../../../assets/utils/utils';
 import { useInfiniteInstructors } from '../../../hooks/useInstructors';
+import { useGradeSubjects } from '../../../hooks/useGradeSubjects';
 import { SessionFilters } from '../../../lib/queryKeys';
-import { Instructor } from '../../../assets/types';
+import { Instructor, GradeSubject } from '../../../assets/types';
 
 import './session-filter.styles.scss';
 
@@ -82,6 +83,9 @@ const SessionFilter: FC<SessionFilterProps> = ({ onFiltersChange }) => {
   const [status, setStatus] = useState('all');
   const [selectedInstructor, setSelectedInstructor] =
     useState<Instructor | null>(null);
+  const [selectedCourse, setSelectedCourse] = useState<GradeSubject | null>(
+    null,
+  );
   const [listBody, setListBody] = useState(!isSmallScreen);
 
   // Fetch instructors with infinite scroll
@@ -93,9 +97,16 @@ const SessionFilter: FC<SessionFilterProps> = ({ onFiltersChange }) => {
     isLoading: isLoadingInstructors,
   } = useInfiniteInstructors(10);
 
+  // Fetch grade subjects (courses)
+  const { data: gradeSubjectsData, isLoading: isLoadingCourses } =
+    useGradeSubjects();
+
   // Flatten all instructor pages
   const allInstructors =
     instructorsData?.pages.flatMap((page) => page.data) ?? [];
+
+  // Get all courses
+  const allCourses = gradeSubjectsData?.data ?? [];
 
   useEffect(() => {
     setListBody(!isSmallScreen);
@@ -113,9 +124,13 @@ const SessionFilter: FC<SessionFilterProps> = ({ onFiltersChange }) => {
       filters.tutor_id = selectedInstructor.id;
     }
 
+    if (selectedCourse) {
+      filters.grade_subject_id = selectedCourse.id;
+    }
+
     onFiltersChange(filters);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [status, selectedInstructor]);
+  }, [status, selectedInstructor, selectedCourse]);
 
   const handleStatusChange = (event: SelectChangeEvent<string>) =>
     setStatus(event.target.value);
@@ -288,6 +303,53 @@ const SessionFilter: FC<SessionFilterProps> = ({ onFiltersChange }) => {
                       },
                     },
                   }}
+                />
+              </FormControl>
+            </div>
+
+            {/* Course Filter */}
+            <div className={`session-filter__field ${rtlClass}`}>
+              <InputLabel id="course-label">
+                {t('MYSESSIONS.FILTERS.COURSE')}
+              </InputLabel>
+              <FormControl sx={{ width: '100%' }}>
+                <Autocomplete
+                  value={selectedCourse}
+                  onChange={(_event, newValue) => {
+                    setSelectedCourse(newValue);
+                  }}
+                  options={allCourses}
+                  getOptionLabel={(option) => option.full_course_name}
+                  isOptionEqualToValue={(option, value) =>
+                    option.id === value.id
+                  }
+                  loading={isLoadingCourses}
+                  loadingText={t('MYSESSIONS.FILTERS.LOADING_COURSES')}
+                  noOptionsText={t('MYSESSIONS.FILTERS.NO_COURSES_FOUND')}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      placeholder={t('MYSESSIONS.FILTERS.SELECT_COURSE')}
+                      sx={{
+                        '& .MuiInputBase-root': {
+                          height: '44px',
+                        },
+                      }}
+                      slotProps={{
+                        input: {
+                          ...params.InputProps,
+                          endAdornment: (
+                            <>
+                              {isLoadingCourses ? (
+                                <CircularProgress color="inherit" size={20} />
+                              ) : null}
+                              {params.InputProps?.endAdornment}
+                            </>
+                          ),
+                        },
+                      }}
+                    />
+                  )}
                 />
               </FormControl>
             </div>
