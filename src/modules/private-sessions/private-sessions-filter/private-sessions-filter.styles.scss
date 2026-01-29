@@ -16,7 +16,7 @@
   &__container {
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     column-gap: 2.4rem;
     padding: 14px 0 6px;
 
@@ -163,7 +163,6 @@
         order: 1;
         margin-left: 0;
         margin-right: auto;
-        width: calc(100% - 10rem);
 
         &.rtl {
           margin-left: auto;
@@ -214,6 +213,56 @@
           left: unset;
           right: -10px;
         }
+      }
+    }
+
+    &--course {
+      width: 24rem;
+      min-width: 24rem;
+      margin-right: 2rem;
+
+      .MuiAutocomplete-root {
+        width: 100%;
+      }
+
+      .MuiFormControl-root,
+      .MuiTextField-root {
+        width: 100%;
+        margin-bottom: 0;
+      }
+
+      .MuiInputLabel-root {
+        top: -5px;
+      }
+
+      .MuiInputBase-root {
+        height: 4rem;
+
+        &:hover {
+          .MuiOutlinedInput-notchedOutline {
+            border-color: rgba(0, 0, 0, 0.23);
+          }
+        }
+      }
+
+      &.rtl {
+        margin-left: 2rem;
+        margin-right: 0;
+      }
+
+      @media only screen and (max-width: $breakpoint-xmd) {
+        width: 100%;
+        margin-right: 0;
+        margin-bottom: 1rem;
+
+        &.rtl {
+          margin-left: 0;
+        }
+      }
+
+      @include respond(phone) {
+        width: 100%;
+        margin-bottom: 1rem;
       }
     }
 

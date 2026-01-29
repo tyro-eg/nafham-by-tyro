@@ -42,18 +42,33 @@ interface UserInfoUpdateData {
 }
 
 /**
+ * Instructor filters
+ */
+export interface InstructorFilters {
+  grade_subject_id?: number;
+}
+
+/**
  * Fetch paginated list of instructors
  */
-export function useInstructors(pageNumber: number = 1, pageSize: number = 10) {
+export function useInstructors(
+  pageNumber: number = 1,
+  pageSize: number = 10,
+  filters?: InstructorFilters,
+) {
   return useQuery({
-    queryKey: queryKeys.instructors.list({ pageNumber, pageSize }),
+    queryKey: queryKeys.instructors.list({ pageNumber, pageSize, ...filters }),
     queryFn: async () => {
-      const response = await get(`/tutors`, {
-        params: {
-          per_page: pageSize,
-          page: pageNumber,
-        },
-      });
+      const params: Record<string, any> = {
+        per_page: pageSize,
+        page: pageNumber,
+      };
+
+      if (filters?.grade_subject_id) {
+        params.grade_subject_id = filters.grade_subject_id;
+      }
+
+      const response = await get(`/tutors`, { params });
       return {
         data: response.data.data as Instructor[],
         pagination: response.headers,
@@ -84,17 +99,25 @@ export function useInstructor(id: number | string, enabled: boolean = true) {
  * Fetch instructors with infinite scroll
  *
  * @param pageSize - Number of items per page
+ * @param filters - Optional filters (grade_subject_id)
  */
-export function useInfiniteInstructors(pageSize: number = 20) {
+export function useInfiniteInstructors(
+  pageSize: number = 20,
+  filters?: InstructorFilters,
+) {
   return useInfiniteQuery({
-    queryKey: [...queryKeys.instructors.all, 'infinite'],
+    queryKey: [...queryKeys.instructors.all, 'infinite', filters],
     queryFn: async ({ pageParam = 1 }) => {
-      const response = await get(`/tutors`, {
-        params: {
-          per_page: pageSize,
-          page: pageParam,
-        },
-      });
+      const params: Record<string, any> = {
+        per_page: pageSize,
+        page: pageParam,
+      };
+
+      if (filters?.grade_subject_id) {
+        params.grade_subject_id = filters.grade_subject_id;
+      }
+
+      const response = await get(`/tutors`, { params });
       return {
         data: response.data.data as Instructor[],
         pagination: response.headers,
@@ -179,12 +202,18 @@ export function useUpdateTutorProfile() {
 /**
  * Fetch user's instructors (instructors they've booked sessions with)
  * Endpoint: /me/instructors
+ * @param filters - Optional filters (grade_subject_id)
  */
-export function useMyInstructors() {
+export function useMyInstructors(filters?: InstructorFilters) {
   return useQuery({
-    queryKey: [...queryKeys.instructors.all, 'my-instructors'],
+    queryKey: [...queryKeys.instructors.all, 'my-instructors', filters],
     queryFn: async () => {
-      const response = await get(`/me/instructors`);
+      const params: Record<string, any> = {};
+      if (filters?.grade_subject_id) {
+        params.grade_subject_id = filters.grade_subject_id;
+      }
+
+      const response = await get(`/me/instructors`, { params });
       return {
         data: (response.data.data || response.data) as Instructor[],
       };
