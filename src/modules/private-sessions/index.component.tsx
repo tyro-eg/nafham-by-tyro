@@ -6,7 +6,7 @@ import {
   useInstructors,
   useInfiniteInstructors,
 } from '../../hooks/useInstructors';
-import { Instructor } from '../../assets/types';
+import { Instructor, GradeSubject } from '../../assets/types';
 
 import { ReactComponent as EmptyImg } from '../../assets/images/empty.svg';
 import PrivateSessionsFilter from './private-sessions-filter/private-sessions-filter.component';
@@ -18,17 +18,33 @@ const PrivateSessions: FC = () => {
   const { t } = useTranslation();
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCourse, setSelectedCourse] = useState<GradeSubject | null>(
+    null,
+  );
   const pageSize = 10;
+
+  // Build filters object
+  const filters = useMemo(() => {
+    const filterObj: { grade_subject_id?: number } = {};
+    if (selectedCourse) {
+      filterObj.grade_subject_id = selectedCourse.id;
+    }
+    return filterObj;
+  }, [selectedCourse]);
 
   // Use infinite query when searching to get all instructors across all pages
   const hasSearchQuery = !!searchQuery.trim();
-  const { data: paginatedData } = useInstructors(currentPage, pageSize);
+  const { data: paginatedData } = useInstructors(
+    currentPage,
+    pageSize,
+    filters,
+  );
   const {
     data: infiniteData,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = useInfiniteInstructors(pageSize);
+  } = useInfiniteInstructors(pageSize, filters);
 
   // Fetch all pages when searching to enable searching across all instructors
   useEffect(() => {
@@ -55,12 +71,12 @@ const PrivateSessions: FC = () => {
 
   const instructorsPagination = paginatedData?.pagination;
 
-  // Reset to page 1 when search query changes
+  // Reset to page 1 when search query or course filter changes
   useEffect(() => {
-    if (hasSearchQuery && currentPage !== 1) {
+    if ((hasSearchQuery || selectedCourse) && currentPage !== 1) {
       setCurrentPage(1);
     }
-  }, [hasSearchQuery, currentPage]);
+  }, [hasSearchQuery, selectedCourse, currentPage]);
 
   /**
    * Filter instructors client-side based on search query
@@ -130,6 +146,8 @@ const PrivateSessions: FC = () => {
       <PrivateSessionsFilter
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
+        selectedCourse={selectedCourse}
+        onCourseChange={setSelectedCourse}
       />
       <section className="instructor-list">
         <div className="instructor-list__container container">
@@ -142,7 +160,7 @@ const PrivateSessions: FC = () => {
           renderNoResults()}
       </section>
 
-      {/* Hide pagination when searching since we're filtering only current page */}
+      {/* Hide pagination only when searching (client-side filter) */}
       {!searchQuery.trim() &&
         instructors?.length &&
         instructorsPagination?.['total-pages'] && (

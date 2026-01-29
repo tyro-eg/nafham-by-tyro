@@ -1,18 +1,26 @@
 @import '../../assets/styles/variables.scss';
 @import '../../assets/styles/mixins.scss';
+@import '../private-sessions/private-sessions-filter/private-sessions-filter.styles.scss';
 
 .my-instructors {
   display: flex;
   flex-direction: column;
-  padding-top: 4rem;
   background-color: $color-grey-light-0;
 
   .instructor-list {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding-top: 0;
+    padding-top: 10rem;
     background-color: $color-grey-light-0;
+
+    @include respond(tab-port) {
+      padding-top: 16rem;
+    }
+
+    @include respond(phone) {
+      padding-top: 10rem;
+    }
 
     &__container {
       display: flex;
