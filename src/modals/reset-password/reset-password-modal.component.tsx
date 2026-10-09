@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button, InputLabel, TextField } from '@mui/material';
+import { LockReset } from '@mui/icons-material';
 
 import {
   resetPasswordSchema,
@@ -38,38 +39,46 @@ const ResetPasswordModal: FC<ResetPasswordModalProps> = ({ handleClose }) => {
 
   return (
     <div className="forget-password">
-      <p className="forget-password__title">{t('FORGET_PASSWORD.TITLE')}</p>
+      <div className="forget-password__icon">
+        <LockReset />
+      </div>
+      <h2 className="forget-password__title">{t('FORGET_PASSWORD.TITLE')}</h2>
       <div className="forget-password__description">
         <p className="title">{t('FORGET_PASSWORD.DESCRIPTION1')}</p>
         <p className="title">{t('FORGET_PASSWORD.DESCRIPTION2')}</p>
       </div>
       <form onSubmit={handleSubmit(onSubmit)} className="forget-password__form">
-        <InputLabel htmlFor="email">
-          {t('FORGET_PASSWORD.FORM.LABEL')}
-        </InputLabel>
-        <Controller
-          name="email"
-          control={control}
-          render={({ field }) => (
-            <TextField
-              {...field}
-              placeholder={t('FORGET_PASSWORD.FORM.EMAIL_PLACEHOLDER')}
-              id="email"
-              type="email"
-              variant="outlined"
-              className="custom-input-style"
-              error={!!errors.email}
-              helperText={errors.email?.message && t(errors.email.message)}
-              fullWidth
-            />
-          )}
-        />
+        <div className="auth-field">
+          <InputLabel htmlFor="email">
+            {t('FORGET_PASSWORD.FORM.LABEL')}
+          </InputLabel>
+          <Controller
+            name="email"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                placeholder={t('FORGET_PASSWORD.FORM.EMAIL_PLACEHOLDER')}
+                id="email"
+                type="email"
+                variant="outlined"
+                className="custom-input-style"
+                autoComplete="email"
+                error={!!errors.email}
+                helperText={errors.email?.message && t(errors.email.message)}
+                fullWidth
+              />
+            )}
+          />
+        </div>
         <Button
           type="submit"
           variant="contained"
           color="primary"
+          size="large"
           disabled={isSubmitting}
           className="btn-custom-style"
+          fullWidth
         >
           {t('FORGET_PASSWORD.FORM.RESET_PASSWORD_BTN')}
         </Button>

@@ -1,8 +1,14 @@
 import { useEffect, useState, FC } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Button, Dialog, InputLabel, TextField } from '@mui/material';
-import { ExitToApp } from '@mui/icons-material';
+import {
+  Button,
+  Dialog,
+  IconButton,
+  InputLabel,
+  TextField,
+} from '@mui/material';
+import { Close, ExitToApp } from '@mui/icons-material';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import PhoneInput from 'react-phone-input-2';
@@ -117,57 +123,67 @@ const RegisterModal: FC<RegisterModalProps> = ({
 
   return (
     <div className="register-modal">
-      <div className="register-modal__card">
-        <div className="register-modal__card-icon">
+      <div className={`register-modal__header ${rtlClass}`}>
+        <div className="register-modal__icon">
           <ExitToApp />
         </div>
-        <div className={`register-modal__card-body ${rtlClass}`}>
-          <p className="register-modal__card-body__header">
+        <div className="register-modal__heading">
+          <h2 className="register-modal__title">
             {modalData.courseItem
               ? t('REGISTER.REGISTER_TITLE_1')
               : t('REGISTER.REGISTER_TITLE')}
-          </p>
-          <p className="register-modal__card-body__text">
+          </h2>
+          <p className="register-modal__subtitle">
             {t('REGISTER.REGISTER_SUBTITLE')}
           </p>
         </div>
+        <IconButton
+          className="register-modal__close"
+          onClick={onClose}
+          aria-label={t('CALENDAR.MYSESSION.ACTIONS.CLOSE')}
+        >
+          <Close />
+        </IconButton>
       </div>
-
-      <hr className="full-line" />
 
       <form
         onSubmit={handleSubmit(onSubmit)}
         className={`register-modal__form ${rtlClass}`}
       >
-        <InputLabel htmlFor="email">{t('REGISTER.REGISTER_EMAIL')}</InputLabel>
-        <Controller
-          name="email"
-          control={control}
-          render={({ field }) => (
-            <TextField
-              {...field}
-              type="email"
-              variant="outlined"
-              placeholder={t('REGISTER.REGISTER_EMAIL_INPUT_PLACEHOLDER')}
-              fullWidth
-              error={!!errors.email}
-              helperText={errors.email?.message}
-              className="custom-input-style"
-              id="email"
-              onChange={(e) => {
-                field.onChange(e);
-                // Auto-extract first_name from email
-                const emailName = e.target.value.split('@')[0];
-                if (emailName) {
-                  setValue('first_name', emailName);
-                  setValue('last_name', 'Student');
-                }
-              }}
-            />
-          )}
-        />
+        <div className="auth-field">
+          <InputLabel htmlFor="email">
+            {t('REGISTER.REGISTER_EMAIL')}
+          </InputLabel>
+          <Controller
+            name="email"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                type="email"
+                variant="outlined"
+                placeholder={t('REGISTER.REGISTER_EMAIL_INPUT_PLACEHOLDER')}
+                fullWidth
+                error={!!errors.email}
+                helperText={errors.email?.message}
+                className="custom-input-style"
+                id="email"
+                autoComplete="email"
+                onChange={(e) => {
+                  field.onChange(e);
+                  // Auto-extract first_name from email
+                  const emailName = e.target.value.split('@')[0];
+                  if (emailName) {
+                    setValue('first_name', emailName);
+                    setValue('last_name', 'Student');
+                  }
+                }}
+              />
+            )}
+          />
+        </div>
 
-        <div className="phone-input">
+        <div className="phone-input auth-field">
           <InputLabel htmlFor="phone_number">
             {t('REGISTER.REGISTER_PHONE_NUMBER')}
           </InputLabel>
@@ -181,6 +197,7 @@ const RegisterModal: FC<RegisterModalProps> = ({
                 preferredCountries={['ae', 'eg', 'sa']}
                 specialLabel=""
                 inputStyle={{ width: '100%' }}
+                inputClass={errors.phone_number ? 'is-invalid' : ''}
                 onChange={(phoneNumber: string, countryData: any) => {
                   setValue('phone_number', phoneNumber);
                   // Auto-set country and nationality from phone country
@@ -199,38 +216,43 @@ const RegisterModal: FC<RegisterModalProps> = ({
           )}
         </div>
 
-        <InputLabel htmlFor="password">
-          {t('REGISTER.REGISTER_PASSWORD')}
-        </InputLabel>
-        <Controller
-          name="password"
-          control={control}
-          render={({ field }) => (
-            <TextField
-              {...field}
-              type="password"
-              variant="outlined"
-              placeholder={t('REGISTER.REGISTER_PASSWORD_INPUT_PLACEHOLDER')}
-              fullWidth
-              error={!!errors.password}
-              helperText={errors.password?.message}
-              className="custom-input-style"
-              id="password"
-              onChange={(e) => {
-                field.onChange(e);
-                // Automatically set password_confirmation to match password
-                setValue('password_confirmation', e.target.value);
-              }}
-            />
-          )}
-        />
+        <div className="auth-field">
+          <InputLabel htmlFor="password">
+            {t('REGISTER.REGISTER_PASSWORD')}
+          </InputLabel>
+          <Controller
+            name="password"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                type="password"
+                variant="outlined"
+                placeholder={t('REGISTER.REGISTER_PASSWORD_INPUT_PLACEHOLDER')}
+                fullWidth
+                error={!!errors.password}
+                helperText={errors.password?.message}
+                className="custom-input-style"
+                id="password"
+                autoComplete="new-password"
+                onChange={(e) => {
+                  field.onChange(e);
+                  // Automatically set password_confirmation to match password
+                  setValue('password_confirmation', e.target.value);
+                }}
+              />
+            )}
+          />
+        </div>
 
         <Button
           type="submit"
           variant="contained"
           color="primary"
+          size="large"
           disabled={isSubmitting}
           className="btn-custom-style"
+          fullWidth
         >
           {t('REGISTER.REGISTER_SUBMIT_BTN')}
         </Button>
@@ -255,7 +277,9 @@ const RegisterModal: FC<RegisterModalProps> = ({
         <div className="term-body">
           <p className="term-first-text">{t('REGISTER.TERMS')}</p>
           <Button onClick={goToTerms} variant="text">
-            <p className="term-second-text">{t('REGISTER.TERMS_GREEN')}</p>
+            <span className="term-second-text">
+              {t('REGISTER.TERMS_GREEN')}
+            </span>
           </Button>
         </div>
       </form>

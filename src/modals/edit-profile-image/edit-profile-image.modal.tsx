@@ -1,8 +1,11 @@
 import { FC, useCallback, useEffect, useRef, useState } from 'react';
 import { Button } from '@mui/material';
+import { AddAPhotoOutlined } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 import ReactCrop, { Crop, PixelCrop } from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
+
+import './edit-profile-image.styles.scss';
 
 interface EditProfileImageModalProps {
   onClose: () => void;
@@ -98,56 +101,67 @@ const EditProfileImageModal: FC<EditProfileImageModalProps> = ({
   };
 
   return (
-    <div className="profile-info__img-edit-modal">
-      <label htmlFor="contained-button-file">
-        <input
-          accept="image/*"
-          onChange={onSelectFile}
-          id="contained-button-file"
-          type="file"
-          style={{ display: 'none' }}
-        />
-        <Button variant="contained" component="span">
-          {t('PROFILE.EDITPROFILE.IMG.EDITMODAL.UPLOAD')}
-        </Button>
-      </label>
-
-      <div className="image-cropper-wrapper">
-        {upImg && (
-          <ReactCrop
-            circularCrop
-            crop={crop}
-            onChange={(c) => setCrop(c)}
-            onComplete={(c) => setCompletedCrop(c)}
-            aspect={1}
-          >
-            <img
-              src={upImg as string}
-              onLoad={(e) => onLoad(e.currentTarget)}
-              alt="To crop"
-            />
-          </ReactCrop>
-        )}
-      </div>
-
-      <div className="profile-info__img-edit-modal-placeholder">
-        {completedCrop ? (
-          <canvas
-            ref={previewCanvasRef}
-            style={{
-              width: '200px',
-              height: '200px',
-            }}
+    <div className="edit-image-modal">
+      <div className="edit-image-modal__header">
+        <div className="edit-image-modal__icon">
+          <AddAPhotoOutlined />
+        </div>
+        <p className="edit-image-modal__title">
+          {t('PROFILE.EDITPROFILE.IMG.EDITMODAL.TITLE')}
+        </p>
+        <label
+          htmlFor="contained-button-file"
+          className="edit-image-modal__upload"
+        >
+          <input
+            accept="image/*"
+            onChange={onSelectFile}
+            id="contained-button-file"
+            type="file"
+            style={{ display: 'none' }}
           />
-        ) : (
-          imageUrl && <img src={imageUrl} alt="profile" />
-        )}
+          <Button variant="outlined" component="span">
+            {t('PROFILE.EDITPROFILE.IMG.EDITMODAL.UPLOAD')}
+          </Button>
+        </label>
       </div>
 
-      <p className="title">{t('PROFILE.EDITPROFILE.IMG.EDITMODAL.TITLE')}</p>
+      <div className="edit-image-modal__workspace">
+        {upImg && (
+          <div className="image-cropper-wrapper">
+            <ReactCrop
+              circularCrop
+              crop={crop}
+              onChange={(c) => setCrop(c)}
+              onComplete={(c) => setCompletedCrop(c)}
+              aspect={1}
+            >
+              <img
+                src={upImg as string}
+                onLoad={(e) => onLoad(e.currentTarget)}
+                alt="To crop"
+              />
+            </ReactCrop>
+          </div>
+        )}
 
-      <div className="profile-info__img-edit-modal-actions">
-        <Button color="error" variant="outlined" onClick={onClose}>
+        <div className="edit-image-modal__preview">
+          {completedCrop ? (
+            <canvas
+              ref={previewCanvasRef}
+              style={{
+                width: '200px',
+                height: '200px',
+              }}
+            />
+          ) : (
+            imageUrl && <img src={imageUrl} alt="profile" />
+          )}
+        </div>
+      </div>
+
+      <div className="edit-image-modal__actions">
+        <Button variant="outlined" onClick={onClose}>
           {t('MODALS.ACTIONS.CANCEL')}
         </Button>
         <Button

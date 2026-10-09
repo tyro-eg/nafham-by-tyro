@@ -277,8 +277,7 @@ const MySessionCalendar: FC<MySessionCalendarProps> = ({
       <div className="mySession-calendar__actions-container">
         <Button
           className="mySession-calendar__actions-container-action"
-          variant="contained"
-          color="error"
+          variant="outlined"
           onClick={handleClose}
         >
           {t('CALENDAR.MYSESSION.ACTIONS.CLOSE')}

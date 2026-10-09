@@ -1,6 +1,7 @@
 import { FC } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@mui/material';
+import { MarkEmailUnreadOutlined } from '@mui/icons-material';
 
 import './email-confirmation-modal.styles.scss';
 
@@ -23,8 +24,11 @@ const EmailConfirmationModal: FC<EmailConfirmationModalProps> = ({
 
   return (
     <div className="email-confirm">
-      <div>
-        <h5>
+      <div className="email-confirm__header">
+        <div className="email-confirm__icon">
+          <MarkEmailUnreadOutlined />
+        </div>
+        <h5 className="email-confirm__message">
           {t('EMAIL_CONFIRMATION.MESSAGE')} <b>{email}</b>
         </h5>
       </div>
@@ -32,8 +36,7 @@ const EmailConfirmationModal: FC<EmailConfirmationModalProps> = ({
       <div className="button-wrapper">
         <Button
           className="button-wrapper__action"
-          variant="contained"
-          color="error"
+          variant="outlined"
           onClick={onClose}
         >
           {t('MODALS.ACTIONS.CANCEL')}

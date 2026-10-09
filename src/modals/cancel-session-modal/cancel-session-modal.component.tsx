@@ -38,28 +38,26 @@ const CancelSessionModal: FC<CancelSessionModalProps> = ({
   return (
     <div className="cancelCalendarModal">
       <div className="cancelCalendarModal__head">
-        <Warning
-          fontSize="inherit"
-          className="cancelCalendarModal__head-icon"
-        />
-        <h4 className="u-color-title u-font-size-18">
-          {type === 'cancel'
-            ? t('MYSESSIONS.MAIN.CANCELMODAL.TITLE')
-            : t('MYSESSIONS.MAIN.ENDMODAL.TITLE')}
-        </h4>
-      </div>
-      <div className="cancelCalendarModal__body">
-        <p className="u-color-body u-font-size-14">
-          {type === 'cancel'
-            ? t('MYSESSIONS.MAIN.CANCELMODAL.DESCRIPTION')
-            : t('MYSESSIONS.MAIN.ENDMODAL.DESCRIPTION')}
-        </p>
+        <div className="cancelCalendarModal__head-icon">
+          <Warning fontSize="inherit" />
+        </div>
+        <div className="cancelCalendarModal__head-text">
+          <h4 className="cancelCalendarModal__title">
+            {type === 'cancel'
+              ? t('MYSESSIONS.MAIN.CANCELMODAL.TITLE')
+              : t('MYSESSIONS.MAIN.ENDMODAL.TITLE')}
+          </h4>
+          <p className="cancelCalendarModal__body">
+            {type === 'cancel'
+              ? t('MYSESSIONS.MAIN.CANCELMODAL.DESCRIPTION')
+              : t('MYSESSIONS.MAIN.ENDMODAL.DESCRIPTION')}
+          </p>
+        </div>
       </div>
       <div className="cancelCalendarModal__actions-container">
         <Button
           className="cancelCalendarModal__actions-container-action"
-          variant="contained"
-          color="secondary"
+          variant="outlined"
           onClick={handleClose}
         >
           {t('MYSESSIONS.MAIN.CANCELMODAL.NO')}
@@ -67,7 +65,7 @@ const CancelSessionModal: FC<CancelSessionModalProps> = ({
         <Button
           className="cancelCalendarModal__actions-container-action"
           variant="contained"
-          color="primary"
+          color="error"
           onClick={cancelThisSession}
         >
           {t('MYSESSIONS.MAIN.CANCELMODAL.YES')}

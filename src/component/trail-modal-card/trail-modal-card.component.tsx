@@ -20,7 +20,7 @@ const TrailModalCard: FC<TrailModalCardProps> = ({ instructor }) => {
 
   return (
     <>
-      <Button onClick={openTrialModal}>
+      <Button onClick={openTrialModal} className="trail-modal-card__button">
         <div className="trail-modal-card">
           <div
             className="trail-modal-card__image"
@@ -35,11 +35,11 @@ const TrailModalCard: FC<TrailModalCardProps> = ({ instructor }) => {
                 )}
           </div>
           <div className="trail-modal-card__body">
-            <h3 className="trail-modal-card__body-name u-font-size-16 u-font-weight-bold">
+            <h3 className="trail-modal-card__body-name">
               {instructor.first_name} {instructor.last_name}
             </h3>
             {instructor.instructor_fields?.map((instructorField) => (
-              <h4 className="trail-modal-card__body-field u-font-size-14 u-font-weight-500">
+              <h4 className="trail-modal-card__body-field">
                 {instructorField}
               </h4>
             ))}
@@ -49,6 +49,7 @@ const TrailModalCard: FC<TrailModalCardProps> = ({ instructor }) => {
                   name="instructor-rating"
                   value={+Number(instructor.average_rating).toPrecision(2)}
                   precision={0.1}
+                  size="small"
                   readOnly
                 />
               </div>
@@ -72,9 +73,9 @@ const TrailModalCard: FC<TrailModalCardProps> = ({ instructor }) => {
           open={openCalendarStepperModal}
           sx={{
             '& .MuiDialog-paper': {
-              width: '100%',
-              margin: 0,
-              borderRadius: '16px',
+              width: 'calc(100% - 3.2rem)',
+              margin: '1.6rem',
+              maxHeight: 'calc(100% - 3.2rem)',
             },
           }}
         >

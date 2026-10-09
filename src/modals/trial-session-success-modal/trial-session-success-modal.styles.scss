@@ -1,44 +1,13 @@
+@import '../../assets/styles/variables.scss';
+@import '../../assets/styles/mixins.scss';
+@import '../modal-kit';
+
 .trialSessionModal {
   &__wrapper {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 3rem;
-    text-align: center;
-
-    img {
-      width: 6.4rem;
-      height: 6.4rem;
-      margin-bottom: 3.2rem;
-    }
+    @include modal-success;
   }
 
-  &__title {
-    font-weight: bold;
-    margin-bottom: 1.4rem;
-  }
-
-  &__message {
-    font-size: 1.6rem;
-    margin-bottom: 3.2rem;
-
-    .add-text {
-      display: block;
-    }
-  }
-
-  &__button {
-    font-size: 1.6rem;
-    padding: 1rem 0;
-    width: 100%;
-    margin-top: 1.6rem;
-    text-transform: none;
-  }
-
-  &__btn {
-    font-size: 1.6rem;
-    padding: 1rem 0;
-    width: 100%;
+  &__message .add-text {
+    display: block;
   }
 }
