@@ -1,7 +1,7 @@
 .container {
-  max-width: $grid-width !important;
-  // padding: 0 $offset-x;
-  padding: 0;
+  width: 100%;
+  max-width: $container-max !important;
+  padding: 0 $container-gutter;
   margin: 0 auto;
 
   .row {
@@ -20,13 +20,8 @@
     }
   }
 
-  @include respond(tab-port) {
-    max-width: $grid-width-tab-port !important;
-    // padding: 0 3rem;
-  }
-
   @include respond(phone) {
-    max-width: $grid-width-phone !important;
+    padding: 0 $container-gutter-mobile;
   }
 
   @include clearfix;
