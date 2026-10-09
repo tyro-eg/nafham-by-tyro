@@ -475,7 +475,8 @@
       },
       "IMG": {
         "EDITMODAL": {
-          "TITLE": "قم بتحميل صورة ملفك الشخصي"
+          "TITLE": "قم بتحميل صورة ملفك الشخصي",
+          "UPLOAD": "اختر ملفًا"
         }
       },
       "EDITACTION": {
@@ -880,7 +881,12 @@
     "MAIN": {
       "TITLE": "أهلا بك  👋",
       "SUBTITLE": "أدخل بياناتك بالأسفل"
-    }
+    },
+    "COUNTRY": "الدولة",
+    "SELECT_COUNTRY": "اختر الدولة",
+    "NATIONALITY": "الجنسية",
+    "SELECT_NATIONALITY": "اختر الجنسية",
+    "OR": "أو سجّل باستخدام"
   },
   "REGISTERED": {
     "TITLE": "شكرا لتسجيلك!",

@@ -34,7 +34,14 @@ function LanguageSelector() {
     fontWeight: 500,
     color: '#4a5a6e',
     whiteSpace: 'nowrap',
-    '& .MuiButton-startIcon': { color: '#6b7a8d' },
+    // Logical margins so the icon gap is correct in RTL too
+    '& .MuiButton-startIcon': {
+      color: '#6b7a8d',
+      marginLeft: 0,
+      marginRight: 0,
+      marginInlineStart: '-4px',
+      marginInlineEnd: '8px',
+    },
     '&:hover': { color: '#0f1b2d', backgroundColor: '#f6f9fc' },
   };
 

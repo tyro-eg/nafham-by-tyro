@@ -58,6 +58,8 @@
         height: 3.6rem;
         object-fit: contain;
         filter: grayscale(1);
+        // Hide solid white image backgrounds (e.g. CNBC) on the tinted section
+        mix-blend-mode: multiply;
         opacity: 0.55;
         transition:
           filter $transition,
