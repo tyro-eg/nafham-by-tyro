@@ -2,67 +2,77 @@
 @import '../../../assets/styles/mixins.scss';
 
 .landing__features {
-  background-color: $color-white;
-  padding-top: 4.8rem;
-  padding-bottom: 4.8rem;
-  background:
-    linear-gradient(rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0.75)),
-    url('/assets/images/newLanding/blend.webp') center/cover no-repeat;
+  @include section($surface-alt);
+  border-top: 1px solid $border;
 
-  .container {
+  @include respond(phone) {
+    padding: $space-6 0;
+  }
+
+  .ds-container {
     display: flex;
     flex-direction: column;
     align-items: center;
-    row-gap: 5rem;
+    gap: $space-5;
+  }
 
-    .features-title {
-      color: $color-midnight-blue;
-      font-size: 4.8rem;
-      font-weight: 600;
-      line-height: 7.4rem;
-      letter-spacing: -2.305px;
-      text-align: center;
+  .features-title {
+    font-size: $font-sm;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-align: center;
+    color: $text-muted;
 
-      span {
-        color: $color-primary;
-      }
+    html[dir='rtl'] & {
+      letter-spacing: 0;
+    }
+  }
+
+  .features-images {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: $space-5 $space-8;
+
+    @include respond(phone) {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      justify-items: center;
+      gap: $space-5 $space-4;
     }
 
-    .bow-underline {
-      position: relative;
-      display: inline-block;
-    }
-
-    .bow-underline::after {
-      content: '';
-      position: absolute;
-      left: -21px;
-      bottom: -5px;
-      width: 233px;
-      height: 14px;
-      transform: rotate(1.51deg);
-
-      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="238" height="14" viewBox="0 0 238 14" fill="none"><path d="M2.72519 5.57909C41.6658 2.6042 142.785 -0.332167 235.736 11.7214" stroke="%233AC5F1" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>')
-        no-repeat center;
-      background-size: contain;
-    }
-
-    .features-images {
-      display: flex;
+    .feature-logo {
+      display: inline-flex;
       align-items: center;
       justify-content: center;
-      flex-wrap: wrap;
-      column-gap: 7.7rem;
-      row-gap: 4rem;
+      min-height: 4.4rem;
+      padding: $space-1 $space-2;
+      border-radius: $radius-sm;
 
-      .feature-logo {
-        cursor: pointer;
+      .image {
+        display: block;
+        width: auto;
+        max-width: 16rem;
+        height: 3.6rem;
+        object-fit: contain;
+        filter: grayscale(1);
+        opacity: 0.55;
+        transition:
+          filter $transition,
+          opacity $transition;
 
-        .image {
-          max-width: 24rem;
-          min-width: 17rem;
-          height: 5rem;
+        @include respond(phone) {
+          max-width: 100%;
+          height: 2.8rem;
         }
+      }
+
+      &:hover .image,
+      &:focus-visible .image {
+        filter: grayscale(0);
+        opacity: 1;
       }
     }
   }

@@ -40,30 +40,29 @@ const HomeFeatures: FC = () => {
     },
   ];
 
-  const handleOpenLink = (url: string) => {
-    window.open(url, '_blank');
-  };
-
   return (
-    <div className="landing__features">
-      <div className="container">
-        <p className="features-title bow-underline">
+    <section className="landing__features">
+      <div className="ds-container">
+        <p className="features-title">
           {t('LANDING.BLOCK1.FEATURED.PART1')}{' '}
           <span>{t('LANDING.BLOCK1.FEATURED.PART2')}</span>
         </p>
         <div className="features-images">
           {features.map(({ image, alt, url }, index) => (
-            <div
+            <a
               key={alt + index}
               className="feature-logo"
-              onClick={() => handleOpenLink(url)}
+              href={url}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={alt}
             >
-              <img className="image" src={image} alt={alt} />
-            </div>
+              <img className="image" src={image} alt={alt} loading="lazy" />
+            </a>
           ))}
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 

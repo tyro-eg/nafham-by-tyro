@@ -1,7 +1,8 @@
 import { FC } from 'react';
 import { useTranslation } from 'react-i18next';
+import { FormatQuote } from '@mui/icons-material';
 
-import { useRtlClass } from '../../../assets/utils/utils';
+import { getNameInitials, useRtlClass } from '../../../assets/utils/utils';
 
 import ReadMore from '../../../component/read-more/read-more.component';
 import Carousel from '../../../component/carousel/carousel';
@@ -117,25 +118,46 @@ const HomeTestimonial: FC = () => {
   const rtlClass = useRtlClass();
 
   return (
-    <div className="landing__testimonials">
-      <div className={`testimonials-image-container ${rtlClass}`}>
-        <div className="container">
-          <Carousel small arrows={false}>
+    <section className={`landing__testimonials ${rtlClass}`}>
+      <div className="ds-container">
+        <div className="home-heading">
+          <p className="ds-eyebrow">{t('LANDING.BLOCK5.TITLE')}</p>
+          <h2 className="section-title">{t('LANDING.TESTIMONIAL')}</h2>
+        </div>
+
+        <div className="testimonials-carousel">
+          <Carousel arrows={false}>
             {(i18n.dir() === 'rtl' ? testimonialsArabic : testimonials).map(
               (testimonial, index) => (
-                <div key={index}>
-                  <p className="title">{t('LANDING.BLOCK5.TITLE')}</p>
-                  <ReadMore
-                    text={testimonial.description}
-                    maxLength={180}
-                  ></ReadMore>
-                </div>
+                <figure key={index} className="testimonial-card">
+                  <FormatQuote
+                    className="testimonial-card__quote"
+                    aria-hidden="true"
+                  />
+                  <blockquote className="testimonial-card__text">
+                    <ReadMore
+                      text={testimonial.description}
+                      maxLength={180}
+                    ></ReadMore>
+                  </blockquote>
+                  <figcaption className="testimonial-card__author">
+                    <span
+                      className="testimonial-card__avatar"
+                      aria-hidden="true"
+                    >
+                      {getNameInitials(testimonial.name)}
+                    </span>
+                    <span className="testimonial-card__name">
+                      {testimonial.name}
+                    </span>
+                  </figcaption>
+                </figure>
               ),
             )}
           </Carousel>
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 

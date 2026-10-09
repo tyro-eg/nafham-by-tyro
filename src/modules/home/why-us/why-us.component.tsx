@@ -14,45 +14,51 @@ const HomeWhyUs: FC = () => {
   const rtlClass = useRtlClass();
 
   return (
-    <div className="landing__why-us">
-      <div className="container">
-        <div className="why-us-container">
-          <p className="why-us-header">{t('LANDING.BLOCK7.TITLE')}</p>
-          <p className="why-us-description">
+    <section className="landing__why-us">
+      <div className="ds-container">
+        <div className="home-heading">
+          <p className="ds-eyebrow">{t('LANDING.BLOCK7.TITLE')}</p>
+          <h2 className="section-title">
             <span>{t('LANDING.BLOCK7.DESCRIPTION.PART1')}</span>
             <span className={`parallelogram ${rtlClass}`}>
               {t('LANDING.BLOCK7.DESCRIPTION.PART2')}
             </span>
-          </p>
+          </h2>
         </div>
 
         <div className="strong-points">
           <div className="strong-points__card green">
-            <img className="image" src={rafiki} alt="SVG" />
-            <h5 className="title">{t('LANDING.BLOCK7.ITEM1.TITLE')}</h5>
+            <div className="image-wrap">
+              <img className="image" src={rafiki} alt="SVG" />
+            </div>
+            <h3 className="title">{t('LANDING.BLOCK7.ITEM1.TITLE')}</h3>
             <p className="description">
               {t('LANDING.BLOCK7.ITEM1.DESCRIPTION')}
             </p>
           </div>
 
           <div className="strong-points__card primary">
-            <img className="image" src={notes} alt="SVG" />
-            <h5 className="title">{t('LANDING.BLOCK7.ITEM2.TITLE')}</h5>
+            <div className="image-wrap">
+              <img className="image" src={notes} alt="SVG" />
+            </div>
+            <h3 className="title">{t('LANDING.BLOCK7.ITEM2.TITLE')}</h3>
             <p className="description">
               {t('LANDING.BLOCK7.ITEM2.DESCRIPTION')}
             </p>
           </div>
 
           <div className="strong-points__card gold">
-            <img className="image" src={programming} alt="SVG" />
-            <h5 className="title">{t('LANDING.BLOCK7.ITEM3.TITLE')}</h5>
+            <div className="image-wrap">
+              <img className="image" src={programming} alt="SVG" />
+            </div>
+            <h3 className="title">{t('LANDING.BLOCK7.ITEM3.TITLE')}</h3>
             <p className="description">
               {t('LANDING.BLOCK7.ITEM3.DESCRIPTION')}
             </p>
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 

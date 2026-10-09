@@ -1,15 +1,21 @@
 import { FC, useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { AppBar, Button, Container, Toolbar, Popover } from '@mui/material';
-import { ExpandMore } from '@mui/icons-material';
+import { AppBar, Button, Popover } from '@mui/material';
+import {
+  ExpandMore,
+  Logout,
+  MailOutline,
+  PersonOutline,
+  PhoneOutlined,
+  SettingsOutlined,
+} from '@mui/icons-material';
 // TODO: Uncomment when backend is ready
 // import { Info } from '@mui/icons-material';
 
 import { useAppSelector } from '../../../redux/store';
 import { selectCurrentUser } from '../../../redux/user/user.selectors';
 import { useSignOut } from '../../../hooks/useAuth';
-import { useRtlClass } from '../../../assets/utils/utils';
 import LanguageSelector from '../../../component/i18next/LanguageSelector';
 import logo from '../../../assets/images/logo.png';
 import Profile from '../../../assets/images/videoSession/people/profile.png';
@@ -27,7 +33,6 @@ const MainHeader: FC<HeaderProps> = ({ openFreeTrail }) => {
   // const MainHeader: FC<HeaderProps> = ({ openFreeTrail, openEmailConfirm }) => {
   const { t } = useTranslation();
   const signOutMutation = useSignOut();
-  const rtlClass = useRtlClass();
 
   const currentUser = useAppSelector(selectCurrentUser);
 
@@ -40,8 +45,15 @@ const MainHeader: FC<HeaderProps> = ({ openFreeTrail }) => {
     await signOutMutation.mutateAsync();
   };
 
+  const navClass = ({ isActive }: { isActive: boolean }) =>
+    isActive ? 'menu-item active' : 'menu-item';
+
+  const fullName = `${currentUser?.first_name ?? ''} ${
+    currentUser?.last_name ?? ''
+  }`.trim();
+
   return (
-    <AppBar sx={{ backgroundColor: '#fffffff7' }} position="fixed">
+    <AppBar position="fixed" className="app-header">
       {/* TODO: Uncomment when backend is ready */}
       {/* {!!currentUser &&
         !!currentUser?.email &&
@@ -61,187 +73,167 @@ const MainHeader: FC<HeaderProps> = ({ openFreeTrail }) => {
             </span>
           </div>
         )} */}
-      <Toolbar>
-        <Container maxWidth="lg">
-          <div className="container header-container">
-            <div className={`app-header__top ${rtlClass}`}>
-              <div className="contact-menu">
-                <a className="item" href="tel:+971507105394">
-                  (+971) 50 710 5394
-                </a>
-                |
-                <a className="item" href="mailto:learn@nafhambytyro.com">
-                  learn@nafhambytyro.com
-                </a>
-              </div>
-              <div className="app-header__top-links">
-                {!currentUser && (
-                  <>
-                    <Link className="link" to="/login">
-                      {t('HEADER.TOP.LOGIN')}
-                    </Link>
-                    <Link className="link" to="/register">
-                      {t('HEADER.TOP.REGISTER')}
-                    </Link>
-                  </>
-                )}
-                <div>
-                  <LanguageSelector />
-                </div>
-              </div>
-            </div>
+      <div className="app-header__strip">
+        <div className="app-header__inner">
+          <div className="contact-menu">
+            <a className="item" href="tel:+971507105394">
+              <PhoneOutlined className="item__icon" />
+              <span>(+971) 50 710 5394</span>
+            </a>
+            <a className="item" href="mailto:learn@nafhambytyro.com">
+              <MailOutline className="item__icon" />
+              <span>learn@nafhambytyro.com</span>
+            </a>
+          </div>
+          {!currentUser && (
+            <Link className="app-header__strip-link" to="/register">
+              {t('HEADER.TOP.REGISTER')}
+            </Link>
+          )}
+        </div>
+      </div>
 
-            <div className={`app-header__bottom ${rtlClass}`}>
-              <Link to="/">
-                <img src={logo} alt="tyro logo" loading="lazy" />
-              </Link>
-              <div className="links">
-                <div>
-                  <NavLink
-                    className={({ isActive }) =>
-                      isActive ? 'menu-item active' : 'menu-item'
-                    }
-                    to="/"
-                  >
-                    {t('NAVIGATION.HOME')}
-                  </NavLink>
-                  {currentUser && (
-                    <>
-                      <NavLink
-                        className={({ isActive }) =>
-                          isActive ? 'menu-item active' : 'menu-item'
-                        }
-                        to="/home"
-                      >
-                        {t('NAVIGATION.INSTRUCTORS')}
-                      </NavLink>
+      <div className="app-header__bar">
+        <div className="app-header__inner">
+          <Link to="/" className="app-header__logo">
+            <img src={logo} alt="tyro logo" loading="lazy" />
+          </Link>
 
-                      <NavLink
-                        className={({ isActive }) =>
-                          isActive ? 'menu-item active' : 'menu-item'
-                        }
-                        to="/my_instructors"
-                      >
-                        {t('NAVIGATION.MY_INSTRUCTORS')}
-                      </NavLink>
+          <nav className="app-header__nav">
+            <NavLink className={navClass} to="/">
+              {t('NAVIGATION.HOME')}
+            </NavLink>
+            {currentUser && (
+              <>
+                <NavLink className={navClass} to="/home">
+                  {t('NAVIGATION.INSTRUCTORS')}
+                </NavLink>
+                <NavLink className={navClass} to="/my_instructors">
+                  {t('NAVIGATION.MY_INSTRUCTORS')}
+                </NavLink>
+                <NavLink className={navClass} to="/my_sessions">
+                  {t('NAVIGATION.SESSIONS')}
+                </NavLink>
+                <NavLink className={navClass} to="/my_packages">
+                  {t('NAVIGATION.PACKAGES')}
+                </NavLink>
+              </>
+            )}
+          </nav>
 
-                      <NavLink
-                        className={({ isActive }) =>
-                          isActive ? 'menu-item active' : 'menu-item'
-                        }
-                        to="/my_sessions"
-                      >
-                        {t('NAVIGATION.SESSIONS')}
-                      </NavLink>
+          <div className="app-header__actions">
+            <LanguageSelector />
 
-                      <NavLink
-                        className={({ isActive }) =>
-                          isActive ? 'menu-item active' : 'menu-item'
-                        }
-                        to="/my_packages"
-                      >
-                        {t('NAVIGATION.PACKAGES')}
-                      </NavLink>
-                    </>
-                  )}
-                </div>
-              </div>
-
-              {!currentUser && (
+            {!currentUser && (
+              <>
+                <Button
+                  component={Link}
+                  to="/login"
+                  color="inherit"
+                  className="app-header__login"
+                >
+                  {t('HEADER.TOP.LOGIN')}
+                </Button>
                 <Button
                   onClick={openFreeTrail}
                   variant="contained"
                   color="primary"
+                  className="app-header__cta"
                 >
                   {t('HEADER.TOP.FREE_TRIAL')}
                 </Button>
-              )}
+              </>
+            )}
 
-              {!!currentUser && (
-                <>
-                  <Button
-                    onClick={(e) => setProfileAnchorEl(e.currentTarget)}
-                    className="app-header__user"
-                    endIcon={<ExpandMore />}
-                  >
-                    {currentUser?.avatar ? (
+            {!!currentUser && (
+              <>
+                <Button
+                  onClick={(e) => setProfileAnchorEl(e.currentTarget)}
+                  className="app-header__user"
+                  color="inherit"
+                  endIcon={<ExpandMore />}
+                  aria-haspopup="true"
+                  aria-expanded={isProfilePopoverOpen}
+                >
+                  <img
+                    className="app-header__avatar"
+                    src={currentUser?.avatar || Profile}
+                    alt="profile"
+                    loading="lazy"
+                  />
+                  <span className="app-header__user-name">{fullName}</span>
+                </Button>
+                <Popover
+                  open={isProfilePopoverOpen}
+                  anchorEl={profileAnchorEl}
+                  onClose={() => setProfileAnchorEl(null)}
+                  anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'right',
+                  }}
+                  transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  slotProps={{ paper: { className: 'profile-popover-paper' } }}
+                >
+                  <div className="profile-popover">
+                    <div className="profile-popover__head">
                       <img
-                        src={currentUser?.avatar}
+                        className="profile-popover__avatar"
+                        src={currentUser?.avatar || Profile}
                         alt="profile"
                         loading="lazy"
                       />
-                    ) : (
-                      <img src={Profile} alt="profile" loading="lazy" />
-                    )}
-                    <div className="app-header__user-center">
-                      <div className="name">
-                        {currentUser?.first_name + ' ' + currentUser.last_name}
+                      <div className="profile-popover__meta">
+                        <div className="name">{fullName}</div>
+                        <span className="email">{currentUser?.email}</span>
                       </div>
                     </div>
-                  </Button>
-                  <Popover
-                    elevation={0}
-                    open={isProfilePopoverOpen}
-                    anchorEl={profileAnchorEl}
-                    onClose={() => setProfileAnchorEl(null)}
-                    anchorOrigin={{
-                      vertical: 'bottom',
-                      horizontal: 'right',
-                    }}
-                    transformOrigin={{
-                      vertical: 'top',
-                      horizontal: 'right',
-                    }}
-                  >
-                    <div className="profile-popover">
-                      <div className="title">
-                        <div className="name">
-                          {currentUser?.first_name +
-                            ' ' +
-                            currentUser?.last_name}
-                        </div>
-                        <span>{currentUser?.email}</span>
+
+                    {currentUser?.type === 'Tutor' && (
+                      <div className="profile-popover__links">
+                        <Link
+                          onClick={() => setProfileAnchorEl(null)}
+                          to={`/profile/${currentUser?.id}`}
+                          className="item"
+                        >
+                          <PersonOutline className="item__icon" />
+                          {t('HEADER.USER.PROFILE')}
+                        </Link>
+
+                        <Link
+                          onClick={() => setProfileAnchorEl(null)}
+                          to="/account_settings"
+                          className="item"
+                        >
+                          <SettingsOutlined className="item__icon" />
+                          {t('HEADER.USER.SETTINGS')}
+                        </Link>
                       </div>
+                    )}
 
-                      {currentUser?.type === 'Tutor' && (
-                        <>
-                          <Link
-                            onClick={() => setProfileAnchorEl(null)}
-                            to={`/profile/${currentUser?.id}`}
-                            className="item"
-                          >
-                            {t('HEADER.USER.PROFILE')}
-                          </Link>
-
-                          <Link
-                            onClick={() => setProfileAnchorEl(null)}
-                            to="/account_settings"
-                            className="item"
-                          >
-                            {t('HEADER.USER.SETTINGS')}
-                          </Link>
-                        </>
-                      )}
-
+                    <div className="profile-popover__footer">
                       <Button
                         onClick={() => {
                           handleLogOut();
                           setProfileAnchorEl(null);
                         }}
-                        variant="contained"
-                        color="primary"
+                        variant="outlined"
+                        fullWidth
+                        startIcon={<Logout />}
                         className="logout-button"
                       >
                         {t('HEADER.USER.LOGOUT')}
                       </Button>
                     </div>
-                  </Popover>
-                </>
-              )}
-            </div>
+                  </div>
+                </Popover>
+              </>
+            )}
           </div>
-        </Container>
-      </Toolbar>
+        </div>
+      </div>
     </AppBar>
   );
 };

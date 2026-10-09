@@ -2,7 +2,13 @@ import { FC, useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Button, IconButton } from '@mui/material';
-import { Menu } from '@mui/icons-material';
+import {
+  Close,
+  Logout,
+  MailOutline,
+  Menu,
+  PhoneOutlined,
+} from '@mui/icons-material';
 // TODO: Uncomment when backend is ready
 // import { Info } from '@mui/icons-material';
 
@@ -11,6 +17,7 @@ import { selectCurrentUser } from '../../../redux/user/user.selectors';
 import { useSignOut } from '../../../hooks/useAuth';
 import LanguageSelector from '../../../component/i18next/LanguageSelector';
 import logo from '../../../assets/images/logo.png';
+import Profile from '../../../assets/images/videoSession/people/profile.png';
 import { HeaderProps } from '../main-header/main-header.component';
 
 import './mobile-header.styles.scss';
@@ -34,6 +41,9 @@ const MobileHeader: FC<HeaderProps> = ({ openFreeTrail }) => {
   const closeMobileHeader = () => {
     toggleMobileHeader(false);
   };
+
+  const navClass = ({ isActive }: { isActive: boolean }) =>
+    isActive ? 'menu-item active' : 'menu-item';
 
   return (
     <>
@@ -60,55 +70,100 @@ const MobileHeader: FC<HeaderProps> = ({ openFreeTrail }) => {
           </div>
         )} */}
         <div className="app-header-mobile__top">
-          <Link to="/" onClick={closeMobileHeader}>
+          <Link
+            to="/"
+            onClick={closeMobileHeader}
+            className="app-header-mobile__logo"
+          >
             <img src={logo} alt="tyro logo" />
           </Link>
-          <IconButton onClick={() => toggleMobileHeader(!mobileHeader)}>
-            <Menu className="menu-icon" />
-          </IconButton>
+          <div className="app-header-mobile__top-actions">
+            {!currentUser && !mobileHeader && (
+              <Button
+                variant="contained"
+                color="primary"
+                size="small"
+                className="app-header-mobile__cta"
+                onClick={openFreeTrail}
+              >
+                {t('HEADER.TOP.FREE_TRIAL')}
+              </Button>
+            )}
+            <IconButton
+              className="app-header-mobile__toggle"
+              aria-label="menu"
+              aria-expanded={mobileHeader}
+              onClick={() => toggleMobileHeader(!mobileHeader)}
+            >
+              {mobileHeader ? (
+                <Close className="menu-icon" />
+              ) : (
+                <Menu className="menu-icon" />
+              )}
+            </IconButton>
+          </div>
         </div>
         <div
           className={`app-header-mobile__body ${mobileHeader ? 'active' : ''}`}
         >
           {currentUser && (
-            <div>
-              <div className="app-header__user">
-                <div className="app-header__user-center">
-                  <div className="name">
-                    {currentUser?.first_name + ' ' + currentUser?.last_name}
-                  </div>
+            <div className="app-header__user">
+              <img
+                className="app-header__user-avatar"
+                src={currentUser?.avatar || Profile}
+                alt="profile"
+              />
+              <div className="app-header__user-center">
+                <div className="name">
+                  {currentUser?.first_name + ' ' + currentUser?.last_name}
                 </div>
+                {currentUser?.email && (
+                  <span className="email">{currentUser.email}</span>
+                )}
               </div>
             </div>
           )}
 
-          <LanguageSelector />
+          <nav className="app-header-mobile__nav">
+            <NavLink className={navClass} to="/" onClick={closeMobileHeader}>
+              {t('NAVIGATION.HOME')}
+            </NavLink>
+            {currentUser && (
+              <>
+                <NavLink
+                  className={navClass}
+                  to="/home"
+                  onClick={closeMobileHeader}
+                >
+                  {t('NAVIGATION.INSTRUCTORS')}
+                </NavLink>
 
-          {!currentUser && (
-            <div className="app-header-mobile__body-links">
-              <Link className="link" to="/login" onClick={closeMobileHeader}>
-                {t('HEADER.TOP.LOGIN')}
-              </Link>
-              <Link className="link" to="/register" onClick={closeMobileHeader}>
-                {t('HEADER.TOP.REGISTER')}
-              </Link>
-            </div>
-          )}
+                <NavLink
+                  className={navClass}
+                  to="/my_instructors"
+                  onClick={closeMobileHeader}
+                >
+                  {t('NAVIGATION.MY_INSTRUCTORS')}
+                </NavLink>
 
-          {!currentUser && (
-            <div className="app-header-mobile__body-free-trail">
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={() => {
-                  openFreeTrail();
-                  closeMobileHeader();
-                }}
-              >
-                {t('HEADER.TOP.FREE_TRIAL')}
-              </Button>
-            </div>
-          )}
+                <NavLink
+                  className={navClass}
+                  to="/my_sessions"
+                  onClick={closeMobileHeader}
+                >
+                  {t('NAVIGATION.SESSIONS')}
+                </NavLink>
+
+                <NavLink
+                  className={navClass}
+                  to="/my_packages"
+                  onClick={closeMobileHeader}
+                >
+                  {t('NAVIGATION.PACKAGES')}
+                </NavLink>
+              </>
+            )}
+          </nav>
 
           {currentUser && currentUser.type === 'Tutor' && (
             <div className="app-header-mobile__body-profile">
@@ -130,57 +185,48 @@ const MobileHeader: FC<HeaderProps> = ({ openFreeTrail }) => {
             </div>
           )}
 
-          <NavLink
-            className={({ isActive }) =>
-              isActive ? 'menu-item active' : 'menu-item'
-            }
-            to="/"
-            onClick={closeMobileHeader}
-          >
-            {t('NAVIGATION.HOME')}
-          </NavLink>
-          {currentUser && (
-            <>
-              <NavLink
-                className={({ isActive }) =>
-                  isActive ? 'menu-item active' : 'menu-item'
-                }
-                to="/home"
-                onClick={closeMobileHeader}
-              >
-                {t('NAVIGATION.INSTRUCTORS')}
-              </NavLink>
+          <div className="app-header-mobile__body-lang">
+            <LanguageSelector />
+          </div>
 
-              <NavLink
-                className={({ isActive }) =>
-                  isActive ? 'menu-item active' : 'menu-item'
-                }
-                to="/my_instructors"
+          {!currentUser && (
+            <div className="app-header-mobile__body-links">
+              <Button
+                component={Link}
+                to="/login"
+                variant="outlined"
+                fullWidth
                 onClick={closeMobileHeader}
               >
-                {t('NAVIGATION.MY_INSTRUCTORS')}
-              </NavLink>
+                {t('HEADER.TOP.LOGIN')}
+              </Button>
+              <Button
+                component={Link}
+                to="/register"
+                variant="outlined"
+                fullWidth
+                onClick={closeMobileHeader}
+              >
+                {t('HEADER.TOP.REGISTER')}
+              </Button>
+            </div>
+          )}
 
-              <NavLink
-                className={({ isActive }) =>
-                  isActive ? 'menu-item active' : 'menu-item'
-                }
-                to="/my_sessions"
-                onClick={closeMobileHeader}
+          {!currentUser && (
+            <div className="app-header-mobile__body-free-trail">
+              <Button
+                variant="contained"
+                color="primary"
+                fullWidth
+                size="large"
+                onClick={() => {
+                  openFreeTrail();
+                  closeMobileHeader();
+                }}
               >
-                {t('NAVIGATION.SESSIONS')}
-              </NavLink>
-
-              <NavLink
-                className={({ isActive }) =>
-                  isActive ? 'menu-item active' : 'menu-item'
-                }
-                to="/my_packages"
-                onClick={closeMobileHeader}
-              >
-                {t('NAVIGATION.PACKAGES')}
-              </NavLink>
-            </>
+                {t('HEADER.TOP.FREE_TRIAL')}
+              </Button>
+            </div>
           )}
 
           {currentUser && (
@@ -190,13 +236,25 @@ const MobileHeader: FC<HeaderProps> = ({ openFreeTrail }) => {
                   handleLogOut();
                   closeMobileHeader();
                 }}
-                variant="contained"
-                color="primary"
+                variant="outlined"
+                fullWidth
+                startIcon={<Logout />}
               >
                 {t('HEADER.USER.LOGOUT')}
               </Button>
             </div>
           )}
+
+          <div className="app-header-mobile__contact">
+            <a className="item" href="tel:+971507105394">
+              <PhoneOutlined className="item__icon" />
+              <span>(+971) 50 710 5394</span>
+            </a>
+            <a className="item" href="mailto:learn@nafhambytyro.com">
+              <MailOutline className="item__icon" />
+              <span>learn@nafhambytyro.com</span>
+            </a>
+          </div>
         </div>
       </div>
     </>
