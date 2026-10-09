@@ -213,6 +213,11 @@ const MaterialTheme: React.FC<MaterialThemeProps> = ({ children }) => {
               paper: {
                 borderRadius: 16,
                 boxShadow: '0 24px 64px rgba(15, 27, 45, 0.24)',
+                '@media (max-width: 600px)': {
+                  margin: 16,
+                  width: 'calc(100% - 32px)',
+                  maxHeight: 'calc(100% - 32px)',
+                },
               },
             },
           },
@@ -228,7 +233,11 @@ const MaterialTheme: React.FC<MaterialThemeProps> = ({ children }) => {
           },
           MuiDialogTitle: {
             styleOverrides: {
-              root: { fontSize: '2rem', fontWeight: 700, color: tokens.navy900 },
+              root: {
+                fontSize: '2rem',
+                fontWeight: 700,
+                color: tokens.navy900,
+              },
             },
           },
           MuiPaper: {
