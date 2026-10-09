@@ -1,63 +1,29 @@
 @import '../../assets/styles/variables.scss';
 @import '../../assets/styles/mixins.scss';
-@import '../private-sessions/private-sessions-filter/private-sessions-filter.styles.scss';
 
+// Page shell lives in sessions/dashboard-shell.styles.scss and the
+// filter bar in private-sessions-filter.styles.scss (both imported
+// from the component).
 .my-instructors {
-  display: flex;
-  flex-direction: column;
-  background-color: $color-grey-light-0;
-
+  // The instructor card is a wide horizontal card, so the results
+  // are a single responsive column with consistent gaps.
   .instructor-list {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding-top: 10rem;
-    background-color: $color-grey-light-0;
-
-    @include respond(tab-port) {
-      padding-top: 16rem;
-    }
-
-    @include respond(phone) {
-      padding-top: 10rem;
-    }
+    width: 100%;
 
     &__container {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: $space-5;
 
       @include respond(phone) {
-        width: 94%;
-        max-width: unset !important;
-      }
-    }
-
-    .no_results {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      margin-bottom: 2rem;
-
-      &__img {
-        margin-top: 14%;
-        margin-bottom: 1.8rem;
-        margin-left: -8rem;
-
-        svg {
-          width: 201px;
-          height: 257px;
-        }
+        gap: $space-4;
       }
 
-      &__content {
-        text-align: center;
-
-        p {
-          font-size: 2.6rem;
-          color: $color-disabled;
-        }
+      > .instructor-card,
+      > .instructor-card-container {
+        width: 100%;
+        max-width: none;
+        margin: 0;
       }
     }
   }

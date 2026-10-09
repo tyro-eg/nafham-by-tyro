@@ -1,101 +1,144 @@
 @import '../../../../../assets/styles/variables.scss';
 @import '../../../../../assets/styles/mixins.scss';
+@import '../../../session-tokens.scss';
+
 .instructorRateModal {
-  padding: 3rem;
+  padding: $space-6;
+
+  @include respond(phone) {
+    padding: $space-5 $space-4;
+  }
+
   &__head {
     max-width: 40rem;
-    margin: 0 auto 4.8rem auto;
+    margin: 0 auto $space-6;
+
+    h3 {
+      margin-bottom: $space-2;
+      font-weight: 700;
+      line-height: 1.2;
+    }
   }
 
   &__time {
     display: flex;
-    justify-content: space-between;
+    gap: $space-4;
+
     .time-field {
-      width: 48%;
+      flex: 1 1 0;
+      min-width: 0;
     }
   }
 
-  &__body {
-    label {
-      text-align: start;
-      display: block;
-    }
+  .textarea-container > label,
+  .rating-container > label {
+    display: block;
+    margin-bottom: $space-2;
+    text-align: start;
+  }
+
+  textarea {
+    @include input;
+    display: block;
+    min-height: 12rem;
+    line-height: 1.6;
+    font-family: inherit;
+    resize: vertical;
+  }
+
+  hr {
+    width: 100%;
+    margin: $space-5 0;
+    border: 0;
+    border-top: 1px solid $border;
   }
 
   &__attended-students {
-    margin: 2rem 0;
+    margin: $space-5 0;
+
     h4 {
-      margin-bottom: 1rem;
+      margin-bottom: $space-3;
       text-align: start;
     }
+
     &-checkboxes {
-      display: flex;
-      justify-content: space-between;
-      flex-wrap: wrap;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: $space-2;
+
+      @include respond(phone) {
+        grid-template-columns: minmax(0, 1fr);
+      }
     }
+
     .MuiSvgIcon-root {
       width: 2rem;
       height: 2rem;
     }
+
     .MuiFormControlLabel-root {
-      width: 48%;
-      background-color: #eff3f6;
-      border-radius: 4px;
-      margin-right: 0;
+      margin: 0;
+      padding-inline-end: $space-3;
+      border: 1px solid $border;
+      border-radius: $radius-sm;
+      background-color: $gray-50;
+
+      .MuiFormControlLabel-label {
+        margin-bottom: 0;
+        font-size: $font-sm;
+        color: $text-strong;
+      }
     }
   }
 
   &__instructor-feedback {
     .select-container {
-      display: flex;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      margin-bottom: 2.4rem;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: $space-4;
+      margin-bottom: $space-5;
+
+      @include respond(phone) {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
       .select-input {
-        width: 48%;
-        @include respond(phone) {
-          width: 100%;
-        }
+        width: 100%;
+      }
+
+      .MuiInputLabel-root {
+        margin-bottom: 0;
       }
     }
+
     .rating-container {
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      margin-bottom: 2rem;
+      gap: $space-2;
+      margin-bottom: $space-5;
 
       .rating-icon {
-        font-size: 5.4rem;
+        font-size: 4.8rem;
+        @include accent-rating;
       }
     }
+
     .textarea-container {
-      margin-bottom: 2.4rem;
+      margin-bottom: $space-5;
     }
   }
 
   &__instructor-optional {
     .textarea-container {
-      margin-bottom: 2.4rem;
+      margin-bottom: $space-5;
     }
   }
 
   &__footer {
     display: flex;
     justify-content: space-between;
-
-    padding: 0 3rem;
-    margin-top: 4.8rem;
-
-    app-button {
-      max-width: 26rem;
-      width: 100%;
-    }
+    padding: 0 $space-6;
+    margin-top: $space-7;
   }
-}
-
-hr {
-  width: 80%;
-
-  margin: 3rem auto;
 }

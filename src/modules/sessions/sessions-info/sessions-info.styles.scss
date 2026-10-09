@@ -2,83 +2,53 @@
 @import '../../../assets/styles/mixins.scss';
 
 .sessions-info {
-  @include respond(tab-port) {
-    margin-top: 3.6rem;
-  }
+  width: 100%;
+  min-width: 0;
+
+  // Calendar / List switch: themed MUI Tabs on a hairline divider
   .session-tab1 {
+    border-bottom: 1px solid $border;
+
+    // Keep "List" (the default view) first in reading order
     .MuiTabs-flexContainer {
       flex-direction: row-reverse;
+      justify-content: flex-end;
+      gap: $space-2;
     }
-  }
-  .MuiTabs-root {
-    min-height: unset;
-    .tab1 {
-      width: 17.8rem;
-      height: 3.2rem;
-      min-height: 3.2rem;
-      background-color: #eaeef1;
-      color: $color-body;
-      font-weight: 600;
-      font-size: 1.5rem;
-      line-height: 20px;
-      padding: 0;
-      border-radius: 2px;
-      @include respond(phone) {
-        width: 12.2rem;
-      }
 
-      &.Mui-selected {
-        background-color: $color-primary;
-        color: $color-white;
-      }
-    }
-    .MuiTabs-indicator {
-      display: none;
+    .tab1 {
+      min-width: 0;
+      padding-inline: $space-4;
     }
   }
+
   &__tab-init {
-    margin-top: 3rem;
-    align-self: flex-start;
     width: 100%;
     min-height: 1px;
+    margin-top: $space-5;
 
+    @include respond(phone) {
+      margin-top: $space-4;
+    }
+
+    // Secondary list tabs. Hidden while there is only a single tab
+    // (the Rate tab is disabled until the backend is ready); it shows
+    // again automatically once a second tab is rendered.
     .session-tab2 {
-      .MuiTabs-flexContainer {
-        // TODO undo this when backend rate is ready
-        // width: 35rem;
-        width: 17.5rem;
-        background-color: #eaeef1;
-        color: $color-body;
-        border-radius: 16px 2px;
+      margin-bottom: $space-4;
 
-        .tab2 {
-          border: 0;
-          margin: 0;
-          font-weight: 600;
-          font-size: 2rem;
-          line-height: 40px;
-          padding: 1rem 2rem;
-          // TODO undo this when backend rate is ready
-          // width: 50%;
-          width: 100%;
-          border-radius: 16px 2px;
+      &:has(.MuiTab-root:only-child) {
+        display: none;
+      }
 
-          @include respond(phone) {
-            font-size: 1.6rem;
-          }
-
-          &.Mui-selected {
-            background-color: $color-white;
-            color: $color-body;
-          }
-        }
+      .tab2 {
+        min-width: 0;
+        padding-inline: $space-4;
       }
     }
+
     .session-list-tabs {
-      margin-top: 0;
-      background-color: $color-white;
-      padding: 3.2rem 2.4rem;
-      border-radius: 16px;
+      width: 100%;
     }
   }
 }

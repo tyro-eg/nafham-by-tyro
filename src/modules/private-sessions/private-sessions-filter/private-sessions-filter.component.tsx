@@ -1,7 +1,6 @@
 import { FC, ChangeEvent } from 'react';
 import {
   Button,
-  Container,
   Autocomplete,
   TextField,
   CircularProgress,
@@ -44,58 +43,56 @@ const PrivateSessionsFilter: FC<PrivateSessionsFilterProps> = ({
 
   return (
     <div className="home-filter">
-      <Container maxWidth="lg">
-        <div className="home-filter__container">
-          {/* Course Filter */}
-          <div className={`home-filter__field--course ${rtlClass}`}>
-            <Autocomplete
-              value={selectedCourse}
-              onChange={(_event, newValue) => {
-                onCourseChange(newValue);
-              }}
-              options={allCourses}
-              getOptionLabel={(option) => option.full_course_name}
-              isOptionEqualToValue={(option, value) => option.id === value.id}
-              loading={isLoadingCourses}
-              loadingText={t('MYSESSIONS.FILTERS.LOADING_COURSES')}
-              noOptionsText={t('MYSESSIONS.FILTERS.NO_COURSES_FOUND')}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label={t('MYSESSIONS.FILTERS.COURSE')}
-                  variant="outlined"
-                  slotProps={{
-                    input: {
-                      ...params.InputProps,
-                      endAdornment: (
-                        <>
-                          {isLoadingCourses ? (
-                            <CircularProgress color="inherit" size={20} />
-                          ) : null}
-                          {params.InputProps?.endAdornment}
-                        </>
-                      ),
-                    },
-                  }}
-                />
-              )}
-            />
-          </div>
-
-          <div className={`home-filter__field--search ${rtlClass}`}>
-            <input
-              type="search"
-              placeholder={t('COURSES.COURSE_FILTER.SEARCH_PLACEHOLDER')}
-              className={rtlClass}
-              value={searchQuery}
-              onChange={handleSearchChange}
-            />
-            <Button className={rtlClass} type="button">
-              <img src={SearchIcon} alt="Search" />
-            </Button>
-          </div>
+      <div className="home-filter__container">
+        {/* Course Filter */}
+        <div className={`home-filter__field--course ${rtlClass}`}>
+          <Autocomplete
+            value={selectedCourse}
+            onChange={(_event, newValue) => {
+              onCourseChange(newValue);
+            }}
+            options={allCourses}
+            getOptionLabel={(option) => option.full_course_name}
+            isOptionEqualToValue={(option, value) => option.id === value.id}
+            loading={isLoadingCourses}
+            loadingText={t('MYSESSIONS.FILTERS.LOADING_COURSES')}
+            noOptionsText={t('MYSESSIONS.FILTERS.NO_COURSES_FOUND')}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label={t('MYSESSIONS.FILTERS.COURSE')}
+                variant="outlined"
+                slotProps={{
+                  input: {
+                    ...params.InputProps,
+                    endAdornment: (
+                      <>
+                        {isLoadingCourses ? (
+                          <CircularProgress color="inherit" size={20} />
+                        ) : null}
+                        {params.InputProps?.endAdornment}
+                      </>
+                    ),
+                  },
+                }}
+              />
+            )}
+          />
         </div>
-      </Container>
+
+        <div className={`home-filter__field--search ${rtlClass}`}>
+          <input
+            type="search"
+            placeholder={t('COURSES.COURSE_FILTER.SEARCH_PLACEHOLDER')}
+            className={rtlClass}
+            value={searchQuery}
+            onChange={handleSearchChange}
+          />
+          <Button className={rtlClass} type="button" tabIndex={-1}>
+            <img src={SearchIcon} alt="" />
+          </Button>
+        </div>
+      </div>
     </div>
   );
 };

@@ -1,22 +1,25 @@
 @import '../../../assets/styles/variables.scss';
 @import '../../../assets/styles/mixins.scss';
+
 .sessions-rate-container {
   .line {
     @include respond(phone) {
       display: none;
     }
   }
+
   .sessions-rate {
     &__title {
-      margin-bottom: 2.4rem;
+      margin-bottom: $space-5;
       text-align: start;
+
       @include respond(phone) {
-        margin: 2.4rem 0 1.2rem;
+        margin: $space-5 0 $space-3;
       }
     }
 
     &__card:not(:last-child) {
-      margin-bottom: 2rem;
+      margin-bottom: $space-4;
     }
   }
 }
@@ -28,17 +31,12 @@
   }
 }
 
-hr {
-  margin: 3.2rem 0;
-}
-
 .studentRateSuccessModal {
   &__wrapper {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-
     text-align: center;
 
     img {

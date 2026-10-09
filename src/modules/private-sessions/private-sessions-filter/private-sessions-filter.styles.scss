@@ -1,331 +1,105 @@
 @import '../../../assets/styles/variables.scss';
 @import '../../../assets/styles/mixins.scss';
 
+// Filter bar used by the Instructors directory (/home) and My Instructors.
 .home-filter {
-  position: fixed;
-  background-color: #fffffff7;
-  z-index: 100;
+  @include card($space-4 $space-5);
   width: 100%;
-  margin-bottom: 2rem;
-  border-bottom: 1px solid #eee;
 
   @include respond(phone) {
-    margin-top: 0;
+    padding: $space-4;
   }
 
   &__container {
     display: flex;
     align-items: center;
-    justify-content: flex-start;
-    column-gap: 2.4rem;
-    padding: 14px 0 6px;
-
-    @media only screen and (max-width: $breakpoint-xmd) {
-      flex-wrap: wrap;
-      max-width: 94vw;
-      margin: auto;
-      column-gap: normal;
-    }
-
-    .hidden {
-      overflow: hidden;
-      height: 0;
-      opacity: 0;
-      transition: all 0.5s ease-in-out;
-    }
-
-    .visible {
-      overflow: visible;
-      opacity: 1;
-      height: unset;
-      transform: translateY(0);
-    }
-  }
-
-  &__dropdown-container {
-    display: flex;
-
-    @media only screen and (max-width: $breakpoint-xmd) {
-      order: 3;
-      width: 100%;
-    }
-  }
-
-  &__dropdown-group {
-    display: flex;
-    column-gap: 2.4rem;
-    margin: 0 !important;
-
-    .MuiFormControl-root {
-      margin-bottom: 0;
-      min-width: 16.4rem;
-
-      .MuiFormLabel-root {
-        top: -5px;
-      }
-
-      .MuiInputBase-root {
-        height: 4.4rem;
-
-        &:hover {
-          .MuiOutlinedInput-notchedOutline {
-            border-color: rgba(0, 0, 0, 0.23);
-          }
-        }
-      }
-    }
-
-    @media only screen and (max-width: $breakpoint-xmd) {
-      justify-content: space-between;
-      margin-top: 1.2rem !important;
-      width: 100%;
-
-      &:not(:last-child) {
-        margin-right: auto !important;
-
-        &.rtl {
-          margin-right: 0 !important;
-          margin-left: auto !important;
-        }
-      }
-    }
+    gap: $space-4;
 
     @include respond(phone) {
       flex-direction: column;
-      row-gap: 1.2rem;
+      align-items: stretch;
+      gap: $space-3;
     }
   }
 
   &__field {
-    width: 16rem;
-    margin-right: 3rem;
-
-    .MuiOutlinedInput-input {
-      padding: 11.7px 14px;
-    }
-
-    .MuiSelect-icon {
-      top: calc(50% - 7px);
-    }
-
-    .MuiSelect-select {
-      color: $color-secondary;
-    }
-
-    .MuiSelect-select.Mui-disabled {
-      background-color: $color-grey-light-2;
-      color: $color-disabled;
-    }
-
-    .MuiSelect-select:focus {
-      background-color: unset;
-    }
-
-    .MuiInputLabel-formControl {
-      top: -7px;
-    }
-
-    .MuiInputLabel-outlined.MuiInputLabel-shrink {
-      top: 0;
-    }
-
-    &.rtl {
-      margin-left: 1rem;
-      margin-right: 0;
-    }
-
-    @media only screen and (max-width: $breakpoint-xmd) {
-      margin-right: 0;
-      width: 48%;
-
-      &.rtl {
-        margin-left: 0;
-      }
-    }
-
-    @include respond(phone) {
-      width: 100%;
-      margin-bottom: 2rem;
-    }
-
-    &--search {
-      position: relative;
-      width: 100%;
-      margin-left: auto;
-      font-size: $default-font-size;
-
-      &.rtl {
-        margin-right: auto;
-        margin-left: 0;
-      }
-
-      @media only screen and (max-width: $breakpoint-xmd) {
-        order: 1;
-        margin-left: 0;
-        margin-right: auto;
-
-        &.rtl {
-          margin-left: auto;
-          margin-right: 0;
-        }
-      }
+    // Course autocomplete (outlined MUI field with floating label)
+    &--course {
+      flex: 0 1 32rem;
+      min-width: 24rem;
 
       @include respond(phone) {
-        margin-right: auto;
-      }
-
-      input {
-        padding: 8px 12px 8px 36px;
-        border: 1px solid $color-grey-light-2;
-        border-radius: 4px;
-        background-color: $color-white;
-        height: 4rem;
-        width: 100%;
-        outline: none;
-
-        @include respond(tab-port) {
-          width: 100%;
-          min-width: 100%;
-        }
-
-        &::placeholder {
-          color: $color-grey-light-5;
-        }
-
-        &.rtl {
-          padding: 8px 36px 8px 12px;
-        }
-      }
-
-      button {
-        position: absolute;
-        left: -10px;
-        top: 10px;
-        border: none;
-        background-color: transparent;
-        padding: 0.2rem 0.5rem;
-
-        &:hover {
-          background-color: transparent;
-        }
-
-        &.rtl {
-          left: unset;
-          right: -10px;
-        }
-      }
-    }
-
-    &--course {
-      width: 24rem;
-      min-width: 24rem;
-      margin-right: 2rem;
-
-      .MuiAutocomplete-root {
+        flex-basis: auto;
+        min-width: 0;
         width: 100%;
       }
 
+      .MuiAutocomplete-root,
       .MuiFormControl-root,
       .MuiTextField-root {
         width: 100%;
         margin-bottom: 0;
       }
 
-      .MuiInputLabel-root {
-        top: -5px;
+      .MuiAutocomplete-inputRoot.MuiOutlinedInput-root {
+        min-height: 4.4rem;
+        padding-top: 0;
+        padding-bottom: 0;
       }
 
-      .MuiInputBase-root {
-        height: 4rem;
+      // Centre the resting label in a 44px field (MUI assumes 56px)
+      .MuiInputLabel-root:not(.MuiInputLabel-shrink) {
+        top: -0.6rem;
+      }
+
+      .MuiInputBase-input {
+        color: $text-strong;
+      }
+    }
+
+    // Free-text search
+    &--search {
+      position: relative;
+      flex: 1 1 auto;
+      min-width: 0;
+      font-size: $font-base;
+
+      @include respond(phone) {
+        width: 100%;
+      }
+
+      input {
+        @include input;
+        -webkit-appearance: none;
+        appearance: none;
+        padding-inline-start: 4.4rem;
+        padding-inline-end: 1.4rem;
+        font-family: inherit;
+      }
+
+      .MuiButton-root {
+        position: absolute;
+        top: 50%;
+        inset-inline-start: 0.6rem;
+        min-width: 0;
+        min-height: 0;
+        width: 3.2rem;
+        height: 3.2rem;
+        padding: 0;
+        border: none;
+        background-color: transparent;
+        transform: translateY(-50%);
+        pointer-events: none;
 
         &:hover {
-          .MuiOutlinedInput-notchedOutline {
-            border-color: rgba(0, 0, 0, 0.23);
-          }
+          background-color: transparent;
         }
-      }
 
-      &.rtl {
-        margin-left: 2rem;
-        margin-right: 0;
-      }
-
-      @media only screen and (max-width: $breakpoint-xmd) {
-        width: 100%;
-        margin-right: 0;
-        margin-bottom: 1rem;
-
-        &.rtl {
-          margin-left: 0;
+        img {
+          width: 1.8rem;
+          height: 1.8rem;
+          opacity: 0.6;
         }
-      }
-
-      @include respond(phone) {
-        width: 100%;
-        margin-bottom: 1rem;
-      }
-    }
-
-    &--filter {
-      display: none;
-      width: 9.5rem;
-      position: relative;
-      border-radius: 0.4rem;
-      overflow: hidden;
-
-      .active {
-        color: white;
-        background-color: $color-primary !important;
-      }
-
-      @media only screen and (max-width: $breakpoint-xmd) {
-        display: initial;
-        order: 2;
-      }
-
-      @include respond(phone) {
-        display: initial;
-      }
-
-      button {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        color: $color-grey-light-5;
-        border: 1px solid $color-grey-light-2;
-        border-radius: 4px;
-        background-color: $color-grey-light-1;
-        padding: 8px 12px 8px;
-
-        &.rtl {
-          flex-direction: row-reverse;
-
-          .MuiButton-startIcon {
-            margin-right: -4px;
-            margin-left: 8px;
-          }
-        }
-      }
-    }
-  }
-
-  &__filter-list {
-    display: none;
-    width: 100%;
-    margin-bottom: 2rem;
-
-    @include respond(phone) {
-      display: inline-block;
-    }
-
-    div:first-of-type {
-      margin-bottom: 0;
-    }
-
-    .home-filter__field {
-      &.one,
-      &.three {
-        margin-bottom: 1rem;
       }
     }
   }

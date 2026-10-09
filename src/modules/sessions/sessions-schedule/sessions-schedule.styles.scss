@@ -2,21 +2,28 @@
 @import '../../../assets/styles/mixins.scss';
 
 .sessions-schedule {
-  margin-bottom: 4rem;
+  margin-bottom: $space-7;
 
   &__title {
-    margin-bottom: 2.1rem;
-    font-weight: 600;
-    font-size: 2.4rem;
-    line-height: 32px;
+    margin-bottom: $space-4;
+    font-size: $font-h3;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    color: $text-strong;
     text-align: start;
+
+    [dir='rtl'] & {
+      letter-spacing: 0;
+    }
   }
 
   &__container {
     .unscheduled-card {
-      width: 100%;
       display: flex !important;
       justify-content: center;
+      width: 100%;
+      padding: $space-1;
     }
   }
 }

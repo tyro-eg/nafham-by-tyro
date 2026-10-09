@@ -1,42 +1,32 @@
 @import '../../../../assets/styles/variables.scss';
 @import '../../../../assets/styles/mixins.scss';
 
-.no-sessions {
+.sessions-list-container {
+  width: 100%;
+
+  // react-infinite-scroll-component wrapper: let card shadows breathe
+  .infinite-scroll-component {
+    overflow: visible !important;
+  }
+}
+
+.sessions-list {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  gap: $space-4;
 
-  svg {
-    color: $color-title;
-    font-size: 3.2rem;
-    margin-bottom: 1rem;
-
-    @include respond(phone) {
-      font-size: 2.8rem;
-    }
+  @include respond(phone) {
+    gap: $space-3;
   }
 
-  .title {
-    color: $color-title;
-    font-weight: 700;
-    font-size: 2.8rem;
-    line-height: 120%;
+  &__loader {
+    padding: $space-4 0;
+    font-size: $font-sm;
+    color: $text-muted;
     text-align: center;
 
-    @include respond(phone) {
-      font-size: 2.2rem;
-    }
-  }
-
-  .subtitle {
-    font-weight: 400;
-    font-size: 1.6rem;
-    line-height: 26px;
-    margin-bottom: 2.2rem;
-    text-align: center;
-
-    @include respond(phone) {
-      font-size: 1.4rem;
+    &:empty {
+      padding: 0;
     }
   }
 }

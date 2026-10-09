@@ -154,6 +154,7 @@ const SessionsRateCard: React.FC<SessionsRateCardProps> = ({ session }) => {
                         name="instructor rating"
                         value={session.tutor?.data?.rating || 0}
                         precision={0.1}
+                        size="small"
                         readOnly
                       />
                       <span className="review-numbers">

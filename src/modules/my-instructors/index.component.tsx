@@ -1,11 +1,6 @@
 import { FC, useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-  Autocomplete,
-  TextField,
-  CircularProgress,
-  Container,
-} from '@mui/material';
+import { Autocomplete, TextField, CircularProgress } from '@mui/material';
 
 import { useMyInstructors } from '../../hooks/useInstructors';
 import { useGradeSubjects } from '../../hooks/useGradeSubjects';
@@ -14,6 +9,8 @@ import { useRtlClass } from '../../assets/utils/utils';
 import InstructorCard from '../../component/instructor-card/instructor-card.component';
 import { ReactComponent as EmptyImg } from '../../assets/images/empty.svg';
 
+import '../sessions/dashboard-shell.styles.scss';
+import '../private-sessions/private-sessions-filter/private-sessions-filter.styles.scss';
 import './index.styles.scss';
 
 const MyInstructors: FC = () => {
@@ -42,33 +39,59 @@ const MyInstructors: FC = () => {
 
   const instructors = data?.data || [];
 
+  const renderHeader = () => (
+    <header className="dashboard-header">
+      <div className="container dashboard-header__inner">
+        <div className="dashboard-header__text">
+          <h1 className="dashboard-header__title">
+            {t('NAVIGATION.MY_INSTRUCTORS')}
+            {!isLoading && instructors.length > 0 && (
+              <span className="dashboard-header__count">
+                {instructors.length}
+              </span>
+            )}
+          </h1>
+        </div>
+      </div>
+    </header>
+  );
+
   const renderEmptyState = () => (
-    <div className="no_results container">
-      <div className="no_results__img">
+    <div className="no_results dashboard-empty">
+      <div className="dashboard-empty__img" aria-hidden="true">
         <EmptyImg />
       </div>
-      <div className="no_results__content">
-        <p>{t('MYINSTRUCTORS.EMPTY.FIRST_P')}</p>
-        <p>{t('MYINSTRUCTORS.EMPTY.SECOND_P')}</p>
-      </div>
+      <p className="dashboard-empty__title">
+        {t('MYINSTRUCTORS.EMPTY.FIRST_P')}
+      </p>
+      <p className="dashboard-empty__text">
+        {t('MYINSTRUCTORS.EMPTY.SECOND_P')}
+      </p>
     </div>
   );
 
   if (isLoading) {
     return (
-      <div className="my-instructors">
-        <div className="container">
-          <p>{t('MYINSTRUCTORS.LOADING')}</p>
+      <div className="my-instructors dashboard-page">
+        {renderHeader()}
+        <div className="container dashboard-page__body">
+          <div className="dashboard-empty" role="status">
+            <p className="dashboard-empty__text">
+              {t('MYINSTRUCTORS.LOADING')}
+            </p>
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="my-instructors">
-      {/* Course Filter */}
-      <div className="home-filter">
-        <Container maxWidth="lg">
+    <div className="my-instructors dashboard-page">
+      {renderHeader()}
+
+      <div className="container dashboard-page__body">
+        {/* Course Filter */}
+        <div className="home-filter">
           <div className="home-filter__container">
             <div className={`home-filter__field--course ${rtlClass}`}>
               <Autocomplete
@@ -105,19 +128,21 @@ const MyInstructors: FC = () => {
               />
             </div>
           </div>
-        </Container>
-      </div>
-
-      <section className="instructor-list">
-        <div className="instructor-list__container container">
-          {instructors?.map((instructor) => (
-            <InstructorCard key={instructor.id} instructor={instructor} />
-          ))}
         </div>
 
-        {((instructors && instructors.length === 0) || !instructors) &&
-          renderEmptyState()}
-      </section>
+        <section className="instructor-list">
+          {!!instructors?.length && (
+            <div className="instructor-list__container">
+              {instructors.map((instructor) => (
+                <InstructorCard key={instructor.id} instructor={instructor} />
+              ))}
+            </div>
+          )}
+
+          {((instructors && instructors.length === 0) || !instructors) &&
+            renderEmptyState()}
+        </section>
+      </div>
     </div>
   );
 };

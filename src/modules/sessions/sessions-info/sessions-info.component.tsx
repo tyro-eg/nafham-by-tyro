@@ -49,7 +49,6 @@ const SessionsInfo: FC<SessionsInfoProps> = ({ filters }) => {
         indicatorColor="primary"
         textColor="primary"
         aria-label="my sessions tabs"
-        sx={{ marginBottom: 2 }}
         className="session-tab1"
       >
         <Tab
@@ -72,7 +71,6 @@ const SessionsInfo: FC<SessionsInfoProps> = ({ filters }) => {
             indicatorColor="primary"
             textColor="primary"
             aria-label="sessions lists"
-            sx={{ marginBottom: 2 }}
             className="session-tab2"
           >
             <Tab

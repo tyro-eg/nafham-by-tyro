@@ -12,6 +12,7 @@ import { ReactComponent as EmptyImg } from '../../assets/images/empty.svg';
 import PrivateSessionsFilter from './private-sessions-filter/private-sessions-filter.component';
 import InstructorCard from '../../component/instructor-card/instructor-card.component';
 
+import '../sessions/dashboard-shell.styles.scss';
 import './index.styles.scss';
 
 const PrivateSessions: FC = () => {
@@ -130,48 +131,65 @@ const PrivateSessions: FC = () => {
   };
 
   const renderNoResults = () => (
-    <div className="no_results container">
-      <div className="no_results__img">
+    <div className="no_results dashboard-empty">
+      <div className="dashboard-empty__img" aria-hidden="true">
         <EmptyImg />
       </div>
-      <div className="no_results__content">
-        <p>{t('COURSES.COURSE_LIST.NO_RESULTS.FIRST_P')}</p>
-        <p>{t('COURSES.COURSE_LIST.NO_RESULTS.SECOND_P')}!</p>
-      </div>
+      <p className="dashboard-empty__title">
+        {t('COURSES.COURSE_LIST.NO_RESULTS.FIRST_P')}
+      </p>
+      <p className="dashboard-empty__text">
+        {t('COURSES.COURSE_LIST.NO_RESULTS.SECOND_P')}!
+      </p>
     </div>
   );
 
   return (
-    <div>
-      <PrivateSessionsFilter
-        searchQuery={searchQuery}
-        onSearchChange={setSearchQuery}
-        selectedCourse={selectedCourse}
-        onCourseChange={setSelectedCourse}
-      />
-      <section className="instructor-list">
-        <div className="instructor-list__container container">
-          {instructors?.map((instructor) => (
-            <InstructorCard key={instructor.id} instructor={instructor} />
-          ))}
+    <div className="instructors-page dashboard-page">
+      <header className="dashboard-header">
+        <div className="container dashboard-header__inner">
+          <div className="dashboard-header__text">
+            <h1 className="dashboard-header__title">
+              {t('NAVIGATION.INSTRUCTORS')}
+            </h1>
+          </div>
         </div>
+      </header>
 
-        {((instructors && instructors.length === 0) || !instructors) &&
-          renderNoResults()}
-      </section>
+      <div className="container dashboard-page__body">
+        <PrivateSessionsFilter
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
+          selectedCourse={selectedCourse}
+          onCourseChange={setSelectedCourse}
+        />
+        <section className="instructor-list">
+          {!!instructors?.length && (
+            <div className="instructor-list__container">
+              {instructors.map((instructor) => (
+                <InstructorCard key={instructor.id} instructor={instructor} />
+              ))}
+            </div>
+          )}
 
-      {/* Hide pagination only when searching (client-side filter) */}
-      {!searchQuery.trim() &&
-        instructors?.length &&
-        instructorsPagination?.['total-pages'] && (
-          <Pagination
-            color="primary"
-            size="large"
-            page={currentPage}
-            count={Number(instructorsPagination['total-pages'])}
-            onChange={handlePageChange}
-          />
-        )}
+          {((instructors && instructors.length === 0) || !instructors) &&
+            renderNoResults()}
+        </section>
+
+        {/* Hide pagination only when searching (client-side filter) */}
+        {!searchQuery.trim() &&
+          !!instructors?.length &&
+          instructorsPagination?.['total-pages'] && (
+            <Pagination
+              className="instructors-page__pagination"
+              color="primary"
+              size="large"
+              page={currentPage}
+              count={Number(instructorsPagination['total-pages'])}
+              onChange={handlePageChange}
+            />
+          )}
+      </div>
     </div>
   );
 };
