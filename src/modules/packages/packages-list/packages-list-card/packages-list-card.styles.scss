@@ -2,224 +2,244 @@
 @import '../../../../assets/styles/mixins.scss';
 
 .packages-card {
-  display: block;
-  border-radius: 8px;
-  border: 1px solid #eaeef1;
-  background-color: $color-white;
-  padding: 3.2rem 3.2rem 1.2rem 1.2rem;
-  margin-bottom: 2rem;
+  @include card($space-5);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  transition:
+    box-shadow $transition,
+    border-color $transition;
+
+  &:hover {
+    box-shadow: $shadow-md;
+    border-color: $border-strong;
+  }
 
   @include respond(phone) {
-    padding: 1.2rem;
+    padding: $space-4;
   }
 
   &__content {
     display: flex;
     flex-direction: column;
+    gap: $space-4;
+    height: 100%;
 
     &-top {
       display: flex;
+      align-items: flex-start;
       justify-content: space-between;
-      border-bottom: 1px solid #eaeef1;
-      padding-bottom: 1.6rem;
-      padding-left: 2rem;
-
-      &.rtl {
-        direction: rtl;
-        padding-left: 0;
-        padding-right: 2rem;
-      }
-
-      @include respond(tab-port) {
-        padding-left: 0;
-
-        &.rtl {
-          padding-right: 0;
-        }
-      }
+      gap: $space-3;
+      flex-wrap: wrap;
     }
 
+    // Detail list
     &-middle {
-      display: flex;
-      flex-wrap: wrap;
-      padding-bottom: 1.6rem;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: $space-4 $space-5;
+      padding-top: $space-4;
+      border-top: 1px solid $border;
+
+      @include respond(phone) {
+        gap: $space-3 $space-4;
+      }
 
       .prop-card {
         display: flex;
         flex-direction: column;
         align-items: flex-start;
-        padding-left: 2rem;
-        padding-top: 1.2rem;
-        width: 25%;
+        gap: $space-1;
+        min-width: 0;
 
-        &:not(:nth-child(4n)) {
-          border-right: 1px solid #eaeef1;
-        }
-
-        &.rtl {
-          padding-right: 2rem;
-          padding-left: 0;
-          &:not(:nth-child(4n)) {
-            border-left: 1px solid #eaeef1;
-            border-right: none;
-          }
-        }
-
-        @include respond(tab-port) {
-          width: 50%;
-          padding-left: 0;
-
-          &:not(:last-child) {
-            border-right: none;
-          }
-
-          &:nth-child(odd):not(:last-child) {
-            border-right: 1px solid #eaeef1;
-          }
-
-          &:not(:last-child) {
-            border-bottom: 1px solid #eaeef1;
-            padding-bottom: 1.2rem;
-          }
-
-          &:nth-child(even) {
-            padding-left: 2rem;
-          }
-
-          &.rtl {
-            padding-right: 0;
-
-            &:not(:last-child) {
-              border-left: none;
-            }
-
-            &:nth-child(odd):not(:last-child) {
-              border-left: 1px solid #eaeef1;
-              border-right: none;
-            }
-
-            &:nth-child(even) {
-              padding-right: 2rem;
-              padding-left: 0;
-            }
-          }
+        &--wide {
+          grid-column: 1 / -1;
         }
 
         .title {
-          font-weight: 600;
-          font-size: 1.6rem;
-          line-height: 19px;
-          color: $color-title;
-          margin-bottom: 1.2rem;
+          font-weight: 500;
+          font-size: $font-xs;
+          line-height: 1.4;
+          letter-spacing: 0.04em;
+          text-transform: uppercase;
+          color: $text-muted;
           text-align: start;
-
-          @include respond(phone) {
-            font-size: 1.1rem;
-          }
         }
 
         .value {
           display: flex;
           align-items: center;
-          justify-content: flex-start;
+          gap: $space-2;
           font-weight: 500;
-          font-size: 1.6rem;
-          line-height: 150%;
-          color: $color-body;
+          font-size: $font-sm;
+          line-height: 1.5;
+          color: $text-strong;
+          text-align: start;
+          min-width: 0;
 
           svg {
-            font-size: 2rem;
-            margin-right: 0.7rem;
+            flex: none;
+            font-size: 1.8rem;
+            color: $gray-500;
           }
 
-          @include respond(phone) {
-            font-size: 1.1rem;
-
-            svg {
-              font-size: 1.2rem;
-            }
-          }
-        }
-
-        &.rtl {
-          .value {
-            svg {
-              margin-right: 0;
-              margin-left: 0.7rem;
-            }
-          }
-
-          .field {
-            margin-right: 0;
-            margin-left: 2rem;
+          &--strong {
+            font-weight: 700;
+            font-variant-numeric: tabular-nums;
           }
         }
 
         .field {
-          padding: 4px 6px;
-          border-radius: 0.6rem;
-          background-color: #eaeef1;
-          color: $color-body;
+          @include badge($gray-100, $text-strong);
+          font-size: $font-sm;
           font-weight: 500;
-          font-size: 1.6rem;
-          line-height: 150%;
-          margin-right: 2rem;
-
-          @include respond(phone) {
-            font-size: 1.1rem;
-          }
+          line-height: 1.5;
+          padding: 0.3rem 1.2rem;
+          max-width: 100%;
+          white-space: normal;
         }
       }
+    }
+  }
+
+  // Package type pill
+  &__type {
+    @include badge($brand-50, $brand-700);
+    flex: none;
+
+    svg {
+      font-size: 1.6rem;
+    }
+
+    &--group_course {
+      background-color: $success-50;
+      color: $success-500;
+    }
+
+    &--trial_session {
+      background-color: $warning-50;
+      color: $warning-500;
+    }
+  }
+
+  // Remaining-hours meter
+  &__progress {
+    display: flex;
+    flex-direction: column;
+    gap: $space-2;
+    padding: $space-4;
+    background-color: $surface-alt;
+    border-radius: $radius-sm;
+
+    &-labels {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: $space-3;
+    }
+
+    &-stat {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+      text-align: start;
+
+      &--end {
+        align-items: flex-end;
+        text-align: end;
+      }
+
+      .label {
+        font-size: $font-xs;
+        font-weight: 500;
+        color: $text-muted;
+      }
+
+      .value {
+        display: inline-flex;
+        align-items: center;
+        gap: $space-1;
+        font-size: $font-sm;
+        font-weight: 500;
+        color: $text-body;
+        font-variant-numeric: tabular-nums;
+
+        svg {
+          font-size: 1.8rem;
+          color: $brand-600;
+        }
+
+        &--strong {
+          font-size: $font-lg;
+          font-weight: 700;
+          color: $text-strong;
+        }
+      }
+    }
+
+    &-track {
+      position: relative;
+      height: 0.8rem;
+      border-radius: $radius-pill;
+      background-color: $gray-200;
+      overflow: hidden;
+    }
+
+    &-bar {
+      position: absolute;
+      inset-block: 0;
+      inset-inline-start: 0;
+      border-radius: $radius-pill;
+      background-color: $brand-500;
+      transition: width $transition;
     }
   }
 
   &__img-container {
     display: flex;
     align-items: center;
+    gap: $space-3;
+    min-width: 0;
 
     img {
-      width: 4.9rem;
-      height: 4.9rem;
+      width: 4.8rem;
+      height: 4.8rem;
       border-radius: 50%;
+      object-fit: cover;
+      display: block;
     }
 
     .user-info {
-      margin: 0 0.8rem;
+      min-width: 0;
 
       .name {
-        font-weight: 700;
-        font-size: 2.4rem;
-        line-height: 140%;
-        color: $color-title;
+        font-weight: 600;
+        font-size: $font-lg;
+        line-height: 1.3;
+        color: $text-strong;
         text-align: start;
-
-        @include respond(phone) {
-          font-size: 1.6rem;
-        }
+        @include ellipsis;
       }
 
       .review {
         display: flex;
         align-items: center;
+        margin-top: 0.2rem;
 
         &-stars {
           display: flex;
-          justify-content: center;
           align-items: center;
-          gap: 0.5rem;
+          gap: $space-1;
 
-          .yellow {
-            color: $color-gold;
-          }
-
-          .grey {
-            color: rgba($color: $color-black, $alpha: 0.1);
+          .MuiRating-iconFilled {
+            color: $accent-500;
           }
         }
 
         &-numbers {
-          font-size: 1.4rem;
-          color: $color-body;
+          font-size: $font-xs;
+          font-weight: 500;
+          color: $text-muted;
         }
       }
     }
@@ -227,8 +247,11 @@
 
   &__user-img {
     cursor: pointer;
-    padding: 0;
-    min-width: auto;
+    padding: 0 !important;
+    min-width: auto !important;
+    min-height: 0 !important;
+    border-radius: 50% !important;
+    flex: none;
 
     &:disabled {
       cursor: default;

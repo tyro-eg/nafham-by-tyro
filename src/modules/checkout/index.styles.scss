@@ -2,13 +2,12 @@
 @import '../../assets/styles/variables.scss';
 
 .checkout {
-  background-color: $color-grey-light-0;
+  background-color: $surface-alt;
+  padding-bottom: $space-9;
+  min-height: 60vh;
 
-  .checkout-container {
-    @include respond(phone) {
-      width: 94%;
-      max-width: unset !important;
-    }
+  @include respond(phone) {
+    padding-bottom: $space-7;
   }
 
   &.rtl {
@@ -16,71 +15,113 @@
   }
 
   &__header {
-    padding: 6.4rem 0 4.8rem;
+    padding: $space-8 0 $space-6;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
+    text-align: start;
+
+    @include respond(phone) {
+      padding: $space-6 0 $space-5;
+    }
 
     .title {
-      color: $color-title;
-      font-weight: 800;
-      font-size: 4.8rem;
-      line-height: 64px;
-      margin-bottom: 2.1rem;
+      color: $text-strong;
+      font-weight: 700;
+      font-size: $font-h1;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+      margin-bottom: $space-2;
+      // Translation is all caps ("CHECKOUT"); render it in sentence case
+      text-transform: lowercase;
+
+      &::first-letter {
+        text-transform: uppercase;
+      }
 
       @include respond(phone) {
-        font-weight: 700;
-        font-size: 3.6rem;
-        line-height: 48px;
+        font-size: 3.2rem;
       }
     }
 
     .sub-title {
-      color: $color-body;
-      font-weight: 500;
-      font-size: 1.6rem;
-      line-height: 150%;
+      color: $text-body;
+      font-weight: 400;
+      font-size: $font-lg;
+      line-height: 1.6;
+
+      &::first-letter {
+        text-transform: uppercase;
+      }
 
       @include respond(phone) {
-        font-size: 1.4rem;
+        font-size: $font-base;
       }
     }
   }
 
+  // Two columns on desktop: options on the start side, sticky summary on the end side
+  &__layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 38rem;
+    gap: $space-6;
+    align-items: start;
+
+    @include respond(tab-land) {
+      grid-template-columns: minmax(0, 1fr) 34rem;
+      gap: $space-5;
+    }
+
+    @include respond(tab-port) {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  &__main {
+    min-width: 0;
+  }
+
   &__payment-details {
+    @include card($space-5);
+    position: sticky;
+    top: calc(#{$header-height} + #{$space-5});
+
+    @include respond(tab-port) {
+      position: static;
+    }
+
     .title {
-      color: $color-title;
+      color: $text-strong;
       font-weight: 700;
-      font-size: 2.8rem;
-      line-height: 120%;
-      margin-bottom: 3.2rem;
+      font-size: $font-h4;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+      padding-bottom: $space-4;
+      margin-bottom: $space-4;
+      border-bottom: 1px solid $border;
 
       @include respond(phone) {
-        font-weight: 600;
-        font-size: 1.8rem;
-        margin-bottom: 1.8rem;
+        font-size: $font-h5;
       }
     }
 
     &__container {
       display: flex;
-      justify-content: space-between;
-
-      @include respond(tab-port) {
-        flex-direction: column;
-      }
+      flex-direction: column;
+      gap: $space-4;
 
       .block {
         display: flex;
         flex-direction: column;
-        width: 48%;
-
-        @include respond(tab-port) {
-          width: 100%;
-        }
+        width: 100%;
       }
     }
   }
+}
+
+html[dir='rtl'] .checkout__header .title,
+html[dir='rtl'] .checkout__payment-details .title {
+  letter-spacing: 0;
 }
 
 .checkoutModal {
@@ -89,19 +130,19 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 3rem;
+    padding: $space-6;
     text-align: center;
 
     img {
       width: 6.4rem;
       height: 6.4rem;
-
-      margin-bottom: 3.2rem;
+      margin-bottom: $space-5;
     }
 
     p {
-      margin-top: 1.4rem;
-      margin-bottom: 3.2rem;
+      margin-top: $space-3;
+      margin-bottom: $space-5;
+      color: $text-body;
 
       .add-text {
         display: block;
@@ -110,8 +151,8 @@
   }
 
   &__btn {
-    font-size: 1.6rem;
-    padding: 1rem 0;
+    font-size: $font-base;
+    min-height: 4.4rem;
     width: 100%;
   }
 }

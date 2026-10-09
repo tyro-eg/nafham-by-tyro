@@ -109,10 +109,18 @@ const PackageListCard: FC<PackageListCardProps> = ({ packageData }) => {
 
   if (!displayUser) return null;
 
+  const remainingHours = packageData.remaining_hours ?? 0;
+  const originalHours = packageData.original_hours ?? 0;
+  // Purely presentational: share of the package still available
+  const remainingPercent =
+    originalHours > 0
+      ? Math.min(100, Math.max(0, (remainingHours / originalHours) * 100))
+      : 0;
+
   return (
-    <div className="packages-card">
+    <article className="packages-card">
       <div className="packages-card__content">
-        <div className={`packages-card__content-top ${rtlClass}`}>
+        <header className={`packages-card__content-top ${rtlClass}`}>
           <div className="packages-card__img-container">
             <Button
               className="card-img packages-card__user-img"
@@ -148,6 +156,7 @@ const PackageListCard: FC<PackageListCardProps> = ({ packageData }) => {
                         value={displayUser.average_rating || 0}
                         precision={0.1}
                         readOnly
+                        size="small"
                       />
                       <span className="review-numbers">
                         {displayUser.average_rating || 0} / 5.0
@@ -157,34 +166,57 @@ const PackageListCard: FC<PackageListCardProps> = ({ packageData }) => {
                 )}
             </div>
           </div>
+          <span
+            className={`packages-card__type packages-card__type--${
+              packageData.package_type || 'private'
+            }`}
+          >
+            {packageData.package_type === 'group_course' ? (
+              <Group />
+            ) : (
+              <Person />
+            )}
+            {packageTypeLabel}
+          </span>
+        </header>
+
+        <div className="packages-card__progress">
+          <div className="packages-card__progress-labels">
+            <div className="packages-card__progress-stat">
+              <span className="label">
+                {t('MYPACKAGES.CARD.REMAINING_HOURS')}
+              </span>
+              <span className="value value--strong">
+                <AccessTime />
+                {remainingHours} {t('MYPACKAGES.CARD.HOURS')}
+              </span>
+            </div>
+            <div className="packages-card__progress-stat packages-card__progress-stat--end">
+              <span className="label">
+                {t('MYPACKAGES.CARD.ORIGINAL_HOURS')}
+              </span>
+              <span className="value">
+                {originalHours} {t('MYPACKAGES.CARD.HOURS')}
+              </span>
+            </div>
+          </div>
+          <div
+            className="packages-card__progress-track"
+            role="progressbar"
+            aria-valuemin={0}
+            aria-valuemax={originalHours}
+            aria-valuenow={remainingHours}
+            aria-label={t('MYPACKAGES.CARD.REMAINING_HOURS')}
+          >
+            <span
+              className="packages-card__progress-bar"
+              style={{ width: `${remainingPercent}%` }}
+            />
+          </div>
         </div>
+
         <div className="packages-card__content-middle">
-          <div className={`prop-card ${rtlClass}`}>
-            <p className="title">{t('MYPACKAGES.CARD.TYPE')}</p>
-            <p className="value">
-              {packageData.package_type === 'group_course' ? (
-                <Group />
-              ) : (
-                <Person />
-              )}
-              {packageTypeLabel}
-            </p>
-          </div>
-          <div className={`prop-card ${rtlClass}`}>
-            <p className="title">{t('MYPACKAGES.CARD.REMAINING_HOURS')}</p>
-            <p className="value">
-              <AccessTime />
-              {packageData.remaining_hours ?? 0} {t('MYPACKAGES.CARD.HOURS')}
-            </p>
-          </div>
-          <div className={`prop-card ${rtlClass}`}>
-            <p className="title">{t('MYPACKAGES.CARD.ORIGINAL_HOURS')}</p>
-            <p className="value">
-              <AccessTime />
-              {packageData.original_hours ?? 0} {t('MYPACKAGES.CARD.HOURS')}
-            </p>
-          </div>
-          <div className={`prop-card ${rtlClass}`}>
+          <div className={`prop-card prop-card--wide ${rtlClass}`}>
             <p className="title">{t('MYPACKAGES.CARD.COURSE')}</p>
             <p className="value field">{courseName}</p>
           </div>
@@ -192,7 +224,7 @@ const PackageListCard: FC<PackageListCardProps> = ({ packageData }) => {
             <>
               <div className={`prop-card ${rtlClass}`}>
                 <p className="title">{t('MYPACKAGES.CARD.AMOUNT_PAID')}</p>
-                <p className="value">
+                <p className="value value--strong">
                   <Payment />
                   {packageData.amount_paid ?? 0}{' '}
                   {packageData.amount_paid_currency || ''}
@@ -227,7 +259,7 @@ const PackageListCard: FC<PackageListCardProps> = ({ packageData }) => {
           </div>
         </div>
       </div>
-    </div>
+    </article>
   );
 };
 

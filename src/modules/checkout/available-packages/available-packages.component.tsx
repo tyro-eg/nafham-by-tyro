@@ -11,7 +11,6 @@ import {
 } from '@mui/material';
 import { CheckCircle } from '@mui/icons-material';
 
-import Carousel from '../../../component/carousel/carousel';
 import { TutorField, TutorPackage } from '../index.component';
 
 import './available-packages.styles.scss';
@@ -58,10 +57,10 @@ const AvailablePackages: React.FC<AvailablePackagesProps> = ({
     <section className="available-packages">
       {tutorFields[0] && tutorPackages[0] && field && (
         <>
-          <h4 className="available-packages__title">
-            {t('CHECKOUT.PACKAGES.TITLE1')}
-          </h4>
-          <div className="field-container">
+          <div className="available-packages__card field-container">
+            <h2 className="available-packages__title">
+              {t('CHECKOUT.PACKAGES.TITLE1')}
+            </h2>
             <FormControl variant="outlined" className="select-field">
               <Select
                 labelId="field-label"
@@ -77,76 +76,75 @@ const AvailablePackages: React.FC<AvailablePackagesProps> = ({
               </Select>
             </FormControl>
           </div>
-          <h4 className="available-packages__title">
-            {t('CHECKOUT.PACKAGES.TITLE2')}
-          </h4>
-          <div className="available-packages__radio-container">
+          <div className="available-packages__card available-packages__radio-container">
+            <h2 className="available-packages__title">
+              {t('CHECKOUT.PACKAGES.TITLE2')}
+            </h2>
             <FormControl component="fieldset">
               <RadioGroup
                 aria-label="packages"
                 name="packageOp"
                 value={selectedPackageId}
                 onChange={handlePackageChange}
+                className="available-packages__grid"
               >
-                <Carousel>
-                  {tutorPackages.map((tutorPackage) => (
-                    <FormControlLabel
-                      className={`radio-wrapper ${
-                        Number(tutorPackage.id) === Number(selectedPackageId)
-                          ? 'checked'
-                          : ''
-                      } ${
-                        tutorPackage.type === 'DefaultPackage'
-                          ? 'popular_theme'
-                          : ''
-                      }`}
-                      key={tutorPackage.id}
-                      value={tutorPackage.id}
-                      name="packageOp"
-                      control={<Radio color="primary" />}
-                      checked={
-                        Number(tutorPackage.id) === Number(selectedPackageId)
-                      }
-                      label={
-                        <div
-                          className={`profile-package ${
-                            tutorPackage.type === 'DefaultPackage'
-                              ? 'popular'
-                              : ''
-                          }`}
-                        >
-                          {tutorPackage.type === 'DefaultPackage' && (
-                            <p className="profile-package__badge">
-                              {t('PROFILE.PACKAGES.MOST_POPULAR')}
-                            </p>
-                          )}
-                          <p className="profile-package__rate">
-                            ${Number(tutorPackage.rate)}{' '}
-                            <span className="profile-package__rate-perHour">
-                              {t('PROFILE.PACKAGES.PER_HOUR')}
-                            </span>
+                {tutorPackages.map((tutorPackage) => (
+                  <FormControlLabel
+                    className={`radio-wrapper ${
+                      Number(tutorPackage.id) === Number(selectedPackageId)
+                        ? 'checked'
+                        : ''
+                    } ${
+                      tutorPackage.type === 'DefaultPackage'
+                        ? 'popular_theme'
+                        : ''
+                    }`}
+                    key={tutorPackage.id}
+                    value={tutorPackage.id}
+                    name="packageOp"
+                    control={<Radio color="primary" />}
+                    checked={
+                      Number(tutorPackage.id) === Number(selectedPackageId)
+                    }
+                    label={
+                      <div
+                        className={`profile-package ${
+                          tutorPackage.type === 'DefaultPackage'
+                            ? 'popular'
+                            : ''
+                        }`}
+                      >
+                        {tutorPackage.type === 'DefaultPackage' && (
+                          <p className="profile-package__badge">
+                            {t('PROFILE.PACKAGES.MOST_POPULAR')}
                           </p>
-                          <div className="profile-package__minutes">
-                            {tutorPackage.time_in_hours}{' '}
-                            {tutorPackage.time_in_hours > 1
-                              ? t('PROFILE.PACKAGES.HOURS')
-                              : t('PROFILE.PACKAGES.HOUR')}
-                          </div>
-                          <div className="profile-package__save">
-                            <CheckCircle color="primary" />
-                            <span className="profile-package__save-title">
-                              {t('PROFILE.PACKAGES.SAVE')}
-                            </span>
-                            20%
-                          </div>
-                          <div className="profile-package__action">
-                            {t('PROFILE.PACKAGES.CHOOSE')}
-                          </div>
+                        )}
+                        <div className="profile-package__minutes">
+                          {tutorPackage.time_in_hours}{' '}
+                          {tutorPackage.time_in_hours > 1
+                            ? t('PROFILE.PACKAGES.HOURS')
+                            : t('PROFILE.PACKAGES.HOUR')}
                         </div>
-                      }
-                    />
-                  ))}
-                </Carousel>
+                        <p className="profile-package__rate">
+                          ${Number(tutorPackage.rate)}{' '}
+                          <span className="profile-package__rate-perHour">
+                            {t('PROFILE.PACKAGES.PER_HOUR')}
+                          </span>
+                        </p>
+                        <div className="profile-package__save">
+                          <CheckCircle color="primary" />
+                          <span className="profile-package__save-title">
+                            {t('PROFILE.PACKAGES.SAVE')}
+                          </span>
+                          20%
+                        </div>
+                        <div className="profile-package__action">
+                          {t('PROFILE.PACKAGES.CHOOSE')}
+                        </div>
+                      </div>
+                    }
+                  />
+                ))}
               </RadioGroup>
             </FormControl>
           </div>

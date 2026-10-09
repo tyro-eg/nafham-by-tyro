@@ -47,14 +47,7 @@ const PackagesList: FC = () => {
   if (isLoading) {
     return (
       <div className="packages-list-container">
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            padding: '40px',
-          }}
-        >
+        <div className="packages-list__status">
           <p>{t('MYPACKAGES.LOADING_PACKAGES')}</p>
         </div>
       </div>
@@ -69,7 +62,7 @@ const PackagesList: FC = () => {
           next={fetchNextPage}
           hasMore={!!hasNextPage}
           loader={
-            <div style={{ textAlign: 'center', padding: '10px' }}>
+            <div className="packages-list__status packages-list__status--more">
               {isFetchingNextPage ? t('MYPACKAGES.LOADING_MORE') : ''}
             </div>
           }

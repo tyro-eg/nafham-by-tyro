@@ -2,4 +2,19 @@
 
 .profile-reviews {
   width: 100%;
+  min-width: 0;
+
+  // Equal-height review cards with breathing room between slides
+  .slick-track {
+    display: flex !important;
+  }
+
+  .slick-slide {
+    height: inherit !important;
+
+    > div {
+      height: 100%;
+      padding: $space-2;
+    }
+  }
 }

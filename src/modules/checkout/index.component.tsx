@@ -134,26 +134,30 @@ const Checkout = () => {
         <header className="checkout__header">
           <h1 className="title">{t('CHECKOUT.TITLE')}</h1>
           {isCourse ? (
-            <h4 className="sub-title">{t('CHECKOUT.SUBTITLE.COURSE')}!</h4>
+            <p className="sub-title">{t('CHECKOUT.SUBTITLE.COURSE')}!</p>
           ) : (
-            <h4 className="sub-title">{t('CHECKOUT.SUBTITLE.PRIVATE')}!</h4>
+            <p className="sub-title">{t('CHECKOUT.SUBTITLE.PRIVATE')}!</p>
           )}
         </header>
-        <AvailablePackages
-          tutorFields={tutorFields}
-          tutorPackages={tutorPackages}
-        />
-        <div className="checkout__payment-details">
-          <p className="title">{t('CHECKOUT.PAYMENT_DETAILS.TITLE')}</p>
-          <div className="checkout__payment-details__container">
-            <div className="block">
-              <CheckoutDiscount
-                promoCodeOut={checkPromoCode}
-                promoCode={promoCode}
-                loginModelOut={() => setOpenRegisterModal(true)}
-              />
-            </div>
+        <div className="checkout__layout">
+          <div className="checkout__main">
+            <AvailablePackages
+              tutorFields={tutorFields}
+              tutorPackages={tutorPackages}
+            />
           </div>
+          <aside className="checkout__payment-details">
+            <h2 className="title">{t('CHECKOUT.PAYMENT_DETAILS.TITLE')}</h2>
+            <div className="checkout__payment-details__container">
+              <div className="block">
+                <CheckoutDiscount
+                  promoCodeOut={checkPromoCode}
+                  promoCode={promoCode}
+                  loginModelOut={() => setOpenRegisterModal(true)}
+                />
+              </div>
+            </div>
+          </aside>
         </div>
         <Dialog maxWidth="sm" fullWidth open={openRegisterModal}>
           <RegisterModal

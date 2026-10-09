@@ -259,6 +259,26 @@ const EditProfile: FC = () => {
       <section className="profile">
         {renderProfileInfo()}
         <div className="profile__container container">
+          {showEditMode && renderProfileMissingInfoBanner()}
+          {showEditMode && (
+            <div className="profile__owner-actions">
+              <Button
+                onClick={() => {
+                  toggleEditMode();
+                  if (editMode) updateProfile();
+                }}
+                startIcon={editMode ? <Check /> : <Edit />}
+                variant="contained"
+                color="primary"
+                disabled={editMode && missingInformationFlag}
+                className="profile__edit"
+              >
+                {editMode
+                  ? t('PROFILE.EDITPROFILE.EDITACTION.SAVE&UPDATE')
+                  : t('PROFILE.EDITPROFILE.EDITACTION.EDITYOURPROFILE')}
+              </Button>
+            </div>
+          )}
           <div className="profile__fieldsTrail">
             {!!instructor?.grade_subjects?.length && (
               <div
@@ -303,40 +323,22 @@ const EditProfile: FC = () => {
               </div>
             </div> */}
           <div className="profile__calendar">
-            <h4 className="profile__calendar__title">
+            <h2 className="profile__calendar__title">
               {t('PROFILE.INSTRUCTOR_AVAILABILITY')}
-            </h4>
+            </h2>
             <div className="profile__calendar__slots">
               {renderProfileCalender()}
             </div>
           </div>
           {profileReviewsData?.length > 0 && (
             <div className="profile__reviews">
-              <h4 className="profile__reviews__title">
+              <h2 className="profile__reviews__title">
                 {t('COURSES.COURSE_REVIEWS.REVIEWS')}
-              </h4>
+              </h2>
               <div className="profile__reviews__container">
                 <ProfileReviewsList profileReviews={profileReviewsData} />
               </div>
             </div>
-          )}
-          {showEditMode && renderProfileMissingInfoBanner()}
-          {showEditMode && (
-            <Button
-              onClick={() => {
-                toggleEditMode();
-                if (editMode) updateProfile();
-              }}
-              startIcon={editMode ? <Check /> : <Edit />}
-              variant="contained"
-              color="primary"
-              disabled={editMode && missingInformationFlag}
-              className="profile__edit"
-            >
-              {editMode
-                ? t('PROFILE.EDITPROFILE.EDITACTION.SAVE&UPDATE')
-                : t('PROFILE.EDITPROFILE.EDITACTION.EDITYOURPROFILE')}
-            </Button>
           )}
         </div>
       </section>

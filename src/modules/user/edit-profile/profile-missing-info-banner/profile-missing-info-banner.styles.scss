@@ -1,56 +1,93 @@
 @import '../../../../assets/styles/variables.scss';
 @import '../../../../assets/styles/mixins.scss';
 
+// Soft warning callout
 .profile-missing-info-banner {
   width: 100%;
-  padding: 12px 50px 24px;
-  background-color: $color-danger;
-  position: relative;
-  color: #fff;
-  margin-bottom: 17px;
-  border-radius: 4px;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  column-gap: $space-4;
+  row-gap: $space-2;
+  align-items: start;
+  padding: $space-5;
+  background-color: $warning-50;
+  border: 1px solid rgba($warning-500, 0.3);
+  border-inline-start: 4px solid $warning-500;
+  border-radius: $radius-md;
+  color: $text-body;
 
-  display: flex;
-  justify-content: flex-start;
-  align-items: flex-start;
-  flex-direction: column;
+  @include respond(phone) {
+    grid-template-columns: minmax(0, 1fr);
+    padding: $space-4;
+  }
 
+  // Icon chip
   svg {
-    font-size: 3rem;
-    display: flex;
-    align-self: center;
-    margin-bottom: 0.8rem;
-  }
-  h4 {
-    color: #ffffff;
-    font-size: 1.8rem;
-    font-weight: bold;
-    line-height: 2.8rem;
-    margin-bottom: 1rem;
-    display: inline-block;
-  }
-  p {
-    color: #ffffff;
-    font-size: 1.4rem;
-    line-height: 2.2rem;
-    margin-bottom: 2rem;
-  }
-  ul {
-    list-style-position: inside;
-    list-style: disc;
-    li {
-      color: #ffffff;
-      font-size: 1.4rem;
-      line-height: 2.2rem;
-      padding-left: 0;
-      margin-left: 1.8rem;
-      &.bold {
-        font-weight: bold;
-      }
+    grid-row: 1 / span 3;
+    width: 4.8rem;
+    height: 4.8rem;
+    padding: 1.2rem;
+    box-sizing: border-box;
+    border-radius: $radius-md;
+    background-color: rgba($warning-500, 0.12);
+    color: $warning-500;
+
+    @include respond(phone) {
+      grid-row: auto;
+      width: 4rem;
+      height: 4rem;
+      padding: 1rem;
     }
   }
 
-  @include respond(phone) {
-    padding: 2rem;
+  h4 {
+    color: $text-strong;
+    font-size: $font-h5;
+    font-weight: 600;
+    line-height: 1.3;
+    text-align: start;
+  }
+
+  p {
+    color: $text-body;
+    font-size: $font-sm;
+    line-height: 1.6;
+    text-align: start;
+  }
+
+  ul {
+    list-style: none;
+    margin: $space-2 0 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: $space-2;
+
+    li {
+      @include badge($surface, $text-strong);
+      border: 1px solid rgba($warning-500, 0.35);
+      font-size: $font-sm;
+      font-weight: 500;
+      padding: 0.4rem 1.2rem;
+
+      &::before {
+        content: '';
+        width: 0.6rem;
+        height: 0.6rem;
+        border-radius: 50%;
+        background-color: $warning-500;
+      }
+
+      // Required items block saving
+      &.bold {
+        font-weight: 700;
+        border-color: rgba($danger-500, 0.4);
+        color: $danger-500;
+
+        &::before {
+          background-color: $danger-500;
+        }
+      }
+    }
   }
 }

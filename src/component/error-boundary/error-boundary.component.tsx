@@ -21,6 +21,7 @@ import { ErrorBoundary as SentryErrorBoundary } from '@sentry/react';
 import { useTranslation } from 'react-i18next';
 import { Box, Button, Typography, Container } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { ErrorOutline } from '@mui/icons-material';
 
 import { useRtlClass } from '../../assets/utils/utils';
 
@@ -59,6 +60,9 @@ const ErrorFallback: FC<{
   return (
     <Container maxWidth="md" className={`error-boundary ${rtlClass}`}>
       <Box className="error-boundary__content" dir={i18n.dir()}>
+        <span className="error-boundary__icon" aria-hidden="true">
+          <ErrorOutline />
+        </span>
         <Typography variant="h1" className="error-boundary__title">
           {t('ERROR.TITLE', 'Oops! Something went wrong')}
         </Typography>

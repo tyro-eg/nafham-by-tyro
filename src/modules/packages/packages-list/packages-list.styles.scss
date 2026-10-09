@@ -5,43 +5,74 @@
   width: 100%;
 
   .packages-list {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(36rem, 1fr));
+    gap: $space-5;
+
+    @include respond(phone) {
+      grid-template-columns: minmax(0, 1fr);
+      gap: $space-4;
+    }
+  }
+
+  // Infinite-scroll wrapper should not clip card shadows
+  .infinite-scroll-component {
+    overflow: visible !important;
   }
 
   .no-packages {
+    @include card($space-8 $space-5);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 6rem 2rem;
     text-align: center;
 
     svg {
-      font-size: 6rem;
-      color: $color-grey-light-2;
-      margin-bottom: 2rem;
+      font-size: 3.2rem;
+      color: $brand-600;
+      width: 6.4rem;
+      height: 6.4rem;
+      padding: 1.6rem;
+      background-color: $brand-50;
+      border-radius: $radius-md;
+      margin-bottom: $space-4;
+      box-sizing: border-box;
     }
 
     .title {
-      font-size: 2.4rem;
+      font-size: $font-h4;
       font-weight: 700;
-      color: $color-title;
-      margin-bottom: 1rem;
+      color: $text-strong;
+      margin-bottom: $space-2;
 
       @include respond(phone) {
-        font-size: 2rem;
+        font-size: $font-h5;
       }
     }
 
     .subtitle {
-      font-size: 1.6rem;
-      color: $color-body;
-      max-width: 50rem;
-
-      @include respond(phone) {
-        font-size: 1.4rem;
-      }
+      font-size: $font-base;
+      color: $text-muted;
+      max-width: 48rem;
     }
+  }
+}
+
+.packages-list__status {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: $space-7 $space-4;
+  color: $text-muted;
+  font-size: $font-sm;
+
+  p {
+    color: $text-muted;
+    font-size: $font-base;
+  }
+
+  &--more {
+    padding: $space-5 $space-4;
   }
 }
