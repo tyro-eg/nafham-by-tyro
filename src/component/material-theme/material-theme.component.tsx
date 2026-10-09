@@ -9,24 +9,24 @@ interface MaterialThemeProps {
 // Keep in sync with src/assets/styles/variables.scss
 const tokens = {
   brand400: '#3ac5f1',
-  brand500: '#12a9dd',
-  brand600: '#0a8bc0',
-  brand700: '#0b6f99',
+  brand500: '#3ac5f1',
+  brand600: '#3ac5f1',
+  brand700: '#41b7dc',
   brand50: '#eef9fe',
-  navy900: '#0f1b2d',
-  navy800: '#1a2b42',
-  navy700: '#2a3d57',
+  navy900: '#2c3e50',
+  navy800: '#3a4b60',
+  navy700: '#4b5d74',
   gray50: '#f6f9fc',
   gray100: '#eef2f7',
   gray200: '#e3e9f0',
   gray300: '#cfd8e3',
   gray400: '#9aa8b8',
   gray500: '#6b7a8d',
-  gray600: '#4a5a6e',
+  gray600: '#778699',
   accent400: '#ffc94a',
   accent500: '#f5b301',
-  success: '#16a34a',
-  danger: '#dc2626',
+  success: '#54c853',
+  danger: '#dc3545',
   warning: '#d97706',
 };
 
@@ -50,7 +50,7 @@ const MaterialTheme: React.FC<MaterialThemeProps> = ({ children }) => {
         direction,
         palette: {
           primary: {
-            light: tokens.brand400,
+            light: '#5bd1f6',
             main: tokens.brand600,
             dark: tokens.brand700,
             contrastText: '#fff',

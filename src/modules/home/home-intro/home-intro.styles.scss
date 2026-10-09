@@ -5,33 +5,31 @@
   position: relative;
   overflow: hidden;
   color: $text-on-dark;
-  background-color: $navy-900;
+  // Original brand hero: sky-blue gradient artwork. Its bottom strip is
+  // transparent, so a matching gradient sits underneath to fill any gap.
+  background-color: $brand-400;
   background-image:
-    radial-gradient(
-      60rem 40rem at 85% 20%,
-      rgba($brand-500, 0.35),
-      transparent 70%
-    ),
-    radial-gradient(
-      50rem 36rem at 0% 100%,
-      rgba($brand-700, 0.35),
-      transparent 70%
-    ),
-    linear-gradient(180deg, $navy-900 0%, $navy-800 100%);
+    url('../../../assets/images/newLanding/group1.webp'),
+    linear-gradient(
+      90deg,
+      #01caff 0%,
+      #00a5ff 25%,
+      #0081fe 50%,
+      #015dff 75%,
+      #0036ff 100%
+    );
+  background-size:
+    cover,
+    100% 100%;
+  background-position: top center;
+  background-repeat: no-repeat;
 
-  &.rtl {
-    background-image:
-      radial-gradient(
-        60rem 40rem at 15% 20%,
-        rgba($brand-500, 0.35),
-        transparent 70%
-      ),
-      radial-gradient(
-        50rem 36rem at 100% 100%,
-        rgba($brand-700, 0.35),
-        transparent 70%
-      ),
-      linear-gradient(180deg, $navy-900 0%, $navy-800 100%);
+  // On tall, narrow heroes scale by height so the transparent strip
+  // falls below the section instead of showing the fill gradient.
+  @include respond(tab-port) {
+    background-size:
+      auto 125%,
+      100% 100%;
   }
 
   &__inner {

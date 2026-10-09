@@ -32,7 +32,7 @@ function LanguageSelector() {
     px: 1.5,
     fontSize: '1.4rem',
     fontWeight: 500,
-    color: '#4a5a6e',
+    color: '#778699',
     whiteSpace: 'nowrap',
     // Logical margins so the icon gap is correct in RTL too
     '& .MuiButton-startIcon': {
@@ -42,7 +42,7 @@ function LanguageSelector() {
       marginInlineStart: '-4px',
       marginInlineEnd: '8px',
     },
-    '&:hover': { color: '#0f1b2d', backgroundColor: '#f6f9fc' },
+    '&:hover': { color: '#2c3e50', backgroundColor: '#f6f9fc' },
   };
 
   // Show Arabic button when current language is not Arabic

@@ -5,23 +5,23 @@
 // new styles; legacy names below are mapped onto them.
 // ============================================================
 
-// Brand (sky blue). 400 is the signature logo colour; use 600+
-// for anything that carries white text or must meet contrast.
+// Brand (sky blue). Original brand colours are kept: #3ac5f1 is the
+// primary (400-600) and #41b7dc its darker/hover shade (700).
 $brand-50: #eef9fe;
 $brand-100: #d6f1fc;
 $brand-200: #ade3f8;
 $brand-300: #74d3f5;
 $brand-400: #3ac5f1;
-$brand-500: #12a9dd;
-$brand-600: #0a8bc0;
-$brand-700: #0b6f99;
-$brand-800: #0f5a7c;
+$brand-500: #3ac5f1;
+$brand-600: #3ac5f1;
+$brand-700: #41b7dc;
+$brand-800: #2fa3c9;
 
-// Navy (headings, dark sections, footer)
-$navy-950: #0a1322;
-$navy-900: #0f1b2d;
-$navy-800: #1a2b42;
-$navy-700: #2a3d57;
+// Dark brand colours (headings, dark sections, footer)
+$navy-950: #161c2d; // original midnight blue
+$navy-900: #2c3e50; // original title colour
+$navy-800: #3a4b60; // original secondary
+$navy-700: #4b5d74;
 
 // Neutrals
 $gray-50: #f6f9fc;
@@ -30,7 +30,7 @@ $gray-200: #e3e9f0;
 $gray-300: #cfd8e3;
 $gray-400: #9aa8b8;
 $gray-500: #6b7a8d;
-$gray-600: #4a5a6e;
+$gray-600: #778699; // original body text colour
 $gray-700: #334155;
 
 // Accent (use sparingly: highlights, ratings, badges)
@@ -38,9 +38,9 @@ $accent-400: #ffc94a;
 $accent-500: #f5b301;
 
 // Status
-$success-500: #16a34a;
+$success-500: #54c853;
 $success-50: #ecfdf3;
-$danger-500: #dc2626;
+$danger-500: #dc3545;
 $danger-50: #fef2f2;
 $warning-500: #d97706;
 $warning-50: #fffbeb;
@@ -53,7 +53,7 @@ $text-on-dark: #ffffff;
 $text-on-dark-muted: rgba(255, 255, 255, 0.72);
 $surface: #ffffff;
 $surface-alt: $gray-50;
-$surface-dark: $navy-900;
+$surface-dark: $navy-950;
 $border: $gray-200;
 $border-strong: $gray-300;
 $link: $brand-700;
@@ -72,7 +72,7 @@ $shadow-sm:
   0 1px 2px rgba(15, 27, 45, 0.04);
 $shadow-md: 0 4px 16px rgba(15, 27, 45, 0.08);
 $shadow-lg: 0 12px 32px rgba(15, 27, 45, 0.12);
-$focus-ring: 0 0 0 3px rgba(18, 169, 221, 0.35);
+$focus-ring: 0 0 0 3px rgba(58, 197, 241, 0.35);
 
 // Spacing scale (html is 62.5%, so 1rem = 10px)
 $space-1: 0.4rem;
