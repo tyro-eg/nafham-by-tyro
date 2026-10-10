@@ -109,11 +109,6 @@ const SidebarLayout: FC<SidebarLayoutProps> = ({ children }) => {
       label: t('NAVIGATION.DASHBOARD'),
     },
     {
-      to: '/home',
-      icon: <PersonSearchRounded />,
-      label: t('NAVIGATION.INSTRUCTORS'),
-    },
-    {
       to: '/my_instructors',
       icon: <PeopleAltRounded />,
       label: t('NAVIGATION.MY_INSTRUCTORS'),
@@ -220,6 +215,20 @@ const SidebarLayout: FC<SidebarLayoutProps> = ({ children }) => {
         </nav>
 
         <div className="side-layout__footer">
+          {!isTutor && (
+            <NavLink
+              to="/home"
+              onClick={() => setDrawerOpen(false)}
+              className={({ isActive }) =>
+                `side-layout__browse${
+                  isActive ? ' side-layout__browse--active' : ''
+                }`
+              }
+            >
+              <PersonSearchRounded aria-hidden="true" />
+              {t('NAVIGATION.BROWSE_INSTRUCTORS')}
+            </NavLink>
+          )}
           <div className="side-layout__language">
             <LanguageSelector />
           </div>

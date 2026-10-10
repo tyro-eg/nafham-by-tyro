@@ -43,7 +43,8 @@
     "MY_SALARY": "راتبي",
     "MENU": "القائمة الرئيسية",
     "OPEN_MENU": "فتح القائمة",
-    "CLOSE_MENU": "إغلاق القائمة"
+    "CLOSE_MENU": "إغلاق القائمة",
+    "BROWSE_INSTRUCTORS": "تصفح المعلمين"
   },
   "CARDS": {
     "FREE_ASSESMENT": {

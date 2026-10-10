@@ -43,7 +43,8 @@
     "MY_SALARY": "My Salary",
     "MENU": "Main menu",
     "OPEN_MENU": "Open menu",
-    "CLOSE_MENU": "Close menu"
+    "CLOSE_MENU": "Close menu",
+    "BROWSE_INSTRUCTORS": "Browse instructors"
   },
   "CARDS": {
     "FREE_ASSESMENT": {

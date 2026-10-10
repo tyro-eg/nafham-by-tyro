@@ -150,7 +150,7 @@ const PrivateSessions: FC = () => {
         <div className="container dashboard-header__inner">
           <div className="dashboard-header__text">
             <h1 className="dashboard-header__title">
-              {t('NAVIGATION.INSTRUCTORS')}
+              {t('NAVIGATION.BROWSE_INSTRUCTORS')}
             </h1>
           </div>
         </div>

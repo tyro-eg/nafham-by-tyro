@@ -223,6 +223,38 @@ $topbar-height: 6.4rem;
     border-top: 1px solid $border;
   }
 
+  &__browse {
+    display: flex;
+    align-items: center;
+    gap: $space-2;
+    padding: 0.8rem $space-3;
+    border-radius: 1.2rem;
+    border: 1px dashed $border-strong;
+    font-size: $font-sm;
+    font-weight: 600;
+    color: $brand-700;
+    text-decoration: none;
+    transition:
+      background-color $transition,
+      border-color $transition;
+
+    svg {
+      font-size: 2rem;
+      color: $brand-400;
+    }
+
+    &:hover,
+    &--active {
+      background-color: $brand-50;
+      border-color: $brand-200;
+      color: $brand-700;
+    }
+
+    &:focus-visible {
+      @include focus-ring;
+    }
+  }
+
   &__language .language-selector {
     width: 100%;
     justify-content: flex-start;
