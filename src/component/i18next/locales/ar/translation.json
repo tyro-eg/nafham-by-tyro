@@ -38,7 +38,8 @@
     "PACKAGES": "باقاتي",
     "TERMS": "الأحكام والشروط",
     "FUNDS": "إضافة الأموال",
-    "DASHBOARD": "لوحتي"
+    "DASHBOARD": "لوحتي",
+    "MY_STUDENTS": "طلابي"
   },
   "CARDS": {
     "FREE_ASSESMENT": {
@@ -1267,6 +1268,45 @@
       "TITLE": "معلّميّ",
       "EMPTY": "لم تدرس مع أي معلم بعد.",
       "FIND": "ابحث عن معلم"
+    }
+  },
+  "MY_STUDENTS": {
+    "TITLE": "طلابي",
+    "SUBTITLE": "جميع الطلاب المسجلين معك، وساعاتهم، وجلساتهم القادمة.",
+    "STATS": {
+      "STUDENTS": "الطلاب",
+      "ACTIVE": "طلاب نشطون",
+      "HOURS_REMAINING": "الساعات المتبقية",
+      "HOURS_TAUGHT": "ساعات التدريس"
+    },
+    "SEARCH": "ابحث عن طالب بالاسم أو البريد الإلكتروني",
+    "FILTER_COURSE": "تصفية حسب المادة",
+    "ALL_COURSES": "كل المواد",
+    "STATUS": {
+      "ALL": "الكل",
+      "ACTIVE": "نشط",
+      "INACTIVE": "غير نشط"
+    },
+    "EMPTY_TITLE": "لا يوجد طلاب بعد",
+    "EMPTY_TEXT": "سيظهر الطلاب هنا بعد حجز جلسة أو شراء باقة معك.",
+    "NO_MATCH_TITLE": "لا يوجد طلاب مطابقون",
+    "NO_MATCH_TEXT": "جرّب اسماً أو مادة أو حالة مختلفة.",
+    "CARD": {
+      "HOURS_LEFT": "الساعات المتبقية",
+      "HOURS_OF": "{{left}} من {{total}} س",
+      "NEXT": "الجلسة القادمة",
+      "NONE": "غير محددة",
+      "COMPLETED": "مكتملة",
+      "SESSIONS_HOURS_zero": "لا جلسات · {{hours}} س",
+      "SESSIONS_HOURS_one": "جلسة واحدة · {{hours}} س",
+      "SESSIONS_HOURS_two": "جلستان · {{hours}} س",
+      "SESSIONS_HOURS_few": "{{count}} جلسات · {{hours}} س",
+      "SESSIONS_HOURS_many": "{{count}} جلسة · {{hours}} س",
+      "SESSIONS_HOURS_other": "{{count}} جلسة · {{hours}} س",
+      "LAST": "آخر جلسة",
+      "EMAIL": "البريد",
+      "SESSIONS": "الجلسات",
+      "NO_PACKAGE": "لا توجد باقة بعد (جلسة تجريبية أو جلسات فردية)"
     }
   }
 }

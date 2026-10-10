@@ -114,9 +114,15 @@ const MainHeader: FC<HeaderProps> = ({ openFreeTrail }) => {
                 <NavLink className={navClass} to="/home">
                   {t('NAVIGATION.INSTRUCTORS')}
                 </NavLink>
-                <NavLink className={navClass} to="/my_instructors">
-                  {t('NAVIGATION.MY_INSTRUCTORS')}
-                </NavLink>
+                {currentUser.type === 'Tutor' ? (
+                  <NavLink className={navClass} to="/my_students">
+                    {t('NAVIGATION.MY_STUDENTS')}
+                  </NavLink>
+                ) : (
+                  <NavLink className={navClass} to="/my_instructors">
+                    {t('NAVIGATION.MY_INSTRUCTORS')}
+                  </NavLink>
+                )}
                 <NavLink className={navClass} to="/my_sessions">
                   {t('NAVIGATION.SESSIONS')}
                 </NavLink>

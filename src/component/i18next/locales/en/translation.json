@@ -38,7 +38,8 @@
     "PACKAGES": "My Packages",
     "TERMS": "Terms & Conditions",
     "FUNDS": "Add Funds",
-    "DASHBOARD": "Dashboard"
+    "DASHBOARD": "Dashboard",
+    "MY_STUDENTS": "My Students"
   },
   "CARDS": {
     "FREE_ASSESMENT": {
@@ -1237,6 +1238,41 @@
       "TITLE": "My instructors",
       "EMPTY": "You haven't studied with an instructor yet.",
       "FIND": "Find an instructor"
+    }
+  },
+  "MY_STUDENTS": {
+    "TITLE": "My Students",
+    "SUBTITLE": "Everyone enrolled with you, their hours and what's coming up next.",
+    "STATS": {
+      "STUDENTS": "Students",
+      "ACTIVE": "Active students",
+      "HOURS_REMAINING": "Hours remaining",
+      "HOURS_TAUGHT": "Hours taught"
+    },
+    "SEARCH": "Search students by name or email",
+    "FILTER_COURSE": "Filter by course",
+    "ALL_COURSES": "All courses",
+    "STATUS": {
+      "ALL": "All",
+      "ACTIVE": "Active",
+      "INACTIVE": "Inactive"
+    },
+    "EMPTY_TITLE": "No students yet",
+    "EMPTY_TEXT": "Students appear here once they book a session or buy a package with you.",
+    "NO_MATCH_TITLE": "No matching students",
+    "NO_MATCH_TEXT": "Try a different name, course or status.",
+    "CARD": {
+      "HOURS_LEFT": "Hours left",
+      "HOURS_OF": "{{left}} of {{total}} h",
+      "NEXT": "Next session",
+      "NONE": "Not scheduled",
+      "COMPLETED": "Completed",
+      "SESSIONS_HOURS_one": "{{count}} session · {{hours}} h",
+      "SESSIONS_HOURS_other": "{{count}} sessions · {{hours}} h",
+      "LAST": "Last session",
+      "EMAIL": "Email",
+      "SESSIONS": "Sessions",
+      "NO_PACKAGE": "No package yet (trial or single sessions)"
     }
   }
 }

@@ -148,13 +148,23 @@ const MobileHeader: FC<HeaderProps> = ({ openFreeTrail }) => {
                   {t('NAVIGATION.INSTRUCTORS')}
                 </NavLink>
 
-                <NavLink
-                  className={navClass}
-                  to="/my_instructors"
-                  onClick={closeMobileHeader}
-                >
-                  {t('NAVIGATION.MY_INSTRUCTORS')}
-                </NavLink>
+                {currentUser.type === 'Tutor' ? (
+                  <NavLink
+                    className={navClass}
+                    to="/my_students"
+                    onClick={closeMobileHeader}
+                  >
+                    {t('NAVIGATION.MY_STUDENTS')}
+                  </NavLink>
+                ) : (
+                  <NavLink
+                    className={navClass}
+                    to="/my_instructors"
+                    onClick={closeMobileHeader}
+                  >
+                    {t('NAVIGATION.MY_INSTRUCTORS')}
+                  </NavLink>
+                )}
 
                 <NavLink
                   className={navClass}

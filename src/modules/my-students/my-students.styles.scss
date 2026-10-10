@@ -1,0 +1,452 @@
+@import '../../assets/styles/variables.scss';
+@import '../../assets/styles/mixins.scss';
+
+$tones: (
+  sky: (
+    bg: #e8f8fe,
+    fg: #1792ba,
+  ),
+  mint: (
+    bg: #eafaf0,
+    fg: #2f9a3a,
+  ),
+  sun: (
+    bg: #fff6e0,
+    fg: #b07800,
+  ),
+  lilac: (
+    bg: #f2efff,
+    fg: #6a52d6,
+  ),
+  coral: (
+    bg: #fff0ee,
+    fg: #d4554a,
+  ),
+);
+
+$ms-radius: 2rem;
+
+.my-students {
+  background:
+    radial-gradient(
+      60rem 30rem at 100% 0%,
+      rgba($brand-400, 0.08),
+      transparent 70%
+    ),
+    $surface-alt;
+  padding: $space-6 0 $space-8;
+  min-height: 60vh;
+
+  .container.ms-container {
+    margin-bottom: 0;
+  }
+}
+
+.ms-muted {
+  color: $text-muted;
+}
+
+// ---------- Header ----------
+.ms-header {
+  margin-bottom: $space-5;
+
+  &__title {
+    display: flex;
+    align-items: center;
+    gap: $space-3;
+    font-size: $font-h2;
+    color: $text-strong;
+
+    @include respond(phone) {
+      font-size: 2.8rem;
+    }
+  }
+
+  &__count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 3.6rem;
+    height: 3.6rem;
+    padding: 0 1rem;
+    border-radius: $radius-pill;
+    background-color: $brand-50;
+    color: $brand-700;
+    font-size: $font-base;
+    font-weight: 700;
+    letter-spacing: 0;
+  }
+
+  &__subtitle {
+    margin-top: $space-1;
+    font-size: $font-base;
+    color: $text-body;
+  }
+}
+
+// ---------- Stats ----------
+.ms-stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: $space-4;
+  margin-bottom: $space-5;
+
+  @include respond(tab-land) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @include respond(phone) {
+    gap: $space-3;
+  }
+}
+
+.ms-stat {
+  display: flex;
+  align-items: center;
+  gap: $space-3;
+  padding: $space-4;
+  border-radius: $ms-radius;
+
+  > div {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  &__icon {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 4.4rem;
+    height: 4.4rem;
+    border-radius: 1.4rem;
+    background-color: #fff;
+    box-shadow: 0 4px 12px rgba(15, 27, 45, 0.06);
+
+    svg {
+      font-size: 2.4rem;
+    }
+  }
+
+  &__value {
+    font-size: 2.8rem;
+    font-weight: 800;
+    line-height: 1.1;
+    color: $text-strong;
+  }
+
+  &__label {
+    font-size: $font-sm;
+    font-weight: 600;
+    color: $text-body;
+  }
+
+  @each $name, $tone in $tones {
+    &--#{$name} {
+      background-color: map-get($tone, bg);
+
+      .ms-stat__icon {
+        color: map-get($tone, fg);
+      }
+    }
+  }
+}
+
+// ---------- Toolbar ----------
+.ms-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: $space-3;
+  margin-bottom: $space-5;
+  padding: $space-3;
+  border-radius: $ms-radius;
+  background-color: $surface;
+  box-shadow: 0 2px 6px rgba(15, 27, 45, 0.04);
+
+  &__search {
+    flex: 1 1 26rem;
+  }
+
+  &__select {
+    flex: 0 1 24rem;
+
+    @include respond(phone) {
+      flex: 1 1 100%;
+    }
+  }
+
+  .MuiOutlinedInput-root {
+    border-radius: $radius-pill;
+  }
+}
+
+.ms-segment {
+  display: inline-flex;
+  padding: 0.4rem;
+  border-radius: $radius-pill;
+  background-color: $gray-100;
+
+  @include respond(phone) {
+    width: 100%;
+  }
+
+  &__btn {
+    flex: 1;
+    padding: 0.7rem 1.6rem;
+    border: 0;
+    border-radius: $radius-pill;
+    background: transparent;
+    font: inherit;
+    font-size: $font-sm;
+    font-weight: 600;
+    color: $text-body;
+    white-space: nowrap;
+    cursor: pointer;
+    transition:
+      background-color $transition,
+      color $transition;
+
+    &:hover {
+      color: $text-strong;
+    }
+
+    &:focus-visible {
+      @include focus-ring;
+    }
+
+    &--on {
+      background-color: #fff;
+      color: $brand-700;
+      box-shadow: 0 2px 6px rgba(15, 27, 45, 0.08);
+    }
+  }
+}
+
+// ---------- Grid / cards ----------
+.ms-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(32rem, 1fr));
+  gap: $space-5;
+
+  @include respond(phone) {
+    grid-template-columns: minmax(0, 1fr);
+    gap: $space-4;
+  }
+}
+
+.ms-card {
+  display: flex;
+  flex-direction: column;
+  gap: $space-4;
+  padding: $space-5;
+  border-radius: $ms-radius;
+  background-color: $surface;
+  box-shadow:
+    0 2px 6px rgba(15, 27, 45, 0.04),
+    0 12px 32px rgba(15, 27, 45, 0.05);
+  transition:
+    box-shadow $transition,
+    transform $transition;
+
+  &:hover {
+    box-shadow:
+      0 4px 10px rgba(15, 27, 45, 0.06),
+      0 18px 40px rgba(15, 27, 45, 0.08);
+    transform: translateY(-2px);
+  }
+
+  @include respond(phone) {
+    padding: $space-4;
+  }
+
+  &__top {
+    display: flex;
+    align-items: center;
+    gap: $space-3;
+  }
+
+  &__avatar.MuiAvatar-root {
+    flex: none;
+    width: 5.2rem;
+    height: 5.2rem;
+    font-size: 1.8rem;
+    font-weight: 700;
+  }
+
+  @each $name, $tone in $tones {
+    &__avatar--#{$name}.MuiAvatar-root {
+      background-color: map-get($tone, bg);
+      color: map-get($tone, fg);
+    }
+  }
+
+  &__who {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__name {
+    font-size: $font-lg;
+    font-weight: 700;
+    color: $text-strong;
+    @include ellipsis;
+  }
+
+  &__email {
+    font-size: $font-sm;
+    color: $text-muted;
+    @include ellipsis;
+  }
+
+  &__status {
+    flex: none;
+    padding: 0.3rem 1rem;
+    border-radius: $radius-pill;
+    font-size: $font-xs;
+    font-weight: 700;
+
+    &--active {
+      background-color: map-get(map-get($tones, mint), bg);
+      color: map-get(map-get($tones, mint), fg);
+    }
+
+    &--inactive {
+      background-color: $gray-100;
+      color: $gray-500;
+    }
+  }
+
+  &__courses {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $space-2;
+  }
+
+  &__course {
+    padding: 0.4rem 1.2rem;
+    border-radius: $radius-pill;
+    background-color: $brand-50;
+    color: $brand-700;
+    font-size: $font-sm;
+    font-weight: 600;
+  }
+
+  &__hours {
+    padding: $space-3;
+    border-radius: 1.4rem;
+    background-color: $gray-50;
+
+    &--none {
+      font-size: $font-sm;
+      color: $text-muted;
+    }
+  }
+
+  &__hours-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: $space-2;
+    margin-bottom: $space-2;
+    font-size: $font-sm;
+    color: $text-body;
+
+    strong {
+      color: $text-strong;
+    }
+  }
+
+  &__track {
+    display: block;
+    height: 0.8rem;
+    border-radius: $radius-pill;
+    background-color: $gray-200;
+    overflow: hidden;
+  }
+
+  &__bar {
+    display: block;
+    height: 100%;
+    border-radius: $radius-pill;
+    background-color: $brand-400;
+  }
+
+  &__facts {
+    display: flex;
+    flex-direction: column;
+    gap: $space-2;
+    margin: 0;
+
+    > div {
+      display: flex;
+      justify-content: space-between;
+      gap: $space-3;
+      font-size: $font-sm;
+    }
+
+    dt {
+      color: $text-muted;
+      white-space: nowrap;
+    }
+
+    dd {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin: 0;
+      font-weight: 600;
+      color: $text-strong;
+      text-align: end;
+
+      svg {
+        font-size: 1.6rem;
+        color: $brand-400;
+      }
+    }
+  }
+
+  &__actions {
+    display: flex;
+    gap: $space-2;
+    margin-top: auto;
+    padding-top: $space-2;
+
+    .MuiButton-root {
+      flex: 1;
+      border-radius: $radius-pill;
+    }
+  }
+}
+
+// ---------- Empty ----------
+.ms-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $space-2;
+  padding: $space-7 $space-4;
+  border-radius: $ms-radius;
+  background-color: $surface;
+  text-align: center;
+
+  img {
+    width: 16rem;
+    margin-bottom: $space-3;
+  }
+
+  h2 {
+    font-size: 2rem;
+  }
+
+  p {
+    max-width: 44rem;
+    color: $text-body;
+  }
+}
