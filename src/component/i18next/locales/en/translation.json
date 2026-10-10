@@ -44,7 +44,8 @@
     "MENU": "Main menu",
     "OPEN_MENU": "Open menu",
     "CLOSE_MENU": "Close menu",
-    "BROWSE_INSTRUCTORS": "Browse instructors"
+    "BROWSE_INSTRUCTORS": "Browse instructors",
+    "CALENDAR": "Calendar"
   },
   "CARDS": {
     "FREE_ASSESMENT": {
@@ -1373,5 +1374,20 @@
     "EMPTY_MTD": "No completed sessions yet this month. Your earnings will appear here as sessions are completed.",
     "EMPTY_MONTH": "No completed sessions in this month.",
     "NOTE": "This is an estimate based on completed sessions and your hourly rate for each course. Missed and cancelled sessions aren't counted. Your final payout may differ."
+  },
+  "CALENDAR_PAGE": {
+    "TITLE": "Calendar",
+    "SUBTITLE": "Your sessions at a glance. Click a session for details.",
+    "FILTER": {
+      "SCHEDULED": "Scheduled",
+      "ALL": "All sessions"
+    },
+    "LEGEND": {
+      "SCHEDULED": "Scheduled / live",
+      "COMPLETED": "Completed",
+      "MISSED": "Missed",
+      "CANCELED": "Cancelled"
+    },
+    "HINT": "Use Month / Week to change the view."
   }
 }

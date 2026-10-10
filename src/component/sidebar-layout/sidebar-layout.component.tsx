@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { Avatar, IconButton, Tooltip } from '@mui/material';
 import {
   AccountCircleRounded,
+  CalendarMonthRounded,
   CloseRounded,
   DashboardRounded,
   EventNoteRounded,
@@ -81,6 +82,11 @@ const SidebarLayout: FC<SidebarLayoutProps> = ({ children }) => {
       label: t('NAVIGATION.SESSIONS'),
     },
     {
+      to: '/calendar',
+      icon: <CalendarMonthRounded />,
+      label: t('NAVIGATION.CALENDAR'),
+    },
+    {
       to: '/my_packages',
       icon: <Inventory2Rounded />,
       label: t('NAVIGATION.PACKAGES'),
@@ -117,6 +123,11 @@ const SidebarLayout: FC<SidebarLayoutProps> = ({ children }) => {
       to: '/my_sessions',
       icon: <EventNoteRounded />,
       label: t('NAVIGATION.SESSIONS'),
+    },
+    {
+      to: '/calendar',
+      icon: <CalendarMonthRounded />,
+      label: t('NAVIGATION.CALENDAR'),
     },
     {
       to: '/my_packages',

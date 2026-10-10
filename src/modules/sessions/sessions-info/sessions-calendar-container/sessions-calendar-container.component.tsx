@@ -1,6 +1,7 @@
 import React, { useRef, useMemo, useEffect, useState } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
+import timeGridPlugin from '@fullcalendar/timegrid';
 import arLocale from '../../../../assets/utils/calendar-locale';
 import { useTranslation } from 'react-i18next';
 import { Popover } from '@mui/material';
@@ -17,6 +18,10 @@ interface SessionsCalendarContainerProps {
     status?: string;
     tutor_id?: number;
   };
+  /** Adds a Month/Week switcher (used by the Calendar page) */
+  enableWeekView?: boolean;
+  /** Only show sessions with these statuses (client-side) */
+  onlyStatuses?: string[];
 }
 
 /**
@@ -37,6 +42,8 @@ const getStatusColor = (status: string): string => {
 
 const SessionsCalendarContainer: React.FC<SessionsCalendarContainerProps> = ({
   filters,
+  enableWeekView = false,
+  onlyStatuses,
 }) => {
   const { t, i18n } = useTranslation();
   const calendarRef = useRef<FullCalendar>(null);
@@ -82,7 +89,10 @@ const SessionsCalendarContainer: React.FC<SessionsCalendarContainerProps> = ({
 
   // Transform sessions to FullCalendar events
   const calendarEvents: EventInput[] = useMemo(() => {
-    return sessions.map((session) => {
+    const visible = onlyStatuses
+      ? sessions.filter((s) => onlyStatuses.includes(s.status))
+      : sessions;
+    return visible.map((session) => {
       // Determine session color based on status
       const status = session.status as string;
       const backgroundColor = getStatusColor(status);
@@ -120,7 +130,7 @@ const SessionsCalendarContainer: React.FC<SessionsCalendarContainerProps> = ({
         },
       };
     });
-  }, [sessions, t]);
+  }, [sessions, t, onlyStatuses]);
 
   /**
    * Handle event click - open popover with session details
@@ -155,12 +165,16 @@ const SessionsCalendarContainer: React.FC<SessionsCalendarContainerProps> = ({
       ) : (
         <FullCalendar
           ref={calendarRef}
-          plugins={[dayGridPlugin]}
+          plugins={
+            enableWeekView ? [dayGridPlugin, timeGridPlugin] : [dayGridPlugin]
+          }
           headerToolbar={{
             left: 'prev,next today',
             center: 'title',
-            right: '',
+            right: enableWeekView ? 'dayGridMonth,timeGridWeek' : '',
           }}
+          scrollTime="08:00:00"
+          allDaySlot={false}
           initialView="dayGridMonth"
           dayHeaderFormat={{
             weekday: 'short',
@@ -168,6 +182,7 @@ const SessionsCalendarContainer: React.FC<SessionsCalendarContainerProps> = ({
           buttonText={{
             today: t('CALENDAR.BUTTONS.TODAY'),
             month: t('CALENDAR.BUTTONS.MONTH'),
+            week: t('CALENDAR.BUTTONS.WEEK'),
           }}
           direction={i18n.dir()}
           locale={i18n.language === 'ar' ? arLocale : undefined}
