@@ -204,6 +204,7 @@ const SidebarLayout: FC<SidebarLayoutProps> = ({ children }) => {
             <NavLink
               key={item.to}
               to={item.to}
+              onClick={() => setDrawerOpen(false)}
               className={({ isActive }) =>
                 `side-layout__link${
                   isActive ? ' side-layout__link--active' : ''
