@@ -125,7 +125,7 @@ const MobileHeader: FC<HeaderProps> = ({ openFreeTrail }) => {
           )}
 
           <nav className="app-header-mobile__nav">
-            {currentUser?.type === 'Student' ? (
+            {currentUser ? (
               <NavLink
                 className={navClass}
                 to="/dashboard"
@@ -138,7 +138,7 @@ const MobileHeader: FC<HeaderProps> = ({ openFreeTrail }) => {
                 {t('NAVIGATION.HOME')}
               </NavLink>
             )}
-            {currentUser && (
+            {currentUser?.type === 'Student' && (
               <>
                 <NavLink
                   className={navClass}
@@ -147,25 +147,13 @@ const MobileHeader: FC<HeaderProps> = ({ openFreeTrail }) => {
                 >
                   {t('NAVIGATION.INSTRUCTORS')}
                 </NavLink>
-
-                {currentUser.type === 'Tutor' ? (
-                  <NavLink
-                    className={navClass}
-                    to="/my_students"
-                    onClick={closeMobileHeader}
-                  >
-                    {t('NAVIGATION.MY_STUDENTS')}
-                  </NavLink>
-                ) : (
-                  <NavLink
-                    className={navClass}
-                    to="/my_instructors"
-                    onClick={closeMobileHeader}
-                  >
-                    {t('NAVIGATION.MY_INSTRUCTORS')}
-                  </NavLink>
-                )}
-
+                <NavLink
+                  className={navClass}
+                  to="/my_instructors"
+                  onClick={closeMobileHeader}
+                >
+                  {t('NAVIGATION.MY_INSTRUCTORS')}
+                </NavLink>
                 <NavLink
                   className={navClass}
                   to="/my_sessions"
@@ -173,7 +161,31 @@ const MobileHeader: FC<HeaderProps> = ({ openFreeTrail }) => {
                 >
                   {t('NAVIGATION.SESSIONS')}
                 </NavLink>
-
+                <NavLink
+                  className={navClass}
+                  to="/my_packages"
+                  onClick={closeMobileHeader}
+                >
+                  {t('NAVIGATION.PACKAGES')}
+                </NavLink>
+              </>
+            )}
+            {currentUser?.type === 'Tutor' && (
+              <>
+                <NavLink
+                  className={navClass}
+                  to="/my_students"
+                  onClick={closeMobileHeader}
+                >
+                  {t('NAVIGATION.MY_STUDENTS')}
+                </NavLink>
+                <NavLink
+                  className={navClass}
+                  to="/my_sessions"
+                  onClick={closeMobileHeader}
+                >
+                  {t('NAVIGATION.SESSIONS')}
+                </NavLink>
                 <NavLink
                   className={navClass}
                   to="/my_packages"

@@ -439,6 +439,38 @@ const buildSessions = (role: DemoRole): SessionType[] => {
       makeSession(TUTOR_ID, 900202, at(15, 16), 60, 'regular', 'scheduled', 15),
       makeSession(TUTOR_ID, 900203, at(-2, 19), 60, 'regular', 'completed', 13),
       makeSession(TUTOR_ID, 900204, at(-4, 17), 60, 'regular', 'missed', 11),
+      // Two months of teaching history for the tutor dashboard
+      ...(
+        [
+          [-1, 17, 60, STUDENT_ID, 11],
+          [-3, 18, 90, 900202, 15],
+          [-6, 17, 60, 900203, 13],
+          [-8, 18, 60, STUDENT_ID, 11],
+          [-9, 19, 60, 900204, 11],
+          [-13, 17, 90, 900202, 15],
+          [-15, 18, 60, STUDENT_ID, 13],
+          [-17, 17, 60, 900203, 13],
+          [-20, 18, 60, 900202, 15],
+          [-23, 18, 60, STUDENT_ID, 11],
+          [-27, 17, 90, 900204, 11],
+          [-30, 18, 60, 900202, 15],
+          [-34, 18, 60, STUDENT_ID, 11],
+          [-38, 17, 60, 900203, 13],
+          [-41, 18, 60, 900202, 15],
+          [-45, 18, 60, STUDENT_ID, 11],
+          [-49, 17, 60, 900204, 11],
+        ] as const
+      ).map(([day, hour, minutes, studentId, subjectId]) =>
+        makeSession(
+          TUTOR_ID,
+          studentId,
+          at(day, hour),
+          minutes,
+          'regular',
+          'completed',
+          subjectId,
+        ),
+      ),
     ];
   }
   return [

@@ -4,10 +4,14 @@ import GuardedRoute from '../guarded-route/guarded-route.component';
 import Loader from './Loader';
 import { CurrentUser } from '../../assets/types';
 import { getHomePath } from '../../assets/utils/home-path';
+import TutorLayout from '../tutor-layout/tutor-layout.component';
 
 const Home = lazy(() => import('../../modules/home/index'));
 const MyStudents = lazy(
   () => import('../../modules/my-students/index.component'),
+);
+const TutorDashboard = lazy(
+  () => import('../../modules/dashboard/tutor-dashboard.component'),
 );
 const Dashboard = lazy(() => import('../../modules/dashboard/index.component'));
 const SignIn = lazy(() => import('../../modules/auth/signin/signin.component'));
@@ -51,20 +55,22 @@ const RoutesComponent: React.FC<RoutesProps> = ({ currentUser }) => (
     <Routes>
       <Route
         path="/"
-        element={
-          currentUser?.type === 'Student' ? (
-            <Navigate to="/dashboard" replace />
-          ) : (
-            <Home />
-          )
-        }
+        element={currentUser ? <Navigate to="/dashboard" replace /> : <Home />}
       />
       <Route
         path="/dashboard"
         element={
           <GuardedRoute
-            element={<Dashboard />}
-            auth={!!currentUser && currentUser.type === 'Student'}
+            element={
+              currentUser?.type === 'Tutor' ? (
+                <TutorLayout>
+                  <TutorDashboard />
+                </TutorLayout>
+              ) : (
+                <Dashboard />
+              )
+            }
+            auth={!!currentUser}
           />
         }
       />
@@ -87,7 +93,11 @@ const RoutesComponent: React.FC<RoutesProps> = ({ currentUser }) => (
         path="/account_settings"
         element={
           <GuardedRoute
-            element={<AccountSettings />}
+            element={
+              <TutorLayout>
+                <AccountSettings />
+              </TutorLayout>
+            }
             auth={!!currentUser && currentUser.type === 'Tutor'}
           />
         }
@@ -112,7 +122,11 @@ const RoutesComponent: React.FC<RoutesProps> = ({ currentUser }) => (
         path="/my_students"
         element={
           <GuardedRoute
-            element={<MyStudents />}
+            element={
+              <TutorLayout>
+                <MyStudents />
+              </TutorLayout>
+            }
             auth={!!currentUser && currentUser.type === 'Tutor'}
           />
         }
@@ -121,16 +135,41 @@ const RoutesComponent: React.FC<RoutesProps> = ({ currentUser }) => (
       <Route path="/course/:courseId" element={<CourseDetails />} /> */}
       <Route
         path="/my_sessions"
-        element={<GuardedRoute element={<Sessions />} auth={!!currentUser} />}
+        element={
+          <GuardedRoute
+            element={
+              <TutorLayout>
+                <Sessions />
+              </TutorLayout>
+            }
+            auth={!!currentUser}
+          />
+        }
       />
       <Route
         path="/my_packages"
-        element={<GuardedRoute element={<Packages />} auth={!!currentUser} />}
+        element={
+          <GuardedRoute
+            element={
+              <TutorLayout>
+                <Packages />
+              </TutorLayout>
+            }
+            auth={!!currentUser}
+          />
+        }
       />
       <Route
         path="/profile/:id"
         element={
-          <GuardedRoute element={<EditProfile />} auth={!!currentUser} />
+          <GuardedRoute
+            element={
+              <TutorLayout>
+                <EditProfile />
+              </TutorLayout>
+            }
+            auth={!!currentUser}
+          />
         }
       />
       <Route path="/checkout" element={<Checkout />} />

@@ -1274,5 +1274,56 @@
       "SESSIONS": "Sessions",
       "NO_PACKAGE": "No package yet (trial or single sessions)"
     }
+  },
+  "TUTOR_DASHBOARD": {
+    "ROLE": "Instructor",
+    "NAV": "Instructor menu",
+    "HERO": {
+      "EYEBROW": "Instructor space",
+      "TODAY_one": "You have {{count}} session today. Next up: {{subject}} with {{student}}, {{when}}.",
+      "TODAY_other": "You have {{count}} sessions today. Next up: {{subject}} with {{student}}, {{when}}.",
+      "NEXT": "Your next session is {{subject}} with {{student}}, {{when}}.",
+      "NO_NEXT": "No sessions booked yet. Keep your availability up to date so students can book you.",
+      "AVAILABILITY": "Update availability"
+    },
+    "STATS": {
+      "UPCOMING": "Upcoming sessions",
+      "HOURS_MONTH": "Hours taught this month",
+      "ACTIVE_STUDENTS": "Active students",
+      "RATING_one": "Rating · {{count}} review",
+      "RATING_other": "Rating · {{count}} reviews"
+    },
+    "SCHEDULE": {
+      "TITLE": "Your schedule",
+      "EMPTY": "Nothing scheduled yet. Open more slots in your availability to get booked."
+    },
+    "ACTIVITY": {
+      "TITLE": "Teaching activity",
+      "CHEER_one": "You've taught {{hours}} hour this month. Great work!",
+      "CHEER_other": "You've taught {{hours}} hours this month. Great work!",
+      "TOTAL_one": "{{count}} completed session in total.",
+      "TOTAL_other": "{{count}} completed sessions in total.",
+      "WEEKLY": "Hours taught per week",
+      "SESSIONS": "Sessions"
+    },
+    "PACKAGES": {
+      "TITLE": "Packages",
+      "ACTIVE": "Active",
+      "SOLD": "Hours sold",
+      "LEFT": "Hours left",
+      "VIEW": "View packages"
+    },
+    "ATTENTION": {
+      "TITLE": "Needs attention",
+      "LOW_one": "Only {{hours}} hour left – suggest a new package",
+      "LOW_other": "Only {{hours}} hours left – suggest a new package",
+      "IDLE_one": "{{hours}} hour left but nothing booked",
+      "IDLE_other": "{{hours}} hours left but nothing booked",
+      "EMPTY": "All your students are on track. 🎉"
+    },
+    "REVIEWS": {
+      "TITLE": "Latest reviews",
+      "EMPTY": "No reviews yet. They'll appear here after your students rate their sessions."
+    }
   }
 }

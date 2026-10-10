@@ -100,7 +100,7 @@ const MainHeader: FC<HeaderProps> = ({ openFreeTrail }) => {
           </Link>
 
           <nav className="app-header__nav">
-            {currentUser?.type === 'Student' ? (
+            {currentUser ? (
               <NavLink className={navClass} to="/dashboard">
                 {t('NAVIGATION.DASHBOARD')}
               </NavLink>
@@ -109,20 +109,15 @@ const MainHeader: FC<HeaderProps> = ({ openFreeTrail }) => {
                 {t('NAVIGATION.HOME')}
               </NavLink>
             )}
-            {currentUser && (
+            {/* Tutors navigate their area from the dashboard sidebar */}
+            {currentUser?.type === 'Student' && (
               <>
                 <NavLink className={navClass} to="/home">
                   {t('NAVIGATION.INSTRUCTORS')}
                 </NavLink>
-                {currentUser.type === 'Tutor' ? (
-                  <NavLink className={navClass} to="/my_students">
-                    {t('NAVIGATION.MY_STUDENTS')}
-                  </NavLink>
-                ) : (
-                  <NavLink className={navClass} to="/my_instructors">
-                    {t('NAVIGATION.MY_INSTRUCTORS')}
-                  </NavLink>
-                )}
+                <NavLink className={navClass} to="/my_instructors">
+                  {t('NAVIGATION.MY_INSTRUCTORS')}
+                </NavLink>
                 <NavLink className={navClass} to="/my_sessions">
                   {t('NAVIGATION.SESSIONS')}
                 </NavLink>

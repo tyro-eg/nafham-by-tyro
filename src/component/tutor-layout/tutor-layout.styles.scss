@@ -1,0 +1,174 @@
+@import '../../assets/styles/variables.scss';
+@import '../../assets/styles/mixins.scss';
+
+// Desktop header = 3.6rem contact strip + $header-height; phone header 6.4rem
+$desktop-header: 3.6rem + $header-height;
+$phone-header: 6.4rem;
+
+.tutor-layout {
+  display: grid;
+  grid-template-columns: 26rem minmax(0, 1fr);
+  align-items: start;
+  background-color: $surface-alt;
+
+  @include respond(tab-port) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  &__sidebar {
+    position: sticky;
+    top: $desktop-header;
+    display: flex;
+    flex-direction: column;
+    gap: $space-5;
+    height: calc(100vh - #{$desktop-header});
+    padding: $space-5 $space-4;
+    background-color: $surface;
+    border-inline-end: 1px solid $border;
+    overflow-y: auto;
+
+    @include respond(tab-port) {
+      z-index: 10;
+      height: auto;
+      padding: $space-2 $space-3;
+      border-inline-end: 0;
+      border-bottom: 1px solid $border;
+      overflow: visible;
+    }
+
+    @include respond(phone) {
+      top: $phone-header;
+    }
+  }
+
+  &__profile {
+    display: flex;
+    align-items: center;
+    gap: $space-3;
+    padding: $space-3;
+    border-radius: 1.6rem;
+    background: linear-gradient(135deg, #e8f8fe 0%, #f2efff 100%);
+
+    @include respond(tab-port) {
+      display: none;
+    }
+  }
+
+  &__avatar.MuiAvatar-root {
+    width: 4.4rem;
+    height: 4.4rem;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: $brand-700;
+    background-color: #fff;
+  }
+
+  &__who {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  &__name {
+    font-size: $font-sm;
+    font-weight: 700;
+    color: $text-strong;
+    @include ellipsis;
+  }
+
+  &__role {
+    font-size: $font-xs;
+    color: $text-muted;
+  }
+
+  &__nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+
+    @include respond(tab-port) {
+      flex-direction: row;
+      gap: $space-2;
+      overflow-x: auto;
+      scrollbar-width: none;
+
+      &::-webkit-scrollbar {
+        display: none;
+      }
+    }
+  }
+
+  &__link {
+    display: flex;
+    align-items: center;
+    gap: $space-3;
+    padding: 1.1rem $space-3;
+    border-radius: 1.2rem;
+    font-size: $font-sm;
+    font-weight: 600;
+    color: $text-body;
+    text-decoration: none;
+    white-space: nowrap;
+    transition:
+      background-color $transition,
+      color $transition;
+
+    &:hover {
+      background-color: $gray-50;
+      color: $text-strong;
+    }
+
+    &:focus-visible {
+      @include focus-ring;
+    }
+
+    &--active,
+    &--active:hover {
+      background-color: $brand-50;
+      color: $brand-700;
+      box-shadow: inset 3px 0 0 $brand-400;
+
+      .rtl & {
+        box-shadow: inset -3px 0 0 $brand-400;
+      }
+
+      .tutor-layout__icon {
+        color: $brand-400;
+      }
+    }
+
+    @include respond(tab-port) {
+      flex: none;
+      gap: $space-2;
+      padding: 0.8rem 1.4rem;
+      border-radius: $radius-pill;
+      background-color: $gray-50;
+
+      &--active,
+      &--active:hover,
+      .rtl &--active {
+        background-color: $brand-400;
+        color: #fff;
+        box-shadow: none;
+
+        .tutor-layout__icon {
+          color: #fff;
+        }
+      }
+    }
+  }
+
+  &__icon {
+    display: inline-flex;
+    color: $gray-400;
+
+    svg {
+      font-size: 2.2rem;
+    }
+  }
+
+  &__main {
+    min-width: 0;
+    min-height: calc(100vh - #{$desktop-header});
+  }
+}

@@ -37,21 +37,43 @@ const Footer = () => {
           </div>
 
           <nav className={`footer-navbar ${rtlClass}`}>
-            <NavLink className={navClass} to="/">
-              {t('NAVIGATION.HOME')}
-            </NavLink>
-            {currentUser && (
+            {!currentUser && (
+              <NavLink className={navClass} to="/">
+                {t('NAVIGATION.HOME')}
+              </NavLink>
+            )}
+            {currentUser?.type === 'Student' && (
               <>
+                <NavLink className={navClass} to="/dashboard">
+                  {t('NAVIGATION.DASHBOARD')}
+                </NavLink>
                 <NavLink className={navClass} to="/home">
                   {t('NAVIGATION.INSTRUCTORS')}
                 </NavLink>
-
                 <NavLink className={navClass} to="/my_instructors">
                   {t('NAVIGATION.MY_INSTRUCTORS')}
                 </NavLink>
-
                 <NavLink className={navClass} to="/my_sessions">
                   {t('NAVIGATION.SESSIONS')}
+                </NavLink>
+                <NavLink className={navClass} to="/my_packages">
+                  {t('NAVIGATION.PACKAGES')}
+                </NavLink>
+              </>
+            )}
+            {currentUser?.type === 'Tutor' && (
+              <>
+                <NavLink className={navClass} to="/dashboard">
+                  {t('NAVIGATION.DASHBOARD')}
+                </NavLink>
+                <NavLink className={navClass} to="/my_students">
+                  {t('NAVIGATION.MY_STUDENTS')}
+                </NavLink>
+                <NavLink className={navClass} to="/my_sessions">
+                  {t('NAVIGATION.SESSIONS')}
+                </NavLink>
+                <NavLink className={navClass} to="/my_packages">
+                  {t('NAVIGATION.PACKAGES')}
                 </NavLink>
               </>
             )}
