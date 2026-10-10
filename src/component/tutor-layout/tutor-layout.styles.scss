@@ -1,7 +1,12 @@
 @import '../../assets/styles/variables.scss';
 @import '../../assets/styles/mixins.scss';
 
-// Tutors have no site header: the sidebar is the whole navigation
+// Tutors have no site header: the sidebar is the whole navigation.
+// Desktop: docked on the left (right in Arabic). Narrow screens: a slim
+// top bar opens the same sidebar as a slide-in drawer.
+$drawer-width: 28rem;
+$topbar-height: 6.4rem;
+
 .tutor-layout {
   display: grid;
   grid-template-columns: 26rem minmax(0, 1fr);
@@ -13,6 +18,67 @@
     grid-template-columns: minmax(0, 1fr);
   }
 
+  // ---------- Narrow-screen top bar ----------
+  &__topbar {
+    display: none;
+
+    @include respond(tab-port) {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      display: flex;
+      align-items: center;
+      gap: $space-2;
+      height: $topbar-height;
+      padding: 0 $space-3;
+      background-color: rgba(255, 255, 255, 0.94);
+      backdrop-filter: saturate(180%) blur(12px);
+      border-bottom: 1px solid $border;
+
+      .tutor-layout__logo {
+        flex: 1;
+      }
+    }
+  }
+
+  &__menu.MuiIconButton-root {
+    color: $text-strong;
+
+    svg {
+      font-size: 2.6rem;
+    }
+  }
+
+  &__topbar-avatar.MuiAvatar-root {
+    width: 3.6rem;
+    height: 3.6rem;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: $brand-700;
+    background-color: $brand-50;
+  }
+
+  &__overlay {
+    display: none;
+
+    @include respond(tab-port) {
+      position: fixed;
+      inset: 0;
+      z-index: 40;
+      display: block;
+      background-color: rgba(22, 28, 45, 0.45);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 220ms ease;
+    }
+  }
+
+  &--open &__overlay {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  // ---------- Sidebar ----------
   &__sidebar {
     position: sticky;
     top: 0;
@@ -27,13 +93,34 @@
     overflow-y: auto;
 
     @include respond(tab-port) {
-      height: auto;
-      gap: $space-2;
-      padding: $space-2 $space-3 $space-3;
-      border-inline-end: 0;
-      border-bottom: 1px solid $border;
-      box-shadow: 0 4px 16px rgba(15, 27, 45, 0.06);
-      overflow: visible;
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      inset-inline-start: 0;
+      z-index: 50;
+      width: $drawer-width;
+      max-width: 85vw;
+      height: 100%;
+      box-shadow: 0 0 40px rgba(15, 27, 45, 0.25);
+      transform: translateX(-100%);
+      visibility: hidden;
+      transition:
+        transform 260ms ease,
+        visibility 260ms;
+    }
+  }
+
+  &.rtl &__sidebar {
+    @include respond(tab-port) {
+      transform: translateX(100%);
+    }
+  }
+
+  &--open &__sidebar,
+  &.rtl.tutor-layout--open &__sidebar {
+    @include respond(tab-port) {
+      transform: translateX(0);
+      visibility: visible;
     }
   }
 
@@ -56,13 +143,12 @@
     }
   }
 
-  &__compact {
+  &__close.MuiIconButton-root {
     display: none;
-    align-items: center;
-    gap: 0.4rem;
+    color: $gray-500;
 
     @include respond(tab-port) {
-      display: flex;
+      display: inline-flex;
     }
   }
 
@@ -72,17 +158,6 @@
     flex-direction: column;
     gap: 0.4rem;
     flex: 1;
-
-    @include respond(tab-port) {
-      flex-direction: row;
-      gap: $space-2;
-      overflow-x: auto;
-      scrollbar-width: none;
-
-      &::-webkit-scrollbar {
-        display: none;
-      }
-    }
   }
 
   &__link {
@@ -125,23 +200,8 @@
     }
 
     @include respond(tab-port) {
-      flex: none;
-      gap: $space-2;
-      padding: 0.8rem 1.4rem;
-      border-radius: $radius-pill;
-      background-color: $gray-50;
-
-      &--active,
-      &--active:hover,
-      .rtl &--active {
-        background-color: $brand-400;
-        color: #fff;
-        box-shadow: none;
-
-        .tutor-layout__icon {
-          color: #fff;
-        }
-      }
+      padding: 1.3rem $space-3;
+      font-size: $font-base;
     }
   }
 
@@ -161,10 +221,6 @@
     gap: $space-3;
     padding-top: $space-4;
     border-top: 1px solid $border;
-
-    @include respond(tab-port) {
-      display: none;
-    }
   }
 
   &__language .language-selector {

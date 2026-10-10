@@ -1325,7 +1325,9 @@
     "REVIEWS": {
       "TITLE": "Latest reviews",
       "EMPTY": "No reviews yet. They'll appear here after your students rate their sessions."
-    }
+    },
+    "OPEN_MENU": "Open menu",
+    "CLOSE_MENU": "Close menu"
   },
   "MY_SALARY": {
     "TITLE": "My Salary",

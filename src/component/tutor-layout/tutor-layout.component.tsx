@@ -1,14 +1,16 @@
-import { FC, ReactNode } from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import { FC, ReactNode, useEffect, useState } from 'react';
+import { Link, NavLink, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Avatar, IconButton, Tooltip } from '@mui/material';
 import {
   AccountCircleRounded,
+  CloseRounded,
   DashboardRounded,
   EventNoteRounded,
   GroupsRounded,
   Inventory2Rounded,
   LogoutRounded,
+  MenuRounded,
   PaymentsRounded,
   SettingsRounded,
 } from '@mui/icons-material';
@@ -29,14 +31,31 @@ interface TutorLayoutProps {
 /**
  * App shell for tutors: the left sidebar (right in Arabic) replaces the
  * site header and holds the logo, navigation, language switch and the
- * account/logout block. On small screens it becomes a sticky top bar with
- * a scrollable tab row.
+ * account/logout block. On small screens a slim top bar with a menu button
+ * slides the same sidebar in as a drawer.
  */
 const TutorLayout: FC<TutorLayoutProps> = ({ children }) => {
   const { t } = useTranslation();
   const rtlClass = useRtlClass();
   const currentUser = useAppSelector(selectCurrentUser);
   const signOutMutation = useSignOut();
+  const location = useLocation();
+  const [drawerOpen, setDrawerOpen] = useState(false);
+
+  // Close the phone drawer whenever the page changes
+  useEffect(() => {
+    setDrawerOpen(false);
+  }, [location.pathname]);
+
+  // Close the drawer with Escape
+  useEffect(() => {
+    if (!drawerOpen) return undefined;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setDrawerOpen(false);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [drawerOpen]);
 
   if (currentUser?.type !== 'Tutor') return <>{children}</>;
 
@@ -95,17 +114,52 @@ const TutorLayout: FC<TutorLayoutProps> = ({ children }) => {
   );
 
   return (
-    <div className={`tutor-layout ${rtlClass}`}>
-      <aside className="tutor-layout__sidebar">
+    <div
+      className={`tutor-layout ${rtlClass}${
+        drawerOpen ? ' tutor-layout--open' : ''
+      }`}
+    >
+      {/* Small screens: top bar that opens the sidebar as a drawer */}
+      <header className="tutor-layout__topbar">
+        <IconButton
+          className="tutor-layout__menu"
+          onClick={() => setDrawerOpen(true)}
+          aria-label={t('TUTOR_DASHBOARD.OPEN_MENU')}
+          aria-expanded={drawerOpen}
+          aria-controls="tutor-sidebar"
+        >
+          <MenuRounded />
+        </IconButton>
+        <Link to="/dashboard" className="tutor-layout__logo">
+          <img src={logo} alt="Nafham by Tyro" />
+        </Link>
+        <Avatar
+          src={currentUser.avatar}
+          alt={currentUser.first_name}
+          className="tutor-layout__topbar-avatar"
+        >
+          {initials}
+        </Avatar>
+      </header>
+
+      <div
+        className="tutor-layout__overlay"
+        onClick={() => setDrawerOpen(false)}
+        aria-hidden="true"
+      />
+
+      <aside className="tutor-layout__sidebar" id="tutor-sidebar">
         <div className="tutor-layout__brand">
           <Link to="/dashboard" className="tutor-layout__logo">
             <img src={logo} alt="Nafham by Tyro" />
           </Link>
-          {/* Compact controls, shown on small screens only */}
-          <div className="tutor-layout__compact">
-            <LanguageSelector />
-            {logout}
-          </div>
+          <IconButton
+            className="tutor-layout__close"
+            onClick={() => setDrawerOpen(false)}
+            aria-label={t('TUTOR_DASHBOARD.CLOSE_MENU')}
+          >
+            <CloseRounded />
+          </IconButton>
         </div>
 
         <nav
