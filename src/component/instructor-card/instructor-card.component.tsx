@@ -1,10 +1,11 @@
 import React, { useState, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { Button, Dialog, Box, Rating } from '@mui/material';
+import { Button, Dialog, Box } from '@mui/material';
 import { ArrowRightAlt } from '@mui/icons-material';
 
 import ReadMore from '../read-more/read-more.component';
+import RatingSummary from '../rating-summary/rating-summary.component';
 import InstructorCalendar from '../instructor-calendar/instructor-calendar.component';
 
 // import UAE from '../../assets/images/landing/united-arab-emirates-round.png';
@@ -90,27 +91,12 @@ const InstructorCard: React.FC<{ instructor: Instructor }> = memo(
                   <h3 className="name">
                     {instructor.first_name} {instructor.last_name}
                   </h3>
-                  {instructor.average_rating && (
-                    <Box
+                  {!!instructor.average_rating && (
+                    <RatingSummary
                       className="review"
-                      sx={{ display: 'flex', alignItems: 'center' }}
-                    >
-                      <Rating
-                        name="instructor rating"
-                        value={
-                          +Number(instructor.average_rating).toPrecision(2)
-                        }
-                        precision={0.1}
-                        readOnly
-                        size="small"
-                      />
-                      <span className="review-numbers">
-                        {instructor.average_rating
-                          ? +Number(instructor.average_rating).toPrecision(2)
-                          : 0}{' '}
-                        (5.0)
-                      </span>
-                    </Box>
+                      value={instructor.average_rating}
+                      count={instructor.number_of_reviews}
+                    />
                   )}
                 </Button>
               </Box>

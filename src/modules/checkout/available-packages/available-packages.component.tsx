@@ -48,6 +48,25 @@ const AvailablePackages: React.FC<AvailablePackagesProps> = ({
     }
   };
 
+  // "Save x%" is derived only from the prices shown here: each package's
+  // hourly rate vs the hourly rate of the smallest package (the base price).
+  // Hidden when there is no saving (e.g. the base package itself).
+  const basePackage = tutorPackages
+    .filter((pkg) => Number(pkg.rate) > 0)
+    .reduce<TutorPackage | null>(
+      (min, pkg) =>
+        !min || Number(pkg.time_in_hours) < Number(min.time_in_hours)
+          ? pkg
+          : min,
+      null,
+    );
+  const getSavingPercent = (pkg: TutorPackage): number => {
+    const baseRate = Number(basePackage?.rate) || 0;
+    const rate = Number(pkg.rate) || 0;
+    if (!baseRate || !rate || rate >= baseRate) return 0;
+    return Math.round(((baseRate - rate) / baseRate) * 100);
+  };
+
   const handlePackageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const packageId = Number(event.target.value);
     setSelectedPackageId(packageId);
@@ -131,13 +150,15 @@ const AvailablePackages: React.FC<AvailablePackagesProps> = ({
                             {t('PROFILE.PACKAGES.PER_HOUR')}
                           </span>
                         </p>
-                        <div className="profile-package__save">
-                          <CheckCircle color="primary" />
-                          <span className="profile-package__save-title">
-                            {t('PROFILE.PACKAGES.SAVE')}
-                          </span>
-                          20%
-                        </div>
+                        {getSavingPercent(tutorPackage) > 0 && (
+                          <div className="profile-package__save">
+                            <CheckCircle color="primary" />
+                            <span className="profile-package__save-title">
+                              {t('PROFILE.PACKAGES.SAVE')}
+                            </span>
+                            {getSavingPercent(tutorPackage)}%
+                          </div>
+                        )}
                         <div className="profile-package__action">
                           {t('PROFILE.PACKAGES.CHOOSE')}
                         </div>

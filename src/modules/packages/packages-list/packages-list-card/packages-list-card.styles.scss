@@ -30,7 +30,17 @@
       align-items: flex-start;
       justify-content: space-between;
       gap: $space-3;
-      flex-wrap: wrap;
+
+      // Phones: the type badge always gets its own row above the person,
+      // whatever the length of the name.
+      @include respond(phone) {
+        flex-direction: column;
+        gap: $space-2;
+
+        .packages-card__type {
+          order: -1;
+        }
+      }
     }
 
     // Detail list
@@ -196,6 +206,7 @@
   }
 
   &__img-container {
+    flex: 1 1 auto;
     display: flex;
     align-items: center;
     gap: $space-3;
@@ -222,25 +233,7 @@
       }
 
       .review {
-        display: flex;
-        align-items: center;
         margin-top: 0.2rem;
-
-        &-stars {
-          display: flex;
-          align-items: center;
-          gap: $space-1;
-
-          .MuiRating-iconFilled {
-            color: $accent-500;
-          }
-        }
-
-        &-numbers {
-          font-size: $font-xs;
-          font-weight: 500;
-          color: $text-muted;
-        }
       }
     }
   }

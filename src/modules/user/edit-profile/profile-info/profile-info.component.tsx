@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from 'react';
-import { Button, IconButton, Dialog, Rating } from '@mui/material';
+import { Button, IconButton, Dialog } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import { useTranslation } from 'react-i18next';
 
@@ -7,6 +7,7 @@ import { useRtlClass } from '../../../../assets/utils/utils';
 import { getYoutubeId } from '../edit-profile.utils';
 import { ProfileInfoType, UserInfoType } from '..';
 import ReadMore from '../../../../component/read-more/read-more.component';
+import RatingSummary from '../../../../component/rating-summary/rating-summary.component';
 import EditProfileVideoModal from '../../../../modals/edit-profile-video/edit-profile-video.modal';
 import EditProfileImageModal from '../../../../modals/edit-profile-image/edit-profile-image.modal';
 import { ReactComponent as ProfileImgPlaceholder } from '../../../../assets/images/img-placeholder_23@2x.svg';
@@ -156,25 +157,12 @@ const ProfileInfo: FC<ProfileInfoProps> = ({
                     <h1 className="profile-info__instructor-name">
                       {data.full_name || '-'}
                     </h1>
-                    {data.average_rating && (
-                      <div className="profile-info__instructor-stars">
-                        <Rating
-                          name="profile-info-review"
-                          value={
-                            data.average_rating
-                              ? Number(data.average_rating?.toPrecision(2))
-                              : 0
-                          }
-                          precision={0.1}
-                          readOnly
-                        />
-                        <span className="review-numbers">
-                          {data.average_rating
-                            ? Number(data.average_rating?.toPrecision(2))
-                            : 0}{' '}
-                          (5.0)
-                        </span>
-                      </div>
+                    {!!data.average_rating && (
+                      <RatingSummary
+                        className="profile-info__instructor-stars"
+                        value={data.average_rating}
+                        size="medium"
+                      />
                     )}
                   </div>
                 </div>
@@ -206,7 +194,8 @@ const ProfileInfo: FC<ProfileInfoProps> = ({
                     },
                     {
                       label: t('PROFILE.EDITPROFILE.STATISTICS.ACTIVE_HOURS'),
-                      value: `${data.number_of_sessions || 0} ${t('GENEREL.HOURS')}`,
+                      value: data.number_of_sessions || 0,
+                      unit: t('GENEREL.HOURS'),
                     },
                     {
                       label: t(
@@ -214,16 +203,26 @@ const ProfileInfo: FC<ProfileInfoProps> = ({
                       ),
                       value: data.number_of_students || 0,
                     },
-                  ].map((stat, idx) => (
-                    <div key={idx} className="profile-info__statistics-card">
-                      <p className="profile-info__statistics-card__name">
-                        {stat.label}
-                      </p>
-                      <p className="profile-info__statistics-card__value">
-                        {stat.value}
-                      </p>
-                    </div>
-                  ))}
+                  ].map(
+                    (
+                      stat: { label: string; value: number; unit?: string },
+                      idx,
+                    ) => (
+                      <div key={idx} className="profile-info__statistics-card">
+                        <p className="profile-info__statistics-card__name">
+                          {stat.label}
+                        </p>
+                        <p className="profile-info__statistics-card__value">
+                          {stat.value}
+                          {stat.unit && (
+                            <span className="profile-info__statistics-card__unit">
+                              {stat.unit}
+                            </span>
+                          )}
+                        </p>
+                      </div>
+                    ),
+                  )}
                 </div>
               </div>
               {/* Video Section */}

@@ -32,25 +32,10 @@
   }
 
   &__rating-stars {
-    display: flex;
-    align-items: center;
-    gap: $space-2;
     margin-bottom: $space-2;
 
     .MuiRating-root {
       font-size: 2rem;
-    }
-
-    .MuiRating-iconFilled {
-      color: $accent-500;
-    }
-
-    .review-numbers {
-      color: $text-strong;
-      font-weight: 600;
-      font-size: $font-xs;
-      line-height: 1.4;
-      font-variant-numeric: tabular-nums;
     }
   }
 

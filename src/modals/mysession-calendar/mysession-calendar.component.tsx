@@ -3,7 +3,7 @@ import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
-import arLocale from '@fullcalendar/core/locales/ar-kw';
+import arLocale from '../../assets/utils/calendar-locale';
 import { addDays, getDay } from 'date-fns';
 import { useTranslation } from 'react-i18next';
 import WarningIcon from '@mui/icons-material/Warning';

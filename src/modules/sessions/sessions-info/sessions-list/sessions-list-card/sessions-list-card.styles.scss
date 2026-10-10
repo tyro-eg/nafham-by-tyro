@@ -244,15 +244,7 @@
   }
 
   &__rating {
-    display: flex;
-    align-items: center;
-    gap: $space-1;
     @include accent-rating;
-
-    &-value {
-      font-size: $font-xs;
-      color: $text-muted;
-    }
   }
 
   // ---- Actions ---------------------------------------------------

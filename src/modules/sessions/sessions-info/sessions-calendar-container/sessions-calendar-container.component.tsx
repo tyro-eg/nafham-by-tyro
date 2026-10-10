@@ -1,7 +1,7 @@
 import React, { useRef, useMemo, useEffect, useState } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
-import arLocale from '@fullcalendar/core/locales/ar-kw';
+import arLocale from '../../../../assets/utils/calendar-locale';
 import { useTranslation } from 'react-i18next';
 import { Popover } from '@mui/material';
 import type { EventClickArg } from '@fullcalendar/core';
@@ -26,9 +26,10 @@ interface SessionsCalendarContainerProps {
 const getStatusColor = (status: string): string => {
   const normalizedStatus = status.toLowerCase();
   if (normalizedStatus === 'completed') return '#4caf50'; // green
+  // Same meaning as the list view badges: missed = danger, canceled = neutral
   if (normalizedStatus === 'canceled' || normalizedStatus === 'cancelled')
-    return '#f44336'; // red
-  if (normalizedStatus === 'missed') return '#9e9e9e'; // gray
+    return '#9aa8b8'; // gray ($gray-400)
+  if (normalizedStatus === 'missed') return '#dc3545'; // red ($danger-500)
   if (normalizedStatus === 'open' || normalizedStatus === 'scheduled')
     return '#ff9800'; // orange
   return '#3ac5f1'; // default blue
@@ -66,6 +67,19 @@ const SessionsCalendarContainer: React.FC<SessionsCalendarContainerProps> = ({
     return infiniteData.pages.flatMap((page) => page.data);
   }, [infiniteData]);
 
+  // Translated status labels (raw API values are lower-case English)
+  const getStatusLabel = (status: string): string => {
+    const statusMap: Record<string, string> = {
+      open: t('MYSESSIONS.FILTERS.OPEN'),
+      scheduled: t('MYSESSIONS.FILTERS.SCHEDULED'),
+      completed: t('MYSESSIONS.FILTERS.COMPLETED'),
+      cancelled: t('MYSESSIONS.FILTERS.CANCELLED'),
+      canceled: t('MYSESSIONS.FILTERS.CANCELLED'),
+      missed: t('MYSESSIONS.FILTERS.MISSED'),
+    };
+    return statusMap[status?.toLowerCase()] || status;
+  };
+
   // Transform sessions to FullCalendar events
   const calendarEvents: EventInput[] = useMemo(() => {
     return sessions.map((session) => {
@@ -95,6 +109,8 @@ const SessionsCalendarContainer: React.FC<SessionsCalendarContainerProps> = ({
         ],
         extendedProps: {
           status: session.status,
+          statusLabel: getStatusLabel(session.status as string),
+          statusTitle: t('SESSION_CALENDAR_MODAL.STATUS'),
           tutor: tutorName,
           student: studentName,
           gradeSubject: session.grade_subject?.full_course_name || 'N/A',
@@ -208,6 +224,8 @@ interface EventInfo {
     title: string;
     extendedProps: {
       status: string;
+      statusLabel?: string;
+      statusTitle?: string;
       tutor: string;
       student: string;
       gradeSubject: string;
@@ -221,8 +239,16 @@ interface EventInfo {
  */
 const renderEventContent = (eventInfo: EventInfo) => {
   const { event } = eventInfo;
-  const { status, tutor, student, gradeSubject, backgroundColor } =
-    event.extendedProps;
+  const {
+    status,
+    statusLabel,
+    statusTitle,
+    tutor,
+    student,
+    gradeSubject,
+    backgroundColor,
+  } = event.extendedProps;
+  const label = statusLabel || status;
 
   // Use stored backgroundColor or calculate from status
   const bgColor = backgroundColor || getStatusColor(status);
@@ -234,16 +260,18 @@ const renderEventContent = (eventInfo: EventInfo) => {
         backgroundColor: bgColor,
         color: '#ffffff',
       }}
-      title={`${tutor} - ${student}\n${gradeSubject}\nStatus: ${status}`}
+      title={`${tutor} - ${student}\n${gradeSubject}\n${statusTitle || 'Status'}: ${label}`}
     >
-      <div className="session-event__time">
+      <div className="session-event__time" dir="auto">
         {event.start.toLocaleTimeString([], {
           hour: '2-digit',
           minute: '2-digit',
         })}
       </div>
-      <div className="session-event__title">{event.title}</div>
-      <div className="session-event__status">{status}</div>
+      <div className="session-event__title" dir="auto">
+        {event.title}
+      </div>
+      <div className="session-event__status">{label}</div>
     </div>
   );
 };

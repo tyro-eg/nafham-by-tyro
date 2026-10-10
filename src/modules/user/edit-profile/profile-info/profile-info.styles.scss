@@ -274,16 +274,8 @@ $profile-avatar-size-sm: 8rem;
       font-size: 2rem;
     }
 
-    .MuiRating-iconFilled {
-      color: $accent-500;
-    }
-
-    .review-numbers {
-      color: $text-strong;
+    .rating-summary__value {
       font-size: $font-sm;
-      line-height: 1.4;
-      font-weight: 600;
-      font-variant-numeric: tabular-nums;
     }
   }
 
@@ -341,6 +333,9 @@ $profile-avatar-size-sm: 8rem;
     &-card {
       display: flex;
       flex-direction: column-reverse;
+      // column-reverse: flex-end packs at the top, so the numbers share a
+      // baseline even when a label wraps to two lines
+      justify-content: flex-end;
       gap: 0.2rem;
       padding: $space-3 $space-4;
       border-radius: $radius-sm;
@@ -365,9 +360,21 @@ $profile-avatar-size-sm: 8rem;
         font-size: $font-h4;
         line-height: 1.2;
         font-variant-numeric: tabular-nums;
+        white-space: nowrap;
 
         @include respond(phone) {
           font-size: $font-base;
+        }
+      }
+
+      &__unit {
+        margin-inline-start: 0.4rem;
+        color: $text-muted;
+        font-size: $font-sm;
+        font-weight: 600;
+
+        @include respond(phone) {
+          font-size: $font-xs;
         }
       }
     }

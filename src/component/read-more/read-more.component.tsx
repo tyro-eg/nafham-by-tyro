@@ -55,7 +55,7 @@ const ReadMore: FC<ReadMoreProps> = ({
   };
 
   return (
-    <div className="profile-p">
+    <div className="profile-p" dir="auto">
       {displayText}
       {shouldTruncate && (
         <Button

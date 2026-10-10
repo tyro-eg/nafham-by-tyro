@@ -14,12 +14,14 @@ function LanguageSelector() {
   const { i18n } = useTranslation();
   const currentLanguage = i18n.language;
 
-  // Update document direction when language changes
+  // Update document direction and language when language changes
   useEffect(() => {
+    const lang = currentLanguage === 'ar' ? 'ar' : 'en';
     const directionEle = document.getElementById('direction');
     if (directionEle) {
-      directionEle.dir = currentLanguage === 'ar' ? 'rtl' : 'ltr';
+      directionEle.dir = lang === 'ar' ? 'rtl' : 'ltr';
     }
+    document.documentElement.lang = lang;
   }, [currentLanguage]);
 
   const changeLanguage = (lng: string) => {

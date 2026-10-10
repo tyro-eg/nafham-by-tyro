@@ -37,7 +37,8 @@
     "SESSIONS": "My Sessions",
     "PACKAGES": "My Packages",
     "TERMS": "Terms & Conditions",
-    "FUNDS": "Add Funds"
+    "FUNDS": "Add Funds",
+    "DASHBOARD": "Dashboard"
   },
   "CARDS": {
     "FREE_ASSESMENT": {
@@ -665,7 +666,8 @@
       "SCHEDULED": "Scheduled",
       "OPEN": "Open",
       "COMPLETED": "Completed",
-      "CANCELLED": "Cancelled"
+      "CANCELLED": "Cancelled",
+      "MISSED": "Missed"
     },
     "MAIN": {
       "LIST": "List",
@@ -693,7 +695,15 @@
         "MISSED": "Session Missed",
         "CANCELLED": "Session Cancelled",
         "DOWNLOAD": "Download",
-        "MINUTE": "minute"
+        "MINUTE": "minute",
+        "MINUTES_COUNT_one": "{{count}} minute",
+        "MINUTES_COUNT_other": "{{count}} minutes",
+        "RELATIVE_MINUTES_one": "{{count}} minute",
+        "RELATIVE_MINUTES_other": "{{count}} minutes",
+        "RELATIVE_HOURS_one": "{{count}} hour",
+        "RELATIVE_HOURS_other": "{{count}} hours",
+        "RELATIVE_DAYS_one": "{{count}} day",
+        "RELATIVE_DAYS_other": "{{count}} days"
       },
       "CANCELMODAL": {
         "TITLE": "Want to cancel a session?",
@@ -1047,7 +1057,9 @@
     "SAR_PER_HOUR": "SAR / Hour",
     "USD_PER_HOUR": "USD / Hour",
     "HOURS": "hours",
-    "PACKAGE": "package"
+    "PACKAGE": "package",
+    "REVIEWS_COUNT_one": "{{count}} review",
+    "REVIEWS_COUNT_other": "{{count}} reviews"
   },
   "CHECKOUT": {
     "TITLE": "CHECKOUT",
@@ -1165,6 +1177,66 @@
     "EMPTY": {
       "FIRST_P": "You haven't booked any sessions yet",
       "SECOND_P": "Start booking sessions to see your instructors here!"
+    }
+  },
+  "DASHBOARD": {
+    "BOOK_SESSION": "Book a session",
+    "VIEW_ALL": "View all",
+    "HOURS_SHORT": "{{hours}} h",
+    "HERO": {
+      "EYEBROW": "Your learning space",
+      "WELCOME": "Welcome back, {{name}}! 👋",
+      "NEXT": "Your next session is {{subject}} with {{tutor}}, {{when}}. You've got this!",
+      "NO_NEXT": "Ready for your next step? Book a session with one of our instructors and keep the momentum going.",
+      "MY_SESSIONS": "My sessions"
+    },
+    "STATS": {
+      "UPCOMING": "Upcoming sessions",
+      "HOURS_LEARNED": "Hours learned",
+      "HOURS_REMAINING": "Hours remaining",
+      "ATTENDANCE": "Attendance"
+    },
+    "NEXT": {
+      "TITLE": "Up next",
+      "LATER": "Coming up later",
+      "JOIN": "Join session",
+      "LIVE_NOW": "Live now",
+      "IN_MINUTES_one": "In {{count}} minute",
+      "IN_MINUTES_other": "In {{count}} minutes",
+      "IN_HOURS_one": "In {{count}} hour",
+      "IN_HOURS_other": "In {{count}} hours",
+      "IN_DAYS_one": "Tomorrow",
+      "IN_DAYS_other": "In {{count}} days",
+      "EMPTY": "No sessions booked yet. Pick an instructor and schedule your next lesson."
+    },
+    "PROGRESS": {
+      "TITLE": "Your progress",
+      "START": "Every expert was once a beginner. Your first session this month is waiting!",
+      "ACTIVE_WEEKS_one": "You studied in {{count}} of the last {{total}} weeks.",
+      "ACTIVE_WEEKS_other": "You studied in {{count}} of the last {{total}} weeks.",
+      "WEEKLY": "Hours learned per week",
+      "THIS_WEEK": "This week",
+      "SUBJECTS": "Your subjects",
+      "NO_HISTORY": "Your subjects will appear here after your first completed session.",
+      "ATTENDANCE": "Attendance",
+      "COMPLETED": "Completed",
+      "MISSED": "Missed",
+      "CANCELED": "Cancelled",
+      "GREAT_one": "Amazing! You've learned {{hours}} hour this month. Keep it up!",
+      "GREAT_other": "Amazing! You've learned {{hours}} hours this month. Keep it up!",
+      "GOOD_one": "Nice work! {{hours}} hour of learning this month so far.",
+      "GOOD_other": "Nice work! {{hours}} hours of learning this month so far."
+    },
+    "PACKAGES": {
+      "TITLE": "My packages",
+      "WITH": "with {{tutor}}",
+      "LEFT_OF": "{{left}} of {{total}} hours left",
+      "EMPTY": "You don't have any packages yet."
+    },
+    "INSTRUCTORS": {
+      "TITLE": "My instructors",
+      "EMPTY": "You haven't studied with an instructor yet.",
+      "FIND": "Find an instructor"
     }
   }
 }

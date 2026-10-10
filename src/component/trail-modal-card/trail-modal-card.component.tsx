@@ -55,7 +55,7 @@ const TrailModalCard: FC<TrailModalCardProps> = ({ instructor }) => {
               </div>
             )}
             <div className="trail-modal-card__body-separator"></div>
-            <div className="trail-modal-card__body-about">
+            <div className="trail-modal-card__body-about" dir="auto">
               {(instructor?.bio?.length ?? 0) > 100
                 ? `${instructor?.bio?.substring(0, 100)}...`
                 : instructor?.bio}

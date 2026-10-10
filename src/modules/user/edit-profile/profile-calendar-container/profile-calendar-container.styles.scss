@@ -162,6 +162,19 @@
         table {
           font-size: 1.2rem;
         }
+
+        // Compact one-line day headers ("S 10") and time labels ("7:30a")
+        .fc-col-header-cell-cushion {
+          padding: 0.4rem 0;
+          white-space: nowrap;
+          font-size: 1.1rem;
+        }
+
+        .fc-timegrid-slot-label-cushion {
+          padding-inline: 0.4rem;
+          white-space: nowrap;
+          font-size: 1.1rem;
+        }
       }
     }
 

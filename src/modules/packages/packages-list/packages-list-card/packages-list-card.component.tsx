@@ -13,7 +13,7 @@ import { useNavigate } from 'react-router-dom';
 import { parseISO, format } from 'date-fns';
 import { arSA } from 'date-fns/locale/ar-SA';
 import { enUS } from 'date-fns/locale/en-US';
-import { Rating } from '@mui/material';
+import RatingSummary from '../../../../component/rating-summary/rating-summary.component';
 import { useAppSelector } from '../../../../redux/store';
 import { selectCurrentUser } from '../../../../redux/user/user.selectors';
 import { useRtlClass } from '../../../../assets/utils/utils';
@@ -147,23 +147,13 @@ const PackageListCard: FC<PackageListCardProps> = ({ packageData }) => {
             </Button>
             <div className="user-info">
               <p className="name">{userName}</p>
-              {displayUser.type === 'Tutor' &&
-                displayUser.average_rating !== undefined && (
-                  <div className="review">
-                    <div className="review-stars">
-                      <Rating
-                        name="package user rating"
-                        value={displayUser.average_rating || 0}
-                        precision={0.1}
-                        readOnly
-                        size="small"
-                      />
-                      <span className="review-numbers">
-                        {displayUser.average_rating || 0} / 5.0
-                      </span>
-                    </div>
-                  </div>
-                )}
+              {displayUser.type === 'Tutor' && !!displayUser.average_rating && (
+                <RatingSummary
+                  className="review"
+                  value={displayUser.average_rating}
+                  count={displayUser.number_of_reviews}
+                />
+              )}
             </div>
           </div>
           <span

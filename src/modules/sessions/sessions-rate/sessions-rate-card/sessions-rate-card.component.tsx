@@ -158,7 +158,7 @@ const SessionsRateCard: React.FC<SessionsRateCardProps> = ({ session }) => {
                         readOnly
                       />
                       <span className="review-numbers">
-                        {session.tutor?.data?.rating || 0} (5.0)
+                        {Number(session.tutor?.data?.rating || 0).toFixed(1)}
                       </span>
                     </div>
                   </div>

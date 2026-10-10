@@ -4,7 +4,7 @@ import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
-import arLocale from '@fullcalendar/core/locales/ar-kw';
+import arLocale from '../../../../assets/utils/calendar-locale';
 import { addDays, getDay } from 'date-fns';
 import { useTranslation } from 'react-i18next';
 import {
@@ -20,6 +20,7 @@ import {
   Typography,
   CircularProgress,
   Box,
+  useMediaQuery,
 } from '@mui/material';
 import { DateSelectArg, EventAddArg } from '@fullcalendar/core';
 
@@ -59,6 +60,8 @@ const ProfileCalendar: FC<ProfileCalendarProps> = ({
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
   const rtlClass = useRtlClass();
+  // Matches the SCSS `respond(phone)` breakpoint (37.5em = 600px)
+  const isPhone = useMediaQuery('(max-width: 600px)');
 
   const calendarRef = useRef<FullCalendar | null>(null);
   const hasScrolledToInitialEvent = useRef(false);
@@ -668,18 +671,32 @@ const ProfileCalendar: FC<ProfileCalendarProps> = ({
           eventColor="#3ac5f1"
           allDaySlot={false}
           slotLabelInterval="00:30"
-          slotLabelFormat={{
-            hour: '2-digit',
-            minute: '2-digit',
-            omitZeroMinute: false,
-            meridiem: true,
-          }}
-          dayHeaderFormat={{
-            weekday: 'short',
-            month: 'short',
-            day: 'numeric',
-            omitCommas: true,
-          }}
+          // Phones: compact labels so 7 day columns + the time axis fit
+          slotLabelFormat={
+            isPhone
+              ? {
+                  hour: 'numeric',
+                  minute: '2-digit',
+                  omitZeroMinute: true,
+                  meridiem: 'narrow',
+                }
+              : {
+                  hour: '2-digit',
+                  minute: '2-digit',
+                  omitZeroMinute: false,
+                  meridiem: true,
+                }
+          }
+          dayHeaderFormat={
+            isPhone
+              ? { weekday: 'narrow', day: 'numeric', omitCommas: true }
+              : {
+                  weekday: 'short',
+                  month: 'short',
+                  day: 'numeric',
+                  omitCommas: true,
+                }
+          }
           buttonText={{
             today: t('CALENDAR.BUTTONS.TODAY'),
             month: t('CALENDAR.BUTTONS.MONTH'),

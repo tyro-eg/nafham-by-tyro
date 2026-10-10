@@ -55,7 +55,7 @@
   &__title {
     display: flex;
     align-items: center;
-    gap: $space-3;
+    gap: $space-2;
     margin: 0;
     font-size: $font-h2;
     font-weight: 700;
@@ -77,10 +77,25 @@
     }
   }
 
+  // Count pill sitting right after the title text, vertically centred
   &__count {
-    @include badge($brand-50, $brand-700);
-    font-size: $font-sm;
+    @include badge($brand-100, $brand-800);
+    flex: none;
+    justify-content: center;
+    min-width: 3.2rem;
+    height: 3.2rem;
+    padding: 0 1rem;
+    font-size: $font-base;
+    font-weight: 700;
+    line-height: 1;
     letter-spacing: 0;
+    font-variant-numeric: tabular-nums;
+
+    @include respond(phone) {
+      min-width: 2.8rem;
+      height: 2.8rem;
+      font-size: $font-sm;
+    }
   }
 
   &__subtitle {

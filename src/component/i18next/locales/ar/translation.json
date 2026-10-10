@@ -37,7 +37,8 @@
     "SESSIONS": "محاضراتي",
     "PACKAGES": "باقاتي",
     "TERMS": "الأحكام والشروط",
-    "FUNDS": "إضافة الأموال"
+    "FUNDS": "إضافة الأموال",
+    "DASHBOARD": "لوحتي"
   },
   "CARDS": {
     "FREE_ASSESMENT": {
@@ -666,7 +667,8 @@
       "SCHEDULED": "مجدول",
       "OPEN": "مفتوح",
       "COMPLETED": "مكتمل",
-      "CANCELLED": "ملغي"
+      "CANCELLED": "ملغي",
+      "MISSED": "فائتة"
     },
     "MAIN": {
       "LIST": "قائمة",
@@ -694,7 +696,31 @@
         "MISSED": "جلسة فائتة",
         "CANCELLED": "جلسة ملغاة",
         "DOWNLOAD": "تنزيل",
-        "MINUTE": "دقيقة"
+        "MINUTE": "دقيقة",
+        "MINUTES_COUNT_zero": "{{count}} دقيقة",
+        "MINUTES_COUNT_one": "دقيقة واحدة",
+        "MINUTES_COUNT_two": "دقيقتان",
+        "MINUTES_COUNT_few": "{{count}} دقائق",
+        "MINUTES_COUNT_many": "{{count}} دقيقة",
+        "MINUTES_COUNT_other": "{{count}} دقيقة",
+        "RELATIVE_MINUTES_zero": "{{count}} دقيقة",
+        "RELATIVE_MINUTES_one": "دقيقة واحدة",
+        "RELATIVE_MINUTES_two": "دقيقتين",
+        "RELATIVE_MINUTES_few": "{{count}} دقائق",
+        "RELATIVE_MINUTES_many": "{{count}} دقيقة",
+        "RELATIVE_MINUTES_other": "{{count}} دقيقة",
+        "RELATIVE_HOURS_zero": "{{count}} ساعة",
+        "RELATIVE_HOURS_one": "ساعة واحدة",
+        "RELATIVE_HOURS_two": "ساعتين",
+        "RELATIVE_HOURS_few": "{{count}} ساعات",
+        "RELATIVE_HOURS_many": "{{count}} ساعة",
+        "RELATIVE_HOURS_other": "{{count}} ساعة",
+        "RELATIVE_DAYS_zero": "{{count}} يوم",
+        "RELATIVE_DAYS_one": "يوم واحد",
+        "RELATIVE_DAYS_two": "يومين",
+        "RELATIVE_DAYS_few": "{{count}} أيام",
+        "RELATIVE_DAYS_many": "{{count}} يومًا",
+        "RELATIVE_DAYS_other": "{{count}} يوم"
       },
       "CANCELMODAL": {
         "TITLE": "هل تريد إلغاء الجلسة?",
@@ -1049,7 +1075,13 @@
     "SAR_PER_HOUR": "ريال / ساعة",
     "USD_PER_HOUR": "دولار / ساعة",
     "HOURS": "ساعات",
-    "PACKAGE": "حزمة"
+    "PACKAGE": "حزمة",
+    "REVIEWS_COUNT_zero": "{{count}} تقييم",
+    "REVIEWS_COUNT_one": "تقييم واحد",
+    "REVIEWS_COUNT_two": "تقييمان",
+    "REVIEWS_COUNT_few": "{{count}} تقييمات",
+    "REVIEWS_COUNT_many": "{{count}} تقييمًا",
+    "REVIEWS_COUNT_other": "{{count}} تقييم"
   },
   "CHECKOUT": {
     "TITLE": "الدفع",
@@ -1167,6 +1199,74 @@
     "EMPTY": {
       "FIRST_P": "لم تحجز أي جلسات بعد",
       "SECOND_P": "ابدأ بحجز الجلسات لرؤية مدرسينك هنا!"
+    }
+  },
+  "DASHBOARD": {
+    "BOOK_SESSION": "احجز جلسة",
+    "VIEW_ALL": "عرض الكل",
+    "HOURS_SHORT": "{{hours}} س",
+    "HERO": {
+      "EYEBROW": "مساحتك التعليمية",
+      "WELCOME": "أهلاً بعودتك يا {{name}}! 👋",
+      "NEXT": "جلستك القادمة في {{subject}} مع {{tutor}}، {{when}}. أنت قادر على ذلك!",
+      "NO_NEXT": "مستعد لخطوتك التالية؟ احجز جلسة مع أحد معلمينا وحافظ على حماسك.",
+      "MY_SESSIONS": "جلساتي"
+    },
+    "STATS": {
+      "UPCOMING": "الجلسات القادمة",
+      "HOURS_LEARNED": "ساعات التعلّم",
+      "HOURS_REMAINING": "الساعات المتبقية",
+      "ATTENDANCE": "نسبة الحضور"
+    },
+    "NEXT": {
+      "TITLE": "التالي",
+      "LATER": "لاحقاً",
+      "JOIN": "انضم للجلسة",
+      "LIVE_NOW": "مباشر الآن",
+      "IN_MINUTES_one": "بعد دقيقة",
+      "IN_MINUTES_two": "بعد دقيقتين",
+      "IN_MINUTES_few": "بعد {{count}} دقائق",
+      "IN_MINUTES_many": "بعد {{count}} دقيقة",
+      "IN_MINUTES_other": "بعد {{count}} دقيقة",
+      "IN_HOURS_one": "بعد ساعة",
+      "IN_HOURS_two": "بعد ساعتين",
+      "IN_HOURS_few": "بعد {{count}} ساعات",
+      "IN_HOURS_many": "بعد {{count}} ساعة",
+      "IN_HOURS_other": "بعد {{count}} ساعة",
+      "IN_DAYS_one": "غداً",
+      "IN_DAYS_two": "بعد يومين",
+      "IN_DAYS_few": "بعد {{count}} أيام",
+      "IN_DAYS_many": "بعد {{count}} يوماً",
+      "IN_DAYS_other": "بعد {{count}} يوم",
+      "EMPTY": "لا توجد جلسات محجوزة بعد. اختر معلماً وحدد موعد درسك القادم."
+    },
+    "PROGRESS": {
+      "TITLE": "تقدّمك",
+      "START": "كل خبير كان مبتدئاً يوماً ما. جلستك الأولى هذا الشهر بانتظارك!",
+      "ACTIVE_WEEKS_one": "درست في أسبوع واحد من آخر {{total}} أسابيع.",
+      "ACTIVE_WEEKS_other": "درست في {{count}} من آخر {{total}} أسابيع.",
+      "WEEKLY": "ساعات التعلّم أسبوعياً",
+      "THIS_WEEK": "هذا الأسبوع",
+      "SUBJECTS": "موادك",
+      "NO_HISTORY": "ستظهر موادك هنا بعد أول جلسة مكتملة.",
+      "ATTENDANCE": "الحضور",
+      "COMPLETED": "مكتملة",
+      "MISSED": "فائتة",
+      "CANCELED": "ملغاة",
+      "GREAT_other": "رائع! تعلّمت {{hours}} ساعات هذا الشهر. استمر!",
+      "GOOD_one": "عمل جميل! ساعة واحدة من التعلّم هذا الشهر حتى الآن.",
+      "GOOD_other": "عمل جميل! {{hours}} ساعات من التعلّم هذا الشهر حتى الآن."
+    },
+    "PACKAGES": {
+      "TITLE": "باقاتي",
+      "WITH": "مع {{tutor}}",
+      "LEFT_OF": "متبقي {{left}} من {{total}} ساعات",
+      "EMPTY": "لا توجد لديك باقات بعد."
+    },
+    "INSTRUCTORS": {
+      "TITLE": "معلّميّ",
+      "EMPTY": "لم تدرس مع أي معلم بعد.",
+      "FIND": "ابحث عن معلم"
     }
   }
 }

@@ -110,21 +110,7 @@
           }
 
           .review {
-            display: flex;
-            align-items: center;
-            gap: $space-1;
-
-            .MuiRating-iconFilled {
-              color: $accent-500;
-            }
-
-            .review-numbers {
-              font-weight: 600;
-              font-size: $font-xs;
-              line-height: 1.5;
-              color: $text-muted;
-              font-variant-numeric: tabular-nums;
-            }
+            max-width: 100%;
           }
         }
       }

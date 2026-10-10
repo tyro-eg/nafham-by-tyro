@@ -54,7 +54,8 @@
   &__grid {
     display: grid !important;
     grid-template-columns: repeat(auto-fill, minmax(19rem, 1fr));
-    gap: $space-4;
+    gap: $space-5 $space-4; // row gap leaves room for the "Most popular" tab
+    padding-top: $space-2;
   }
 
   .radio-wrapper {
@@ -126,11 +127,18 @@
       gap: $space-2;
       text-align: start;
 
+      // Sits on the card's top edge so it doesn't push this card's content
+      // down: titles and prices line up across all cards.
       &__badge {
         @include badge($accent-400, $navy-900);
+        position: absolute;
+        top: 0;
+        inset-inline-start: $space-4;
+        transform: translateY(-50%);
+        z-index: 1;
         font-size: 1.1rem;
         letter-spacing: 0.06em;
-        margin-bottom: $space-1;
+        white-space: nowrap;
       }
 
       &__minutes {

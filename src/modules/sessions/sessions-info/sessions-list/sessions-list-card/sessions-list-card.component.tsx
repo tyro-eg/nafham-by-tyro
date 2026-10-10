@@ -21,7 +21,7 @@ import {
 } from 'date-fns';
 import { arSA } from 'date-fns/locale/ar-SA';
 import { enUS } from 'date-fns/locale/en-US';
-import { Rating } from '@mui/material';
+import RatingSummary from '../../../../../component/rating-summary/rating-summary.component';
 import { selectCurrentUser } from '../../../../../redux/user/user.selectors';
 import { useRtlClass } from '../../../../../assets/utils/utils';
 
@@ -97,11 +97,13 @@ const SessionListCard: React.FC<SessionListCardProps> = ({ session }) => {
           new Date(),
         );
 
-        return `${minutesDiff} ${i18n.language === 'en' ? 'Minutes' : 'دقائق'}`;
+        return t('MYSESSIONS.MAIN.CARD.RELATIVE_MINUTES', {
+          count: minutesDiff,
+        });
       }
-      return `${hoursDiff} ${i18n.language === 'en' ? 'Hours' : 'ساعات'}`;
+      return t('MYSESSIONS.MAIN.CARD.RELATIVE_HOURS', { count: hoursDiff });
     }
-    return `${daysDiff} ${i18n.language === 'en' ? 'Days' : 'أيام'}`;
+    return t('MYSESSIONS.MAIN.CARD.RELATIVE_DAYS', { count: daysDiff });
   };
 
   const goToSession = () => {
@@ -201,7 +203,9 @@ const SessionListCard: React.FC<SessionListCardProps> = ({ session }) => {
           </span>
           <span className="sessions-card__time-item sessions-card__time-item--muted">
             <TimerTwoTone aria-hidden="true" />
-            {sessionDuration} {t('MYSESSIONS.MAIN.CARD.MINUTE')}
+            {t('MYSESSIONS.MAIN.CARD.MINUTES_COUNT', {
+              count: sessionDuration,
+            })}
           </span>
           <span className="sessions-card__time-item sessions-card__time-item--muted">
             <CalendarToday aria-hidden="true" />
@@ -252,20 +256,15 @@ const SessionListCard: React.FC<SessionListCardProps> = ({ session }) => {
                   : ''}
               </p>
             )}
-            {session.session_type !== 'group' && session.tutor?.rating && (
-              <div className="sessions-card__rating">
-                <Rating
-                  name="instructor rating"
-                  value={session.tutor?.rating || 0}
-                  precision={0.1}
-                  size="small"
-                  readOnly
+            {/* The tutor's rating only makes sense when the counterpart is the tutor */}
+            {!isInstructor &&
+              session.session_type !== 'group' &&
+              !!session.tutor?.rating && (
+                <RatingSummary
+                  className="sessions-card__rating"
+                  value={session.tutor.rating}
                 />
-                <span className="sessions-card__rating-value">
-                  {session.tutor?.rating || 0} / 5.0
-                </span>
-              </div>
-            )}
+              )}
           </div>
         </div>
       </div>
