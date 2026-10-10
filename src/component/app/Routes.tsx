@@ -6,6 +6,7 @@ import { CurrentUser } from '../../assets/types';
 import { getHomePath } from '../../assets/utils/home-path';
 
 const Home = lazy(() => import('../../modules/home/index'));
+const MySalary = lazy(() => import('../../modules/my-salary/index.component'));
 const MyStudents = lazy(
   () => import('../../modules/my-students/index.component'),
 );
@@ -105,6 +106,15 @@ const RoutesComponent: React.FC<RoutesProps> = ({ currentUser }) => (
           ) : (
             <GuardedRoute element={<MyInstructors />} auth={!!currentUser} />
           )
+        }
+      />
+      <Route
+        path="/my_salary"
+        element={
+          <GuardedRoute
+            element={<MySalary />}
+            auth={!!currentUser && currentUser.type === 'Tutor'}
+          />
         }
       />
       <Route

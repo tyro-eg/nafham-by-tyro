@@ -39,7 +39,8 @@
     "TERMS": "Terms & Conditions",
     "FUNDS": "Add Funds",
     "DASHBOARD": "Dashboard",
-    "MY_STUDENTS": "My Students"
+    "MY_STUDENTS": "My Students",
+    "MY_SALARY": "My Salary"
   },
   "CARDS": {
     "FREE_ASSESMENT": {
@@ -1325,5 +1326,48 @@
       "TITLE": "Latest reviews",
       "EMPTY": "No reviews yet. They'll appear here after your students rate their sessions."
     }
+  },
+  "MY_SALARY": {
+    "TITLE": "My Salary",
+    "SUBTITLE": "Your earnings from completed sessions, by curriculum, stage and subject.",
+    "MTD": "Month to date",
+    "PREV_MONTH": "Previous month",
+    "NEXT_MONTH": "Next month",
+    "STATS": {
+      "EARNED_MTD": "Earned this month so far",
+      "EARNED_MONTH": "Earned this month",
+      "SESSIONS": "Completed sessions",
+      "HOURS": "Hours taught",
+      "AVG_RATE": "Average rate per hour"
+    },
+    "PROJECTION_one": "{{count}} more session is booked this month, worth about {{amount}} once completed.",
+    "PROJECTION_other": "{{count}} more sessions are booked this month, worth about {{amount}} once completed.",
+    "BREAKDOWN": {
+      "TITLE": "Breakdown by course",
+      "HINT": "Completed sessions only"
+    },
+    "COLS": {
+      "CURRICULUM": "Curriculum",
+      "STAGE": "Stage",
+      "SUBJECT": "Subject",
+      "SESSIONS": "Sessions",
+      "HOURS": "Hours",
+      "RATE": "Rate",
+      "AMOUNT": "Amount"
+    },
+    "PER_HOUR": "{{amount}}/h",
+    "TOTAL": "Total",
+    "NO_RATE": "No rate set",
+    "UNPRICED_one": "{{count}} session has no hourly rate for its course yet, so it isn't included in the total.",
+    "UNPRICED_other": "{{count}} sessions have no hourly rate for their course yet, so they aren't included in the total.",
+    "SESSIONS": {
+      "TITLE": "Completed sessions",
+      "HINT_one": "{{count}} session",
+      "HINT_other": "{{count}} sessions"
+    },
+    "LINE_CALC": "{{hours}} h × {{rate}}",
+    "EMPTY_MTD": "No completed sessions yet this month. Your earnings will appear here as sessions are completed.",
+    "EMPTY_MONTH": "No completed sessions in this month.",
+    "NOTE": "This is an estimate based on completed sessions and your hourly rate for each course. Missed and cancelled sessions aren't counted. Your final payout may differ."
   }
 }

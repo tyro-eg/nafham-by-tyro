@@ -543,6 +543,18 @@ const buildSessions = (role: DemoRole): SessionType[] => {
 // Packages
 // ---------------------------------------------------------------------------
 
+// Tutor's hourly pay differs by curriculum / stage / subject
+const TUTOR_RATE_BY_COURSE: Record<number, number> = {
+  11: 220, // IGCSE - Grade 10 - Mathematics
+  12: 180, // IGCSE - Grade 10 - English as a Second Language
+  13: 260, // American - Grade 11 - SAT Math
+  14: 240, // American - Grade 11 - SAT Verbal
+  15: 200, // IGCSE - Grade 9 - Physics
+  16: 150, // General - Adults - Conversational English
+  17: 230, // IELTS - Adults - IELTS Academic
+  18: 190, // Egyptian National - Grade 12 - Chemistry
+};
+
 const makePackage = (
   id: number,
   tutorId: number,
@@ -571,7 +583,7 @@ const makePackage = (
     payment_method: paymentMethod,
     slug: `demo-package-${id}`,
     source: 'web',
-    tutor_rate: t.rate_to_display || 0,
+    tutor_rate: TUTOR_RATE_BY_COURSE[gradeSubjectId] ?? t.rate_to_display ?? 0,
     student: {
       id: s.id,
       country_code: 'EG',

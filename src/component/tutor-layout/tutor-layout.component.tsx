@@ -9,6 +9,7 @@ import {
   GroupsRounded,
   Inventory2Rounded,
   LogoutRounded,
+  PaymentsRounded,
   SettingsRounded,
 } from '@mui/icons-material';
 
@@ -59,6 +60,11 @@ const TutorLayout: FC<TutorLayoutProps> = ({ children }) => {
       to: '/my_packages',
       icon: <Inventory2Rounded />,
       label: t('NAVIGATION.PACKAGES'),
+    },
+    {
+      to: '/my_salary',
+      icon: <PaymentsRounded />,
+      label: t('NAVIGATION.MY_SALARY'),
     },
     {
       to: `/profile/${currentUser.id}`,
