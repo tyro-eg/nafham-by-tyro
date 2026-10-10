@@ -40,7 +40,10 @@
     "FUNDS": "Add Funds",
     "DASHBOARD": "Dashboard",
     "MY_STUDENTS": "My Students",
-    "MY_SALARY": "My Salary"
+    "MY_SALARY": "My Salary",
+    "MENU": "Main menu",
+    "OPEN_MENU": "Open menu",
+    "CLOSE_MENU": "Close menu"
   },
   "CARDS": {
     "FREE_ASSESMENT": {
@@ -1239,7 +1242,8 @@
       "TITLE": "My instructors",
       "EMPTY": "You haven't studied with an instructor yet.",
       "FIND": "Find an instructor"
-    }
+    },
+    "ROLE": "Student"
   },
   "MY_STUDENTS": {
     "TITLE": "My Students",
@@ -1278,7 +1282,6 @@
   },
   "TUTOR_DASHBOARD": {
     "ROLE": "Instructor",
-    "NAV": "Instructor menu",
     "HERO": {
       "EYEBROW": "Instructor space",
       "TODAY_one": "You have {{count}} session today. Next up: {{subject}} with {{student}}, {{when}}.",
@@ -1325,9 +1328,7 @@
     "REVIEWS": {
       "TITLE": "Latest reviews",
       "EMPTY": "No reviews yet. They'll appear here after your students rate their sessions."
-    },
-    "OPEN_MENU": "Open menu",
-    "CLOSE_MENU": "Close menu"
+    }
   },
   "MY_SALARY": {
     "TITLE": "My Salary",

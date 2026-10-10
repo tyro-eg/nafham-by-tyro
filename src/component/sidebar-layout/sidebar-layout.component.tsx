@@ -12,6 +12,8 @@ import {
   LogoutRounded,
   MenuRounded,
   PaymentsRounded,
+  PeopleAltRounded,
+  PersonSearchRounded,
   SettingsRounded,
 } from '@mui/icons-material';
 
@@ -22,19 +24,20 @@ import { useRtlClass } from '../../assets/utils/utils';
 import LanguageSelector from '../i18next/LanguageSelector';
 import logo from '../../assets/images/logo.png';
 
-import './tutor-layout.styles.scss';
+import './sidebar-layout.styles.scss';
 
-interface TutorLayoutProps {
+interface SidebarLayoutProps {
   children: ReactNode;
 }
 
 /**
- * App shell for tutors: the left sidebar (right in Arabic) replaces the
- * site header and holds the logo, navigation, language switch and the
- * account/logout block. On small screens a slim top bar with a menu button
- * slides the same sidebar in as a drawer.
+ * App shell for signed-in users (students and tutors): the left sidebar
+ * (right in Arabic) replaces the site header and holds the logo, the
+ * role's navigation, the language switch and the account/logout block.
+ * On small screens a slim top bar with a menu button slides the same
+ * sidebar in as a drawer. Visitors get children unchanged.
  */
-const TutorLayout: FC<TutorLayoutProps> = ({ children }) => {
+const SidebarLayout: FC<SidebarLayoutProps> = ({ children }) => {
   const { t } = useTranslation();
   const rtlClass = useRtlClass();
   const currentUser = useAppSelector(selectCurrentUser);
@@ -57,9 +60,11 @@ const TutorLayout: FC<TutorLayoutProps> = ({ children }) => {
     return () => window.removeEventListener('keydown', onKey);
   }, [drawerOpen]);
 
-  if (currentUser?.type !== 'Tutor') return <>{children}</>;
+  if (!currentUser) return <>{children}</>;
 
-  const items = [
+  const isTutor = currentUser.type === 'Tutor';
+
+  const tutorItems = [
     {
       to: '/dashboard',
       icon: <DashboardRounded />,
@@ -97,6 +102,38 @@ const TutorLayout: FC<TutorLayoutProps> = ({ children }) => {
     },
   ];
 
+  const studentItems = [
+    {
+      to: '/dashboard',
+      icon: <DashboardRounded />,
+      label: t('NAVIGATION.DASHBOARD'),
+    },
+    {
+      to: '/home',
+      icon: <PersonSearchRounded />,
+      label: t('NAVIGATION.INSTRUCTORS'),
+    },
+    {
+      to: '/my_instructors',
+      icon: <PeopleAltRounded />,
+      label: t('NAVIGATION.MY_INSTRUCTORS'),
+    },
+    {
+      to: '/my_sessions',
+      icon: <EventNoteRounded />,
+      label: t('NAVIGATION.SESSIONS'),
+    },
+    {
+      to: '/my_packages',
+      icon: <Inventory2Rounded />,
+      label: t('NAVIGATION.PACKAGES'),
+    },
+  ];
+
+  const items = isTutor ? tutorItems : studentItems;
+  const accountLink = isTutor ? `/profile/${currentUser.id}` : '/dashboard';
+  const roleLabel = isTutor ? t('TUTOR_DASHBOARD.ROLE') : t('DASHBOARD.ROLE');
+
   const initials = `${currentUser.first_name?.[0] || ''}${
     currentUser.last_name?.[0] || ''
   }`.toUpperCase();
@@ -104,7 +141,7 @@ const TutorLayout: FC<TutorLayoutProps> = ({ children }) => {
   const logout = (
     <Tooltip title={t('HEADER.USER.LOGOUT')}>
       <IconButton
-        className="tutor-layout__logout"
+        className="side-layout__logout"
         onClick={() => signOutMutation.mutate()}
         aria-label={t('HEADER.USER.LOGOUT')}
       >
@@ -115,98 +152,90 @@ const TutorLayout: FC<TutorLayoutProps> = ({ children }) => {
 
   return (
     <div
-      className={`tutor-layout ${rtlClass}${
-        drawerOpen ? ' tutor-layout--open' : ''
+      className={`side-layout ${rtlClass}${
+        drawerOpen ? ' side-layout--open' : ''
       }`}
     >
       {/* Small screens: top bar that opens the sidebar as a drawer */}
-      <header className="tutor-layout__topbar">
+      <header className="side-layout__topbar">
         <IconButton
-          className="tutor-layout__menu"
+          className="side-layout__menu"
           onClick={() => setDrawerOpen(true)}
-          aria-label={t('TUTOR_DASHBOARD.OPEN_MENU')}
+          aria-label={t('NAVIGATION.OPEN_MENU')}
           aria-expanded={drawerOpen}
-          aria-controls="tutor-sidebar"
+          aria-controls="app-sidebar"
         >
           <MenuRounded />
         </IconButton>
-        <Link to="/dashboard" className="tutor-layout__logo">
+        <Link to="/dashboard" className="side-layout__logo">
           <img src={logo} alt="Nafham by Tyro" />
         </Link>
         <Avatar
           src={currentUser.avatar}
           alt={currentUser.first_name}
-          className="tutor-layout__topbar-avatar"
+          className="side-layout__topbar-avatar"
         >
           {initials}
         </Avatar>
       </header>
 
       <div
-        className="tutor-layout__overlay"
+        className="side-layout__overlay"
         onClick={() => setDrawerOpen(false)}
         aria-hidden="true"
       />
 
-      <aside className="tutor-layout__sidebar" id="tutor-sidebar">
-        <div className="tutor-layout__brand">
-          <Link to="/dashboard" className="tutor-layout__logo">
+      <aside className="side-layout__sidebar" id="app-sidebar">
+        <div className="side-layout__brand">
+          <Link to="/dashboard" className="side-layout__logo">
             <img src={logo} alt="Nafham by Tyro" />
           </Link>
           <IconButton
-            className="tutor-layout__close"
+            className="side-layout__close"
             onClick={() => setDrawerOpen(false)}
-            aria-label={t('TUTOR_DASHBOARD.CLOSE_MENU')}
+            aria-label={t('NAVIGATION.CLOSE_MENU')}
           >
             <CloseRounded />
           </IconButton>
         </div>
 
-        <nav
-          className="tutor-layout__nav"
-          aria-label={t('TUTOR_DASHBOARD.NAV')}
-        >
+        <nav className="side-layout__nav" aria-label={t('NAVIGATION.MENU')}>
           {items.map((item) => (
             <NavLink
               key={item.to}
               to={item.to}
               className={({ isActive }) =>
-                `tutor-layout__link${
-                  isActive ? ' tutor-layout__link--active' : ''
+                `side-layout__link${
+                  isActive ? ' side-layout__link--active' : ''
                 }`
               }
             >
-              <span className="tutor-layout__icon" aria-hidden="true">
+              <span className="side-layout__icon" aria-hidden="true">
                 {item.icon}
               </span>
-              <span className="tutor-layout__label">{item.label}</span>
+              <span className="side-layout__label">{item.label}</span>
             </NavLink>
           ))}
         </nav>
 
-        <div className="tutor-layout__footer">
-          <div className="tutor-layout__language">
+        <div className="side-layout__footer">
+          <div className="side-layout__language">
             <LanguageSelector />
           </div>
-          <div className="tutor-layout__account">
-            <Link
-              to={`/profile/${currentUser.id}`}
-              className="tutor-layout__account-link"
-            >
+          <div className="side-layout__account">
+            <Link to={accountLink} className="side-layout__account-link">
               <Avatar
                 src={currentUser.avatar}
                 alt={currentUser.first_name}
-                className="tutor-layout__avatar"
+                className="side-layout__avatar"
               >
                 {initials}
               </Avatar>
-              <span className="tutor-layout__who">
-                <span className="tutor-layout__name">
+              <span className="side-layout__who">
+                <span className="side-layout__name">
                   {currentUser.first_name} {currentUser.last_name}
                 </span>
-                <span className="tutor-layout__role">
-                  {t('TUTOR_DASHBOARD.ROLE')}
-                </span>
+                <span className="side-layout__role">{roleLabel}</span>
               </span>
             </Link>
             {logout}
@@ -214,9 +243,9 @@ const TutorLayout: FC<TutorLayoutProps> = ({ children }) => {
         </div>
       </aside>
 
-      <main className="tutor-layout__main">{children}</main>
+      <main className="side-layout__main">{children}</main>
     </div>
   );
 };
 
-export default TutorLayout;
+export default SidebarLayout;

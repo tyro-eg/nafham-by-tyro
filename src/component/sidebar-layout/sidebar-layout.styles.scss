@@ -7,7 +7,7 @@
 $drawer-width: 28rem;
 $topbar-height: 6.4rem;
 
-.tutor-layout {
+.side-layout {
   display: grid;
   grid-template-columns: 26rem minmax(0, 1fr);
   align-items: start;
@@ -35,7 +35,7 @@ $topbar-height: 6.4rem;
       backdrop-filter: saturate(180%) blur(12px);
       border-bottom: 1px solid $border;
 
-      .tutor-layout__logo {
+      .side-layout__logo {
         flex: 1;
       }
     }
@@ -117,7 +117,7 @@ $topbar-height: 6.4rem;
   }
 
   &--open &__sidebar,
-  &.rtl.tutor-layout--open &__sidebar {
+  &.rtl.side-layout--open &__sidebar {
     @include respond(tab-port) {
       transform: translateX(0);
       visibility: visible;
@@ -190,7 +190,7 @@ $topbar-height: 6.4rem;
       color: $brand-700;
       box-shadow: inset 3px 0 0 $brand-400;
 
-      .tutor-layout__icon {
+      .side-layout__icon {
         color: $brand-400;
       }
     }

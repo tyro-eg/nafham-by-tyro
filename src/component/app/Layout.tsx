@@ -4,7 +4,7 @@ import Footer from '../../modules/footer/footer.component';
 import { useLocation } from 'react-router-dom';
 import { useAppSelector } from '../../redux/store';
 import { selectCurrentUser } from '../../redux/user/user.selectors';
-import TutorLayout from '../tutor-layout/tutor-layout.component';
+import SidebarLayout from '../sidebar-layout/sidebar-layout.component';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -18,9 +18,9 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   const currentUser = useAppSelector(selectCurrentUser);
   const showFooter = !ROUTES_WITHOUT_FOOTER.includes(location.pathname);
 
-  // Tutors navigate with the left sidebar instead of the site header
-  if (currentUser?.type === 'Tutor') {
-    return <TutorLayout>{children}</TutorLayout>;
+  // Signed-in users navigate with the left sidebar instead of the header
+  if (currentUser) {
+    return <SidebarLayout>{children}</SidebarLayout>;
   }
 
   return (
