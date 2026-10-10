@@ -1,14 +1,12 @@
 @import '../../assets/styles/variables.scss';
 @import '../../assets/styles/mixins.scss';
 
-// Desktop header = 3.6rem contact strip + $header-height; phone header 6.4rem
-$desktop-header: 3.6rem + $header-height;
-$phone-header: 6.4rem;
-
+// Tutors have no site header: the sidebar is the whole navigation
 .tutor-layout {
   display: grid;
   grid-template-columns: 26rem minmax(0, 1fr);
   align-items: start;
+  min-height: 100vh;
   background-color: $surface-alt;
 
   @include respond(tab-port) {
@@ -17,74 +15,63 @@ $phone-header: 6.4rem;
 
   &__sidebar {
     position: sticky;
-    top: $desktop-header;
+    top: 0;
+    z-index: 20;
     display: flex;
     flex-direction: column;
     gap: $space-5;
-    height: calc(100vh - #{$desktop-header});
-    padding: $space-5 $space-4;
+    height: 100vh;
+    padding: $space-5 $space-4 $space-4;
     background-color: $surface;
     border-inline-end: 1px solid $border;
     overflow-y: auto;
 
     @include respond(tab-port) {
-      z-index: 10;
       height: auto;
-      padding: $space-2 $space-3;
+      gap: $space-2;
+      padding: $space-2 $space-3 $space-3;
       border-inline-end: 0;
       border-bottom: 1px solid $border;
+      box-shadow: 0 4px 16px rgba(15, 27, 45, 0.06);
       overflow: visible;
     }
-
-    @include respond(phone) {
-      top: $phone-header;
-    }
   }
 
-  &__profile {
+  // ---------- Brand row ----------
+  &__brand {
     display: flex;
     align-items: center;
-    gap: $space-3;
-    padding: $space-3;
-    border-radius: 1.6rem;
-    background: linear-gradient(135deg, #e8f8fe 0%, #f2efff 100%);
+    justify-content: space-between;
+    gap: $space-2;
+    padding: 0 $space-2;
+  }
+
+  &__logo img {
+    display: block;
+    height: 4.4rem;
+    width: auto;
 
     @include respond(tab-port) {
-      display: none;
+      height: 3.6rem;
     }
   }
 
-  &__avatar.MuiAvatar-root {
-    width: 4.4rem;
-    height: 4.4rem;
-    font-size: 1.6rem;
-    font-weight: 700;
-    color: $brand-700;
-    background-color: #fff;
+  &__compact {
+    display: none;
+    align-items: center;
+    gap: 0.4rem;
+
+    @include respond(tab-port) {
+      display: flex;
+    }
   }
 
-  &__who {
-    display: flex;
-    flex-direction: column;
-    min-width: 0;
-  }
-
-  &__name {
-    font-size: $font-sm;
-    font-weight: 700;
-    color: $text-strong;
-    @include ellipsis;
-  }
-
-  &__role {
-    font-size: $font-xs;
-    color: $text-muted;
-  }
-
+  // ---------- Navigation ----------
   &__nav {
     display: flex;
     flex-direction: column;
     gap: 0.4rem;
+    flex: 1;
 
     @include respond(tab-port) {
       flex-direction: row;
@@ -128,13 +115,13 @@ $phone-header: 6.4rem;
       color: $brand-700;
       box-shadow: inset 3px 0 0 $brand-400;
 
-      .rtl & {
-        box-shadow: inset -3px 0 0 $brand-400;
-      }
-
       .tutor-layout__icon {
         color: $brand-400;
       }
+    }
+
+    .rtl &--active {
+      box-shadow: inset -3px 0 0 $brand-400;
     }
 
     @include respond(tab-port) {
@@ -167,8 +154,90 @@ $phone-header: 6.4rem;
     }
   }
 
+  // ---------- Bottom block ----------
+  &__footer {
+    display: flex;
+    flex-direction: column;
+    gap: $space-3;
+    padding-top: $space-4;
+    border-top: 1px solid $border;
+
+    @include respond(tab-port) {
+      display: none;
+    }
+  }
+
+  &__language .language-selector {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  &__account {
+    display: flex;
+    align-items: center;
+    gap: $space-2;
+    padding: $space-2;
+    border-radius: 1.6rem;
+    background: linear-gradient(135deg, #e8f8fe 0%, #f2efff 100%);
+  }
+
+  &__account-link {
+    display: flex;
+    align-items: center;
+    gap: $space-3;
+    flex: 1;
+    min-width: 0;
+    text-decoration: none;
+  }
+
+  &__avatar.MuiAvatar-root {
+    width: 4.4rem;
+    height: 4.4rem;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: $brand-700;
+    background-color: #fff;
+  }
+
+  &__who {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  &__name {
+    font-size: $font-sm;
+    font-weight: 700;
+    color: $text-strong;
+    @include ellipsis;
+  }
+
+  &__role {
+    font-size: $font-xs;
+    color: $text-muted;
+  }
+
+  &__logout.MuiIconButton-root {
+    flex: none;
+    color: $gray-500;
+
+    &:hover {
+      color: $danger-500;
+      background-color: rgba($danger-500, 0.08);
+    }
+
+    .rtl & svg {
+      transform: scaleX(-1);
+    }
+  }
+
+  // ---------- Content ----------
   &__main {
     min-width: 0;
-    min-height: calc(100vh - #{$desktop-header});
+    min-height: 100vh;
+
+    @include respond(tab-port) {
+      min-height: 0;
+    }
   }
 }

@@ -4,7 +4,6 @@ import GuardedRoute from '../guarded-route/guarded-route.component';
 import Loader from './Loader';
 import { CurrentUser } from '../../assets/types';
 import { getHomePath } from '../../assets/utils/home-path';
-import TutorLayout from '../tutor-layout/tutor-layout.component';
 
 const Home = lazy(() => import('../../modules/home/index'));
 const MyStudents = lazy(
@@ -62,13 +61,7 @@ const RoutesComponent: React.FC<RoutesProps> = ({ currentUser }) => (
         element={
           <GuardedRoute
             element={
-              currentUser?.type === 'Tutor' ? (
-                <TutorLayout>
-                  <TutorDashboard />
-                </TutorLayout>
-              ) : (
-                <Dashboard />
-              )
+              currentUser?.type === 'Tutor' ? <TutorDashboard /> : <Dashboard />
             }
             auth={!!currentUser}
           />
@@ -93,11 +86,7 @@ const RoutesComponent: React.FC<RoutesProps> = ({ currentUser }) => (
         path="/account_settings"
         element={
           <GuardedRoute
-            element={
-              <TutorLayout>
-                <AccountSettings />
-              </TutorLayout>
-            }
+            element={<AccountSettings />}
             auth={!!currentUser && currentUser.type === 'Tutor'}
           />
         }
@@ -122,11 +111,7 @@ const RoutesComponent: React.FC<RoutesProps> = ({ currentUser }) => (
         path="/my_students"
         element={
           <GuardedRoute
-            element={
-              <TutorLayout>
-                <MyStudents />
-              </TutorLayout>
-            }
+            element={<MyStudents />}
             auth={!!currentUser && currentUser.type === 'Tutor'}
           />
         }
@@ -135,41 +120,16 @@ const RoutesComponent: React.FC<RoutesProps> = ({ currentUser }) => (
       <Route path="/course/:courseId" element={<CourseDetails />} /> */}
       <Route
         path="/my_sessions"
-        element={
-          <GuardedRoute
-            element={
-              <TutorLayout>
-                <Sessions />
-              </TutorLayout>
-            }
-            auth={!!currentUser}
-          />
-        }
+        element={<GuardedRoute element={<Sessions />} auth={!!currentUser} />}
       />
       <Route
         path="/my_packages"
-        element={
-          <GuardedRoute
-            element={
-              <TutorLayout>
-                <Packages />
-              </TutorLayout>
-            }
-            auth={!!currentUser}
-          />
-        }
+        element={<GuardedRoute element={<Packages />} auth={!!currentUser} />}
       />
       <Route
         path="/profile/:id"
         element={
-          <GuardedRoute
-            element={
-              <TutorLayout>
-                <EditProfile />
-              </TutorLayout>
-            }
-            auth={!!currentUser}
-          />
+          <GuardedRoute element={<EditProfile />} auth={!!currentUser} />
         }
       />
       <Route path="/checkout" element={<Checkout />} />

@@ -1,19 +1,23 @@
 import { FC, ReactNode } from 'react';
-import { NavLink } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Avatar } from '@mui/material';
+import { Avatar, IconButton, Tooltip } from '@mui/material';
 import {
   AccountCircleRounded,
   DashboardRounded,
   EventNoteRounded,
   GroupsRounded,
   Inventory2Rounded,
+  LogoutRounded,
   SettingsRounded,
 } from '@mui/icons-material';
 
 import { useAppSelector } from '../../redux/store';
 import { selectCurrentUser } from '../../redux/user/user.selectors';
+import { useSignOut } from '../../hooks/useAuth';
 import { useRtlClass } from '../../assets/utils/utils';
+import LanguageSelector from '../i18next/LanguageSelector';
+import logo from '../../assets/images/logo.png';
 
 import './tutor-layout.styles.scss';
 
@@ -22,14 +26,16 @@ interface TutorLayoutProps {
 }
 
 /**
- * Tutor area shell: a left sidebar (right in Arabic) linking the tutor's
- * pages, collapsing to a scrollable tab bar on small screens. Renders
- * children unchanged for anyone who isn't a tutor.
+ * App shell for tutors: the left sidebar (right in Arabic) replaces the
+ * site header and holds the logo, navigation, language switch and the
+ * account/logout block. On small screens it becomes a sticky top bar with
+ * a scrollable tab row.
  */
 const TutorLayout: FC<TutorLayoutProps> = ({ children }) => {
   const { t } = useTranslation();
   const rtlClass = useRtlClass();
   const currentUser = useAppSelector(selectCurrentUser);
+  const signOutMutation = useSignOut();
 
   if (currentUser?.type !== 'Tutor') return <>{children}</>;
 
@@ -66,26 +72,33 @@ const TutorLayout: FC<TutorLayoutProps> = ({ children }) => {
     },
   ];
 
+  const initials = `${currentUser.first_name?.[0] || ''}${
+    currentUser.last_name?.[0] || ''
+  }`.toUpperCase();
+
+  const logout = (
+    <Tooltip title={t('HEADER.USER.LOGOUT')}>
+      <IconButton
+        className="tutor-layout__logout"
+        onClick={() => signOutMutation.mutate()}
+        aria-label={t('HEADER.USER.LOGOUT')}
+      >
+        <LogoutRounded />
+      </IconButton>
+    </Tooltip>
+  );
+
   return (
     <div className={`tutor-layout ${rtlClass}`}>
       <aside className="tutor-layout__sidebar">
-        <div className="tutor-layout__profile">
-          <Avatar
-            src={currentUser.avatar}
-            alt={currentUser.first_name}
-            className="tutor-layout__avatar"
-          >
-            {`${currentUser.first_name?.[0] || ''}${
-              currentUser.last_name?.[0] || ''
-            }`.toUpperCase()}
-          </Avatar>
-          <div className="tutor-layout__who">
-            <span className="tutor-layout__name">
-              {currentUser.first_name} {currentUser.last_name}
-            </span>
-            <span className="tutor-layout__role">
-              {t('TUTOR_DASHBOARD.ROLE')}
-            </span>
+        <div className="tutor-layout__brand">
+          <Link to="/dashboard" className="tutor-layout__logo">
+            <img src={logo} alt="Nafham by Tyro" />
+          </Link>
+          {/* Compact controls, shown on small screens only */}
+          <div className="tutor-layout__compact">
+            <LanguageSelector />
+            {logout}
           </div>
         </div>
 
@@ -98,7 +111,9 @@ const TutorLayout: FC<TutorLayoutProps> = ({ children }) => {
               key={item.to}
               to={item.to}
               className={({ isActive }) =>
-                `tutor-layout__link${isActive ? ' tutor-layout__link--active' : ''}`
+                `tutor-layout__link${
+                  isActive ? ' tutor-layout__link--active' : ''
+                }`
               }
             >
               <span className="tutor-layout__icon" aria-hidden="true">
@@ -108,6 +123,35 @@ const TutorLayout: FC<TutorLayoutProps> = ({ children }) => {
             </NavLink>
           ))}
         </nav>
+
+        <div className="tutor-layout__footer">
+          <div className="tutor-layout__language">
+            <LanguageSelector />
+          </div>
+          <div className="tutor-layout__account">
+            <Link
+              to={`/profile/${currentUser.id}`}
+              className="tutor-layout__account-link"
+            >
+              <Avatar
+                src={currentUser.avatar}
+                alt={currentUser.first_name}
+                className="tutor-layout__avatar"
+              >
+                {initials}
+              </Avatar>
+              <span className="tutor-layout__who">
+                <span className="tutor-layout__name">
+                  {currentUser.first_name} {currentUser.last_name}
+                </span>
+                <span className="tutor-layout__role">
+                  {t('TUTOR_DASHBOARD.ROLE')}
+                </span>
+              </span>
+            </Link>
+            {logout}
+          </div>
+        </div>
       </aside>
 
       <main className="tutor-layout__main">{children}</main>
