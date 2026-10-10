@@ -1,6 +1,6 @@
 import { FC, useState, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 
-import { useRtlClass } from '../../assets/utils/utils';
 import { SessionFilters } from '../../lib/queryKeys';
 import { useAppSelector } from '../../redux/store';
 import { selectCurrentUser } from '../../redux/user/user.selectors';
@@ -9,6 +9,7 @@ import SessionsInfo from './sessions-info/sessions-info.component';
 import SessionsOverview from './sessions-overview/sessions-overview.component';
 import SessionFilter from './session-filter/session-filter.component';
 
+import './dashboard-shell.styles.scss';
 import './index.styles.scss';
 
 /**
@@ -18,7 +19,7 @@ import './index.styles.scss';
  * between SessionFilter, SessionsInfo, and other session-related components.
  */
 const Sessions: FC = () => {
-  const rtlClass = useRtlClass();
+  const { t } = useTranslation();
   const [filters, setFilters] = useState<SessionFilters>({});
   const currentUser = useAppSelector(selectCurrentUser);
 
@@ -37,18 +38,19 @@ const Sessions: FC = () => {
   };
 
   return (
-    <section className="sessions">
-      <div className="sessions__banner">
-        {overViewData && (
-          <div className={`overview ${rtlClass}`}>
-            <SessionsOverview overViewData={overViewData} />
+    <section className="sessions dashboard-page">
+      <header className="dashboard-header">
+        <div className="container dashboard-header__inner">
+          <div className="dashboard-header__text">
+            <h1 className="dashboard-header__title">
+              {t('NAVIGATION.SESSIONS')}
+            </h1>
           </div>
-        )}
-        <div className={`filter container ${rtlClass}`}>
-          <SessionFilter onFiltersChange={handleFiltersChange} />
         </div>
-      </div>
-      <div className="sessions__container container">
+      </header>
+      <div className="sessions__container container dashboard-page__body">
+        {overViewData && <SessionsOverview overViewData={overViewData} />}
+        <SessionFilter onFiltersChange={handleFiltersChange} />
         <SessionsInfo filters={filters} />
       </div>
     </section>

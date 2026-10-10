@@ -3,14 +3,16 @@
 
 .profile-calendar {
   display: flex;
-  font-size: 14px;
-  background-color: $color-white;
-  border-radius: 0.5rem;
+  font-size: $font-sm;
+  background-color: $surface;
+  border-radius: $radius-sm;
   width: 100%;
+  min-width: 0;
 
   &__container {
     flex-grow: 1;
     position: relative;
+    min-width: 0;
 
     &:hover .calendar__hover {
       z-index: 30;
@@ -22,6 +24,11 @@
       align-items: center;
       flex-wrap: wrap;
       justify-content: space-between;
+      gap: $space-2 $space-4;
+      margin-bottom: $space-4;
+      padding: $space-3 $space-4;
+      background-color: $surface-alt;
+      border-radius: $radius-sm;
 
       &__legend {
         display: flex;
@@ -49,14 +56,16 @@
           align-items: center;
 
           .title {
-            font-size: 1rem;
+            font-size: $font-xs;
+            font-weight: 500;
+            color: $text-body;
           }
 
           .color {
-            height: 1.5rem;
-            width: 1.5rem;
+            height: 1.2rem;
+            width: 1.2rem;
 
-            border-radius: 2px;
+            border-radius: 0.3rem;
 
             margin-right: 5px;
 
@@ -68,7 +77,7 @@
         }
 
         [class^='calendar__legend']:not(:last-child) {
-          margin-right: 1rem;
+          margin-right: 1.6rem;
 
           &.rtl {
             margin-left: 1rem;
@@ -109,7 +118,8 @@
         }
 
         p {
-          font-size: 1.2rem;
+          font-size: $font-xs;
+          color: $text-muted;
         }
       }
 
@@ -119,6 +129,31 @@
     }
 
     .fc {
+      font-family: inherit;
+      --fc-border-color: #{$border};
+      --fc-today-bg-color: #{$brand-50};
+
+      .fc-button {
+        font-size: $font-xs;
+        font-weight: 600;
+        text-transform: capitalize;
+        border-radius: 0.6rem;
+        box-shadow: none;
+      }
+
+      .fc-col-header-cell-cushion,
+      .fc-timegrid-slot-label-cushion {
+        color: $text-muted;
+        font-weight: 500;
+        text-decoration: none;
+      }
+
+      .fc-toolbar-title {
+        font-size: $font-h5;
+        font-weight: 600;
+        color: $text-strong;
+      }
+
       .fc-view-harness {
         max-height: 55rem;
       }
@@ -127,11 +162,24 @@
         table {
           font-size: 1.2rem;
         }
+
+        // Compact one-line day headers ("S 10") and time labels ("7:30a")
+        .fc-col-header-cell-cushion {
+          padding: 0.4rem 0;
+          white-space: nowrap;
+          font-size: 1.1rem;
+        }
+
+        .fc-timegrid-slot-label-cushion {
+          padding-inline: 0.4rem;
+          white-space: nowrap;
+          font-size: 1.1rem;
+        }
       }
     }
 
     .fc-day-today {
-      background-color: #ffffff !important;
+      background-color: $brand-50 !important;
     }
 
     .fc-header-toolbar {
@@ -140,8 +188,14 @@
       .fc-toolbar-chunk {
         .fc-button-group {
           .fc-button-primary {
-            background-color: $color-primary;
-            border-color: $color-white;
+            background-color: $surface;
+            border: 1px solid $border-strong;
+            color: $text-strong;
+
+            &:hover:not(:disabled) {
+              background-color: $gray-50;
+              border-color: $gray-400;
+            }
 
             &:focus {
               box-shadow: none;
@@ -153,7 +207,9 @@
           }
 
           .fc-button-active {
-            background-color: #41b7dc;
+            background-color: $brand-600 !important;
+            border-color: $brand-600 !important;
+            color: $text-on-dark !important;
 
             &:focus {
               box-shadow: none;
@@ -162,8 +218,10 @@
         }
 
         .fc-today-button {
-          background-color: $color-primary;
-          border-color: $color-white;
+          background-color: $surface;
+          border: 1px solid $border-strong;
+          color: $text-strong;
+          margin-inline-start: 0.4rem;
 
           &:focus {
             box-shadow: none;
@@ -175,18 +233,18 @@
         }
 
         .fc-duplicateWeek-button {
-          background-color: $color-primary;
-          border-color: $color-white;
-          font-weight: 500;
+          background-color: $brand-600;
+          border-color: $brand-600;
+          color: $text-on-dark;
+          font-weight: 600;
           margin-right: 0.75rem;
           padding: 0.4rem 1rem;
-          border-radius: 4px;
-          transition: all 0.2s ease;
+          border-radius: 0.6rem;
+          transition: background-color $transition;
 
           &:hover:not(:disabled) {
-            background-color: darken($color-primary, 10%);
-            transform: translateY(-1px);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            background-color: $brand-700;
+            border-color: $brand-700;
           }
 
           &:focus {
@@ -204,7 +262,7 @@
           }
 
           @include respond(phone) {
-            font-size: 0.75rem;
+            font-size: $font-xs;
             padding: 0.3rem 0.6rem;
             margin-right: 0.5rem;
 
@@ -285,11 +343,12 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: rgba($color: $color-black, $alpha: 0.8);
-    transition: all 0.35s ease-in-out;
+    background-color: rgba($navy-900, 0.72);
+    backdrop-filter: blur(1px);
+    transition: opacity 0.25s ease-in-out;
     z-index: -10;
     opacity: 0;
-    border-radius: 4px;
+    border-radius: $radius-sm;
 
     &.hide {
       opacity: 0 !important;
@@ -297,9 +356,9 @@
     }
 
     &--btn {
-      min-width: 14rem;
+      min-width: 16rem;
       z-index: 20;
-      height: 4rem;
+      min-height: 4.4rem;
     }
   }
 }

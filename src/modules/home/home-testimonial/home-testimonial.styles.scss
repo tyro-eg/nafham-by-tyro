@@ -2,67 +2,101 @@
 @import '../../../assets/styles/mixins.scss';
 
 .landing__testimonials {
-  padding: 2rem;
-  width: 100%;
-  height: fit-content;
-  min-height: 55.5rem;
-  background: linear-gradient(
-    90deg,
-    rgba(1, 202, 255, 0.7) 0%,
-    rgba(1, 55, 255, 0.7) 100%
-  );
+  @include section($surface-alt);
 
-  .testimonials-image-container {
+  .testimonials-carousel {
+    // Equal-height cards and even gutters (overrides the global slick
+    // spacing from assets/styles/carousel.scss for this section only)
+    .slick-slider {
+      width: auto;
+      margin: 0 (-$space-3) 0;
+      padding-bottom: $space-6;
+    }
+
+    .slick-slider .slick-track {
+      display: flex;
+    }
+
+    .slick-slider .slick-list .slick-track .slick-slide {
+      height: auto;
+      padding: 0;
+
+      & > div {
+        display: flex;
+        height: 100%;
+        margin: 0;
+        padding: $space-2 $space-3;
+      }
+    }
+
+    .slick-dots {
+      bottom: 0;
+    }
+  }
+
+  .testimonial-card {
+    @include card($space-5);
+    display: flex !important;
+    flex-direction: column;
     width: 100%;
-    height: 100%;
-    background-image: url('/assets/images/newLanding/testimonial.webp');
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center center;
+    margin: 0;
+    text-align: start;
 
-    &.rtl {
-      background-image: url('/assets/images/newLanding/testimonialRtl.webp');
-
-      .title,
-      .description {
-        text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
-      }
-    }
-
-    .title {
-      padding-top: 16rem;
-      color: $color-gold;
-      font-size: 2.6rem;
-      font-weight: 600;
-
-      @include respond(tab-port) {
-        font-size: 2.2rem;
-        text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
-      }
-
-      @include respond(phone) {
-        padding-top: 5rem;
-      }
-    }
-
-    .profile-p {
-      color: $color-white;
+    &__quote.MuiSvgIcon-root {
       font-size: 3.6rem;
+      color: $brand-400;
+      margin-inline-start: -0.4rem;
+      margin-bottom: $space-2;
+
+      .rtl & {
+        transform: scaleX(-1);
+      }
+    }
+
+    &__text {
+      flex: 1 1 auto;
+      margin: 0 0 $space-5;
+
+      & > .profile-p {
+        display: block;
+        font-size: $font-base;
+        line-height: 1.7;
+        color: $text-body;
+      }
+
+      .read-more-btn {
+        display: inline;
+        margin-inline-start: $space-1;
+        vertical-align: baseline;
+      }
+    }
+
+    &__author {
+      display: flex;
+      align-items: center;
+      gap: $space-3;
+      padding-top: $space-4;
+      border-top: 1px solid $border;
+    }
+
+    &__avatar {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      width: 4.4rem;
+      height: 4.4rem;
+      border-radius: 50%;
+      background-color: $brand-50;
+      color: $brand-700;
+      font-size: $font-sm;
+      font-weight: 700;
+    }
+
+    &__name {
+      font-size: $font-base;
       font-weight: 600;
-      line-height: 44px;
-      letter-spacing: -1.2px;
-      max-width: 75rem;
-      text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
-
-      @include respond(tab-port) {
-        font-size: 2.4rem;
-        max-width: 50rem;
-        text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
-      }
-
-      @include respond(phone) {
-        max-width: 35rem;
-      }
+      color: $text-strong;
     }
   }
 }

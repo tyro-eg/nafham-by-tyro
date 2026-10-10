@@ -3,8 +3,20 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import GuardedRoute from '../guarded-route/guarded-route.component';
 import Loader from './Loader';
 import { CurrentUser } from '../../assets/types';
+import { getHomePath } from '../../assets/utils/home-path';
 
 const Home = lazy(() => import('../../modules/home/index'));
+const CalendarPage = lazy(
+  () => import('../../modules/calendar/index.component'),
+);
+const MySalary = lazy(() => import('../../modules/my-salary/index.component'));
+const MyStudents = lazy(
+  () => import('../../modules/my-students/index.component'),
+);
+const TutorDashboard = lazy(
+  () => import('../../modules/dashboard/tutor-dashboard.component'),
+);
+const Dashboard = lazy(() => import('../../modules/dashboard/index.component'));
 const SignIn = lazy(() => import('../../modules/auth/signin/signin.component'));
 const Register = lazy(
   () => import('../../modules/auth/register/register.component'),
@@ -44,10 +56,26 @@ interface RoutesProps {
 const RoutesComponent: React.FC<RoutesProps> = ({ currentUser }) => (
   <Suspense fallback={<Loader />}>
     <Routes>
-      <Route path="/" element={<Home />} />
+      <Route
+        path="/"
+        element={currentUser ? <Navigate to="/dashboard" replace /> : <Home />}
+      />
+      <Route
+        path="/dashboard"
+        element={
+          <GuardedRoute
+            element={
+              currentUser?.type === 'Tutor' ? <TutorDashboard /> : <Dashboard />
+            }
+            auth={!!currentUser}
+          />
+        }
+      />
       <Route
         path="/login"
-        element={currentUser ? <Navigate to="/" /> : <SignIn />}
+        element={
+          currentUser ? <Navigate to={getHomePath(currentUser)} /> : <SignIn />
+        }
       />
       <Route
         path="/register"
@@ -76,7 +104,35 @@ const RoutesComponent: React.FC<RoutesProps> = ({ currentUser }) => (
       <Route
         path="/my_instructors"
         element={
-          <GuardedRoute element={<MyInstructors />} auth={!!currentUser} />
+          currentUser?.type === 'Tutor' ? (
+            <Navigate to="/my_students" replace />
+          ) : (
+            <GuardedRoute element={<MyInstructors />} auth={!!currentUser} />
+          )
+        }
+      />
+      <Route
+        path="/calendar"
+        element={
+          <GuardedRoute element={<CalendarPage />} auth={!!currentUser} />
+        }
+      />
+      <Route
+        path="/my_salary"
+        element={
+          <GuardedRoute
+            element={<MySalary />}
+            auth={!!currentUser && currentUser.type === 'Tutor'}
+          />
+        }
+      />
+      <Route
+        path="/my_students"
+        element={
+          <GuardedRoute
+            element={<MyStudents />}
+            auth={!!currentUser && currentUser.type === 'Tutor'}
+          />
         }
       />
       {/* <Route path="/courses" element={<CoursesList />} />

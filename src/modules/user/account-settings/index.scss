@@ -2,7 +2,12 @@
 @import '../../../assets/styles/mixins.scss';
 
 .edit-user {
-  background-color: $color-grey-light-0;
+  background-color: $surface-alt;
   display: block;
-  padding-bottom: 2px;
+  min-height: 60vh;
+  padding-bottom: $space-9;
+
+  @include respond(phone) {
+    padding-bottom: $space-7;
+  }
 }

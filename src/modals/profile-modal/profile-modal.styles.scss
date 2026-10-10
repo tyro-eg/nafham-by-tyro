@@ -1,34 +1,39 @@
 @import '../../assets/styles/variables.scss';
 @import '../../assets/styles/mixins.scss';
+@import '../modal-kit';
+
 .profile-modal {
-  padding: 5rem;
+  @include modal-shell;
   display: flex;
   flex-direction: column;
   align-items: center;
-  @include respond(phone) {
-    padding: 2rem;
+  padding-top: $space-7;
+  text-align: center;
+
+  &__icon {
+    @include modal-icon-chip;
+    margin-bottom: $space-4;
   }
-  p {
-    font-size: 1.8rem;
-    font-weight: 500;
-    line-height: 2.8rem;
-    margin-bottom: 2rem;
+
+  &__title {
+    @include modal-title;
     text-align: center;
   }
-  .calendar {
-    &-actions {
-      &__container {
-        width: 100%;
-        display: flex;
-        justify-content: space-between;
-      }
-      &__button {
-        min-width: 14rem;
-        height: 4rem;
-        &-secondary {
-          background-color: $color-secondary;
-        }
-      }
+
+  &__text {
+    max-width: 44rem;
+    margin-top: $space-2;
+    font-size: $font-base;
+    line-height: 1.6;
+    color: $text-body;
+    text-align: center;
+  }
+
+  .calendar-actions {
+    &__container {
+      @include modal-footer;
+      width: 100%;
+      justify-content: center;
     }
   }
 }

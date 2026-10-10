@@ -1,0 +1,512 @@
+@import '../../assets/styles/variables.scss';
+@import '../../assets/styles/mixins.scss';
+
+$tones: (
+  sky: (
+    bg: #e8f8fe,
+    fg: #1792ba,
+  ),
+  mint: (
+    bg: #eafaf0,
+    fg: #2f9a3a,
+  ),
+  sun: (
+    bg: #fff6e0,
+    fg: #b07800,
+  ),
+  lilac: (
+    bg: #f2efff,
+    fg: #6a52d6,
+  ),
+);
+
+$sal-radius: 2rem;
+
+.my-salary {
+  background:
+    radial-gradient(
+      60rem 30rem at 100% 0%,
+      rgba($success-500, 0.07),
+      transparent 70%
+    ),
+    $surface-alt;
+  padding: $space-6 0 $space-8;
+  min-height: 60vh;
+
+  .container.sal-container {
+    margin-bottom: 0;
+  }
+}
+
+// ---------- Header + month switcher ----------
+.sal-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: $space-4;
+  margin-bottom: $space-5;
+
+  @include respond(phone) {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  &__title {
+    font-size: $font-h2;
+    color: $text-strong;
+
+    @include respond(phone) {
+      font-size: 2.8rem;
+    }
+  }
+
+  &__subtitle {
+    margin-top: $space-1;
+    color: $text-body;
+  }
+}
+
+.sal-month {
+  display: inline-flex;
+  align-items: center;
+  gap: $space-1;
+  padding: 0.4rem;
+  border-radius: $radius-pill;
+  background-color: $surface;
+  box-shadow: 0 2px 8px rgba(15, 27, 45, 0.06);
+
+  @include respond(phone) {
+    justify-content: space-between;
+  }
+
+  &__label {
+    display: inline-flex;
+    align-items: center;
+    gap: $space-2;
+    min-width: 16rem;
+    justify-content: center;
+    font-size: $font-base;
+    font-weight: 700;
+    color: $text-strong;
+    white-space: nowrap;
+  }
+
+  &__badge {
+    padding: 0.2rem 0.8rem;
+    border-radius: $radius-pill;
+    background-color: #eafaf0;
+    color: #2f9a3a;
+    font-size: 1.1rem;
+    font-weight: 700;
+  }
+}
+
+// ---------- Stats ----------
+.sal-stats {
+  display: grid;
+  grid-template-columns: 1.4fr repeat(3, minmax(0, 1fr));
+  gap: $space-4;
+  margin-bottom: $space-4;
+
+  @include respond(tab-land) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  @include respond(phone) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: $space-3;
+
+    .sal-stat--sun {
+      grid-column: 1 / -1;
+    }
+  }
+}
+
+.sal-stat {
+  display: flex;
+  align-items: center;
+  gap: $space-3;
+  padding: $space-4;
+  border-radius: $sal-radius;
+
+  @include respond(phone) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  &__icon {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 4.4rem;
+    height: 4.4rem;
+    border-radius: 1.4rem;
+    background-color: #fff;
+    box-shadow: 0 4px 12px rgba(15, 27, 45, 0.06);
+
+    svg {
+      font-size: 2.4rem;
+    }
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  &__value {
+    font-size: 2.6rem;
+    font-weight: 800;
+    line-height: 1.15;
+    color: $text-strong;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  &__label {
+    font-size: $font-sm;
+    font-weight: 600;
+    color: $text-body;
+  }
+
+  @each $name, $tone in $tones {
+    &--#{$name} {
+      background-color: map-get($tone, bg);
+
+      .sal-stat__icon {
+        color: map-get($tone, fg);
+      }
+    }
+  }
+
+  &--highlight {
+    background: linear-gradient(135deg, #2fbf71 0%, #54c853 100%);
+    box-shadow: 0 12px 28px rgba(84, 200, 83, 0.3);
+
+    .sal-stat__value,
+    .sal-stat__label {
+      color: #fff;
+    }
+
+    .sal-stat__value {
+      font-size: 3rem;
+    }
+
+    .sal-stat__icon {
+      color: #2f9a3a;
+    }
+
+    @include respond(tab-land) {
+      grid-column: 1 / -1;
+    }
+  }
+}
+
+.sal-projection {
+  display: flex;
+  align-items: center;
+  gap: $space-3;
+  margin-bottom: $space-5;
+  padding: $space-3 $space-4;
+  border-radius: 1.6rem;
+  background-color: $surface;
+  border: 1px dashed rgba($success-500, 0.5);
+  color: $text-body;
+  font-size: $font-sm;
+
+  svg {
+    color: $success-500;
+  }
+}
+
+// ---------- Cards ----------
+.sal-card {
+  margin-bottom: $space-5;
+  padding: $space-5;
+  border-radius: $sal-radius;
+  background-color: $surface;
+  box-shadow:
+    0 2px 6px rgba(15, 27, 45, 0.04),
+    0 12px 32px rgba(15, 27, 45, 0.05);
+
+  @include respond(phone) {
+    padding: $space-4;
+  }
+
+  &__header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: $space-2;
+    margin-bottom: $space-4;
+
+    h2 {
+      font-size: 2rem;
+      color: $text-strong;
+    }
+  }
+
+  &__hint {
+    font-size: $font-sm;
+    color: $text-muted;
+  }
+}
+
+.sal-empty {
+  padding: $space-5;
+  border-radius: 1.4rem;
+  background-color: $gray-50;
+  color: $text-body;
+  text-align: center;
+}
+
+// ---------- Breakdown table ----------
+.sal-table-wrap {
+  overflow-x: auto;
+}
+
+.sal-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: $font-sm;
+
+  th,
+  td {
+    padding: 1.2rem 1.4rem;
+    text-align: start;
+    white-space: nowrap;
+  }
+
+  th {
+    font-size: $font-xs;
+    font-weight: 700;
+    color: $text-muted;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    border-bottom: 1px solid $border;
+  }
+
+  tbody tr {
+    transition: background-color $transition;
+
+    &:hover {
+      background-color: $gray-50;
+    }
+
+    td {
+      border-bottom: 1px solid $gray-100;
+      color: $text-body;
+    }
+  }
+
+  .num {
+    text-align: end;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .strong {
+    font-weight: 700;
+    color: $text-strong;
+  }
+
+  tfoot td {
+    padding-top: $space-3;
+    font-size: $font-base;
+    font-weight: 800;
+    color: $text-strong;
+  }
+
+  // Phones: one card per row
+  @include respond(phone) {
+    thead {
+      display: none;
+    }
+
+    tbody,
+    tbody tr,
+    tbody td,
+    tfoot,
+    tfoot tr,
+    tfoot td {
+      display: block;
+      width: 100%;
+    }
+
+    tbody tr {
+      margin-bottom: $space-3;
+      padding: $space-2 $space-3;
+      border-radius: 1.4rem;
+      background-color: $gray-50;
+    }
+
+    tbody td {
+      display: flex;
+      justify-content: space-between;
+      gap: $space-3;
+      padding: 0.6rem 0;
+      border: 0;
+      white-space: normal;
+      text-align: end;
+
+      &::before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: $text-muted;
+        text-align: start;
+      }
+    }
+
+    tfoot tr {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    tfoot td {
+      width: auto;
+      padding: 0;
+
+      &:not(:first-child):not(:last-child) {
+        display: none;
+      }
+    }
+  }
+}
+
+.sal-chip {
+  display: inline-block;
+  padding: 0.3rem 1rem;
+  border-radius: $radius-pill;
+  background-color: $brand-50;
+  color: $brand-700;
+  font-weight: 600;
+}
+
+.sal-missing {
+  color: $danger-500;
+  font-weight: 600;
+}
+
+.sal-warning,
+.sal-note {
+  display: flex;
+  align-items: flex-start;
+  gap: $space-2;
+  margin-top: $space-3;
+  font-size: $font-sm;
+  color: $text-body;
+
+  svg {
+    flex: none;
+    font-size: 1.8rem;
+    margin-top: 0.1rem;
+  }
+}
+
+.sal-warning {
+  padding: $space-3;
+  border-radius: 1.2rem;
+  background-color: $warning-50;
+  color: #8a5a00;
+}
+
+.sal-note {
+  color: $text-muted;
+}
+
+// ---------- Session lines ----------
+.sal-lines {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.sal-line {
+  display: grid;
+  grid-template-columns: 12rem minmax(0, 1fr) auto 12rem;
+  align-items: center;
+  gap: $space-4;
+  padding: $space-3 0;
+  border-bottom: 1px solid $gray-100;
+
+  &:last-child {
+    border-bottom: 0;
+  }
+
+  @include respond(tab-port) {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: $space-1 $space-3;
+  }
+
+  &__date {
+    display: flex;
+    flex-direction: column;
+    font-size: $font-sm;
+
+    strong {
+      color: $text-strong;
+    }
+
+    span {
+      color: $text-muted;
+    }
+
+    @include respond(tab-port) {
+      flex-direction: row;
+      gap: $space-2;
+      grid-column: 1 / -1;
+    }
+  }
+
+  &__who {
+    display: flex;
+    align-items: center;
+    gap: $space-3;
+    min-width: 0;
+
+    .MuiAvatar-root {
+      width: 3.6rem;
+      height: 3.6rem;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: $brand-700;
+      background-color: $brand-50;
+    }
+
+    > span {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      font-size: $font-sm;
+
+      strong {
+        color: $text-strong;
+      }
+
+      span {
+        color: $text-muted;
+        @include ellipsis;
+      }
+    }
+  }
+
+  &__calc {
+    font-size: $font-sm;
+    color: $text-muted;
+    white-space: nowrap;
+
+    @include respond(tab-port) {
+      grid-column: 1;
+    }
+  }
+
+  &__amount {
+    font-size: $font-base;
+    color: $text-strong;
+    text-align: end;
+    font-variant-numeric: tabular-nums;
+  }
+}

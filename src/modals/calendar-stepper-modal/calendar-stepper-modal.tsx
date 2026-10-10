@@ -3,12 +3,13 @@ import { useTranslation } from 'react-i18next';
 import {
   Button,
   Dialog,
+  IconButton,
   Step,
   StepContent,
   StepLabel,
   Stepper,
 } from '@mui/material';
-import { CheckCircle, Warning } from '@mui/icons-material';
+import { CheckCircle, Close, Warning } from '@mui/icons-material';
 
 import StepperCalendar from './stepper-calendar/stepper-calendar.component';
 import RegisterModal from '../register-modal/register-modal.component';
@@ -31,6 +32,7 @@ interface CalendarStepperModalProps {
 const CalendarStepperModal: FC<CalendarStepperModalProps> = ({
   instructor,
   fromTrailModal = false,
+  handleClose,
 }) => {
   const { t } = useTranslation();
   const rtlClass = useRtlClass();
@@ -94,22 +96,32 @@ const CalendarStepperModal: FC<CalendarStepperModalProps> = ({
       <div
         className={`calendar-stepper ${openTrialBookingModal ? 'hide' : ''}`}
       >
-        <h1>{t('CALENDAR.WIZARD.BOOKING_FREE_TRIAL_SESSION')}</h1>
+        <div className="calendar-stepper__header">
+          <h1 className="calendar-stepper__title">
+            {t('CALENDAR.WIZARD.BOOKING_FREE_TRIAL_SESSION')}
+          </h1>
+          <IconButton
+            className="calendar-stepper__close"
+            onClick={handleClose}
+            aria-label={t('CALENDAR.MYSESSION.ACTIONS.CLOSE')}
+          >
+            <Close />
+          </IconButton>
+        </div>
         <Stepper
           activeStep={activeStep}
           orientation="vertical"
           className={rtlClass}
-          sx={{ marginBottom: 2 }}
         >
           <Step key={t('CALENDAR.WIZARD.CHOOSE_FIELD')}>
             <StepLabel icon={<CheckCircle />}>
               <Button
-                sx={{ textTransform: 'none' }}
+                className="calendar-stepper__step-btn"
                 onClick={() => setActiveStep(0)}
                 variant="text"
               >
                 {t('CALENDAR.WIZARD.CHOOSE_FIELD')}
-                <span className="u-color-primary">
+                <span className="calendar-stepper__selected">
                   {getSelectedFieldTitle(selectedField)}
                 </span>
               </Button>
@@ -153,7 +165,7 @@ const CalendarStepperModal: FC<CalendarStepperModalProps> = ({
                       <h4>{t('CALENDAR.WIZARD.MESSAGES.WARNING.TITLE')}!</h4>
                     </div>
                   </div>
-                  <p>
+                  <p className="calendar__warning--body">
                     {userBooked
                       ? t('CALENDAR.WIZARD.MESSAGES.WARNING.BODY2')
                       : t('CALENDAR.WIZARD.MESSAGES.WARNING.BODY1')}
@@ -170,11 +182,7 @@ const CalendarStepperModal: FC<CalendarStepperModalProps> = ({
               />
               <div className="calendar-actions__container">
                 {!fromTrailModal && (
-                  <Button
-                    onClick={handleBack}
-                    variant="contained"
-                    color="secondary"
-                  >
+                  <Button onClick={handleBack} variant="outlined">
                     {t('CALENDAR.WIZARD.ACTIONS.BACK')}
                   </Button>
                 )}

@@ -3,77 +3,133 @@
 
 .app-footer {
   width: 100%;
-  padding: 0 0 4rem;
-  background-color: $color-white;
-  border-top: 1px solid $color-grey-light-4;
+  background-color: $navy-950;
+  color: $text-on-dark-muted;
 
   &__container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    @include container;
+  }
+
+  &__top {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 1fr);
+    gap: $space-7;
+    padding: $space-8 0 $space-7;
+
+    @include respond(tab-port) {
+      grid-template-columns: 1fr 1fr;
+      gap: $space-6;
+      padding-top: $space-7;
+    }
 
     @include respond(phone) {
-      width: 94%;
-      max-width: unset !important;
+      grid-template-columns: 1fr;
+      gap: $space-5;
+      padding: $space-7 0 $space-5;
+    }
+  }
+
+  &__brand {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: $space-4;
+
+    @include respond(tab-port) {
+      grid-column: 1 / -1;
     }
 
+    // The logo bitmap has a small grey "by Tyro" line that disappears on the
+    // dark footer, so it sits on a light tile at its native height (56px).
     .logo {
-      width: 9.2rem;
-      height: 5.5rem;
-      margin-bottom: 1.8rem;
-      cursor: pointer;
+      display: inline-flex;
+      padding: $space-2 $space-3;
+      border-radius: $radius-sm;
+      background-color: $surface;
+
+      img {
+        display: block;
+        width: auto;
+        height: 5.6rem;
+      }
     }
+  }
 
-    .footer-navbar {
-      display: flex;
-      justify-content: center;
-      padding-bottom: 4.8rem;
-      margin-bottom: 2.5rem;
-      border-bottom: 1px solid rgba($color: $color-title, $alpha: 0.2);
-      width: 100%;
+  &__tagline {
+    max-width: 32rem;
+    font-size: $font-base;
+    line-height: 1.6;
+    color: $text-on-dark-muted;
+  }
 
-      @include respond(phone) {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
+  &__heading {
+    margin-bottom: $space-3;
+    font-size: $font-xs;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: $text-on-dark;
 
-        & > div:nth-child(2) {
-          margin: 2rem 0;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          flex-direction: column;
-        }
+    html[dir='rtl'] & {
+      letter-spacing: 0;
+    }
+  }
+
+  .footer-navbar {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: $space-1;
+
+    .menu-item {
+      display: inline-flex;
+      align-items: center;
+      min-height: 3.6rem;
+      font-size: $font-sm + 0.1rem;
+      font-weight: 400;
+      color: $text-on-dark-muted;
+      text-decoration: none;
+      transition: color $transition;
+
+      &:hover {
+        color: $text-on-dark;
       }
 
-      a {
-        display: inline-block;
-        font-size: 1.6rem;
-        font-weight: 400;
-        line-height: 2.6rem;
-        color: $color-title;
-        margin-right: 2rem;
+      &.active {
+        color: $brand-300;
+        font-weight: 500;
+      }
+    }
+  }
 
-        &.active {
-          color: $color-primary;
-          font-weight: 600;
-        }
+  &__contact {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: $space-1;
+
+    .item {
+      display: inline-flex;
+      align-items: center;
+      gap: $space-2;
+      min-height: 3.6rem;
+      font-size: $font-sm + 0.1rem;
+      color: $text-on-dark-muted;
+      text-decoration: none;
+      transition: color $transition;
+
+      &:hover {
+        color: $text-on-dark;
       }
 
-      .social {
-        a {
-          color: $color-grey-light-5;
-          font-size: 1.6rem;
-          margin: 0 1.6rem;
-        }
+      &__icon {
+        font-size: 1.8rem;
+        color: $brand-300;
       }
 
-      &.rtl {
-        a {
-          margin-right: 0;
-          margin-left: 2rem;
-        }
+      span {
+        direction: ltr;
+        unicode-bidi: isolate;
       }
     }
   }
@@ -81,33 +137,54 @@
   &__bottom {
     display: flex;
     justify-content: space-between;
-    width: 100%;
+    align-items: center;
+    gap: $space-4;
+    padding: $space-4 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
 
     @include respond(phone) {
       flex-direction: column-reverse;
-      align-items: center;
+      align-items: flex-start;
+      gap: $space-2;
+      padding-bottom: $space-5;
     }
   }
 
   &__rights {
-    color: $color-title;
-    font-weight: 400;
-    line-height: 24px;
-    font-size: 1.4rem;
+    font-size: $font-sm;
+    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.56);
 
     @include respond(phone) {
-      font-size: 1.2rem;
-      margin-top: 1rem;
+      font-size: $font-xs;
     }
   }
 
   &__icons {
     display: flex;
     align-items: center;
+    gap: $space-1;
 
-    button {
-      color: $color-title;
-      font-size: 1.6rem;
+    @include respond(phone) {
+      margin-inline-start: -0.8rem;
+    }
+
+    .MuiIconButton-root {
+      width: 4.4rem;
+      height: 4.4rem;
+      color: $text-on-dark-muted;
+      transition:
+        color $transition,
+        background-color $transition;
+
+      &:hover {
+        color: $text-on-dark;
+        background-color: rgba(255, 255, 255, 0.08);
+      }
+
+      .MuiSvgIcon-root {
+        font-size: 2rem;
+      }
     }
   }
 }

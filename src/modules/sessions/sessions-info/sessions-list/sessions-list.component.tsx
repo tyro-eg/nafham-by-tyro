@@ -40,10 +40,16 @@ const SessionsList: FC<SessionsListProps> = ({ filters }) => {
   if (isError) {
     return (
       <div className="sessions-list-container">
-        <div className="no-sessions">
-          <CalendarToday />
-          <p className="title">{t('MYSESSIONS.ERROR_TITLE')}</p>
-          <p className="subtitle">{t('MYSESSIONS.ERROR_SUBTITLE')}</p>
+        <div className="no-sessions dashboard-empty">
+          <span className="dashboard-empty__icon" aria-hidden="true">
+            <CalendarToday />
+          </span>
+          <p className="dashboard-empty__title">
+            {t('MYSESSIONS.ERROR_TITLE')}
+          </p>
+          <p className="dashboard-empty__text">
+            {t('MYSESSIONS.ERROR_SUBTITLE')}
+          </p>
         </div>
       </div>
     );
@@ -52,15 +58,10 @@ const SessionsList: FC<SessionsListProps> = ({ filters }) => {
   if (isLoading) {
     return (
       <div className="sessions-list-container">
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            padding: '40px',
-          }}
-        >
-          <p>{t('MYSESSIONS.LOADING_SESSIONS')}</p>
+        <div className="dashboard-empty sessions-list__loading" role="status">
+          <p className="dashboard-empty__text">
+            {t('MYSESSIONS.LOADING_SESSIONS')}
+          </p>
         </div>
       </div>
     );
@@ -74,7 +75,7 @@ const SessionsList: FC<SessionsListProps> = ({ filters }) => {
           next={fetchNextPage}
           hasMore={!!hasNextPage}
           loader={
-            <div style={{ textAlign: 'center', padding: '10px' }}>
+            <div className="sessions-list__loader">
               {isFetchingNextPage ? t('MYSESSIONS.LOADING_MORE') : ''}
             </div>
           }
@@ -88,10 +89,16 @@ const SessionsList: FC<SessionsListProps> = ({ filters }) => {
           </div>
         </InfiniteScroll>
       ) : (
-        <div className="no-sessions">
-          <CalendarToday />
-          <p className="title">{t('MYSESSIONS.NO_SESSIONS_TITLE')}</p>
-          <p className="subtitle">{t('MYSESSIONS.NO_SESSIONS_SUBTITLE')}</p>
+        <div className="no-sessions dashboard-empty">
+          <span className="dashboard-empty__icon" aria-hidden="true">
+            <CalendarToday />
+          </span>
+          <p className="dashboard-empty__title">
+            {t('MYSESSIONS.NO_SESSIONS_TITLE')}
+          </p>
+          <p className="dashboard-empty__text">
+            {t('MYSESSIONS.NO_SESSIONS_SUBTITLE')}
+          </p>
         </div>
       )}
     </div>

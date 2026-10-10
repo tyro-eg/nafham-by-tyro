@@ -75,3 +75,224 @@ ORDER: Base + typography > general layout + grid > page layout > components
     -webkit-box-orient: vertical;
   }
 }
+
+// ============================================================
+// DESIGN SYSTEM MIXINS
+// ============================================================
+
+@mixin focus-ring {
+  outline: none;
+  box-shadow: $focus-ring;
+}
+
+// Page section with consistent vertical rhythm
+@mixin section($bg: $surface) {
+  padding: $space-9 0;
+  background-color: $bg;
+
+  @include respond(tab-port) {
+    padding: $space-8 0;
+  }
+
+  @include respond(phone) {
+    padding: $space-7 0;
+  }
+}
+
+// Centered content column
+@mixin container {
+  width: 100%;
+  max-width: $container-max;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: $container-gutter;
+  padding-right: $container-gutter;
+
+  @include respond(phone) {
+    padding-left: $container-gutter-mobile;
+    padding-right: $container-gutter-mobile;
+  }
+}
+
+// Small uppercase label above a heading
+@mixin eyebrow {
+  display: inline-block;
+  font-size: $font-sm;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: $brand-600;
+}
+
+// Section heading + supporting text block
+@mixin section-heading {
+  max-width: 72rem;
+  margin: 0 auto $space-7;
+  text-align: center;
+
+  h2,
+  .section-title {
+    font-size: $font-h2;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    color: $text-strong;
+    margin-bottom: $space-4;
+
+    @include respond(phone) {
+      font-size: 2.8rem;
+    }
+  }
+
+  p,
+  .section-subtitle {
+    font-size: $font-lg;
+    line-height: 1.6;
+    color: $text-body;
+
+    @include respond(phone) {
+      font-size: $font-base;
+    }
+  }
+}
+
+// Surface card
+@mixin card($padding: $space-5) {
+  background-color: $surface;
+  border: 1px solid $border;
+  border-radius: $radius-md;
+  box-shadow: $shadow-sm;
+  padding: $padding;
+}
+
+@mixin card-hover {
+  transition:
+    box-shadow $transition,
+    transform $transition,
+    border-color $transition;
+
+  &:hover {
+    box-shadow: $shadow-lg;
+    transform: translateY(-2px);
+    border-color: $border-strong;
+  }
+}
+
+// Buttons (for plain elements / MUI Buttons with custom classes)
+@mixin button-base {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: $space-2;
+  min-height: 4.4rem;
+  padding: 1rem 2.4rem;
+  border-radius: $radius-sm;
+  border: 1px solid transparent;
+  font-size: $font-base;
+  font-weight: 600;
+  line-height: 1.5;
+  text-transform: none;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background-color $transition,
+    border-color $transition,
+    color $transition,
+    box-shadow $transition;
+
+  &:focus-visible {
+    @include focus-ring;
+  }
+
+  &:disabled,
+  &.Mui-disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+}
+
+@mixin button-primary {
+  @include button-base;
+  background-color: $brand-600;
+  color: $text-on-dark;
+
+  &:hover {
+    background-color: $brand-700;
+  }
+}
+
+@mixin button-accent {
+  @include button-base;
+  background-color: $accent-400;
+  color: $navy-900;
+
+  &:hover {
+    background-color: $accent-500;
+  }
+}
+
+@mixin button-secondary {
+  @include button-base;
+  background-color: $surface;
+  color: $text-strong;
+  border-color: $border-strong;
+
+  &:hover {
+    background-color: $gray-50;
+    border-color: $gray-400;
+  }
+}
+
+@mixin button-ghost-on-dark {
+  @include button-base;
+  background-color: transparent;
+  color: $text-on-dark;
+  border-color: rgba(255, 255, 255, 0.4);
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.7);
+  }
+}
+
+// Form field look for non-MUI inputs
+@mixin input {
+  width: 100%;
+  min-height: 4.4rem;
+  padding: 1rem 1.4rem;
+  font-size: $font-base;
+  color: $text-strong;
+  background-color: $surface;
+  border: 1px solid $border-strong;
+  border-radius: $radius-sm;
+  transition:
+    border-color $transition,
+    box-shadow $transition;
+
+  &::placeholder {
+    color: $gray-400;
+  }
+
+  &:hover {
+    border-color: $gray-400;
+  }
+
+  &:focus {
+    border-color: $brand-500;
+    @include focus-ring;
+  }
+}
+
+// Status pill / badge
+@mixin badge($bg: $brand-50, $color: $brand-700) {
+  display: inline-flex;
+  align-items: center;
+  gap: $space-1;
+  padding: 0.2rem 1rem;
+  border-radius: $radius-pill;
+  font-size: $font-xs;
+  font-weight: 600;
+  line-height: 2rem;
+  background-color: $bg;
+  color: $color;
+}

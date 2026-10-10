@@ -1,10 +1,11 @@
 import React, { useState, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { Button, Dialog, Box, Rating } from '@mui/material';
+import { Button, Dialog, Box } from '@mui/material';
 import { ArrowRightAlt } from '@mui/icons-material';
 
 import ReadMore from '../read-more/read-more.component';
+import RatingSummary from '../rating-summary/rating-summary.component';
 import InstructorCalendar from '../instructor-calendar/instructor-calendar.component';
 
 // import UAE from '../../assets/images/landing/united-arab-emirates-round.png';
@@ -57,71 +58,60 @@ const InstructorCard: React.FC<{ instructor: Instructor }> = memo(
       instructor.free_trial?.enabled && !instructor.free_trial.claimed;
 
     return (
-      <div className="instructor-card">
-        <div className="instructor-card__video">
-          <iframe
-            title="youtube-video"
-            src={instructor.video_url}
-            loading="lazy"
-            frameBorder="0"
-            srcDoc={videoHtml}
-          ></iframe>
-        </div>
+      <article className="instructor-card">
+        <div className="instructor-card__inner">
+          <div className="instructor-card__video">
+            <iframe
+              title="youtube-video"
+              src={instructor.video_url}
+              loading="lazy"
+              frameBorder="0"
+              srcDoc={videoHtml}
+            ></iframe>
+          </div>
 
-        <div className="instructor-card__body">
-          <Box
-            className={`card-details ${rtlClass}`}
-            sx={{ display: 'flex', flexDirection: 'column' }}
-          >
+          <div className="instructor-card__body">
             <Box
-              className={`card-details__container ${rtlClass}`}
-              sx={{ display: 'flex' }}
+              className={`card-details ${rtlClass}`}
+              sx={{ display: 'flex', flexDirection: 'column' }}
             >
-              <Box className={`image ${rtlClass}`} sx={{ marginRight: '16px' }}>
-                <img
-                  src={instructor.avatar || Profile}
-                  alt="Instructor"
-                  loading="lazy"
-                />
+              <Box
+                className={`card-details__container ${rtlClass}`}
+                sx={{ display: 'flex' }}
+              >
+                <Box className={`image ${rtlClass}`}>
+                  <img
+                    src={instructor.avatar || Profile}
+                    alt="Instructor"
+                    loading="lazy"
+                  />
+                </Box>
+
+                <Button onClick={goToProfile} className="info">
+                  <h3 className="name">
+                    {instructor.first_name} {instructor.last_name}
+                  </h3>
+                  {!!instructor.average_rating && (
+                    <RatingSummary
+                      className="review"
+                      value={instructor.average_rating}
+                      count={instructor.number_of_reviews}
+                    />
+                  )}
+                </Button>
               </Box>
 
-              <Button onClick={goToProfile} className="info">
-                <h6>
-                  {instructor.first_name} {instructor.last_name}
-                </h6>
-                {instructor.average_rating && (
-                  <Box
-                    className="review"
-                    sx={{ display: 'flex', alignItems: 'center' }}
-                  >
-                    <Rating
-                      name="instructor rating"
-                      value={+Number(instructor.average_rating).toPrecision(2)}
-                      precision={0.1}
-                      readOnly
-                    />
-                    <span className="review-numbers">
-                      {instructor.average_rating
-                        ? +Number(instructor.average_rating).toPrecision(2)
-                        : 0}{' '}
-                      (5.0)
-                    </span>
-                  </Box>
-                )}
-              </Button>
-            </Box>
+              {!!instructor.grade_subjects?.length && (
+                <div className="instructor-card__fields">
+                  {instructor.grade_subjects.map((subject) => (
+                    <div key={subject.id} className="instructor-card__field">
+                      {subject.full_course_name}
+                    </div>
+                  ))}
+                </div>
+              )}
 
-            {!!instructor.grade_subjects?.length && (
-              <div className="instructor-card__fields">
-                {instructor.grade_subjects.map((subject) => (
-                  <div key={subject.id} className="instructor-card__field">
-                    {subject.full_course_name}
-                  </div>
-                ))}
-              </div>
-            )}
-
-            {/* <div className="price">
+              {/* <div className="price">
             {instructor.rate_to_display > 0 ? (
               <span className="new-price">
                 {instructor.rate_to_display} {t('GENEREL.EGP_PER_HOUR')}
@@ -130,18 +120,18 @@ const InstructorCard: React.FC<{ instructor: Instructor }> = memo(
               <span className="new-price">{t('COURSES.COURSE_CARD.FREE')}</span>
             )}
           </div> */}
-          </Box>
+            </Box>
 
-          <div className="instructor-card__about">
-            <ReadMore
-              text={instructor.bio || ''}
-              maxLength={95}
-              readonly
-              onClick={goToProfile}
-            />
-          </div>
+            <div className="instructor-card__about">
+              <ReadMore
+                text={instructor.bio || ''}
+                maxLength={95}
+                readonly
+                onClick={goToProfile}
+              />
+            </div>
 
-          {/* <div className="instructor-card__curriculum">
+            {/* <div className="instructor-card__curriculum">
           {[UAE, SAT, EGYPT, SAUDI].map((src, index) => (
             <img
               key={index}
@@ -151,31 +141,32 @@ const InstructorCard: React.FC<{ instructor: Instructor }> = memo(
             />
           ))}
         </div> */}
-        </div>
+          </div>
 
-        <div className="instructor-card__footer">
-          <InstructorCalendar instructorId={instructor.id} />
+          <div className="instructor-card__footer">
+            <InstructorCalendar instructorId={instructor.id} />
 
-          {isTrialAvailable() ? (
-            <Button
-              className="book-now-btn"
-              variant="contained"
-              color="primary"
-              onClick={openTrialModal}
-            >
-              {t('DIRECTORY.FREETRIAL')}
-            </Button>
-          ) : (
-            <Button
-              endIcon={<ArrowRightAlt />}
-              className={`book-now-btn ${rtlClass}`}
-              variant="contained"
-              color="primary"
-              onClick={goToProfile}
-            >
-              {t('DIRECTORY.OPENPROFILE')}
-            </Button>
-          )}
+            {isTrialAvailable() ? (
+              <Button
+                className="book-now-btn"
+                variant="contained"
+                color="primary"
+                onClick={openTrialModal}
+              >
+                {t('DIRECTORY.FREETRIAL')}
+              </Button>
+            ) : (
+              <Button
+                endIcon={<ArrowRightAlt />}
+                className={`book-now-btn ${rtlClass}`}
+                variant="contained"
+                color="primary"
+                onClick={goToProfile}
+              >
+                {t('DIRECTORY.OPENPROFILE')}
+              </Button>
+            )}
+          </div>
         </div>
 
         {openCalendarStepperModal && (
@@ -191,7 +182,7 @@ const InstructorCard: React.FC<{ instructor: Instructor }> = memo(
             />
           </Dialog>
         )}
-      </div>
+      </article>
     );
   },
 );

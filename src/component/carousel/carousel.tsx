@@ -8,14 +8,23 @@ interface CarouselProps {
   children: ReactNode[];
   small?: boolean;
   arrows?: boolean;
+  autoplay?: boolean;
+  /**
+   * Skip react-slick's `rtl` mode (it starts on the wrong slide when
+   * `infinite` is on). The caller then handles RTL itself, e.g. by mirroring.
+   */
+  disableRtl?: boolean;
 }
 
 const Carousel: FC<CarouselProps> = ({
   children,
   small = false,
   arrows = true,
+  autoplay = true,
+  disableRtl = false,
 }) => {
-  const rtlClass = useRtlClass();
+  const pageRtlClass = useRtlClass();
+  const rtlClass = disableRtl ? '' : pageRtlClass;
   const isRtl = rtlClass === 'rtl';
 
   const settings: Settings = useMemo(
@@ -24,7 +33,8 @@ const Carousel: FC<CarouselProps> = ({
       arrows,
       infinite: children.length > 2,
       speed: 500,
-      autoplay: true,
+      autoplay,
+      initialSlide: 0,
       swipeToSlide: true,
       slidesToScroll: 1,
       className: rtlClass,
@@ -41,7 +51,7 @@ const Carousel: FC<CarouselProps> = ({
             { breakpoint: 10000, settings: { slidesToShow: 3 } },
           ],
     }),
-    [arrows, children.length, rtlClass, isRtl, small],
+    [arrows, autoplay, children.length, rtlClass, isRtl, small],
   );
 
   return <Slider {...settings}>{children}</Slider>;

@@ -1,15 +1,18 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
-import arLocale from '@fullcalendar/core/locales/ar-kw';
+import arLocale from '../../assets/utils/calendar-locale';
 import { useTranslation } from 'react-i18next';
 
 import './instructor-calendar.component.scss';
 import { addDays, getDay } from 'date-fns';
-import { EventContentArg } from '@fullcalendar/core';
+import { EventContentArg, EventInput } from '@fullcalendar/core';
 import { useSlots } from '../../hooks/useCalendar';
+
+// Stable fallback so effects depending on `slots` don't re-run every render
+const NO_SLOTS: EventInput[] = [];
 
 const InstructorCalendar: React.FC<{ instructorId: number }> = ({
   instructorId,
@@ -24,12 +27,42 @@ const InstructorCalendar: React.FC<{ instructorId: number }> = ({
   }));
 
   // Fetch slots using TanStack Query
-  const { data: slots = [] } = useSlots(
+  const { data: slots = NO_SLOTS } = useSlots(
     instructorId,
     dateRange.from,
     dateRange.to,
     !!instructorId,
   );
+
+  // The mini calendar only shows ~2 hours, so bring the earliest upcoming
+  // slot of the fetched range into view (presentational only). Falls back
+  // to the current hour when there is no upcoming slot.
+  const scrollTime = useMemo(() => {
+    const now = Date.now();
+    const rangeEnd = new Date(dateRange.to).getTime();
+    const starts = slots
+      .map((slot) => (slot.start ? new Date(slot.start as string) : null))
+      .filter(
+        (d): d is Date =>
+          !!d &&
+          !Number.isNaN(d.getTime()) &&
+          d.getTime() >= now &&
+          d.getTime() < rangeEnd,
+      )
+      .sort((a, b) => a.getTime() - b.getTime());
+    const target = starts[0] || new Date();
+    const pad = (n: number) => String(n).padStart(2, '0');
+    return `${pad(target.getHours())}:${pad(target.getMinutes())}:00`;
+  }, [slots, dateRange.to]);
+
+  // Apply it once the slots arrive, and again after a language switch
+  // (locale/direction changes re-render the calendar and reset its scroll).
+  useEffect(() => {
+    const api = calendarRef.current?.getApi();
+    if (!api) return;
+    const timer = window.setTimeout(() => api.scrollToTime(scrollTime), 50);
+    return () => window.clearTimeout(timer);
+  }, [scrollTime, i18n.language]);
 
   const handleDateChange = (direction?: 'next' | 'prev') => {
     const calendarApi = calendarRef.current?.getApi();
@@ -103,6 +136,7 @@ const InstructorCalendar: React.FC<{ instructorId: number }> = ({
           }}
           firstDay={getDay(new Date())}
           initialView="timeGridDay"
+          scrollTime={scrollTime}
           eventColor="#3ac5f1"
           allDaySlot={false}
           slotLabelInterval="00:30"

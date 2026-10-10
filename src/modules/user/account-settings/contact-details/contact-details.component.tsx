@@ -77,13 +77,26 @@ const ContactDetails: FC = () => {
   return (
     <div className="contact-details">
       <div className="title-container">
-        <h3 className="title container">{t('ACCOUNT_SETTINGS.TITLE')}</h3>
+        <div className="container">
+          <h1 className="title">{t('ACCOUNT_SETTINGS.TITLE')}</h1>
+        </div>
       </div>
       <div className="form-container container">
-        <h4 className="sub-title">
-          {t('ACCOUNT_SETTINGS.CONTACT_DETAILS_FORM.TITLE')}
-        </h4>
-        <div className="contact-details__form-container">
+        <section className="contact-details__form-container">
+          <header className="contact-details__header">
+            <h2 className="sub-title">
+              {t('ACCOUNT_SETTINGS.CONTACT_DETAILS_FORM.TITLE')}
+            </h2>
+            {!editInfoFlag && (
+              <Button
+                variant="outlined"
+                onClick={toggleInfoFlag}
+                className="edit-btn"
+              >
+                {t('ACCOUNT_SETTINGS.EDIT')}
+              </Button>
+            )}
+          </header>
           <form
             onSubmit={handleSubmit(onSubmit)}
             className={`contact-details__form ${rtlClass}`}
@@ -194,6 +207,14 @@ const ContactDetails: FC = () => {
             {editInfoFlag && (
               <div className="form-actions">
                 <Button
+                  variant="outlined"
+                  onClick={cancelInfoEdit}
+                  disabled={isSubmitting}
+                  className="cancel-btn"
+                >
+                  {t('ACCOUNT_SETTINGS.CONTACT_DETAILS_FORM.CANCEL')}
+                </Button>
+                <Button
                   variant="contained"
                   color="primary"
                   type="submit"
@@ -202,27 +223,10 @@ const ContactDetails: FC = () => {
                 >
                   {t('ACCOUNT_SETTINGS.CONTACT_DETAILS_FORM.SUBMIT_BTN')}
                 </Button>
-                <Button
-                  variant="text"
-                  onClick={cancelInfoEdit}
-                  disabled={isSubmitting}
-                  className="cancel-btn"
-                >
-                  {t('ACCOUNT_SETTINGS.CONTACT_DETAILS_FORM.CANCEL')}
-                </Button>
               </div>
             )}
           </form>
-          {!editInfoFlag && (
-            <Button
-              variant="text"
-              onClick={toggleInfoFlag}
-              className="edit-btn"
-            >
-              {t('ACCOUNT_SETTINGS.EDIT')}
-            </Button>
-          )}
-        </div>
+        </section>
       </div>
     </div>
   );

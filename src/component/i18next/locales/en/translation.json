@@ -37,7 +37,15 @@
     "SESSIONS": "My Sessions",
     "PACKAGES": "My Packages",
     "TERMS": "Terms & Conditions",
-    "FUNDS": "Add Funds"
+    "FUNDS": "Add Funds",
+    "DASHBOARD": "Dashboard",
+    "MY_STUDENTS": "My Students",
+    "MY_SALARY": "My Salary",
+    "MENU": "Main menu",
+    "OPEN_MENU": "Open menu",
+    "CLOSE_MENU": "Close menu",
+    "BROWSE_INSTRUCTORS": "Browse instructors",
+    "CALENDAR": "Calendar"
   },
   "CARDS": {
     "FREE_ASSESMENT": {
@@ -665,7 +673,8 @@
       "SCHEDULED": "Scheduled",
       "OPEN": "Open",
       "COMPLETED": "Completed",
-      "CANCELLED": "Cancelled"
+      "CANCELLED": "Cancelled",
+      "MISSED": "Missed"
     },
     "MAIN": {
       "LIST": "List",
@@ -693,7 +702,15 @@
         "MISSED": "Session Missed",
         "CANCELLED": "Session Cancelled",
         "DOWNLOAD": "Download",
-        "MINUTE": "minute"
+        "MINUTE": "minute",
+        "MINUTES_COUNT_one": "{{count}} minute",
+        "MINUTES_COUNT_other": "{{count}} minutes",
+        "RELATIVE_MINUTES_one": "{{count}} minute",
+        "RELATIVE_MINUTES_other": "{{count}} minutes",
+        "RELATIVE_HOURS_one": "{{count}} hour",
+        "RELATIVE_HOURS_other": "{{count}} hours",
+        "RELATIVE_DAYS_one": "{{count}} day",
+        "RELATIVE_DAYS_other": "{{count}} days"
       },
       "CANCELMODAL": {
         "TITLE": "Want to cancel a session?",
@@ -1047,7 +1064,9 @@
     "SAR_PER_HOUR": "SAR / Hour",
     "USD_PER_HOUR": "USD / Hour",
     "HOURS": "hours",
-    "PACKAGE": "package"
+    "PACKAGE": "package",
+    "REVIEWS_COUNT_one": "{{count}} review",
+    "REVIEWS_COUNT_other": "{{count}} reviews"
   },
   "CHECKOUT": {
     "TITLE": "CHECKOUT",
@@ -1166,5 +1185,209 @@
       "FIRST_P": "You haven't booked any sessions yet",
       "SECOND_P": "Start booking sessions to see your instructors here!"
     }
+  },
+  "DASHBOARD": {
+    "BOOK_SESSION": "Book a session",
+    "VIEW_ALL": "View all",
+    "HOURS_SHORT": "{{hours}} h",
+    "HERO": {
+      "EYEBROW": "Your learning space",
+      "WELCOME": "Welcome back, {{name}}! 👋",
+      "NEXT": "Your next session is {{subject}} with {{tutor}}, {{when}}. You've got this!",
+      "NO_NEXT": "Ready for your next step? Book a session with one of our instructors and keep the momentum going.",
+      "MY_SESSIONS": "My sessions"
+    },
+    "STATS": {
+      "UPCOMING": "Upcoming sessions",
+      "HOURS_LEARNED": "Hours learned",
+      "HOURS_REMAINING": "Hours remaining",
+      "ATTENDANCE": "Attendance"
+    },
+    "NEXT": {
+      "TITLE": "Up next",
+      "LATER": "Coming up later",
+      "JOIN": "Join session",
+      "LIVE_NOW": "Live now",
+      "IN_MINUTES_one": "In {{count}} minute",
+      "IN_MINUTES_other": "In {{count}} minutes",
+      "IN_HOURS_one": "In {{count}} hour",
+      "IN_HOURS_other": "In {{count}} hours",
+      "IN_DAYS_one": "Tomorrow",
+      "IN_DAYS_other": "In {{count}} days",
+      "EMPTY": "No sessions booked yet. Pick an instructor and schedule your next lesson."
+    },
+    "PROGRESS": {
+      "TITLE": "Your progress",
+      "START": "Every expert was once a beginner. Your first session this month is waiting!",
+      "ACTIVE_WEEKS_one": "You studied in {{count}} of the last {{total}} weeks.",
+      "ACTIVE_WEEKS_other": "You studied in {{count}} of the last {{total}} weeks.",
+      "WEEKLY": "Hours learned per week",
+      "THIS_WEEK": "This week",
+      "SUBJECTS": "Your subjects",
+      "NO_HISTORY": "Your subjects will appear here after your first completed session.",
+      "ATTENDANCE": "Attendance",
+      "COMPLETED": "Completed",
+      "MISSED": "Missed",
+      "CANCELED": "Cancelled",
+      "GREAT_one": "Amazing! You've learned {{hours}} hour this month. Keep it up!",
+      "GREAT_other": "Amazing! You've learned {{hours}} hours this month. Keep it up!",
+      "GOOD_one": "Nice work! {{hours}} hour of learning this month so far.",
+      "GOOD_other": "Nice work! {{hours}} hours of learning this month so far."
+    },
+    "PACKAGES": {
+      "TITLE": "My packages",
+      "WITH": "with {{tutor}}",
+      "LEFT_OF": "{{left}} of {{total}} hours left",
+      "EMPTY": "You don't have any packages yet."
+    },
+    "INSTRUCTORS": {
+      "TITLE": "My instructors",
+      "EMPTY": "You haven't studied with an instructor yet.",
+      "FIND": "Find an instructor"
+    },
+    "ROLE": "Student"
+  },
+  "MY_STUDENTS": {
+    "TITLE": "My Students",
+    "SUBTITLE": "Everyone enrolled with you, their hours and what's coming up next.",
+    "STATS": {
+      "STUDENTS": "Students",
+      "ACTIVE": "Active students",
+      "HOURS_REMAINING": "Hours remaining",
+      "HOURS_TAUGHT": "Hours taught"
+    },
+    "SEARCH": "Search students by name or email",
+    "FILTER_COURSE": "Filter by course",
+    "ALL_COURSES": "All courses",
+    "STATUS": {
+      "ALL": "All",
+      "ACTIVE": "Active",
+      "INACTIVE": "Inactive"
+    },
+    "EMPTY_TITLE": "No students yet",
+    "EMPTY_TEXT": "Students appear here once they book a session or buy a package with you.",
+    "NO_MATCH_TITLE": "No matching students",
+    "NO_MATCH_TEXT": "Try a different name, course or status.",
+    "CARD": {
+      "HOURS_LEFT": "Hours left",
+      "HOURS_OF": "{{left}} of {{total}} h",
+      "NEXT": "Next session",
+      "NONE": "Not scheduled",
+      "COMPLETED": "Completed",
+      "SESSIONS_HOURS_one": "{{count}} session · {{hours}} h",
+      "SESSIONS_HOURS_other": "{{count}} sessions · {{hours}} h",
+      "LAST": "Last session",
+      "EMAIL": "Email",
+      "SESSIONS": "Sessions",
+      "NO_PACKAGE": "No package yet (trial or single sessions)"
+    }
+  },
+  "TUTOR_DASHBOARD": {
+    "ROLE": "Instructor",
+    "HERO": {
+      "EYEBROW": "Instructor space",
+      "TODAY_one": "You have {{count}} session today. Next up: {{subject}} with {{student}}, {{when}}.",
+      "TODAY_other": "You have {{count}} sessions today. Next up: {{subject}} with {{student}}, {{when}}.",
+      "NEXT": "Your next session is {{subject}} with {{student}}, {{when}}.",
+      "NO_NEXT": "No sessions booked yet. Keep your availability up to date so students can book you.",
+      "AVAILABILITY": "Update availability"
+    },
+    "STATS": {
+      "UPCOMING": "Upcoming sessions",
+      "HOURS_MONTH": "Hours taught this month",
+      "ACTIVE_STUDENTS": "Active students",
+      "RATING_one": "Rating · {{count}} review",
+      "RATING_other": "Rating · {{count}} reviews"
+    },
+    "SCHEDULE": {
+      "TITLE": "Your schedule",
+      "EMPTY": "Nothing scheduled yet. Open more slots in your availability to get booked."
+    },
+    "ACTIVITY": {
+      "TITLE": "Teaching activity",
+      "CHEER_one": "You've taught {{hours}} hour this month. Great work!",
+      "CHEER_other": "You've taught {{hours}} hours this month. Great work!",
+      "TOTAL_one": "{{count}} completed session in total.",
+      "TOTAL_other": "{{count}} completed sessions in total.",
+      "WEEKLY": "Hours taught per week",
+      "SESSIONS": "Sessions"
+    },
+    "PACKAGES": {
+      "TITLE": "Packages",
+      "ACTIVE": "Active",
+      "SOLD": "Hours sold",
+      "LEFT": "Hours left",
+      "VIEW": "View packages"
+    },
+    "ATTENTION": {
+      "TITLE": "Needs attention",
+      "LOW_one": "Only {{hours}} hour left – suggest a new package",
+      "LOW_other": "Only {{hours}} hours left – suggest a new package",
+      "IDLE_one": "{{hours}} hour left but nothing booked",
+      "IDLE_other": "{{hours}} hours left but nothing booked",
+      "EMPTY": "All your students are on track. 🎉"
+    },
+    "REVIEWS": {
+      "TITLE": "Latest reviews",
+      "EMPTY": "No reviews yet. They'll appear here after your students rate their sessions."
+    }
+  },
+  "MY_SALARY": {
+    "TITLE": "My Salary",
+    "SUBTITLE": "Your earnings from completed sessions, by curriculum, stage and subject.",
+    "MTD": "Month to date",
+    "PREV_MONTH": "Previous month",
+    "NEXT_MONTH": "Next month",
+    "STATS": {
+      "EARNED_MTD": "Earned this month so far",
+      "EARNED_MONTH": "Earned this month",
+      "SESSIONS": "Completed sessions",
+      "HOURS": "Hours taught",
+      "AVG_RATE": "Average rate per hour"
+    },
+    "PROJECTION_one": "{{count}} more session is booked this month, worth about {{amount}} once completed.",
+    "PROJECTION_other": "{{count}} more sessions are booked this month, worth about {{amount}} once completed.",
+    "BREAKDOWN": {
+      "TITLE": "Breakdown by course",
+      "HINT": "Completed sessions only"
+    },
+    "COLS": {
+      "CURRICULUM": "Curriculum",
+      "STAGE": "Stage",
+      "SUBJECT": "Subject",
+      "SESSIONS": "Sessions",
+      "HOURS": "Hours",
+      "RATE": "Rate",
+      "AMOUNT": "Amount"
+    },
+    "PER_HOUR": "{{amount}}/h",
+    "TOTAL": "Total",
+    "NO_RATE": "No rate set",
+    "UNPRICED_one": "{{count}} session has no hourly rate for its course yet, so it isn't included in the total.",
+    "UNPRICED_other": "{{count}} sessions have no hourly rate for their course yet, so they aren't included in the total.",
+    "SESSIONS": {
+      "TITLE": "Completed sessions",
+      "HINT_one": "{{count}} session",
+      "HINT_other": "{{count}} sessions"
+    },
+    "LINE_CALC": "{{hours}} h × {{rate}}",
+    "EMPTY_MTD": "No completed sessions yet this month. Your earnings will appear here as sessions are completed.",
+    "EMPTY_MONTH": "No completed sessions in this month.",
+    "NOTE": "This is an estimate based on completed sessions and your hourly rate for each course. Missed and cancelled sessions aren't counted. Your final payout may differ."
+  },
+  "CALENDAR_PAGE": {
+    "TITLE": "Calendar",
+    "SUBTITLE": "Your sessions at a glance. Click a session for details.",
+    "FILTER": {
+      "SCHEDULED": "Scheduled",
+      "ALL": "All sessions"
+    },
+    "LEGEND": {
+      "SCHEDULED": "Scheduled / live",
+      "COMPLETED": "Completed",
+      "MISSED": "Missed",
+      "CANCELED": "Cancelled"
+    },
+    "HINT": "Use Month / Week to change the view."
   }
 }

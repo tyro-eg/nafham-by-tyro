@@ -1,11 +1,11 @@
 import React, { useMemo, memo } from 'react';
-import { Rating } from '@mui/material';
 import { format, parseISO } from 'date-fns';
 import { useTranslation } from 'react-i18next';
 
 import { arSA } from 'date-fns/locale/ar-SA';
 import { enUS } from 'date-fns/locale/en-US';
 import { ReviewData } from '../../modules/user/edit-profile/profile-reviews-list/profile-reviews-list.component';
+import RatingSummary from '../rating-summary/rating-summary.component';
 import './review-card.styles.scss';
 
 interface ReviewCardProps {
@@ -54,24 +54,21 @@ const ReviewCard: React.FC<ReviewCardProps> = memo(({ data }) => {
     <>
       {data && (
         <div className="profile-review">
-          <div className="profile-review__author">{data.student}</div>
+          <div className="profile-review__author" dir="auto">
+            {data.student}
+          </div>
           <div className="profile-review__date">
             {myDateFormatter(data.created_at)}
           </div>
-          {data.rating && (
-            <div className="profile-review__rating-stars">
-              <Rating
-                name="profile-review"
-                value={Math.round(data.rating)}
-                readOnly
-                size="large"
-              />
-              <span className="review-numbers">
-                {data.rating.toFixed(1)} (5.0)
-              </span>
-            </div>
+          {!!data.rating && (
+            <RatingSummary
+              className="profile-review__rating-stars"
+              value={data.rating}
+              size="medium"
+              wholeStars
+            />
           )}
-          <div className="profile-review__text">
+          <div className="profile-review__text" dir="auto">
             <p>{reviewText}</p>
           </div>
         </div>

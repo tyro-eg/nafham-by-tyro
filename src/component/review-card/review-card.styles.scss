@@ -2,54 +2,51 @@
 @import '../../assets/styles/mixins.scss';
 
 .profile-review {
-  box-shadow: 0px 24px 64px rgba(0, 0, 0, 0.1);
-  border-radius: 10px;
-  padding: 3.2rem 1.6rem;
+  @include card($space-5);
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
-  width: 27rem;
-  height: 28rem;
+  gap: $space-1;
+  width: 100%;
+  height: 100%;
+  min-height: 22rem;
+  text-align: start;
+
+  &__author {
+    color: $text-strong;
+    font-weight: 600;
+    font-size: $font-base;
+    line-height: 1.4;
+    margin-bottom: 0 !important;
+    @include ellipsis;
+    max-width: 100%;
+  }
 
   &__date {
-    color: #969bab;
-    font-weight: 500;
-    font-size: 1.4rem;
-    line-height: 24px;
-    margin-bottom: 1rem;
+    color: $text-muted;
+    font-weight: 400;
+    font-size: $font-xs;
+    line-height: 1.4;
+    margin-bottom: $space-2;
   }
 
   &__rating-stars {
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    margin-bottom: 1rem;
+    margin-bottom: $space-2;
 
-    .review-numbers {
-      color: $color-title;
-      font-weight: 400;
-      font-size: 12px;
-      line-height: 18px;
-      padding: 0 0.5rem;
+    .MuiRating-root {
+      font-size: 2rem;
     }
   }
 
   &__text {
-    color: $color-body;
-    font-weight: 400;
-    line-height: 24px;
+    color: $text-body;
 
     p {
-      font-size: 1.4rem;
+      font-size: $font-sm;
+      line-height: 1.6;
+      color: $text-body;
+      @include ellipsis(7);
     }
-  }
-
-  &__author {
-    color: $color-title;
-    font-weight: 700;
-    font-size: 1.8rem;
-    line-height: 28px;
-    margin-bottom: 0 !important;
   }
 }

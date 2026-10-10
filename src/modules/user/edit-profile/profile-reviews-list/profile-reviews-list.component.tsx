@@ -20,7 +20,9 @@ const ProfileReviewsList: React.FC<ProfileReviewsListProps> = ({
   profileReviews = [],
 }) => (
   <section className="profile-reviews">
-    <Carousel>
+    {/* No autoplay: the first review should be the one people see.
+        RTL is handled by mirroring in CSS (see styles), not by slick's rtl. */}
+    <Carousel autoplay={false} disableRtl>
       {profileReviews.map((review) => (
         <ReviewCard key={review.id} data={review} />
       ))}

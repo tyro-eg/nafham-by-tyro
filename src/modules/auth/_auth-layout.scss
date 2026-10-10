@@ -1,0 +1,98 @@
+// Split auth layout: brand / illustration panel + form column.
+// Expects variables.scss and mixins.scss to be imported first.
+@mixin auth-layout {
+  padding: $space-8 0;
+  background:
+    radial-gradient(
+      ellipse 60% 50% at 100% 0%,
+      rgba($brand-100, 0.55),
+      transparent 70%
+    ),
+    $surface-alt;
+
+  @include respond(tab-port) {
+    padding: $space-7 0;
+  }
+
+  @include respond(phone) {
+    padding: $space-5 0 $space-7;
+  }
+
+  &__container {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: center;
+    gap: $space-8;
+
+    // .container adds a clearfix pseudo element; keep it out of the grid
+    &::after {
+      content: none;
+    }
+
+    @include respond(tab-land) {
+      gap: $space-6;
+    }
+
+    @include respond(tab-port) {
+      grid-template-columns: minmax(0, 1fr);
+      max-width: 60rem !important;
+      gap: $space-6;
+    }
+  }
+
+  // Brand / illustration panel
+  .first-section {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    align-self: stretch;
+    min-height: 48rem;
+    padding: $space-7 $space-6 0;
+    overflow: hidden;
+    border: 1px solid $brand-100;
+    border-radius: $radius-xl;
+    background:
+      radial-gradient(circle at 50% 35%, rgba($surface, 0.9), transparent 60%),
+      linear-gradient(160deg, $brand-50 0%, $brand-100 100%);
+
+    img {
+      display: block;
+      width: 100%;
+      max-width: 46rem;
+      height: auto;
+    }
+
+    @include respond(tab-port) {
+      order: 2;
+      min-height: 0;
+      padding: $space-6 $space-5 0;
+
+      img {
+        max-width: 32rem;
+      }
+    }
+
+    @include respond(phone) {
+      border-radius: $radius-lg;
+      padding: $space-5 $space-4 0;
+
+      img {
+        max-width: 26rem;
+      }
+    }
+  }
+
+  // Form column
+  .second-section {
+    width: 100%;
+    max-width: 52rem;
+    margin: 0;
+    justify-self: center;
+
+    @include respond(tab-port) {
+      order: 1;
+      max-width: none;
+    }
+  }
+}

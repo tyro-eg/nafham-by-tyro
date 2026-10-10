@@ -12,8 +12,10 @@ const FreeTrailModal: FC = () => {
 
   return (
     <div className="instructor-trial-modal">
-      <h1>{t('INSTRUCTOR_MODAL.TITLE')}</h1>
-      <h3 className="subtitle">{t('INSTRUCTOR_MODAL.SUBTITLE')}</h3>
+      <div className="instructor-trial-modal__header">
+        <h1 className="title">{t('INSTRUCTOR_MODAL.TITLE')}</h1>
+        <p className="subtitle">{t('INSTRUCTOR_MODAL.SUBTITLE')}</p>
+      </div>
       {instructors && instructors.length > 0 && (
         <div className="instructors-container">
           {instructors.map(

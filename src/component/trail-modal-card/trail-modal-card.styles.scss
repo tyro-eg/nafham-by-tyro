@@ -1,99 +1,150 @@
 @import '../../assets/styles/variables.scss';
 @import '../../assets/styles/mixins.scss';
 
+// Clickable option card used in the free-trial modal
+.trail-modal-card__button.MuiButton-root {
+  display: block;
+  width: 100%;
+  min-height: 0;
+  padding: 0;
+  border-radius: $radius-md;
+  color: inherit;
+  font-weight: inherit;
+  text-align: center;
+
+  &:hover {
+    background-color: transparent;
+  }
+
+  &.Mui-focusVisible .trail-modal-card {
+    border-color: $brand-500;
+    box-shadow: $focus-ring;
+  }
+}
+
 .trail-modal-card {
-  width: 20rem;
-  height: 22rem;
-  margin-bottom: 11rem;
+  @include card($space-5 $space-4);
+  @include card-hover;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $space-3;
+  height: 100%;
   cursor: pointer;
 
   &__image {
-    width: 9rem;
-    height: 9rem;
-    margin: 0 auto;
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 7.2rem;
+    height: 7.2rem;
+    border: 3px solid $surface;
+    border-radius: 50%;
+    background-color: $brand-50;
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center center;
-    border-radius: 50%;
-    border: 3px solid $color-primary;
-    position: relative;
-    top: 3rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 18px;
+    box-shadow: 0 0 0 1px $brand-200;
+    color: $brand-700;
+    font-size: 2rem;
+    font-weight: 700;
+    transition:
+      box-shadow $transition,
+      background-color $transition;
   }
 
   &__body {
     display: flex;
     flex-direction: column;
     align-items: center;
+    gap: 0.2rem;
     width: 100%;
-    height: 100%;
-    box-shadow: 0 13px 25px rgba(196, 220, 235, 0.45);
-    border-radius: 24px;
-    border: 1px solid #e5e5e5;
-    background-color: $color-white;
-    padding-top: 3rem;
-
-    &-stars {
-      margin: 0 -1px;
-      display: flex;
-      justify-content: flex-start;
-      align-items: center;
-    }
-
-    &-separator {
-      width: 40%;
-      border: 1px solid $color-primary;
-      margin: 1rem 0;
-    }
-
-    &-about {
-      padding: 0 1rem;
-      font-size: 12px;
-      text-align: start;
-      color: $color-body;
-      font-weight: 400;
-      line-height: 1.7;
-    }
+    min-width: 0;
 
     &-name {
-      color: $color-title;
+      margin: 0;
+      font-size: $font-base;
+      font-weight: 600;
+      line-height: 1.4;
+      letter-spacing: 0;
+      color: $text-strong;
+      @include ellipsis(1);
+      max-width: 100%;
     }
 
     &-field {
-      color: $color-body;
+      margin: 0;
+      font-size: 1.3rem;
+      font-weight: 500;
+      line-height: 1.5;
+      letter-spacing: 0;
+      color: $brand-700;
       @include ellipsis(1);
-      max-width: 90%;
+      max-width: 100%;
+    }
+
+    &-stars {
+      display: flex;
+      align-items: center;
+      margin-top: 0.2rem;
+
+      .MuiRating-iconFilled {
+        color: $accent-500;
+      }
+    }
+
+    &-separator {
+      width: 3.2rem;
+      height: 1px;
+      margin: $space-2 0;
+      background-color: $border;
+    }
+
+    &-about {
+      font-size: 1.3rem;
+      font-weight: 400;
+      line-height: 1.6;
+      color: $text-body;
+      text-align: center;
+      @include ellipsis(3);
     }
   }
 
   &:hover {
+    border-color: $brand-300;
+
     .trail-modal-card__image {
-      background-color: $color-primary;
-      color: $color-white;
+      box-shadow: 0 0 0 2px $brand-400;
     }
   }
-}
 
-.trail-modal-card:hover .trail-modal-card__body {
-  background-color: $color-primary;
-  color: $color-white;
-}
+  // Compact horizontal card on phones
+  @include respond(phone) {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: $space-4;
+    padding: $space-4;
 
-.trail-modal-card:hover .trail-modal-card__body-name {
-  color: $color-white;
-}
+    &__image {
+      width: 5.6rem;
+      height: 5.6rem;
+      font-size: 1.6rem;
+    }
 
-.trail-modal-card:hover .trail-modal-card__body-about {
-  color: $color-white;
-}
+    &__body {
+      align-items: flex-start;
+      text-align: start;
 
-.trail-modal-card:hover .trail-modal-card__body-field {
-  color: $color-white;
-}
+      &-separator {
+        display: none;
+      }
 
-.trail-modal-card:hover .trail-modal-card__body-separator {
-  border: 1px solid $color-white;
+      &-about {
+        margin-top: $space-1;
+        text-align: start;
+        @include ellipsis(2);
+      }
+    }
+  }
 }

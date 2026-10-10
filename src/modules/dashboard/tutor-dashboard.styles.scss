@@ -1,0 +1,210 @@
+@import '../../assets/styles/variables.scss';
+@import '../../assets/styles/mixins.scss';
+
+// Tutor dashboard: builds on the shared .sd-* dashboard styles
+.tutor-dashboard {
+  // Narrower content area next to the sidebar
+  .sd-hero {
+    grid-template-columns: minmax(0, 1fr) 24rem;
+
+    @include respond(tab-port) {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  .sd-grid.td-grid {
+    grid-template-columns: minmax(0, 1fr) 34rem;
+
+    @media only screen and (max-width: 90em) {
+      grid-template-columns: minmax(0, 1fr);
+
+      .sd-col--side {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        align-items: start;
+      }
+    }
+
+    @include respond(tab-port) {
+      .sd-col--side {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+  }
+}
+
+.td-title {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+
+  &__icon {
+    display: inline-flex;
+    color: $brand-400;
+
+    svg {
+      font-size: 2.2rem;
+    }
+  }
+}
+
+.td-ok {
+  padding: $space-3 $space-4;
+  border-radius: 1.4rem;
+  background-color: #eafaf0;
+  color: #2f9a3a;
+  font-size: $font-sm;
+  font-weight: 600;
+}
+
+// ---------- Students needing attention ----------
+.td-attention {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: $space-2;
+
+  &__item {
+    display: flex;
+    align-items: center;
+    gap: $space-3;
+    padding: $space-2 $space-3;
+    border-radius: 1.4rem;
+    background-color: $gray-50;
+  }
+
+  &__avatar.MuiAvatar-root {
+    width: 4rem;
+    height: 4rem;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: $brand-700;
+    background-color: $brand-50;
+  }
+
+  &__text {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  &__name {
+    font-size: $font-sm;
+    font-weight: 700;
+    color: $text-strong;
+  }
+
+  &__reason {
+    font-size: $font-xs;
+    font-weight: 600;
+
+    &--low {
+      color: #d4554a;
+    }
+
+    &--idle {
+      color: #b07800;
+    }
+  }
+}
+
+// ---------- Rating + reviews ----------
+.td-rating {
+  display: flex;
+  align-items: center;
+  gap: $space-3;
+  margin-bottom: $space-4;
+  padding: $space-3 $space-4;
+  border-radius: 1.4rem;
+  background-color: #fff6e0;
+}
+
+.td-reviews {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: $space-3;
+}
+
+.td-review {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding-bottom: $space-3;
+  border-bottom: 1px solid $border;
+
+  &:last-child {
+    padding-bottom: 0;
+    border-bottom: 0;
+  }
+
+  &__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: $space-2;
+  }
+
+  &__name {
+    font-size: $font-sm;
+    font-weight: 700;
+    color: $text-strong;
+  }
+
+  &__text {
+    font-size: $font-sm;
+    line-height: 1.55;
+    color: $text-body;
+    @include ellipsis(3);
+  }
+
+  &__date {
+    font-size: $font-xs;
+    color: $text-muted;
+  }
+}
+
+// ---------- Packages summary ----------
+.td-packages {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: $space-2;
+
+  > div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: $space-3 $space-2;
+    border-radius: 1.4rem;
+    background-color: #e8f8fe;
+    text-align: center;
+  }
+
+  strong {
+    font-size: 2.2rem;
+    font-weight: 800;
+    line-height: 1.2;
+    color: $text-strong;
+  }
+
+  span {
+    font-size: $font-xs;
+    font-weight: 600;
+    color: #1792ba;
+  }
+
+  &__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-top: $space-3;
+    font-size: $font-sm;
+    font-weight: 600;
+    color: $brand-700;
+    text-decoration: none;
+  }
+}

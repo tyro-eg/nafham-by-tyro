@@ -1,115 +1,104 @@
 @import '../../../assets/styles/variables.scss';
 @import '../../../assets/styles/mixins.scss';
 
+// Lives inside the checkout summary card, so no surface of its own
 .discount {
-  padding: 2rem 3.2rem;
-  background-color: $color-white;
-  margin-bottom: 2.2rem;
-  border-radius: 0.8rem;
-  @include respond(phone) {
-    padding: 2rem;
-  }
+  width: 100%;
 
   &__form {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
+    flex-direction: column;
+    gap: $space-2;
     width: 100%;
 
-    .MuiInputBase-root {
-      font-size: 1.4rem;
-      line-height: 2.2rem;
-      height: 4.4rem;
-      background: #f1f3f8;
-    }
-
-    .MuiOutlinedInput-input {
-      padding: 14.5px 14px;
-    }
-
-    .MuiOutlinedInput-notchedOutline {
-      border: none;
-    }
-
     .MuiFormLabel-root {
-      font-weight: 700;
-      font-size: 2.4rem;
-      line-height: 140%;
-      color: $color-body;
-      @include respond(phone) {
-        font-size: 1.6rem;
-      }
+      font-weight: 600;
+      font-size: $font-sm;
+      line-height: 1.4;
+      color: $text-strong;
+      text-align: start;
+    }
+
+    .MuiInputBase-root {
+      font-size: $font-base;
+      min-height: 4.4rem;
     }
 
     .MuiFormHelperText-root {
-      font-size: 1.4rem;
-      margin: 0.3rem 0;
+      margin: $space-1 0 0;
       text-align: start;
     }
   }
 
-  &__input {
-    height: 4.4rem;
-    font-size: 1.4rem;
+  &__row {
+    display: flex;
+    align-items: stretch;
+    gap: $space-2;
   }
 
   &__input-group {
-    display: flex;
     position: relative;
-    height: 4.4rem;
+    display: flex;
+    flex: 1 1 auto;
+    min-width: 0;
   }
 
+  &__input {
+    width: 100%;
+
+    .MuiOutlinedInput-input {
+      // leave room for the inline status message
+      padding-inline-end: 11rem;
+    }
+  }
+
+  // Inline status shown inside the field's end edge
   &__applied,
   &__invalid {
     position: absolute;
-    right: 24px;
+    inset-inline-end: $space-3;
     top: 50%;
     transform: translateY(-50%);
-    display: flex;
+    display: inline-flex;
     align-items: center;
+    gap: $space-1;
+    font-size: $font-xs;
+    font-weight: 600;
+    pointer-events: none;
 
-    &:after {
+    span {
+      font-size: $font-xs !important;
+    }
+
+    &::before {
       content: '';
-      position: absolute;
-      left: -25px;
-      top: 50%;
-      transform: translateY(-50%);
-      // background-image: url('https://tyro-app.s3-eu-west-1.amazonaws.com/checkout/Success+promo+code.png');
+      flex: none;
       background-repeat: no-repeat;
-      background-size: 16px;
-      width: 16px;
-      height: 16px;
+      background-size: 1.6rem;
+      width: 1.6rem;
+      height: 1.6rem;
     }
   }
 
   &__applied {
-    &:after {
+    color: $success-500;
+
+    &::before {
       background-image: url('https://tyro-app.s3-eu-west-1.amazonaws.com/checkout/Success+promo+code.png');
     }
   }
 
   &__invalid {
-    &:after {
+    color: $danger-500;
+
+    &::before {
       background-image: url('https://tyro-app.s3-eu-west-1.amazonaws.com/checkout/Payment+Declined!+%403x.png');
     }
   }
 
-  .rtl {
-    .discount__applied,
-    .discount__invalid {
-      right: auto;
-      left: 24px;
-
-      &:after {
-        left: auto;
-        right: -25px;
-      }
-    }
-  }
-
   &__submit {
-    padding: 1rem 2rem !important;
-    font-size: 1.6rem !important;
-    height: 4.4rem !important;
+    flex: none;
+    min-height: 4.4rem;
+    padding-inline: $space-5 !important;
   }
 }

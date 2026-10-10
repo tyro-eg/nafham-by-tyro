@@ -2,4 +2,62 @@
 
 .profile-reviews {
   width: 100%;
+  min-width: 0;
+
+  // The shared carousel styles widen the slider and add an asymmetric
+  // gutter; reviews use a symmetric gutter so cards stay centred and
+  // their borders/shadows are not clipped.
+  .slick-slider {
+    width: 100%;
+  }
+
+  // Equal-height review cards with breathing room between slides
+  .slick-track {
+    display: flex !important;
+  }
+
+  // RTL: react-slick's own `rtl` mode opens on the wrong slide, so the
+  // slider runs LTR and is mirrored as a whole (first review on the right,
+  // dots/arrows/swipe follow the reading direction); each slide's content is
+  // mirrored back so text reads normally.
+  html[dir='rtl'] & {
+    .slick-slider {
+      transform: scaleX(-1);
+    }
+
+    .slick-track {
+      direction: ltr;
+    }
+
+    .slick-slide > div {
+      transform: scaleX(-1);
+      direction: rtl; // the track is forced LTR above; content stays RTL
+    }
+
+    // Use the LTR arrow positions; the mirror puts them on the right sides
+    .slick-prev {
+      left: -25px;
+      right: auto;
+    }
+
+    .slick-next {
+      right: -25px;
+      left: auto;
+    }
+  }
+
+  .slick-slide {
+    height: inherit !important;
+    padding-inline: 0 !important;
+
+    > div {
+      height: 100%;
+      margin: 0 !important;
+      padding: $space-2;
+
+      > div {
+        height: 100%;
+      }
+    }
+  }
 }

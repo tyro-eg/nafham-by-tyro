@@ -2,125 +2,131 @@
 @import '../../../assets/styles/mixins.scss';
 
 .profile {
-  background-color: $color-grey-light-1;
-  padding-top: 0.4rem;
+  background-color: $surface-alt;
+  padding-bottom: $space-9;
+
+  @include respond(phone) {
+    padding-bottom: $space-7;
+  }
 
   &__container {
+    display: flex;
+    flex-direction: column;
+    gap: $space-5;
+
     @include respond(phone) {
-      width: 94%;
-      max-width: unset !important;
+      gap: $space-4;
+    }
+  }
+
+  // Owner-only edit / save action: stays reachable while scrolling the profile
+  &__owner-actions {
+    position: sticky;
+    top: calc(#{$header-height} + #{$space-3});
+    z-index: 5;
+    display: flex;
+    justify-content: flex-end;
+    pointer-events: none;
+
+    @include respond(phone) {
+      top: auto;
+      bottom: $space-4;
+      order: 99;
+    }
+  }
+
+  &__edit {
+    pointer-events: auto;
+    min-height: 4.4rem;
+    box-shadow: $shadow-md !important;
+
+    @include respond(phone) {
+      width: 100%;
     }
   }
 
   &__fieldsTrail {
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: $space-5;
+    align-items: start;
 
-    &-fields {
-      width: 100%;
+    &:empty {
+      display: none;
     }
 
-    .withTrial {
-      width: 68%;
+    &:has(.profile__fieldsTrail-trial) {
+      grid-template-columns: minmax(0, 1fr) 34rem;
+
+      @include respond(tab-port) {
+        grid-template-columns: minmax(0, 1fr);
+      }
     }
 
+    &-fields,
+    .withTrial,
     &-trial {
-      width: 30%;
+      width: 100%;
+      min-width: 0;
     }
 
     @include respond(tab-port) {
-      flex-direction: column;
-      .withTrial {
-        order: 2;
-        width: 100%;
-      }
-
       &-trial {
-        order: 1;
-        width: 100%;
+        order: -1;
       }
     }
   }
-  &__edit {
-    margin-bottom: 3rem;
-    width: 100%;
-    background-color: $color-secondary;
-    padding: 8px 16px;
-  }
 
-  &__available-packages {
-    margin-bottom: 4.8rem;
+  // Shared section card
+  &__available-packages,
+  &__calendar,
+  &__reviews {
+    @include card($space-5);
+
+    @include respond(phone) {
+      padding: $space-4;
+    }
+
     &__title {
       font-weight: 700;
-      font-size: 28px;
-      line-height: 40px;
-      color: $color-title;
-      margin-bottom: 3.2rem;
-      @include respond(phone) {
-        margin-bottom: 1.8rem;
-      }
-    }
+      font-size: $font-h4;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+      color: $text-strong;
+      text-align: start;
+      margin-bottom: $space-4;
 
-    &__packages {
-      display: flex;
-      padding: 4.8rem;
-      background-color: $color-white;
-      border-radius: 8px;
       @include respond(phone) {
-        padding: 2.4rem;
+        font-size: $font-h5;
       }
     }
   }
+
+  &__available-packages__packages {
+    display: flex;
+  }
+
   &__calendar {
-    margin-bottom: 4.8rem;
-
-    &__title {
-      font-weight: 700;
-      font-size: 28px;
-      line-height: 40px;
-      color: $color-title;
-      margin-bottom: 3.2rem;
-
-      @include respond(phone) {
-        margin-bottom: 1.8rem;
-      }
-    }
-
     &__slots {
       display: flex;
-      padding: 4.8rem;
-      background-color: $color-white;
-
-      @include respond(phone) {
-        padding: 0;
-      }
+      min-width: 0;
     }
   }
 
   &__reviews {
-    margin-bottom: 4.8rem;
-
-    &__title {
-      font-weight: 700;
-      font-size: 28px;
-      line-height: 40px;
-      color: $color-title;
-      margin-bottom: 3.2rem;
-
-      @include respond(phone) {
-        margin-bottom: 1.8rem;
-      }
-    }
-
     &__container {
       display: flex;
-      padding: 4.8rem;
-      background-color: $color-white;
-      border-radius: 8px;
-
-      @include respond(phone) {
-        padding: 2.4rem;
-      }
+      min-width: 0;
+      // room for the carousel dots
+      padding-bottom: $space-5;
     }
+  }
+}
+
+html[dir='rtl'] .profile {
+  &__calendar__title,
+  &__reviews__title,
+  &__available-packages__title {
+    letter-spacing: 0;
   }
 }

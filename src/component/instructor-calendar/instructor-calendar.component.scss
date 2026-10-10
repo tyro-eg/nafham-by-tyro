@@ -3,46 +3,78 @@
 
 .instructor-calendar {
   display: flex;
-  font-size: 14px;
-  background-color: $color-white;
-  border-radius: 0.5rem;
+  font-size: $font-sm;
+  background-color: $surface;
+  border-radius: $radius-sm;
   width: 100%;
 
   &__container {
     flex-grow: 1;
     position: relative;
+    min-width: 0;
 
     .fc {
-      table {
-        font-size: 1.2rem;
-      }
       max-height: 62rem;
+      font-family: inherit;
+      --fc-border-color: #{$border};
+      --fc-today-bg-color: #{$brand-50};
+
+      table {
+        font-size: $font-xs;
+      }
 
       .fc-button {
-        padding: 0.2rem 0.4rem;
+        padding: 0.3rem 0.8rem;
+        font-size: $font-xs;
+        font-weight: 600;
+        text-transform: capitalize;
+        border-radius: 0.6rem;
+        box-shadow: none;
+      }
+
+      .fc-col-header-cell-cushion,
+      .fc-timegrid-slot-label-cushion {
+        color: $text-muted;
+        font-weight: 500;
+        text-decoration: none;
       }
     }
 
     .fc-day-today {
-      background-color: #ffffff !important;
+      background-color: $brand-50 !important;
     }
 
     .fc-header-toolbar {
-      margin-bottom: 0.5rem !important;
+      margin-bottom: $space-2 !important;
+      gap: $space-1;
 
       .fc-toolbar-chunk {
         .fc-button-group {
+          gap: 0.2rem;
+
           .fc-button-primary {
-            background-color: $color-primary;
-            border-color: $color-white;
+            background-color: $surface;
+            border: 1px solid $border-strong;
+            color: $text-strong;
+
+            &:hover {
+              background-color: $gray-50;
+              border-color: $gray-400;
+            }
 
             &:focus {
               box-shadow: none;
             }
+
+            &:focus-visible {
+              box-shadow: $focus-ring;
+            }
           }
 
           .fc-button-active {
-            background-color: #41b7dc;
+            background-color: $brand-600 !important;
+            border-color: $brand-600 !important;
+            color: $text-on-dark !important;
 
             &:focus {
               box-shadow: none;
@@ -51,8 +83,14 @@
         }
 
         .fc-today-button {
-          background-color: $color-primary;
-          border-color: $color-white;
+          background-color: $surface;
+          border: 1px solid $border-strong;
+          color: $text-strong;
+          margin-inline-start: 0.4rem;
+
+          &:hover {
+            background-color: $gray-50;
+          }
 
           &:focus {
             box-shadow: none;
@@ -61,6 +99,7 @@
 
         .fc-today-button:disabled {
           cursor: default;
+          opacity: 0.55;
         }
 
         .fc-toolbar-title {
@@ -71,6 +110,11 @@
 
     .fc-view-harness {
       height: 14.5rem !important;
+    }
+
+    .fc-scrollgrid {
+      border-radius: $radius-sm;
+      overflow: hidden;
     }
 
     .fc-direction-ltr .fc-timegrid-slot-label-frame {

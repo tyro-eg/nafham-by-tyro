@@ -12,8 +12,8 @@ const HomeStatistics: FC = () => {
   const rtlClass = useRtlClass();
 
   return (
-    <div className="landing__statistics">
-      <div className="container">
+    <section className="landing__statistics">
+      <div className="ds-container">
         <div className="statistics-container">
           <div className="statistics-card">
             <h5 className={`title parallelogram ${rtlClass}`}>
@@ -42,10 +42,15 @@ const HomeStatistics: FC = () => {
         </div>
 
         <div className="statistics-image">
-          <img className="image" src={statistics} alt="statistics" />
+          <img
+            className="image"
+            src={statistics}
+            alt="statistics"
+            loading="lazy"
+          />
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 

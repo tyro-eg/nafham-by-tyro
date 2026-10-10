@@ -1,16 +1,135 @@
 @import '../../../../assets/styles/variables.scss';
+@import '../../../../assets/styles/mixins.scss';
+
 .session-calendar {
+  @include card($space-5);
+
+  @include respond(phone) {
+    padding: $space-3;
+  }
+
   .fc {
     /* the calendar root */
     max-width: 1100px;
     margin: 0 auto;
+    font-size: $font-sm;
+    color: $text-body;
+
+    --fc-border-color: #{$border};
+    --fc-today-bg-color: #{$brand-50};
+    --fc-neutral-bg-color: #{$gray-50};
   }
 
-  // Ensure all days (past, present, future) have the same background
-  .fc-day-today,
+  // Toolbar: title + prev/next/today in the design-system style
+  .fc .fc-toolbar {
+    flex-wrap: wrap;
+    gap: $space-3;
+
+    &.fc-header-toolbar {
+      margin-bottom: $space-4;
+    }
+  }
+
+  .fc .fc-toolbar-title {
+    font-size: $font-h4;
+    font-weight: 700;
+    color: $text-strong;
+
+    @include respond(phone) {
+      font-size: $font-lg;
+    }
+  }
+
+  .fc .fc-button {
+    min-height: 3.6rem;
+    padding: 0.6rem 1.4rem;
+    border: 1px solid $border-strong;
+    border-radius: $radius-sm;
+    background-color: $surface;
+    box-shadow: none;
+    font-size: $font-sm;
+    font-weight: 600;
+    color: $text-strong;
+    text-transform: none;
+
+    &:hover {
+      border-color: $gray-400;
+      background-color: $gray-50;
+      color: $text-strong;
+    }
+
+    &:focus,
+    &:focus-visible {
+      box-shadow: $focus-ring;
+    }
+
+    &:disabled {
+      opacity: 0.55;
+      background-color: $surface;
+      color: $text-muted;
+      border-color: $border;
+    }
+
+    &:not(:disabled):active,
+    &.fc-button-active {
+      border-color: $brand-600;
+      background-color: $brand-50;
+      color: $brand-700;
+    }
+  }
+
+  // "Today" is disabled while today is in view; keep it looking like the
+  // other toolbar buttons instead of a greyed-out ghost.
+  .fc .fc-today-button {
+    text-transform: capitalize;
+
+    &:disabled {
+      opacity: 1;
+      color: $text-strong;
+      border-color: $border-strong;
+      cursor: default;
+    }
+  }
+
+  .fc .fc-button-group > .fc-button:not(:first-child) {
+    margin-inline-start: -1px;
+  }
+
+  .fc .fc-col-header-cell-cushion {
+    padding: $space-2 0;
+    font-size: $font-xs;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: $text-muted;
+  }
+
+  .fc .fc-daygrid-day-number {
+    padding: $space-1 $space-2;
+    font-size: $font-sm;
+    font-weight: 500;
+    color: $text-strong;
+  }
+
+  .fc .fc-scrollgrid {
+    border-radius: $radius-sm;
+    overflow: hidden;
+  }
+
+  // Ensure all days (past, future) have the same background
   .fc-day-future,
   .fc-day-past {
-    background-color: #ffffff !important;
+    background-color: $surface !important;
+  }
+
+  // Today highlight
+  .fc-day-today {
+    background-color: $brand-50 !important;
+
+    .fc-daygrid-day-number {
+      color: $brand-700 !important;
+      font-weight: 700;
+    }
   }
 
   // Remove disabled styling from past dates
@@ -28,9 +147,9 @@
     }
   }
 
-  // Ensure past month cells look the same
+  // Days from adjacent months: same background, muted number
   .fc-day-other {
-    background-color: #ffffff !important;
+    background-color: $surface !important;
     opacity: 1 !important;
 
     .fc-daygrid-day-frame {
@@ -38,7 +157,7 @@
     }
 
     .fc-daygrid-day-number {
-      color: inherit !important;
+      color: $gray-400 !important;
       opacity: 1 !important;
     }
   }
@@ -47,7 +166,8 @@
   .fc-daygrid-event,
   .session-calendar-event {
     padding: 0 !important; // Remove padding so inner div fills it
-    border-radius: 0.3rem !important;
+    border-radius: $radius-sm !important;
+    margin-top: 0.2rem;
     cursor: pointer !important;
     border: none !important;
     opacity: 1 !important;
@@ -73,18 +193,19 @@
     border-color: #4caf50 !important;
   }
 
+  // Same meaning as the list view badges: missed = danger, canceled = neutral
   .fc-daygrid-event.session-status-canceled,
   .fc-event.session-status-canceled,
   .fc-daygrid-event.session-status-cancelled,
   .fc-event.session-status-cancelled {
-    background-color: #f44336 !important;
-    border-color: #f44336 !important;
+    background-color: $gray-400 !important;
+    border-color: $gray-400 !important;
   }
 
   .fc-daygrid-event.session-status-missed,
   .fc-event.session-status-missed {
-    background-color: #9e9e9e !important;
-    border-color: #9e9e9e !important;
+    background-color: $danger-500 !important;
+    border-color: $danger-500 !important;
   }
 
   .fc-daygrid-event.session-status-open,
@@ -132,30 +253,38 @@
     min-height: 400px;
 
     p {
-      font-size: 1.2rem;
-      color: $color-title;
+      font-size: $font-base;
+      color: $text-muted;
     }
   }
 }
 
 .session-event {
-  padding: 0.25rem;
-  font-size: 0.875rem;
-  line-height: 1.2;
+  padding: 0.4rem 0.6rem;
+  font-size: $font-xs;
+  line-height: 1.3;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   color: #ffffff !important;
   width: 100%;
   height: 100%;
-  border-radius: 0.3rem;
+  border-radius: $radius-sm;
   // Background color is applied via inline style from component
 
   &__time {
-    font-weight: 600;
-    font-size: 0.8rem;
+    font-weight: 700;
+    font-size: $font-xs;
     margin-bottom: 0.1rem;
     color: #ffffff !important;
+  }
+
+  &__time,
+  &__title,
+  &__status {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   &__title {
@@ -165,9 +294,8 @@
   }
 
   &__status {
-    font-size: 0.75rem;
-    opacity: 0.95;
-    text-transform: capitalize;
+    font-size: 1.2rem;
+    opacity: 0.9;
     color: #ffffff !important;
   }
 }

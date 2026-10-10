@@ -1,6 +1,7 @@
 import { FC } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@mui/material';
+import { EventAvailable } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 
 import './profile-modal.styles.scss';
@@ -23,22 +24,26 @@ const ProfileModal: FC<ProfileModalProps> = ({ instructorId }) => {
 
   return (
     <div className="profile-modal">
-      <p className="u-font-weight-bold">
+      <div className="profile-modal__icon">
+        <EventAvailable />
+      </div>
+      <h4 className="profile-modal__title">
         {t('PROFILE.STUDENTMODAL.BODYMESS1')}.
+      </h4>
+      <p className="profile-modal__text">
+        {t('PROFILE.STUDENTMODAL.BODYMESS2')}.
       </p>
-      <p>{t('PROFILE.STUDENTMODAL.BODYMESS2')}.</p>
       <div className="calendar-actions__container">
         <Button
           className="calendar-actions__button"
-          color="primary"
-          variant="contained"
+          variant="outlined"
           onClick={goToMySessions}
         >
           {t('PROFILE.STUDENTMODAL.ACTIONS.MYSESSIONS')}
         </Button>
 
         <Button
-          className="calendar-actions__button calendar-actions__button-secondary"
+          className="calendar-actions__button"
           color="primary"
           variant="contained"
           onClick={goToCheckout}

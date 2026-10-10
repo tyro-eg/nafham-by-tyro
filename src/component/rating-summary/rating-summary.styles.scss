@@ -1,0 +1,54 @@
+@import '../../assets/styles/variables.scss';
+@import '../../assets/styles/mixins.scss';
+
+.rating-summary {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: $space-1 $space-2;
+  min-width: 0;
+  line-height: 1.4;
+
+  &__stars {
+    flex: none;
+
+    &.MuiRating-root {
+      display: inline-flex;
+    }
+
+    .MuiRating-iconFilled {
+      color: $accent-500;
+    }
+
+    .MuiRating-iconEmpty {
+      color: $gray-300;
+    }
+  }
+
+  &__value {
+    color: $text-strong;
+    font-weight: 600;
+    font-size: $font-xs;
+    font-variant-numeric: tabular-nums;
+    unicode-bidi: isolate;
+  }
+
+  &__count {
+    color: $text-muted;
+    font-weight: 500;
+    font-size: $font-xs;
+    unicode-bidi: isolate;
+
+    &::before {
+      content: '·';
+      margin-inline-end: $space-2;
+      color: $gray-400;
+    }
+  }
+}
+
+// Stars are rendered LTR (so partial-star clipping works) and mirrored in
+// RTL so the fill starts from the right.
+[dir='rtl'] .rating-summary__stars {
+  transform: scaleX(-1);
+}

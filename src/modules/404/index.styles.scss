@@ -2,41 +2,65 @@
 @import '../../assets/styles/mixins.scss';
 
 .not-found {
-  color: $color-white;
-  text-align: center;
-  height: 85vh;
-  overflow: auto;
   display: flex;
   justify-content: center;
   align-items: center;
+  min-height: 70vh;
+  padding: $space-8 $container-gutter;
+  text-align: center;
+  background-color: $surface;
+  background-image: radial-gradient(
+    50rem 30rem at 50% 30%,
+    $brand-50,
+    transparent 70%
+  );
+
+  @include respond(phone) {
+    padding: $space-7 $container-gutter-mobile;
+  }
 
   &__content {
-    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 56rem;
+  }
 
-    .not-found__404 {
-      font-size: 18rem;
-      color: $color-primary;
-      font-weight: bold;
-      @include respond(phone) {
-        font-size: 12rem;
-      }
+  &__404 {
+    margin-bottom: $space-4;
+    font-size: 14.4rem;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.04em;
+    color: $brand-600;
+    background: linear-gradient(180deg, $brand-500 0%, $brand-700 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+
+    @include respond(phone) {
+      font-size: 9.6rem;
     }
+  }
 
-    .not-found__info {
-      color: $color-primary;
-      margin-bottom: 3rem;
+  &__info {
+    margin-bottom: $space-6;
+    font-size: $font-h3;
+    font-weight: 600;
+    line-height: 1.4;
+    color: $text-strong;
+
+    @include respond(phone) {
+      font-size: $font-h4;
     }
+  }
 
-    .custom-button {
-      margin-bottom: 20px;
-      padding: 1.2rem 3rem;
-      border-radius: 0.4rem;
-      background-color: $color-primary;
-      color: $color-white;
-      font-size: 1.6rem;
-      font-weight: 500;
-      line-height: 2.4rem;
-      text-align: center;
+  &__button.MuiButton-root {
+    min-width: 18rem;
+
+    &,
+    &:hover {
+      color: $text-on-dark;
     }
   }
 }

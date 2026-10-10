@@ -41,7 +41,7 @@
     }
 
     &:before {
-      color: rgba($color: $color-black, $alpha: 0.5);
+      color: $gray-400;
       font-weight: 500;
       position: absolute;
       top: calc(50% - 15px);
@@ -54,7 +54,7 @@
 
     &:hover {
       &:before {
-        color: rgba($color: $color-primary, $alpha: 0.9);
+        color: $brand-600;
       }
     }
   }
@@ -78,39 +78,41 @@
 
   .slick-dots {
     li {
-      border-radius: 0.1rem;
-      width: 6.1rem;
-      height: 0.3rem;
-      @include respond(phone) {
-        width: 3.5rem;
-      }
+      width: auto;
+      height: 0.8rem;
+      margin: 0 0.4rem;
 
       button {
         padding: 0;
-        border-radius: 0.1rem;
-        width: 6.1rem;
-        height: 0.3rem;
-        background-color: #d8d8d8;
+        width: 0.8rem;
+        height: 0.8rem;
+        border-radius: $radius-pill;
+        background-color: $gray-300;
         opacity: 1;
-        transition: all 0.3s;
-        @include respond(phone) {
-          width: 3.5rem;
-        }
+        transition:
+          width $transition,
+          background-color $transition;
 
         &:before {
           display: none;
+        }
+
+        &:focus-visible {
+          outline: 2px solid $brand-500;
+          outline-offset: 2px;
         }
       }
 
       &.slick-active {
         button {
-          background-color: $color-primary;
+          width: 2.4rem;
+          background-color: $brand-600;
         }
       }
 
       &:hover {
         button {
-          background-color: $color-primary;
+          background-color: $brand-400;
         }
       }
     }
@@ -130,9 +132,9 @@
   }
 
   .slick-slider__caption-title {
-    font-size: 16px;
-    font-weight: 500;
-    color: white;
+    font-size: $font-base;
+    font-weight: 600;
+    color: $text-on-dark;
     line-height: 20px;
   }
 

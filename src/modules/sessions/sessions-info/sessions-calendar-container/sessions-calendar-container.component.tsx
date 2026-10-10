@@ -1,7 +1,8 @@
 import React, { useRef, useMemo, useEffect, useState } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
-import arLocale from '@fullcalendar/core/locales/ar-kw';
+import timeGridPlugin from '@fullcalendar/timegrid';
+import arLocale from '../../../../assets/utils/calendar-locale';
 import { useTranslation } from 'react-i18next';
 import { Popover } from '@mui/material';
 import type { EventClickArg } from '@fullcalendar/core';
@@ -17,6 +18,10 @@ interface SessionsCalendarContainerProps {
     status?: string;
     tutor_id?: number;
   };
+  /** Adds a Month/Week switcher (used by the Calendar page) */
+  enableWeekView?: boolean;
+  /** Only show sessions with these statuses (client-side) */
+  onlyStatuses?: string[];
 }
 
 /**
@@ -26,9 +31,10 @@ interface SessionsCalendarContainerProps {
 const getStatusColor = (status: string): string => {
   const normalizedStatus = status.toLowerCase();
   if (normalizedStatus === 'completed') return '#4caf50'; // green
+  // Same meaning as the list view badges: missed = danger, canceled = neutral
   if (normalizedStatus === 'canceled' || normalizedStatus === 'cancelled')
-    return '#f44336'; // red
-  if (normalizedStatus === 'missed') return '#9e9e9e'; // gray
+    return '#9aa8b8'; // gray ($gray-400)
+  if (normalizedStatus === 'missed') return '#dc3545'; // red ($danger-500)
   if (normalizedStatus === 'open' || normalizedStatus === 'scheduled')
     return '#ff9800'; // orange
   return '#3ac5f1'; // default blue
@@ -36,6 +42,8 @@ const getStatusColor = (status: string): string => {
 
 const SessionsCalendarContainer: React.FC<SessionsCalendarContainerProps> = ({
   filters,
+  enableWeekView = false,
+  onlyStatuses,
 }) => {
   const { t, i18n } = useTranslation();
   const calendarRef = useRef<FullCalendar>(null);
@@ -66,9 +74,25 @@ const SessionsCalendarContainer: React.FC<SessionsCalendarContainerProps> = ({
     return infiniteData.pages.flatMap((page) => page.data);
   }, [infiniteData]);
 
+  // Translated status labels (raw API values are lower-case English)
+  const getStatusLabel = (status: string): string => {
+    const statusMap: Record<string, string> = {
+      open: t('MYSESSIONS.FILTERS.OPEN'),
+      scheduled: t('MYSESSIONS.FILTERS.SCHEDULED'),
+      completed: t('MYSESSIONS.FILTERS.COMPLETED'),
+      cancelled: t('MYSESSIONS.FILTERS.CANCELLED'),
+      canceled: t('MYSESSIONS.FILTERS.CANCELLED'),
+      missed: t('MYSESSIONS.FILTERS.MISSED'),
+    };
+    return statusMap[status?.toLowerCase()] || status;
+  };
+
   // Transform sessions to FullCalendar events
   const calendarEvents: EventInput[] = useMemo(() => {
-    return sessions.map((session) => {
+    const visible = onlyStatuses
+      ? sessions.filter((s) => onlyStatuses.includes(s.status))
+      : sessions;
+    return visible.map((session) => {
       // Determine session color based on status
       const status = session.status as string;
       const backgroundColor = getStatusColor(status);
@@ -95,6 +119,8 @@ const SessionsCalendarContainer: React.FC<SessionsCalendarContainerProps> = ({
         ],
         extendedProps: {
           status: session.status,
+          statusLabel: getStatusLabel(session.status as string),
+          statusTitle: t('SESSION_CALENDAR_MODAL.STATUS'),
           tutor: tutorName,
           student: studentName,
           gradeSubject: session.grade_subject?.full_course_name || 'N/A',
@@ -104,7 +130,7 @@ const SessionsCalendarContainer: React.FC<SessionsCalendarContainerProps> = ({
         },
       };
     });
-  }, [sessions, t]);
+  }, [sessions, t, onlyStatuses]);
 
   /**
    * Handle event click - open popover with session details
@@ -139,12 +165,16 @@ const SessionsCalendarContainer: React.FC<SessionsCalendarContainerProps> = ({
       ) : (
         <FullCalendar
           ref={calendarRef}
-          plugins={[dayGridPlugin]}
+          plugins={
+            enableWeekView ? [dayGridPlugin, timeGridPlugin] : [dayGridPlugin]
+          }
           headerToolbar={{
             left: 'prev,next today',
             center: 'title',
-            right: '',
+            right: enableWeekView ? 'dayGridMonth,timeGridWeek' : '',
           }}
+          scrollTime="08:00:00"
+          allDaySlot={false}
           initialView="dayGridMonth"
           dayHeaderFormat={{
             weekday: 'short',
@@ -152,6 +182,7 @@ const SessionsCalendarContainer: React.FC<SessionsCalendarContainerProps> = ({
           buttonText={{
             today: t('CALENDAR.BUTTONS.TODAY'),
             month: t('CALENDAR.BUTTONS.MONTH'),
+            week: t('CALENDAR.BUTTONS.WEEK'),
           }}
           direction={i18n.dir()}
           locale={i18n.language === 'ar' ? arLocale : undefined}
@@ -208,6 +239,8 @@ interface EventInfo {
     title: string;
     extendedProps: {
       status: string;
+      statusLabel?: string;
+      statusTitle?: string;
       tutor: string;
       student: string;
       gradeSubject: string;
@@ -221,8 +254,16 @@ interface EventInfo {
  */
 const renderEventContent = (eventInfo: EventInfo) => {
   const { event } = eventInfo;
-  const { status, tutor, student, gradeSubject, backgroundColor } =
-    event.extendedProps;
+  const {
+    status,
+    statusLabel,
+    statusTitle,
+    tutor,
+    student,
+    gradeSubject,
+    backgroundColor,
+  } = event.extendedProps;
+  const label = statusLabel || status;
 
   // Use stored backgroundColor or calculate from status
   const bgColor = backgroundColor || getStatusColor(status);
@@ -234,16 +275,18 @@ const renderEventContent = (eventInfo: EventInfo) => {
         backgroundColor: bgColor,
         color: '#ffffff',
       }}
-      title={`${tutor} - ${student}\n${gradeSubject}\nStatus: ${status}`}
+      title={`${tutor} - ${student}\n${gradeSubject}\n${statusTitle || 'Status'}: ${label}`}
     >
-      <div className="session-event__time">
+      <div className="session-event__time" dir="auto">
         {event.start.toLocaleTimeString([], {
           hour: '2-digit',
           minute: '2-digit',
         })}
       </div>
-      <div className="session-event__title">{event.title}</div>
-      <div className="session-event__status">{status}</div>
+      <div className="session-event__title" dir="auto">
+        {event.title}
+      </div>
+      <div className="session-event__status">{label}</div>
     </div>
   );
 };

@@ -53,51 +53,53 @@ const CheckoutDiscount: React.FC<CheckoutDiscountProps> = ({
         <InputLabel htmlFor="discount">
           {t('CHECKOUT.DISCOUNT.FORM.LABEL')}
         </InputLabel>
-        <div className={`discount__input-group ${rtlClass()}`}>
-          <Controller
-            name="discount"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                id="discount"
-                placeholder={t('CHECKOUT.DISCOUNT.FORM.LABEL')}
-                variant="outlined"
-                className="discount__input"
-              />
+        <div className="discount__row">
+          <div className={`discount__input-group ${rtlClass()}`}>
+            <Controller
+              name="discount"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  id="discount"
+                  placeholder={t('CHECKOUT.DISCOUNT.FORM.LABEL')}
+                  variant="outlined"
+                  className="discount__input"
+                />
+              )}
+            />
+            {promoCode?.valueNum && (
+              <div className="discount__applied">
+                <span className="u-font-size-14">
+                  {t('CHECKOUT.DISCOUNT.FORM.APPLIED')}
+                </span>
+              </div>
             )}
-          />
-          {promoCode?.valueNum && (
-            <div className="discount__applied">
-              <span className="u-font-size-14">
-                {t('CHECKOUT.DISCOUNT.FORM.APPLIED')}
-              </span>
-            </div>
-          )}
-          {promoCode?.errors === 'The code is wrong' && (
-            <div className="discount__invalid">
-              <span className="u-font-size-14">
-                {t('CHECKOUT.DISCOUNT.FORM.INVALID')}
-              </span>
-            </div>
-          )}
-          {promoCode?.errors === 'Code has been already used' && (
-            <div className="discount__invalid">
-              <span className="u-font-size-14">
-                {t('CHECKOUT.DISCOUNT.FORM.USED')}
-              </span>
-            </div>
-          )}
+            {promoCode?.errors === 'The code is wrong' && (
+              <div className="discount__invalid">
+                <span className="u-font-size-14">
+                  {t('CHECKOUT.DISCOUNT.FORM.INVALID')}
+                </span>
+              </div>
+            )}
+            {promoCode?.errors === 'Code has been already used' && (
+              <div className="discount__invalid">
+                <span className="u-font-size-14">
+                  {t('CHECKOUT.DISCOUNT.FORM.USED')}
+                </span>
+              </div>
+            )}
+          </div>
+          <Button
+            variant="contained"
+            color="primary"
+            disabled={isSubmitting}
+            type="submit"
+            className="discount__submit"
+          >
+            {t('CHECKOUT.DISCOUNT.FORM.APPLY')}
+          </Button>
         </div>
-        <Button
-          variant="contained"
-          color="primary"
-          disabled={isSubmitting}
-          type="submit"
-          className="discount__submit"
-        >
-          {t('CHECKOUT.DISCOUNT.FORM.APPLY')}
-        </Button>
       </form>
     </section>
   );
