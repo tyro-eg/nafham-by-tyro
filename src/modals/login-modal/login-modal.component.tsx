@@ -26,6 +26,7 @@ import { selectCurrentUser } from '../../redux/user/user.selectors';
 import { useAppSelector } from '../../redux/store';
 import { useRtlClass } from '../../assets/utils/utils';
 import { useSignIn } from '../../hooks/useAuth';
+import { getHomePath } from '../../assets/utils/home-path';
 
 interface LoginModalProps {
   onClose: () => void;
@@ -82,7 +83,7 @@ const LoginModal: FC<LoginModalProps> = ({
     try {
       const userData = await signInMutation.mutateAsync(values);
       if (userData?.id) {
-        navigate('/home');
+        navigate(getHomePath(userData));
       }
     } catch (error) {
       console.error('Login error:', error);

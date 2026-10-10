@@ -125,9 +125,19 @@ const MobileHeader: FC<HeaderProps> = ({ openFreeTrail }) => {
           )}
 
           <nav className="app-header-mobile__nav">
-            <NavLink className={navClass} to="/" onClick={closeMobileHeader}>
-              {t('NAVIGATION.HOME')}
-            </NavLink>
+            {currentUser?.type === 'Student' ? (
+              <NavLink
+                className={navClass}
+                to="/dashboard"
+                onClick={closeMobileHeader}
+              >
+                {t('NAVIGATION.DASHBOARD')}
+              </NavLink>
+            ) : (
+              <NavLink className={navClass} to="/" onClick={closeMobileHeader}>
+                {t('NAVIGATION.HOME')}
+              </NavLink>
+            )}
             {currentUser && (
               <>
                 <NavLink

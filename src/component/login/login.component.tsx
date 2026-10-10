@@ -21,6 +21,7 @@ import './login.styles.scss';
 // TODO: Uncomment when backend is ready
 // import ResetPasswordModal from '../../modals/reset-password/reset-password-modal.component';
 import { useSignIn } from '../../hooks/useAuth';
+import { getHomePath } from '../../assets/utils/home-path';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -54,7 +55,7 @@ const Login = () => {
     try {
       const userData = await signInMutation.mutateAsync(values);
       if (userData?.id) {
-        navigate('/home');
+        navigate(getHomePath(userData));
       }
     } catch (error) {
       console.error('Login error:', error);

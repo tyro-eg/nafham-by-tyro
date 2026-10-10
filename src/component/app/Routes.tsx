@@ -3,8 +3,10 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import GuardedRoute from '../guarded-route/guarded-route.component';
 import Loader from './Loader';
 import { CurrentUser } from '../../assets/types';
+import { getHomePath } from '../../assets/utils/home-path';
 
 const Home = lazy(() => import('../../modules/home/index'));
+const Dashboard = lazy(() => import('../../modules/dashboard/index.component'));
 const SignIn = lazy(() => import('../../modules/auth/signin/signin.component'));
 const Register = lazy(
   () => import('../../modules/auth/register/register.component'),
@@ -44,10 +46,30 @@ interface RoutesProps {
 const RoutesComponent: React.FC<RoutesProps> = ({ currentUser }) => (
   <Suspense fallback={<Loader />}>
     <Routes>
-      <Route path="/" element={<Home />} />
+      <Route
+        path="/"
+        element={
+          currentUser?.type === 'Student' ? (
+            <Navigate to="/dashboard" replace />
+          ) : (
+            <Home />
+          )
+        }
+      />
+      <Route
+        path="/dashboard"
+        element={
+          <GuardedRoute
+            element={<Dashboard />}
+            auth={!!currentUser && currentUser.type === 'Student'}
+          />
+        }
+      />
       <Route
         path="/login"
-        element={currentUser ? <Navigate to="/" /> : <SignIn />}
+        element={
+          currentUser ? <Navigate to={getHomePath(currentUser)} /> : <SignIn />
+        }
       />
       <Route
         path="/register"

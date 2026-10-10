@@ -71,7 +71,7 @@ const Register: FC = () => {
       });
 
       if (userData?.id) {
-        navigate('/home');
+        navigate('/dashboard');
       }
     } catch (error) {
       console.error('Registration error:', error);
