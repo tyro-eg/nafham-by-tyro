@@ -1,11 +1,17 @@
 import { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button } from '@mui/material';
-import { Check, Edit } from '@mui/icons-material';
+import { Button, Dialog } from '@mui/material';
+import {
+  ChatBubbleOutlineRounded,
+  Check,
+  Edit,
+  EventAvailableRounded,
+} from '@mui/icons-material';
 import { useParams } from 'react-router-dom';
 
 import { useAppSelector } from '../../../redux/store';
 import { selectCurrentUser } from '../../../redux/user/user.selectors';
+import { useStartConversation } from '../../../hooks/useStreamChat';
 import {
   useInstructor,
   useUpdateTutorProfile,
@@ -18,6 +24,8 @@ import ProfileMissingInfoBanner from './profile-missing-info-banner/profile-miss
 import ProfileReviewsList from './profile-reviews-list/profile-reviews-list.component';
 import ProfileInfo from './profile-info/profile-info.component';
 import ProfileFields from './profile-fields/profile-fields.component';
+import RequestSessionsModal from '../../../modals/request-sessions-modal/request-sessions-modal.component';
+import type { SessionRequestKind } from '../../../hooks/useSessionRequests';
 import { getYoutubeId } from './edit-profile.utils';
 
 import './index.scss';
@@ -50,6 +58,7 @@ const EditProfile: FC = () => {
 
   const currentUser = useAppSelector(selectCurrentUser);
   const updateTutorProfileMutation = useUpdateTutorProfile();
+  const chat = useStartConversation();
 
   const [showEditMode, setShowEditMode] = useState(false);
   const [editMode, setEditMode] = useState(false);
@@ -179,7 +188,14 @@ const EditProfile: FC = () => {
   const onBlockingMissingInformation = (flag: boolean) =>
     setMissingInformationFlag(flag);
 
-  const openFreeTrialModal = () => {};
+  // Students cannot book sessions themselves; they send a request to support
+  const [requestKind, setRequestKind] = useState<SessionRequestKind | null>(
+    null,
+  );
+  const openRequestModal = (kind?: SessionRequestKind) =>
+    setRequestKind(kind ?? 'schedule');
+  const closeRequestModal = () => setRequestKind(null);
+  const openFreeTrialModal = () => openRequestModal('trial');
 
   const freeTrailCardFlag = () =>
     !showEditMode &&
@@ -260,6 +276,51 @@ const EditProfile: FC = () => {
         {renderProfileInfo()}
         <div className="profile__container container">
           {showEditMode && renderProfileMissingInfoBanner()}
+          {!showEditMode && currentUser?.type === 'Student' && !!instructor && (
+            <div className="profile__visitor-actions">
+              {chat.isAvailable && (
+                <Button
+                  variant="outlined"
+                  color="secondary"
+                  startIcon={<ChatBubbleOutlineRounded />}
+                  disabled={chat.isStarting}
+                  className="profile__message"
+                  onClick={() =>
+                    chat.startConversation(
+                      instructor.id,
+                      instructor.grade_subjects?.[0]?.full_course_name,
+                    )
+                  }
+                >
+                  {t('MESSAGES.MESSAGE_BUTTON')}
+                </Button>
+              )}
+              <Button
+                variant="contained"
+                color="primary"
+                startIcon={<EventAvailableRounded />}
+                className="profile__request"
+                onClick={() => openRequestModal()}
+              >
+                {t('SESSION_REQUEST.BUTTON')}
+              </Button>
+            </div>
+          )}
+          {requestKind && !!instructor && (
+            <Dialog
+              maxWidth="sm"
+              fullWidth
+              open
+              onClose={closeRequestModal}
+              aria-labelledby="request-sessions-dialog"
+            >
+              <RequestSessionsModal
+                instructor={instructor}
+                defaultKind={requestKind}
+                handleClose={closeRequestModal}
+              />
+            </Dialog>
+          )}
           {showEditMode && (
             <div className="profile__owner-actions">
               <Button

@@ -214,6 +214,25 @@ $topbar-height: 6.4rem;
     }
   }
 
+  &__label {
+    flex: 1;
+    min-width: 0;
+  }
+
+  // Unread messages count on the Messages item
+  &__badge {
+    @include badge($accent-500, $navy-950);
+    flex: none;
+    justify-content: center;
+    min-width: 2.2rem;
+    height: 2.2rem;
+    padding: 0 0.7rem;
+    font-size: 1.2rem;
+    font-weight: 700;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+
   // ---------- Bottom block ----------
   &__footer {
     display: flex;

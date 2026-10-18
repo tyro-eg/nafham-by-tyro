@@ -20,6 +20,20 @@
   }
 
   // Owner-only edit / save action: stays reachable while scrolling the profile
+  // Student viewing an instructor: open a conversation
+  &__visitor-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: $space-4;
+
+    .profile__message {
+      min-height: 4.4rem;
+      border-radius: $radius-pill;
+      text-transform: none;
+      font-weight: 600;
+    }
+  }
+
   &__owner-actions {
     position: sticky;
     top: calc(#{$header-height} + #{$space-3});
