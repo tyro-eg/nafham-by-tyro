@@ -9,6 +9,7 @@ import NotistackProvider from './component/app/NotistackProvider';
 import AnalyticsTracker from './component/app/AnalyticsTracker';
 import Layout from './component/app/Layout';
 import RoutesComponent from './component/app/Routes';
+import { StreamChatProvider } from './component/stream-chat/stream-chat-provider';
 
 import './assets/styles/main.scss';
 import './App.scss';
@@ -19,6 +20,7 @@ import './App.scss';
  * Component hierarchy:
  * 1. MaterialTheme - MUI theme provider with RTL support
  * 2. NotistackProvider - Snackbar notifications
+ * 2b. StreamChatProvider - Connects the signed-in user to Stream Chat
  * 3. AnalyticsTracker - Automatic page view tracking
  * 4. Layout - Header, Footer, and page structure
  * 5. RoutesComponent - Application routing
@@ -49,10 +51,12 @@ const App: React.FC = () => {
   return (
     <MaterialTheme>
       <NotistackProvider>
-        <AnalyticsTracker />
-        <Layout>
-          <RoutesComponent currentUser={currentUser} />
-        </Layout>
+        <StreamChatProvider>
+          <AnalyticsTracker />
+          <Layout>
+            <RoutesComponent currentUser={currentUser} />
+          </Layout>
+        </StreamChatProvider>
       </NotistackProvider>
     </MaterialTheme>
   );

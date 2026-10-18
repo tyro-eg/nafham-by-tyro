@@ -1,0 +1,427 @@
+@import '../../assets/styles/variables.scss';
+@import '../../assets/styles/mixins.scss';
+
+// Cell colours
+$av-open: $brand-500;
+$av-open-text: $color-white;
+$av-booked: $gray-300;
+$av-adding: $success-500;
+$av-removing: $danger-500;
+$av-cell-height: 2.6rem;
+
+.availability-page {
+  background:
+    radial-gradient(
+      60rem 30rem at 100% 0%,
+      rgba($brand-400, 0.08),
+      transparent 70%
+    ),
+    $surface-alt;
+  padding: $space-6 0 $space-9;
+  min-height: 60vh;
+
+  .container.av-container {
+    margin-bottom: 0;
+  }
+}
+
+// ---------- Header ----------
+.av-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: $space-3;
+  margin-bottom: $space-5;
+
+  &__title {
+    font-size: $font-h2;
+    color: $text-strong;
+
+    @include respond(phone) {
+      font-size: 2.8rem;
+    }
+  }
+
+  &__subtitle {
+    margin-top: $space-2;
+    max-width: 64rem;
+    font-size: $font-base;
+    color: $text-body;
+  }
+
+  &__zone {
+    display: inline-flex;
+    align-items: center;
+    gap: $space-2;
+    font-size: $font-sm;
+    color: $text-muted;
+  }
+}
+
+// ---------- Toolbar ----------
+.av-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: $space-3;
+  margin-bottom: $space-4;
+
+  &__week {
+    display: flex;
+    align-items: center;
+    gap: $space-1;
+  }
+
+  &__label {
+    min-width: 16rem;
+    text-align: center;
+    font-size: $font-lg;
+    font-weight: 700;
+    color: $text-strong;
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: $space-3;
+  }
+
+  &__night .MuiFormControlLabel-label {
+    font-size: $font-sm;
+    color: $text-body;
+  }
+}
+
+html[dir='rtl'] .av-flip svg {
+  transform: scaleX(-1);
+}
+
+// ---------- Summary + legend ----------
+.av-summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: $space-3;
+  margin-bottom: $space-3;
+
+  &__chip {
+    font-weight: 600;
+
+    &--open {
+      background-color: rgba($av-open, 0.14);
+      color: darken($av-open, 18%);
+    }
+
+    &--booked {
+      background-color: $gray-100;
+      color: $text-body;
+    }
+  }
+}
+
+.av-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $space-4;
+  margin-inline-start: auto;
+  list-style: none;
+  padding: 0;
+
+  &__item {
+    display: inline-flex;
+    align-items: center;
+    gap: $space-2;
+    font-size: $font-sm;
+    color: $text-body;
+  }
+
+  &__swatch {
+    display: inline-block;
+    width: 1.6rem;
+    height: 1.6rem;
+    border-radius: 0.4rem;
+    border: 1px solid $border;
+  }
+}
+
+.av-hint {
+  margin-bottom: $space-3;
+  font-size: $font-sm;
+  color: $text-muted;
+}
+
+// ---------- Grid ----------
+.av-grid-wrap {
+  overflow: auto;
+  border: 1px solid $border;
+  border-radius: $radius-lg;
+  background-color: $surface;
+  box-shadow: $shadow-sm;
+  // Keep the header and the whole week visible while scrolling vertically
+  max-height: calc(100vh - 12rem);
+  // Mouse drags paint cells; the page must not select text meanwhile
+  user-select: none;
+}
+
+.av-grid {
+  display: grid;
+  // columns are set inline; every body row is one cell tall
+  grid-auto-rows: $av-cell-height;
+  min-width: 64rem;
+
+  @include respond(phone) {
+    min-width: 56rem;
+  }
+}
+
+.av-grid__corner,
+.av-day {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background-color: $surface;
+  border-bottom: 1px solid $border-strong;
+}
+
+.av-grid__corner {
+  grid-row: 1;
+  height: 5.6rem;
+}
+
+.av-day {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.2rem;
+  height: 5.6rem;
+  padding: 0;
+  border-inline-start: 1px solid $border;
+  background-color: $surface;
+  font: inherit;
+  color: $text-strong;
+  cursor: pointer;
+  transition: background-color $transition;
+
+  &:hover:not(:disabled) {
+    background-color: $brand-50;
+  }
+
+  &:focus-visible {
+    @include focus-ring;
+    z-index: 3;
+  }
+
+  &--today {
+    .av-day__date {
+      background-color: $brand-500;
+      color: $color-white;
+    }
+  }
+
+  &--locked {
+    color: $text-muted;
+    cursor: default;
+  }
+
+  &__weekday {
+    font-size: $font-xs;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: $text-muted;
+  }
+
+  &__date {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2.8rem;
+    height: 2.8rem;
+    padding: 0 0.6rem;
+    border-radius: $radius-pill;
+    font-size: $font-base;
+    font-weight: 700;
+  }
+
+  &__chevron {
+    width: 1.6rem;
+    height: 1.6rem;
+    color: $gray-400;
+  }
+}
+
+.av-time {
+  position: sticky;
+  inset-inline-start: 0;
+  z-index: 1;
+  padding: 0.2rem 0.8rem 0 0;
+  border-inline-end: 1px solid $border-strong;
+  background-color: $surface;
+  font-size: $font-xs;
+  color: $text-muted;
+  text-align: end;
+  white-space: nowrap;
+
+  &--hour {
+    border-top: 1px solid $border;
+  }
+
+  html[dir='rtl'] & {
+    padding: 0.2rem 0 0 0.8rem;
+  }
+}
+
+.av-cell {
+  position: relative;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-inline-start: 1px solid $border;
+  border-top: 1px dashed rgba($border, 0.9);
+  background-color: $surface;
+  cursor: pointer;
+  transition:
+    background-color 80ms ease,
+    box-shadow 80ms ease;
+
+  &--hour {
+    border-top: 1px solid $border;
+  }
+
+  &:hover {
+    box-shadow: inset 0 0 0 2px rgba($brand-500, 0.45);
+  }
+
+  &:focus-visible {
+    @include focus-ring;
+    z-index: 1;
+  }
+
+  &--empty {
+    background-color: $surface;
+  }
+
+  &--available {
+    background-color: $av-open;
+    border-top-color: rgba($color-white, 0.35);
+  }
+
+  &--adding {
+    background-color: rgba($av-adding, 0.75);
+    background-image: repeating-linear-gradient(
+      -45deg,
+      transparent 0 0.6rem,
+      rgba($color-white, 0.28) 0.6rem 1.2rem
+    );
+    border-top-color: rgba($color-white, 0.35);
+  }
+
+  &--removing {
+    background-color: rgba($av-removing, 0.22);
+    background-image: repeating-linear-gradient(
+      45deg,
+      transparent 0 0.6rem,
+      rgba($av-removing, 0.35) 0.6rem 1.2rem
+    );
+  }
+
+  &--reserved {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: $av-booked;
+    cursor: not-allowed;
+
+    &:hover {
+      box-shadow: none;
+    }
+  }
+
+  &__lock {
+    width: 1.4rem;
+    height: 1.4rem;
+    color: $gray-600;
+  }
+
+  &--past {
+    background-color: $gray-50;
+    background-image: repeating-linear-gradient(
+      45deg,
+      transparent 0 0.5rem,
+      rgba($gray-300, 0.35) 0.5rem 1rem
+    );
+    cursor: default;
+
+    &:hover {
+      box-shadow: none;
+    }
+  }
+
+  &--past-open {
+    background-color: rgba($av-open, 0.25);
+  }
+}
+
+// Legend swatches reuse the cell colours
+.av-legend__swatch.av-cell--reserved {
+  background-color: $av-booked;
+}
+
+// ---------- Day menu ----------
+.av-day-menu {
+  &__title {
+    font-weight: 700;
+    color: $text-strong;
+    line-height: 3.6rem;
+  }
+
+  &__secondary {
+    color: $text-body;
+  }
+}
+
+// ---------- Save bar ----------
+.av-savebar {
+  position: sticky;
+  bottom: $space-4;
+  z-index: 5;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: $space-3;
+  margin-top: $space-4;
+  padding: $space-3 $space-4;
+  border: 1px solid $border;
+  border-radius: $radius-lg;
+  background-color: $surface;
+  box-shadow: $shadow-lg;
+
+  &__text {
+    font-weight: 600;
+    color: $text-strong;
+  }
+
+  &__actions {
+    display: flex;
+    gap: $space-3;
+
+    @include respond(phone) {
+      width: 100%;
+
+      .MuiButton-root {
+        flex: 1;
+      }
+    }
+  }
+}
+
+.av-dialog__text {
+  margin: 0 0 $space-4;
+  font-size: $font-base;
+  color: $text-body;
+}

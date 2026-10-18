@@ -1,4 +1,8 @@
 {
+  "404": {
+    "NOT_FOUND": "Ooops! The page you are looking for could not be found 🚧 ☹️",
+    "BACK_HOME": "Back Home"
+  },
   "ERROR": {
     "TITLE": "Oops! Something went wrong",
     "DESCRIPTION": "We're sorry for the inconvenience. An unexpected error occurred.",
@@ -45,7 +49,9 @@
     "OPEN_MENU": "Open menu",
     "CLOSE_MENU": "Close menu",
     "BROWSE_INSTRUCTORS": "Browse instructors",
-    "CALENDAR": "Calendar"
+    "MESSAGES": "Messages",
+    "CALENDAR": "Calendar",
+    "AVAILABILITY": "Availability"
   },
   "CARDS": {
     "FREE_ASSESMENT": {
@@ -55,7 +61,7 @@
     },
     "FREE_TRIAL": {
       "TITLE": "Free Trial Session",
-      "LABEL": "Schedule Now",
+      "LABEL": "Request now",
       "BODY": "A 30-minute session, free of charge it's an excellent way to learn how to use Nafham"
     }
   },
@@ -820,7 +826,7 @@
     "HOURLYRATE": "Hourly Rate",
     "BOOKNOW": "Book Now",
     "OPENPROFILE": "Open Profile",
-    "FREETRIAL": "Book Free Trial",
+    "FREETRIAL": "Request a free trial",
     "COURSEAD": {
       "TITLE": "We Also Provide Group Courses",
       "SUBTITLE": "Prefer learning in a group? We got you covered! We provide group courses with a maximum of 8 students so the instructor could focus with every student in the session. View our courses for more details regarding our group courses.",
@@ -1157,12 +1163,8 @@
     "UNAUTHORIZED_MSG": "Sorry, You must login first!"
   },
   "INSTRUCTOR_MODAL": {
-    "TITLE": "BOOK A FREE TRIAL SESSION",
+    "TITLE": "REQUEST A FREE TRIAL SESSION",
     "SUBTITLE": "Select an instructor you'd like to take the free trial session with"
-  },
-  "404": {
-    "NOT_FOUND": "Ooops! The page you are looking for could not be found 🚧 ☹️",
-    "BACK_HOME": "Back Home"
   },
   "NO_INTERNET": {
     "TITLE": "You are offline. Check your internet connection."
@@ -1187,14 +1189,14 @@
     }
   },
   "DASHBOARD": {
-    "BOOK_SESSION": "Book a session",
+    "BOOK_SESSION": "Request sessions",
     "VIEW_ALL": "View all",
     "HOURS_SHORT": "{{hours}} h",
     "HERO": {
       "EYEBROW": "Your learning space",
       "WELCOME": "Welcome back, {{name}}! 👋",
       "NEXT": "Your next session is {{subject}} with {{tutor}}, {{when}}. You've got this!",
-      "NO_NEXT": "Ready for your next step? Book a session with one of our instructors and keep the momentum going.",
+      "NO_NEXT": "Ready for your next step? Send us a request and our team will schedule your sessions.",
       "MY_SESSIONS": "My sessions"
     },
     "STATS": {
@@ -1214,7 +1216,7 @@
       "IN_HOURS_other": "In {{count}} hours",
       "IN_DAYS_one": "Tomorrow",
       "IN_DAYS_other": "In {{count}} days",
-      "EMPTY": "No sessions booked yet. Pick an instructor and schedule your next lesson."
+      "EMPTY": "No sessions scheduled yet. Send a request and our team will set up your next lesson."
     },
     "PROGRESS": {
       "TITLE": "Your progress",
@@ -1389,5 +1391,145 @@
       "CANCELED": "Cancelled"
     },
     "HINT": "Use Month / Week to change the view."
+  },
+  "MESSAGES": {
+    "TITLE": "Messages",
+    "SEARCH": "Search conversations",
+    "FILTER": {
+      "ALL": "All",
+      "UNREAD": "Unread",
+      "NAFHAM": "Nafham"
+    },
+    "YOU": "You",
+    "NAFHAM_SUPPORT": "Nafham Support",
+    "ADMIN_IN_CHAT": "Nafham Support is in this conversation",
+    "MEMBERS": "Members",
+    "ROLE": {
+      "STUDENT": "Student",
+      "INSTRUCTOR": "Instructor",
+      "ADMIN": "Admin"
+    },
+    "UNKNOWN_USER": "Unknown user",
+    "BACK": "Back to messages",
+    "BOOK_SESSION": "Request sessions",
+    "MESSAGE_BUTTON": "Message",
+    "YESTERDAY": "Yesterday",
+    "VOICE_NOTE": "Voice note",
+    "PHOTO": "Photo",
+    "FILE": "File",
+    "NO_MESSAGES_YET": "No messages yet",
+    "DELETED_MESSAGE": "Message deleted",
+    "UNREAD_COUNT_one": "{{count}} unread message",
+    "UNREAD_COUNT_other": "{{count}} unread messages",
+    "EMPTY": {
+      "TITLE": "No conversations yet",
+      "STUDENT_TEXT": "Message an instructor from their profile. Nafham Support joins every conversation.",
+      "TUTOR_TEXT": "Conversations with your students will appear here. Nafham Support joins every conversation."
+    },
+    "PICK": {
+      "TITLE": "Pick a conversation",
+      "TEXT": "Choose a conversation on the left to read and reply."
+    },
+    "NOT_FOUND": "This conversation is not available.",
+    "NOT_CONFIGURED": "Chat is not set up for this environment yet.",
+    "CONNECTING": "Connecting to chat…",
+    "CONNECTION_FAILED": "Could not connect to chat. Please try again later.",
+    "COMPOSER": {
+      "PLACEHOLDER": "Write a message…",
+      "HINT": "Enter to send · Shift+Enter for a new line · Voice notes up to 5 min · Files up to 25 MB"
+    },
+    "ERRORS": {
+      "NOT_CONNECTED": "Chat is not connected yet. Please try again in a moment.",
+      "START_FAILED": "Could not open the conversation. Please try again."
+    }
+  },
+  "SESSION_REQUEST": {
+    "TITLE": "Request sessions",
+    "SUBTITLE": "Sessions are scheduled by our support team. Tell us what you need and we'll set it up and confirm with you.",
+    "BUTTON": "Request sessions",
+    "NOTICE": "Sessions are scheduled by our support team. Send a request and we will set them up for you.",
+    "KIND": {
+      "LABEL": "What do you need?",
+      "SCHEDULE": "Schedule sessions from the hours I already have",
+      "MORE_HOURS": "Buy more hours",
+      "TRIAL": "A free trial session"
+    },
+    "INSTRUCTOR": "Instructor",
+    "ANY_INSTRUCTOR": "No preference",
+    "COURSE": "Course",
+    "ANY_COURSE": "Not sure yet",
+    "HOURS": "Hours",
+    "HOURS_HINT": "How many hours would you like? (optional)",
+    "HOURS_LEFT": "You have {{hours}} hours left in {{course}}.",
+    "PREFERRED_TIMES": "Preferred days and times",
+    "PREFERRED_TIMES_PLACEHOLDER": "e.g. Monday and Wednesday after 5pm",
+    "NOTE": "Anything else?",
+    "NOTE_PLACEHOLDER": "Optional note for our team",
+    "SUBMIT": "Send request",
+    "CANCEL": "Cancel",
+    "REQUIRED_TIMES": "Please tell us your preferred days and times.",
+    "ERROR": "Could not send your request. Please try again.",
+    "SUCCESS": {
+      "TITLE": "Request sent!",
+      "TEXT": "Our support team will schedule your sessions and get back to you shortly.",
+      "BUTTON": "Done"
+    }
+  },
+  "AVAILABILITY": {
+    "TITLE": "My availability",
+    "SUBTITLE": "Mark the 30-minute slots you can teach. Click a slot or drag across several; use a day name for quick presets. Students and support can only book inside these slots.",
+    "TIMEZONE": "Times are in your local time zone ({{tz}})",
+    "PREV_WEEK": "Previous week",
+    "NEXT_WEEK": "Next week",
+    "THIS_WEEK": "This week",
+    "SHOW_NIGHT": "Show night hours",
+    "HINT": "Tip: drag with the mouse to fill or clear many slots at once. Booked slots are locked.",
+    "STATS": {
+      "OPEN": "{{hours}} open hours this week",
+      "BOOKED": "{{hours}} booked"
+    },
+    "LEGEND": {
+      "TITLE": "Legend"
+    },
+    "STATE": {
+      "EMPTY": "Not available",
+      "AVAILABLE": "Open",
+      "RESERVED": "Booked",
+      "ADDING": "Opening (unsaved)",
+      "REMOVING": "Closing (unsaved)",
+      "PAST": "Past"
+    },
+    "DAY_MENU": {
+      "TITLE": "Quick fill",
+      "MORNING": "Morning · 9am – 12pm",
+      "AFTERNOON": "Afternoon · 12pm – 5pm",
+      "EVENING": "Evening · 5pm – 10pm",
+      "ALL_DAY": "All day · 9am – 10pm",
+      "CLEAR": "Clear this day",
+      "COPY_TO_WEEK": "Copy this day to the whole week"
+    },
+    "COPY_PREV_WEEK": "Copy last week",
+    "COPY_PREV_HINT": "Open the same slots you had last week, where this week is still empty",
+    "COPY_PREV_NONE": "Nothing new to copy from last week.",
+    "REPEAT": {
+      "BUTTON": "Repeat this week",
+      "HINT": "Create this week's open slots again for the coming weeks",
+      "SAVE_FIRST": "Save your changes first",
+      "TITLE": "Repeat this week",
+      "TEXT": "This week's open slots will be created again for the coming weeks. Slots that already exist are skipped.",
+      "WEEKS_one": "Next week only",
+      "WEEKS_other": "Next {{count}} weeks",
+      "CONFIRM": "Repeat",
+      "NONE": "There are no open slots in this week to repeat.",
+      "ALL_EXIST": "Those weeks already have all of these slots.",
+      "DONE": "Added {{count}} slots across the next {{weeks}} week(s)."
+    },
+    "PENDING": "{{add}} to open · {{remove}} to close",
+    "SAVE": "Save changes",
+    "DISCARD": "Discard",
+    "DISCARD_DIALOG": "Cancel",
+    "SAVED": "Availability saved",
+    "SAVE_FAILED": "Could not save your availability.",
+    "LOAD_FAILED": "Could not load availability."
   }
 }

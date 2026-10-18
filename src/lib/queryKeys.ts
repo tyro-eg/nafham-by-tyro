@@ -101,4 +101,11 @@ export const queryKeys = {
   gradeSubjects: {
     all: ['grade_subjects'] as const,
   },
+
+  // Session request keys (students asking support to schedule sessions)
+  sessionRequests: {
+    all: ['session_requests'] as const,
+    list: (status?: string) =>
+      [...queryKeys.sessionRequests.all, 'list', status] as const,
+  },
 } as const;

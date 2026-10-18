@@ -2,7 +2,11 @@ import React, { useState, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { Button, Dialog, Box } from '@mui/material';
-import { ArrowRightAlt } from '@mui/icons-material';
+import { ArrowRightAlt, ChatBubbleOutlineRounded } from '@mui/icons-material';
+
+import { useAppSelector } from '../../redux/store';
+import { selectCurrentUser } from '../../redux/user/user.selectors';
+import { useStartConversation } from '../../hooks/useStreamChat';
 
 import ReadMore from '../read-more/read-more.component';
 import RatingSummary from '../rating-summary/rating-summary.component';
@@ -17,7 +21,7 @@ import Profile from '../../assets/images/videoSession/people/profile.png';
 import { useRtlClass } from '../../assets/utils/utils';
 import './instructor-card.styles.scss';
 import { Instructor } from '../../assets/types';
-import CalendarStepperModal from '../../modals/calendar-stepper-modal/calendar-stepper-modal';
+import RequestSessionsModal from '../../modals/request-sessions-modal/request-sessions-modal.component';
 
 /**
  * InstructorCard Component
@@ -32,8 +36,14 @@ const InstructorCard: React.FC<{ instructor: Instructor }> = memo(
     const navigate = useNavigate();
     const { t } = useTranslation();
     const rtlClass = useRtlClass();
-    const [openCalendarStepperModal, setOpenCalendarStepperModal] =
-      useState(false);
+    const currentUser = useAppSelector(selectCurrentUser);
+    const { startConversation, isStarting, isAvailable } =
+      useStartConversation();
+    const canMessage = isAvailable && currentUser?.type === 'Student';
+    // Students cannot book sessions themselves; they send a request to
+    // support. Visitors are sent to register first.
+    const canRequest = !currentUser || currentUser.type === 'Student';
+    const [openRequestModal, setOpenRequestModal] = useState(false);
 
     const videoHtml = `
     <style>
@@ -48,14 +58,14 @@ const InstructorCard: React.FC<{ instructor: Instructor }> = memo(
     </a>`;
 
     const goToProfile = () => navigate(`/profile/${instructor.id}`);
-    const openTrialModal = () => setOpenCalendarStepperModal(true);
-    // const navigateToCheckout = () =>
-    //   navigate(`/checkout?id=${instructor.id}&course=false`);
-    const handleCloseCalendarStepperModal = () =>
-      setOpenCalendarStepperModal(false);
-
-    const isTrialAvailable = () =>
-      instructor.free_trial?.enabled && !instructor.free_trial.claimed;
+    const openRequest = () => {
+      if (!currentUser) {
+        navigate('/register');
+        return;
+      }
+      setOpenRequestModal(true);
+    };
+    const closeRequest = () => setOpenRequestModal(false);
 
     return (
       <article className="instructor-card">
@@ -146,14 +156,32 @@ const InstructorCard: React.FC<{ instructor: Instructor }> = memo(
           <div className="instructor-card__footer">
             <InstructorCalendar instructorId={instructor.id} />
 
-            {isTrialAvailable() ? (
+            {canMessage && (
+              <Button
+                className="instructor-card__message"
+                variant="outlined"
+                color="secondary"
+                startIcon={<ChatBubbleOutlineRounded />}
+                disabled={isStarting}
+                onClick={() =>
+                  startConversation(
+                    instructor.id,
+                    instructor.grade_subjects?.[0]?.full_course_name,
+                  )
+                }
+              >
+                {t('MESSAGES.MESSAGE_BUTTON')}
+              </Button>
+            )}
+
+            {canRequest ? (
               <Button
                 className="book-now-btn"
                 variant="contained"
                 color="primary"
-                onClick={openTrialModal}
+                onClick={openRequest}
               >
-                {t('DIRECTORY.FREETRIAL')}
+                {t('SESSION_REQUEST.BUTTON')}
               </Button>
             ) : (
               <Button
@@ -169,16 +197,16 @@ const InstructorCard: React.FC<{ instructor: Instructor }> = memo(
           </div>
         </div>
 
-        {openCalendarStepperModal && (
+        {openRequestModal && (
           <Dialog
-            maxWidth="lg"
+            maxWidth="sm"
             fullWidth
-            onClose={handleCloseCalendarStepperModal}
-            open={openCalendarStepperModal}
+            onClose={closeRequest}
+            open={openRequestModal}
           >
-            <CalendarStepperModal
+            <RequestSessionsModal
               instructor={instructor}
-              handleClose={handleCloseCalendarStepperModal}
+              handleClose={closeRequest}
             />
           </Dialog>
         )}

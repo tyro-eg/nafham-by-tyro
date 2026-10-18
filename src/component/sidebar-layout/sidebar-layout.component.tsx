@@ -7,11 +7,13 @@ import {
   CalendarMonthRounded,
   CloseRounded,
   DashboardRounded,
+  EditCalendarRounded,
   EventNoteRounded,
   GroupsRounded,
   Inventory2Rounded,
   LogoutRounded,
   MenuRounded,
+  ChatBubbleRounded,
   PaymentsRounded,
   PeopleAltRounded,
   PersonSearchRounded,
@@ -21,6 +23,7 @@ import {
 import { useAppSelector } from '../../redux/store';
 import { selectCurrentUser } from '../../redux/user/user.selectors';
 import { useSignOut } from '../../hooks/useAuth';
+import { useStreamChat } from '../../hooks/useStreamChat';
 import { useRtlClass } from '../../assets/utils/utils';
 import LanguageSelector from '../i18next/LanguageSelector';
 import logo from '../../assets/images/logo.png';
@@ -43,6 +46,7 @@ const SidebarLayout: FC<SidebarLayoutProps> = ({ children }) => {
   const rtlClass = useRtlClass();
   const currentUser = useAppSelector(selectCurrentUser);
   const signOutMutation = useSignOut();
+  const { client: chatClient, unreadCount } = useStreamChat();
   const location = useLocation();
   const [drawerOpen, setDrawerOpen] = useState(false);
 
@@ -65,11 +69,28 @@ const SidebarLayout: FC<SidebarLayoutProps> = ({ children }) => {
 
   const isTutor = currentUser.type === 'Tutor';
 
+  // Shown to both roles once Stream Chat is configured
+  const messagesItem = chatClient
+    ? [
+        {
+          to: '/messages',
+          icon: <ChatBubbleRounded />,
+          label: t('NAVIGATION.MESSAGES'),
+          badge: unreadCount,
+        },
+      ]
+    : [];
+
   const tutorItems = [
     {
       to: '/dashboard',
       icon: <DashboardRounded />,
       label: t('NAVIGATION.DASHBOARD'),
+    },
+    {
+      to: '/availability',
+      icon: <EditCalendarRounded />,
+      label: t('NAVIGATION.AVAILABILITY'),
     },
     {
       to: '/my_students',
@@ -86,6 +107,7 @@ const SidebarLayout: FC<SidebarLayoutProps> = ({ children }) => {
       icon: <CalendarMonthRounded />,
       label: t('NAVIGATION.CALENDAR'),
     },
+    ...messagesItem,
     {
       to: '/my_packages',
       icon: <Inventory2Rounded />,
@@ -129,6 +151,7 @@ const SidebarLayout: FC<SidebarLayoutProps> = ({ children }) => {
       icon: <CalendarMonthRounded />,
       label: t('NAVIGATION.CALENDAR'),
     },
+    ...messagesItem,
     {
       to: '/my_packages',
       icon: <Inventory2Rounded />,
@@ -221,6 +244,16 @@ const SidebarLayout: FC<SidebarLayoutProps> = ({ children }) => {
                 {item.icon}
               </span>
               <span className="side-layout__label">{item.label}</span>
+              {'badge' in item && item.badge > 0 && (
+                <span
+                  className="side-layout__badge"
+                  aria-label={t('MESSAGES.UNREAD_COUNT', {
+                    count: item.badge,
+                  })}
+                >
+                  {item.badge > 99 ? '99+' : item.badge}
+                </span>
+              )}
             </NavLink>
           ))}
         </nav>

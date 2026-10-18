@@ -265,7 +265,7 @@ const TutorDashboard: FC = () => {
             <div className="sd-hero__actions">
               <Button
                 component={Link}
-                to={`/profile/${currentUser?.id}`}
+                to="/availability"
                 className="sd-hero__primary"
                 startIcon={<EditCalendarRounded />}
               >
@@ -317,7 +317,7 @@ const TutorDashboard: FC = () => {
                   </p>
                   <Button
                     component={Link}
-                    to={`/profile/${currentUser?.id}`}
+                    to="/availability"
                     variant="outlined"
                   >
                     {t('TUTOR_DASHBOARD.HERO.AVAILABILITY')}

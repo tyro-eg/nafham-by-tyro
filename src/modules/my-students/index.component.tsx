@@ -12,6 +12,7 @@ import {
 import {
   AccessTimeRounded,
   CalendarMonthRounded,
+  ChatBubbleOutlineRounded,
   CheckCircleRounded,
   GroupsRounded,
   SchoolRounded,
@@ -20,6 +21,7 @@ import {
 
 import { useSessions } from '../../hooks/useSessions';
 import { usePackages } from '../../hooks/usePackages';
+import { useStartConversation } from '../../hooks/useStreamChat';
 import { useRtlClass } from '../../assets/utils/utils';
 import { formatHours, subjectName } from '../dashboard/dashboard.utils';
 import { buildStudents, StudentSummary } from './my-students.utils';
@@ -39,6 +41,7 @@ const initialsOf = (s: StudentSummary) =>
 const MyStudents: FC = () => {
   const { t, i18n } = useTranslation();
   const rtlClass = useRtlClass();
+  const chat = useStartConversation();
   const [search, setSearch] = useState('');
   const [course, setCourse] = useState('all');
   const [status, setStatus] = useState<StatusFilter>('all');
@@ -357,14 +360,28 @@ const MyStudents: FC = () => {
                   </dl>
 
                   <div className="ms-card__actions">
-                    {student.email && (
+                    {chat.isAvailable ? (
                       <Button
                         variant="outlined"
                         size="small"
-                        href={`mailto:${student.email}`}
+                        startIcon={<ChatBubbleOutlineRounded />}
+                        disabled={chat.isStarting}
+                        onClick={() =>
+                          chat.startConversation(student.id, student.courses[0])
+                        }
                       >
-                        {t('MY_STUDENTS.CARD.EMAIL')}
+                        {t('MESSAGES.MESSAGE_BUTTON')}
                       </Button>
+                    ) : (
+                      student.email && (
+                        <Button
+                          variant="outlined"
+                          size="small"
+                          href={`mailto:${student.email}`}
+                        >
+                          {t('MY_STUDENTS.CARD.EMAIL')}
+                        </Button>
+                      )
                     )}
                     <Button
                       variant="contained"

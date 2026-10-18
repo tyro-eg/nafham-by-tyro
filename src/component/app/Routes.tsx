@@ -9,6 +9,9 @@ const Home = lazy(() => import('../../modules/home/index'));
 const CalendarPage = lazy(
   () => import('../../modules/calendar/index.component'),
 );
+const AvailabilityPage = lazy(
+  () => import('../../modules/availability/index.component'),
+);
 const MySalary = lazy(() => import('../../modules/my-salary/index.component'));
 const MyStudents = lazy(
   () => import('../../modules/my-students/index.component'),
@@ -44,6 +47,7 @@ const MyInstructors = lazy(
 //   () => import('../../modules/courses/course-details/index.component'),
 // );
 const Sessions = lazy(() => import('../../modules/sessions/index.component'));
+const Messages = lazy(() => import('../../modules/messages/index.component'));
 const Packages = lazy(() => import('../../modules/packages/index.component'));
 const Checkout = lazy(() => import('../../modules/checkout/index.component'));
 const Terms = lazy(() => import('../../modules/terms/index.component'));
@@ -118,6 +122,15 @@ const RoutesComponent: React.FC<RoutesProps> = ({ currentUser }) => (
         }
       />
       <Route
+        path="/availability"
+        element={
+          <GuardedRoute
+            element={<AvailabilityPage />}
+            auth={!!currentUser && currentUser.type === 'Tutor'}
+          />
+        }
+      />
+      <Route
         path="/my_salary"
         element={
           <GuardedRoute
@@ -144,6 +157,14 @@ const RoutesComponent: React.FC<RoutesProps> = ({ currentUser }) => (
       <Route
         path="/my_packages"
         element={<GuardedRoute element={<Packages />} auth={!!currentUser} />}
+      />
+      <Route
+        path="/messages"
+        element={<GuardedRoute element={<Messages />} auth={!!currentUser} />}
+      />
+      <Route
+        path="/messages/:channelId"
+        element={<GuardedRoute element={<Messages />} auth={!!currentUser} />}
       />
       <Route
         path="/profile/:id"

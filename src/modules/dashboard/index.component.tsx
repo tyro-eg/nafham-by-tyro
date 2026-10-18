@@ -1,7 +1,7 @@
-import { FC, ReactNode, useMemo } from 'react';
+import { FC, ReactNode, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Avatar, Button, Skeleton } from '@mui/material';
+import { Avatar, Button, Dialog, Skeleton } from '@mui/material';
 import {
   AccessTimeRounded,
   ArrowForwardRounded,
@@ -21,6 +21,7 @@ import { usePackages } from '../../hooks/usePackages';
 import { useMyInstructors } from '../../hooks/useInstructors';
 import { useRtlClass } from '../../assets/utils/utils';
 import type { SessionType } from '../../assets/types';
+import RequestSessionsModal from '../../modals/request-sessions-modal/request-sessions-modal.component';
 import heroArt from '../../assets/images/newLanding/start-learning.webp';
 import emptyArt from '../../assets/images/newLanding/rafiki.svg?url';
 import {
@@ -62,15 +63,19 @@ const Section: FC<SectionProps> = ({ title, action, children, className }) => (
   </section>
 );
 
-const Empty: FC<{ text: string; cta?: { to: string; label: string } }> = ({
-  text,
-  cta,
-}) => (
+type EmptyCta = { label: string } & ({ to: string } | { onClick: () => void });
+
+const Empty: FC<{ text: string; cta?: EmptyCta }> = ({ text, cta }) => (
   <div className="sd-empty">
     <img src={emptyArt} alt="" className="sd-empty__art" />
     <p className="sd-empty__text">{text}</p>
-    {cta && (
+    {cta && 'to' in cta && (
       <Button component={Link} to={cta.to} variant="outlined">
+        {cta.label}
+      </Button>
+    )}
+    {cta && 'onClick' in cta && (
+      <Button onClick={cta.onClick} variant="outlined">
         {cta.label}
       </Button>
     )}
@@ -108,6 +113,10 @@ const Dashboard: FC = () => {
   const { t, i18n } = useTranslation();
   const rtlClass = useRtlClass();
   const currentUser = useAppSelector(selectCurrentUser);
+  // Students cannot book sessions; they send a request to support
+  const [requestOpen, setRequestOpen] = useState(false);
+  const openRequest = () => setRequestOpen(true);
+  const closeRequest = () => setRequestOpen(false);
 
   const sessionsQuery = useSessions(1, HISTORY_SIZE);
   const packagesQuery = usePackages(1, 50);
@@ -263,8 +272,7 @@ const Dashboard: FC = () => {
             )}
             <div className="sd-hero__actions">
               <Button
-                component={Link}
-                to="/home"
+                onClick={openRequest}
                 className="sd-hero__primary"
                 startIcon={<EventAvailableRounded />}
               >
@@ -310,7 +318,10 @@ const Dashboard: FC = () => {
               {!loading && !nextSession && (
                 <Empty
                   text={t('DASHBOARD.NEXT.EMPTY')}
-                  cta={{ to: '/home', label: t('DASHBOARD.BOOK_SESSION') }}
+                  cta={{
+                    onClick: openRequest,
+                    label: t('DASHBOARD.BOOK_SESSION'),
+                  }}
                 />
               )}
               {nextSession && (
@@ -632,6 +643,18 @@ const Dashboard: FC = () => {
           </aside>
         </div>
       </div>
+
+      {requestOpen && (
+        <Dialog
+          maxWidth="sm"
+          fullWidth
+          open
+          onClose={closeRequest}
+          aria-labelledby="request-sessions-dialog"
+        >
+          <RequestSessionsModal handleClose={closeRequest} />
+        </Dialog>
+      )}
     </div>
   );
 };

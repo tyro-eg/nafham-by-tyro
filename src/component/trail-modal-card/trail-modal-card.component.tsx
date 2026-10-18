@@ -1,26 +1,40 @@
 import { useState, FC } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button, Dialog, Rating } from '@mui/material';
 
 import './trail-modal-card.styles.scss';
-import CalendarStepperModal from '../../modals/calendar-stepper-modal/calendar-stepper-modal';
+import RequestSessionsModal from '../../modals/request-sessions-modal/request-sessions-modal.component';
 import { Instructor } from '../../assets/types';
 import { getNameInitials } from '../../assets/utils/utils';
+import { useAppSelector } from '../../redux/store';
+import { selectCurrentUser } from '../../redux/user/user.selectors';
 
 interface TrailModalCardProps {
   instructor: Instructor;
 }
 
+/**
+ * Instructor card inside the "free trial" modal. Students cannot book the
+ * trial themselves: signed-in students send a request to support, visitors
+ * are sent to register first.
+ */
 const TrailModalCard: FC<TrailModalCardProps> = ({ instructor }) => {
-  const [openCalendarStepperModal, setOpenCalendarStepperModal] =
-    useState(false);
+  const navigate = useNavigate();
+  const currentUser = useAppSelector(selectCurrentUser);
+  const [openRequestModal, setOpenRequestModal] = useState(false);
 
-  const openTrialModal = () => setOpenCalendarStepperModal(true);
-  const handleCloseCalendarStepperModal = () =>
-    setOpenCalendarStepperModal(false);
+  const openRequest = () => {
+    if (!currentUser) {
+      navigate('/register');
+      return;
+    }
+    setOpenRequestModal(true);
+  };
+  const closeRequest = () => setOpenRequestModal(false);
 
   return (
     <>
-      <Button onClick={openTrialModal} className="trail-modal-card__button">
+      <Button onClick={openRequest} className="trail-modal-card__button">
         <div className="trail-modal-card">
           <div
             className="trail-modal-card__image"
@@ -39,7 +53,10 @@ const TrailModalCard: FC<TrailModalCardProps> = ({ instructor }) => {
               {instructor.first_name} {instructor.last_name}
             </h3>
             {instructor.instructor_fields?.map((instructorField) => (
-              <h4 className="trail-modal-card__body-field">
+              <h4
+                key={instructorField}
+                className="trail-modal-card__body-field"
+              >
                 {instructorField}
               </h4>
             ))}
@@ -64,25 +81,18 @@ const TrailModalCard: FC<TrailModalCardProps> = ({ instructor }) => {
         </div>
       </Button>
 
-      {openCalendarStepperModal && (
+      {openRequestModal && (
         <Dialog
-          maxWidth="lg"
+          maxWidth="sm"
           fullWidth
-          onClose={handleCloseCalendarStepperModal}
-          aria-labelledby="calendar-stepper-dialog"
-          open={openCalendarStepperModal}
-          sx={{
-            '& .MuiDialog-paper': {
-              width: 'calc(100% - 3.2rem)',
-              margin: '1.6rem',
-              maxHeight: 'calc(100% - 3.2rem)',
-            },
-          }}
+          onClose={closeRequest}
+          aria-labelledby="request-sessions-dialog"
+          open={openRequestModal}
         >
-          <CalendarStepperModal
+          <RequestSessionsModal
             instructor={instructor}
-            fromTrailModal
-            handleClose={handleCloseCalendarStepperModal}
+            defaultKind="trial"
+            handleClose={closeRequest}
           />
         </Dialog>
       )}
