@@ -112,6 +112,8 @@ export type Package = {
   student: PackageStudent;
   tutor: PackageTutor;
   tutor_rate: number;
+  /** ISO code of the tutor rate, always EGP today */
+  tutor_rate_currency?: string;
   updated_at: string;
 };
 

@@ -47,7 +47,7 @@ export const rateFor = (session: SessionType, packages: Package[]): Rate => {
   if (!match) return { perHour: null, currency: '' };
   return {
     perHour: Number(match.tutor_rate),
-    currency: match.amount_paid_currency || '',
+    currency: match.tutor_rate_currency || 'EGP',
   };
 };
 
