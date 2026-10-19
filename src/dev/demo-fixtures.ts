@@ -573,6 +573,7 @@ const makePackage = (
     id,
     amount_paid: amountPaid,
     amount_paid_currency: 'EGP',
+    tutor_rate_currency: 'EGP',
     created_at: createdAt,
     updated_at: '2026-10-08T12:00:00.000Z',
     grade_subject: gs(gradeSubjectId),

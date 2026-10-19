@@ -34,6 +34,15 @@ export interface Rate {
  * first, then the newest package for the same course.
  */
 export const rateFor = (session: SessionType, packages: Package[]): Rate => {
+  // The backend stores the rate each session pays (raises can split a
+  // student's sessions between an old and a new rate); older responses
+  // without it fall back to the newest package for the course.
+  if (session.tutor_rate != null) {
+    return {
+      perHour: Number(session.tutor_rate),
+      currency: session.tutor_rate_currency || 'EGP',
+    };
+  }
   const courseId = session.grade_subject?.id;
   const sameCourse = packages
     .filter((p) => p.grade_subject?.id === courseId && p.tutor_rate != null)
@@ -47,7 +56,7 @@ export const rateFor = (session: SessionType, packages: Package[]): Rate => {
   if (!match) return { perHour: null, currency: '' };
   return {
     perHour: Number(match.tutor_rate),
-    currency: match.amount_paid_currency || '',
+    currency: match.tutor_rate_currency || 'EGP',
   };
 };
 
