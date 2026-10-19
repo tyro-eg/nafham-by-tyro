@@ -218,6 +218,9 @@ export type SessionType = {
   session_type: 'regular' | 'trial' | 'group';
   start_time: string;
   status: 'open' | 'scheduled' | 'completed' | 'missed' | 'canceled';
+  /** What this session pays the tutor per hour, decided by the backend; null while unpriced */
+  tutor_rate?: number | null;
+  tutor_rate_currency?: string;
   student: {
     id: number;
     created_at: string;
