@@ -132,7 +132,12 @@ const SessionListCard: React.FC<SessionListCardProps> = ({ session }) => {
   const locale = locales[i18n.language as 'en' | 'ar'];
   const startDate = parseISO(session.start_time!);
   const isFuture = startDate > new Date();
-  const isLive = session.status === 'open';
+  const endDate = parseISO(session.end_time!);
+  // Over but not closed yet: attendance is being confirmed, nothing to join
+  const isAwaiting =
+    session.status === 'open' &&
+    (session.awaiting_confirmation === true || endDate <= new Date());
+  const isLive = session.status === 'open' && !isAwaiting;
   const isUpcoming = isLive || (session.status === 'scheduled' && isFuture);
   const typeVariant =
     session.session_type === 'group'
@@ -170,6 +175,13 @@ const SessionListCard: React.FC<SessionListCardProps> = ({ session }) => {
             <span className="sessions-card__badge sessions-card__badge--upcoming">
               <Timer aria-hidden="true" />
               {t('MYSESSIONS.MAIN.CARD.WILLGOLIVE')} {getRelativeSessionDate()}
+            </span>
+          )}
+
+          {isAwaiting && (
+            <span className="sessions-card__badge sessions-card__badge--upcoming">
+              <Timer aria-hidden="true" />
+              {t('MYSESSIONS.MAIN.CARD.AWAITING')}
             </span>
           )}
 

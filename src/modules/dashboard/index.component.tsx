@@ -373,7 +373,9 @@ const Dashboard: FC = () => {
                     size="large"
                     startIcon={<VideocamRounded />}
                     disabled={
-                      nextSession.status !== 'open' || !nextSession.session_link
+                      nextSession.status !== 'open' ||
+                      nextSession.awaiting_confirmation === true ||
+                      !nextSession.session_link
                     }
                     onClick={() =>
                       window.open(nextSession.session_link, '_blank')

@@ -703,6 +703,7 @@
         "RESCHEDULE": "Reschedule",
         "WILLGOLIVE": "Session will go live in",
         "END": "End the Session",
+        "AWAITING": "Awaiting confirmation",
         "GOTO": "Join session",
         "COMPLETED": "Session Completed",
         "MISSED": "Session Missed",
