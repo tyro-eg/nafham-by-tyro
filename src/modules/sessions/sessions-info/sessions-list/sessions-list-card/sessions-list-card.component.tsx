@@ -169,22 +169,15 @@ const SessionListCard: React.FC<SessionListCardProps> = ({ session }) => {
 
       <div className="sessions-card__main">
         <div className="sessions-card__badges">
-          <span
-            className={`sessions-card__badge sessions-card__badge--${typeVariant}`}
-          >
-            {session.session_type === 'group' ? <Group /> : <Person />}
-            {sessionName}
-          </span>
-
           {phase === 'upcoming' && (
-            <span className="sessions-card__badge sessions-card__badge--upcoming">
+            <span className="sessions-card__status sessions-card__status--upcoming">
               <Timer aria-hidden="true" />
               {t('MYSESSIONS.MAIN.CARD.WILLGOLIVE')} {getRelativeSessionDate()}
             </span>
           )}
 
           {phase === 'starting_soon' && (
-            <span className="sessions-card__badge sessions-card__badge--soon">
+            <span className="sessions-card__status sessions-card__status--soon">
               <Timer aria-hidden="true" />
               {t('MYSESSIONS.MAIN.CARD.STARTING_SOON')}{' '}
               {getRelativeSessionDate()}
@@ -192,7 +185,7 @@ const SessionListCard: React.FC<SessionListCardProps> = ({ session }) => {
           )}
 
           {isLive && (
-            <span className="sessions-card__badge sessions-card__badge--live">
+            <span className="sessions-card__status sessions-card__status--live">
               <span className="sessions-card__pulse" aria-hidden="true" />
               {t('MYSESSIONS.MAIN.CARD.LIVE_NOW')}
               {minutesSinceStart(session, now) > 0 &&
@@ -203,32 +196,39 @@ const SessionListCard: React.FC<SessionListCardProps> = ({ session }) => {
           )}
 
           {phase === 'awaiting' && (
-            <span className="sessions-card__badge sessions-card__badge--upcoming">
+            <span className="sessions-card__status sessions-card__status--awaiting">
               <Timer aria-hidden="true" />
               {t('MYSESSIONS.MAIN.CARD.AWAITING')}
             </span>
           )}
 
           {session.status === 'completed' && (
-            <span className="sessions-card__badge sessions-card__badge--completed">
+            <span className="sessions-card__status sessions-card__status--completed">
               <CheckCircle aria-hidden="true" />
               {t('MYSESSIONS.MAIN.CARD.COMPLETED')}
             </span>
           )}
 
           {phase === 'missed' && (
-            <span className="sessions-card__badge sessions-card__badge--missed">
+            <span className="sessions-card__status sessions-card__status--missed">
               <Cancel aria-hidden="true" />
               {t('MYSESSIONS.MAIN.CARD.MISSED')}
             </span>
           )}
 
           {phase === 'cancelled' && (
-            <span className="sessions-card__badge sessions-card__badge--canceled">
+            <span className="sessions-card__status sessions-card__status--canceled">
               <Cancel aria-hidden="true" />
               {t('MYSESSIONS.MAIN.CARD.CANCELLED')}
             </span>
           )}
+
+          <span
+            className={`sessions-card__badge sessions-card__badge--${typeVariant}`}
+          >
+            {session.session_type === 'group' ? <Group /> : <Person />}
+            {sessionName}
+          </span>
         </div>
 
         {phase === 'awaiting' && (

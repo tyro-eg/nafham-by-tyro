@@ -152,11 +152,73 @@
     }
   }
 
+  // ---- Status pill: the one thing to read on a card ---------------
+  &__status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.6rem 1.4rem;
+    border-radius: $radius-pill;
+    border: 1px solid transparent;
+    font-size: $font-sm;
+    font-weight: 700;
+    line-height: 1.3;
+    letter-spacing: 0.01em;
+
+    svg {
+      width: 1.8rem;
+      height: 1.8rem;
+    }
+
+    &--upcoming {
+      background-color: $brand-50;
+      border-color: $brand-100;
+      color: $brand-700;
+    }
+
+    &--soon {
+      background-color: $brand-100;
+      border-color: $brand-300;
+      color: $brand-700;
+    }
+
+    &--live {
+      background-color: $success-500;
+      border-color: $success-500;
+      color: #fff;
+      box-shadow: 0 0 0 4px rgba($success-500, 0.18);
+    }
+
+    &--awaiting {
+      background-color: $warning-50;
+      border-color: rgba($warning-500, 0.35);
+      color: $warning-500;
+    }
+
+    &--completed {
+      background-color: $success-50;
+      border-color: rgba($success-500, 0.35);
+      color: $success-500;
+    }
+
+    &--missed {
+      background-color: $danger-50;
+      border-color: rgba($danger-500, 0.3);
+      color: $danger-500;
+    }
+
+    &--canceled {
+      background-color: $gray-100;
+      border-color: $gray-100;
+      color: $gray-600;
+    }
+  }
+
   &__pulse {
     width: 0.8rem;
     height: 0.8rem;
     border-radius: 50%;
-    background-color: $success-500;
+    background-color: #fff;
     animation: sessions-card-pulse 1.6s ease-in-out infinite;
   }
 
