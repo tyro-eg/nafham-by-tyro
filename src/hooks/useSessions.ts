@@ -28,6 +28,9 @@ export interface PrivateSessionData {
   package_id: number;
 }
 
+/** How often session lists re-read the server while the tab is visible */
+export const LIVE_REFRESH_MS = 30_000;
+
 /**
  * Fetch paginated sessions
  */
@@ -61,6 +64,9 @@ export function useSessions(
         pagination: response.headers,
       };
     },
+    // Sessions open, close and get their meeting link on the server's clock
+    refetchInterval: LIVE_REFRESH_MS,
+    refetchIntervalInBackground: false,
   });
 }
 
@@ -109,6 +115,8 @@ export function useInfiniteSessions(
       return hasMore ? currentPage + 1 : undefined;
     },
     initialPageParam: 1,
+    refetchInterval: LIVE_REFRESH_MS,
+    refetchIntervalInBackground: false,
   });
 }
 
