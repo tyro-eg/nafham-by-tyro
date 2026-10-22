@@ -142,6 +142,28 @@
     &--canceled {
       @include badge($gray-100, $gray-600);
     }
+
+    &--soon {
+      @include badge($brand-100, $brand-700);
+    }
+
+    &--live {
+      @include badge($success-50, $success-500);
+    }
+  }
+
+  &__pulse {
+    width: 0.8rem;
+    height: 0.8rem;
+    border-radius: 50%;
+    background-color: $success-500;
+    animation: sessions-card-pulse 1.6s ease-in-out infinite;
+  }
+
+  &__hint {
+    margin-top: $space-1;
+    font-size: $font-xs;
+    color: $gray-600;
   }
 
   &__time {
@@ -285,5 +307,17 @@
       font-weight: 600;
       white-space: nowrap;
     }
+  }
+}
+
+@keyframes sessions-card-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.5);
+    opacity: 0.45;
   }
 }
