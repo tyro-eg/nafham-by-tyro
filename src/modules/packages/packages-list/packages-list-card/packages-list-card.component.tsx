@@ -121,6 +121,8 @@ const PackageListCard: FC<PackageListCardProps> = ({ packageData }) => {
     consistent: true,
   };
   const active = Math.max(hours.bought - hours.moved_out, 0);
+  // Only taught or missed hours count as gone; a booking is still the student's
+  const hoursLeft = Math.max(active - hours.used, 0);
   const share = (value: number) =>
     active > 0 ? Math.min(100, Math.max(0, (value / active) * 100)) : 0;
   const purchases = packageData.purchases ?? [];
@@ -188,11 +190,11 @@ const PackageListCard: FC<PackageListCardProps> = ({ packageData }) => {
           <div className="packages-card__progress-labels">
             <div className="packages-card__progress-stat">
               <span className="label">
-                {t('MYPACKAGES.CARD.UNSCHEDULED_HOURS')}
+                {t('MYPACKAGES.CARD.REMAINING_HOURS')}
               </span>
               <span className="value value--strong">
                 <AccessTime />
-                {hours.unscheduled} {t('MYPACKAGES.CARD.HOURS')}
+                {hoursLeft} {t('MYPACKAGES.CARD.HOURS')}
               </span>
             </div>
             <div className="packages-card__progress-stat packages-card__progress-stat--end">
@@ -207,8 +209,8 @@ const PackageListCard: FC<PackageListCardProps> = ({ packageData }) => {
             role="progressbar"
             aria-valuemin={0}
             aria-valuemax={active}
-            aria-valuenow={hours.unscheduled}
-            aria-label={t('MYPACKAGES.CARD.UNSCHEDULED_HOURS')}
+            aria-valuenow={hoursLeft}
+            aria-label={t('MYPACKAGES.CARD.REMAINING_HOURS')}
           >
             <span
               className="packages-card__progress-bar packages-card__progress-bar--used"
@@ -272,7 +274,9 @@ const PackageListCard: FC<PackageListCardProps> = ({ packageData }) => {
                 <p className="title">{t('MYPACKAGES.CARD.AMOUNT_PAID')}</p>
                 <p className="value value--strong">
                   <Payment />
-                  {packageData.amount_paid ?? 0}{' '}
+                  {packageData.amount_paid_total ??
+                    packageData.amount_paid ??
+                    0}{' '}
                   {packageData.amount_paid_currency || ''}
                 </p>
               </div>
@@ -298,9 +302,13 @@ const PackageListCard: FC<PackageListCardProps> = ({ packageData }) => {
             <p className="title">{t('MYPACKAGES.CARD.UPDATED_DATE')}</p>
             <p className="value">
               <Schedule />
-              {format(parseISO(packageData.updated_at), 'PP', {
-                locale: locales[i18n.language as 'en' | 'ar'],
-              })}
+              {format(
+                parseISO(
+                  packageData.last_activity_at ?? packageData.updated_at,
+                ),
+                'PP',
+                { locale: locales[i18n.language as 'en' | 'ar'] },
+              )}
             </p>
           </div>
         </div>

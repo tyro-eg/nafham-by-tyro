@@ -792,7 +792,7 @@
       "TRIAL_SESSION": "Trial Session",
       "PRIVATE_SESSION": "Private Session",
       "GROUP_COURSE": "Group Course",
-      "REMAINING_HOURS": "Remaining Hours",
+      "REMAINING_HOURS": "Hours Left",
       "ORIGINAL_HOURS": "Original Hours",
       "HOURS": "Hours",
       "COURSE": "Course",
@@ -807,7 +807,7 @@
         "WESTERN_UNION": "Western Union"
       },
       "CREATED_DATE": "Created Date",
-      "UPDATED_DATE": "Updated Date",
+      "UPDATED_DATE": "Last Activity",
       "CURRENCY": "EGP",
       "OTHER": "Other",
       "NOT_AVAILABLE": "Not Available",
