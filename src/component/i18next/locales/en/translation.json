@@ -810,7 +810,20 @@
       "UPDATED_DATE": "Updated Date",
       "CURRENCY": "EGP",
       "OTHER": "Other",
-      "NOT_AVAILABLE": "Not Available"
+      "NOT_AVAILABLE": "Not Available",
+      "BOUGHT_HOURS": "Hours Bought",
+      "UNSCHEDULED_HOURS": "Free to Book",
+      "HISTORY": {
+        "BOUGHT": "Bought",
+        "TOP_UP": "Topped up",
+        "MOVED_IN": "Moved in"
+      },
+      "LEGEND": {
+        "USED": "used",
+        "SCHEDULED": "scheduled",
+        "FREE": "free to book",
+        "MOVED_OUT": "moved to another tutor"
+      }
     }
   },
   "DIRECTORY": {

@@ -827,7 +827,20 @@
       "UPDATED_DATE": "تاريخ التحديث",
       "CURRENCY": "جنيه",
       "OTHER": "أخرى",
-      "NOT_AVAILABLE": "غير متاح"
+      "NOT_AVAILABLE": "غير متاح",
+      "BOUGHT_HOURS": "الساعات المشتراة",
+      "UNSCHEDULED_HOURS": "متاحة للحجز",
+      "HISTORY": {
+        "BOUGHT": "تم شراء",
+        "TOP_UP": "تمت إضافة",
+        "MOVED_IN": "تم نقل"
+      },
+      "LEGEND": {
+        "USED": "مستخدمة",
+        "SCHEDULED": "محجوزة",
+        "FREE": "متاحة للحجز",
+        "MOVED_OUT": "نُقلت إلى معلم آخر"
+      }
     }
   },
   "DIRECTORY": {

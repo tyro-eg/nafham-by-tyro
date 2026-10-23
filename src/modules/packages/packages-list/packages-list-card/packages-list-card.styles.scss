@@ -187,8 +187,9 @@
       }
     }
 
+    // Three segments: used, scheduled, free; the free share stays on the end
     &-track {
-      position: relative;
+      display: flex;
       height: 0.8rem;
       border-radius: $radius-pill;
       background-color: $gray-200;
@@ -196,13 +197,79 @@
     }
 
     &-bar {
-      position: absolute;
-      inset-block: 0;
-      inset-inline-start: 0;
-      border-radius: $radius-pill;
-      background-color: $brand-500;
+      display: block;
+      height: 100%;
       transition: width $transition;
+
+      &--used {
+        background-color: $gray-500;
+      }
+
+      &--scheduled {
+        background-color: $brand-800;
+      }
+
+      &--free {
+        background-color: $brand-500;
+      }
     }
+  }
+
+  &__legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $space-1 $space-4;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    &-item {
+      display: inline-flex;
+      align-items: center;
+      gap: $space-1;
+      font-size: $font-xs;
+      color: $text-muted;
+      font-variant-numeric: tabular-nums;
+
+      strong {
+        color: $text-strong;
+        font-weight: 700;
+      }
+
+      &::before {
+        content: '';
+        width: 0.8rem;
+        height: 0.8rem;
+        border-radius: 50%;
+        background-color: $gray-300;
+      }
+
+      &--used::before {
+        background-color: $gray-500;
+      }
+
+      &--scheduled::before {
+        background-color: $brand-800;
+      }
+
+      &--free::before {
+        background-color: $brand-500;
+      }
+    }
+  }
+
+  // "Bought 24 hours · Oct 21" lines: the hours side of the package's history
+  &__history {
+    list-style: none;
+    margin: 0;
+    padding: $space-2 0 0;
+    border-top: 1px dashed $border;
+    font-size: $font-xs;
+    color: $text-muted;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    text-align: start;
   }
 
   &__img-container {

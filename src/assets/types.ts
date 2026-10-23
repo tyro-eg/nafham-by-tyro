@@ -115,6 +115,26 @@ export type Package = {
   /** ISO code of the tutor rate, always EGP today */
   tutor_rate_currency?: string;
   updated_at: string;
+  /** Hours explained: taught or missed, booked, and still free to book */
+  hours?: PackageHours;
+  /** The purchase, top-ups and hours moved in, oldest first */
+  purchases?: PackagePurchase[];
+};
+
+export type PackageHours = {
+  bought: number;
+  moved_out: number;
+  used: number;
+  scheduled: number;
+  unscheduled: number;
+  consistent: boolean;
+};
+
+export type PackagePurchase = {
+  kind: 'purchase' | 'top_up' | 'moved_in';
+  at: string;
+  hours: number;
+  tutor_name?: string;
 };
 
 export type Schedule = {
