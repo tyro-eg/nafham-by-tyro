@@ -1,5 +1,6 @@
 import { FC } from 'react';
 import { useTranslation } from 'react-i18next';
+import { SchoolOutlined } from '@mui/icons-material';
 
 import { useRtlClass } from '../../../assets/utils/utils';
 
@@ -30,11 +31,11 @@ const HomeFields: FC = () => {
   ];
 
   return (
-    <div className="landing__learning-fields">
-      <div className="container">
-        <div className="learning-fields-container">
-          <p className="learning-fields-header">{t('LANDING.BLOCK2.TITLE')}</p>
-          <p className="learning-fields-description">
+    <section className="landing__learning-fields">
+      <div className="ds-container">
+        <div className="home-heading">
+          <p className="ds-eyebrow">{t('LANDING.BLOCK2.TITLE')}</p>
+          <h2 className="section-title">
             <span className={`parallelogram ${rtlClass}`}>
               {t('LANDING.BLOCK2.DESCRIPTION.PART1')}
             </span>
@@ -42,21 +43,29 @@ const HomeFields: FC = () => {
             <span className={`parallelogram ${rtlClass}`}>
               {t('LANDING.BLOCK2.DESCRIPTION.PART3')}
             </span>
-          </p>
+          </h2>
         </div>
 
         <div className="fields-images">
           {fields.map((field, index) => (
             <div key={index} className="fields-images__card">
-              <h5 className="title">{field.label}</h5>
-              {field.image && (
-                <img className="image" src={field.image} alt={field.alt} />
-              )}
+              <span
+                className={`fields-images__icon ${
+                  field.image ? '' : 'fields-images__icon--placeholder'
+                }`}
+              >
+                {field.image ? (
+                  <img className="image" src={field.image} alt={field.alt} />
+                ) : (
+                  <SchoolOutlined aria-hidden="true" />
+                )}
+              </span>
+              <h3 className="title">{field.label}</h3>
             </div>
           ))}
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 

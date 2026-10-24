@@ -63,6 +63,9 @@ export type GradeSubject = {
     id: number;
     name: string;
   };
+  /** Optional course variants (e.g. IGCSE O Level / A Level, Cambridge / Edexcel) */
+  sub_curriculum?: { id: number; name: string } | null;
+  exam_board?: { id: number; name: string } | null;
 };
 
 export type PackageStudent = {
@@ -109,7 +112,33 @@ export type Package = {
   student: PackageStudent;
   tutor: PackageTutor;
   tutor_rate: number;
+  /** ISO code of the tutor rate, always EGP today */
+  tutor_rate_currency?: string;
   updated_at: string;
+  /** This purchase plus its top-ups */
+  amount_paid_total?: number;
+  /** The last edit, top-up or session on the package */
+  last_activity_at?: string;
+  /** Hours explained: taught or missed, booked, and still free to book */
+  hours?: PackageHours;
+  /** The purchase, top-ups and hours moved in, oldest first */
+  purchases?: PackagePurchase[];
+};
+
+export type PackageHours = {
+  bought: number;
+  moved_out: number;
+  used: number;
+  scheduled: number;
+  unscheduled: number;
+  consistent: boolean;
+};
+
+export type PackagePurchase = {
+  kind: 'purchase' | 'top_up' | 'moved_in';
+  at: string;
+  hours: number;
+  tutor_name?: string;
 };
 
 export type Schedule = {
@@ -213,6 +242,9 @@ export type SessionType = {
   session_type: 'regular' | 'trial' | 'group';
   start_time: string;
   status: 'open' | 'scheduled' | 'completed' | 'missed' | 'canceled';
+  /** What this session pays the tutor per hour, decided by the backend; null while unpriced */
+  tutor_rate?: number | null;
+  tutor_rate_currency?: string;
   student: {
     id: number;
     created_at: string;

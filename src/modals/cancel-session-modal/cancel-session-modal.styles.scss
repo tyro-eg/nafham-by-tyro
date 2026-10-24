@@ -1,38 +1,47 @@
 @import '../../assets/styles/variables.scss';
 @import '../../assets/styles/mixins.scss';
+@import '../modal-kit';
 
 .cancelCalendarModal {
-  padding: 3rem;
-  @include respond(phone) {
-    padding: 2rem;
-  }
+  @include modal-shell;
+
   &__head {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
+    gap: $space-4;
 
     &-icon {
-      color: $color-private;
-      font-size: 2.2rem;
+      @include modal-icon-chip($warning-50, $warning-500);
+      font-size: 2.4rem;
     }
 
-    h4 {
-      margin-left: 1.2rem;
+    &-text {
+      flex: 1;
+      min-width: 0;
+      padding-top: 0.2rem;
+    }
+  }
+
+  &__title {
+    @include modal-title;
+    font-size: $font-h4;
+
+    @include respond(phone) {
+      font-size: $font-lg;
     }
   }
 
   &__body {
-    padding-left: 3rem;
+    @include modal-subtitle;
+    margin-top: $space-2;
+    font-size: $font-base;
   }
 
   &__actions-container {
-    display: flex;
-    justify-content: flex-end;
-    margin-top: 4.5rem;
+    @include modal-footer;
+
     &-action {
-      min-width: 8rem;
-    }
-    &-action:first-child {
-      margin: 0 1rem;
+      min-width: 10rem;
     }
   }
 }

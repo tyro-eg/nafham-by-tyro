@@ -7,10 +7,11 @@ import {
   // TODO: Uncomment when backend is ready
   // Dialog,
   // IconButton,
+  IconButton,
   InputLabel,
   TextField,
 } from '@mui/material';
-import { ExitToApp } from '@mui/icons-material';
+import { Close, ExitToApp } from '@mui/icons-material';
 // TODO: Uncomment when backend is ready
 // import { Close } from '@mui/icons-material';
 import { useForm, Controller } from 'react-hook-form';
@@ -25,6 +26,7 @@ import { selectCurrentUser } from '../../redux/user/user.selectors';
 import { useAppSelector } from '../../redux/store';
 import { useRtlClass } from '../../assets/utils/utils';
 import { useSignIn } from '../../hooks/useAuth';
+import { getHomePath } from '../../assets/utils/home-path';
 
 interface LoginModalProps {
   onClose: () => void;
@@ -81,7 +83,7 @@ const LoginModal: FC<LoginModalProps> = ({
     try {
       const userData = await signInMutation.mutateAsync(values);
       if (userData?.id) {
-        navigate('/home');
+        navigate(getHomePath(userData));
       }
     } catch (error) {
       console.error('Login error:', error);
@@ -104,83 +106,95 @@ const LoginModal: FC<LoginModalProps> = ({
 
   return (
     <div className="login-modal">
-      <div className="login-modal__card">
-        <div className="login-modal__card-icon">
+      <div className={`login-modal__header ${rtlClass}`}>
+        <div className="login-modal__icon">
           <ExitToApp />
         </div>
-        <div className={`login-modal__card-body ${rtlClass}`}>
-          <p className="login-modal__card-body__header">
+        <div className="login-modal__heading">
+          <h2 className="login-modal__title">
             {modalData.courseItem
               ? t('LOGIN.LOGIN_TITLE_1')
               : t('LOGIN.LOGIN_TITLE')}
-          </p>
-          <p className="login-modal__card-body__text">
-            {t('LOGIN.LOGIN_SUBTITLE')}
-          </p>
+          </h2>
+          <p className="login-modal__subtitle">{t('LOGIN.LOGIN_SUBTITLE')}</p>
         </div>
+        <IconButton
+          className="login-modal__close"
+          onClick={onClose}
+          aria-label={t('CALENDAR.MYSESSION.ACTIONS.CLOSE')}
+        >
+          <Close />
+        </IconButton>
       </div>
 
-      <hr className="full-line" />
       <form
         onSubmit={handleSubmit(onSubmit)}
         className={`login-modal__form ${rtlClass}`}
       >
-        <InputLabel htmlFor="email">{t('LOGIN.LOGIN_EMAIL')}</InputLabel>
-        <Controller
-          name="email"
-          control={control}
-          render={({ field }) => (
-            <TextField
-              {...field}
-              placeholder={t('LOGIN.LOGIN_EMAIL_INPUT_PLACEHOLDER')}
-              type="email"
-              variant="outlined"
-              className="custom-input-style"
-              id="email"
-              error={!!errors.email}
-              helperText={errors.email?.message && t(errors.email.message)}
-              fullWidth
-            />
-          )}
-        />
-        <div className="forget-password-label">
-          <InputLabel htmlFor="password">
-            {t('LOGIN.LOGIN_PASSWORD')}
-          </InputLabel>
-          {/* TODO: Uncomment when backend is ready */}
-          {/* <Button
-            variant="text"
-            onClick={handleOpenForgetPassword}
-            className={`forget-password-btn ${rtlClass}`}
-          >
-            {t('LOGIN.FORGET_PASSWORD')}
-          </Button> */}
+        <div className="auth-field">
+          <InputLabel htmlFor="email">{t('LOGIN.LOGIN_EMAIL')}</InputLabel>
+          <Controller
+            name="email"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                placeholder={t('LOGIN.LOGIN_EMAIL_INPUT_PLACEHOLDER')}
+                type="email"
+                variant="outlined"
+                className="custom-input-style"
+                id="email"
+                autoComplete="email"
+                error={!!errors.email}
+                helperText={errors.email?.message && t(errors.email.message)}
+                fullWidth
+              />
+            )}
+          />
         </div>
-        <Controller
-          name="password"
-          control={control}
-          render={({ field }) => (
-            <TextField
-              {...field}
-              placeholder={t('LOGIN.LOGIN_PASSWORD_INPUT_PLACEHOLDER')}
-              variant="outlined"
-              type="password"
-              className="custom-input-style"
-              id="password"
-              error={!!errors.password}
-              helperText={
-                errors.password?.message && t(errors.password.message)
-              }
-              fullWidth
-            />
-          )}
-        />
+        <div className="auth-field">
+          <div className="forget-password-label">
+            <InputLabel htmlFor="password">
+              {t('LOGIN.LOGIN_PASSWORD')}
+            </InputLabel>
+            {/* TODO: Uncomment when backend is ready */}
+            {/* <Button
+              variant="text"
+              onClick={handleOpenForgetPassword}
+              className={`forget-password-btn ${rtlClass}`}
+            >
+              {t('LOGIN.FORGET_PASSWORD')}
+            </Button> */}
+          </div>
+          <Controller
+            name="password"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                placeholder={t('LOGIN.LOGIN_PASSWORD_INPUT_PLACEHOLDER')}
+                variant="outlined"
+                type="password"
+                className="custom-input-style"
+                id="password"
+                autoComplete="current-password"
+                error={!!errors.password}
+                helperText={
+                  errors.password?.message && t(errors.password.message)
+                }
+                fullWidth
+              />
+            )}
+          />
+        </div>
         <Button
           type="submit"
           variant="contained"
           color="primary"
+          size="large"
           disabled={isSubmitting}
           className="btn-custom-style"
+          fullWidth
         >
           {t('LOGIN.LOGIN_SUBMIT_BTN')}
         </Button>
@@ -195,7 +209,9 @@ const LoginModal: FC<LoginModalProps> = ({
         <div className="term-body">
           <p className="term-first-text">{t('REGISTER.TERMS')}</p>
           <Button onClick={goToTerms} variant="text">
-            <p className="term-second-text">{t('REGISTER.TERMS_GREEN')}</p>
+            <span className="term-second-text">
+              {t('REGISTER.TERMS_GREEN')}
+            </span>
           </Button>
         </div>
       </form>

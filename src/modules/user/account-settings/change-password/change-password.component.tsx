@@ -66,10 +66,21 @@ const ChangePassword: FC = () => {
 
   return (
     <div className="container change-password">
-      <h4 className="sub-title">
-        {t('ACCOUNT_SETTINGS.CHANGE_PASSWORD_FORM.TITLE')}
-      </h4>
-      <div className="change-password__form-container">
+      <section className="change-password__form-container">
+        <header className="change-password__header">
+          <h2 className="sub-title">
+            {t('ACCOUNT_SETTINGS.CHANGE_PASSWORD_FORM.TITLE')}
+          </h2>
+          {!editPasswordFlag && (
+            <Button
+              variant="outlined"
+              onClick={togglePasswordFlag}
+              className="edit-btn"
+            >
+              {t('ACCOUNT_SETTINGS.EDIT')}
+            </Button>
+          )}
+        </header>
         <form
           onSubmit={handleSubmit(onSubmit)}
           className={`change-password__form ${rtlClass}`}
@@ -151,6 +162,14 @@ const ChangePassword: FC = () => {
           {!!editPasswordFlag && (
             <div className="form-actions">
               <Button
+                variant="outlined"
+                disabled={isSubmitting || !editPasswordFlag}
+                onClick={cancelPasswordEdit}
+                className="cancel-btn"
+              >
+                {t('ACCOUNT_SETTINGS.CONTACT_DETAILS_FORM.CANCEL')}
+              </Button>
+              <Button
                 variant="contained"
                 color="primary"
                 disabled={isSubmitting}
@@ -159,27 +178,10 @@ const ChangePassword: FC = () => {
               >
                 {t('ACCOUNT_SETTINGS.CHANGE_PASSWORD_FORM.CHANGE_PASSWORD_BTN')}
               </Button>
-              <Button
-                variant="text"
-                disabled={isSubmitting || !editPasswordFlag}
-                onClick={cancelPasswordEdit}
-                className="cancel-btn"
-              >
-                {t('ACCOUNT_SETTINGS.CONTACT_DETAILS_FORM.CANCEL')}
-              </Button>
             </div>
           )}
         </form>
-        {!editPasswordFlag && (
-          <Button
-            variant="text"
-            onClick={togglePasswordFlag}
-            className="edit-btn"
-          >
-            {t('ACCOUNT_SETTINGS.EDIT')}
-          </Button>
-        )}
-      </div>
+      </section>
     </div>
   );
 };

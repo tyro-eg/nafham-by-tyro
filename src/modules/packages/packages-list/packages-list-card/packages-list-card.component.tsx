@@ -13,7 +13,7 @@ import { useNavigate } from 'react-router-dom';
 import { parseISO, format } from 'date-fns';
 import { arSA } from 'date-fns/locale/ar-SA';
 import { enUS } from 'date-fns/locale/en-US';
-import { Rating } from '@mui/material';
+import RatingSummary from '../../../../component/rating-summary/rating-summary.component';
 import { useAppSelector } from '../../../../redux/store';
 import { selectCurrentUser } from '../../../../redux/user/user.selectors';
 import { useRtlClass } from '../../../../assets/utils/utils';
@@ -109,10 +109,34 @@ const PackageListCard: FC<PackageListCardProps> = ({ packageData }) => {
 
   if (!displayUser) return null;
 
+  const remainingHours = packageData.remaining_hours ?? 0;
+  const originalHours = packageData.original_hours ?? 0;
+  // Older API responses carry only the balance: then everything not free is "used"
+  const hours = packageData.hours ?? {
+    bought: originalHours,
+    moved_out: 0,
+    used: Math.max(originalHours - remainingHours, 0),
+    scheduled: 0,
+    unscheduled: remainingHours,
+    consistent: true,
+  };
+  const active = Math.max(hours.bought - hours.moved_out, 0);
+  // Only taught or missed hours count as gone; a booking is still the student's
+  const hoursLeft = Math.max(active - hours.used, 0);
+  const share = (value: number) =>
+    active > 0 ? Math.min(100, Math.max(0, (value / active) * 100)) : 0;
+  const purchases = packageData.purchases ?? [];
+  const purchaseLabel = (kind: string) =>
+    kind === 'top_up'
+      ? t('MYPACKAGES.CARD.HISTORY.TOP_UP')
+      : kind === 'moved_in'
+        ? t('MYPACKAGES.CARD.HISTORY.MOVED_IN')
+        : t('MYPACKAGES.CARD.HISTORY.BOUGHT');
+
   return (
-    <div className="packages-card">
+    <article className="packages-card">
       <div className="packages-card__content">
-        <div className={`packages-card__content-top ${rtlClass}`}>
+        <header className={`packages-card__content-top ${rtlClass}`}>
           <div className="packages-card__img-container">
             <Button
               className="card-img packages-card__user-img"
@@ -139,52 +163,108 @@ const PackageListCard: FC<PackageListCardProps> = ({ packageData }) => {
             </Button>
             <div className="user-info">
               <p className="name">{userName}</p>
-              {displayUser.type === 'Tutor' &&
-                displayUser.average_rating !== undefined && (
-                  <div className="review">
-                    <div className="review-stars">
-                      <Rating
-                        name="package user rating"
-                        value={displayUser.average_rating || 0}
-                        precision={0.1}
-                        readOnly
-                      />
-                      <span className="review-numbers">
-                        {displayUser.average_rating || 0} / 5.0
-                      </span>
-                    </div>
-                  </div>
-                )}
+              {displayUser.type === 'Tutor' && !!displayUser.average_rating && (
+                <RatingSummary
+                  className="review"
+                  value={displayUser.average_rating}
+                  count={displayUser.number_of_reviews}
+                />
+              )}
             </div>
           </div>
+          <span
+            className={`packages-card__type packages-card__type--${
+              packageData.package_type || 'private'
+            }`}
+          >
+            {packageData.package_type === 'group_course' ? (
+              <Group />
+            ) : (
+              <Person />
+            )}
+            {packageTypeLabel}
+          </span>
+        </header>
+
+        <div className="packages-card__progress">
+          <div className="packages-card__progress-labels">
+            <div className="packages-card__progress-stat">
+              <span className="label">
+                {t('MYPACKAGES.CARD.REMAINING_HOURS')}
+              </span>
+              <span className="value value--strong">
+                <AccessTime />
+                {hoursLeft} {t('MYPACKAGES.CARD.HOURS')}
+              </span>
+            </div>
+            <div className="packages-card__progress-stat packages-card__progress-stat--end">
+              <span className="label">{t('MYPACKAGES.CARD.BOUGHT_HOURS')}</span>
+              <span className="value">
+                {hours.bought} {t('MYPACKAGES.CARD.HOURS')}
+              </span>
+            </div>
+          </div>
+          <div
+            className="packages-card__progress-track"
+            role="progressbar"
+            aria-valuemin={0}
+            aria-valuemax={active}
+            aria-valuenow={hoursLeft}
+            aria-label={t('MYPACKAGES.CARD.REMAINING_HOURS')}
+          >
+            <span
+              className="packages-card__progress-bar packages-card__progress-bar--used"
+              style={{ width: `${share(hours.used)}%` }}
+            />
+            <span
+              className="packages-card__progress-bar packages-card__progress-bar--scheduled"
+              style={{ width: `${share(hours.scheduled)}%` }}
+            />
+            <span
+              className="packages-card__progress-bar packages-card__progress-bar--free"
+              style={{ width: `${share(hours.unscheduled)}%` }}
+            />
+          </div>
+          <ul className="packages-card__legend">
+            <li className="packages-card__legend-item packages-card__legend-item--used">
+              <strong>{hours.used}</strong> {t('MYPACKAGES.CARD.LEGEND.USED')}
+            </li>
+            <li className="packages-card__legend-item packages-card__legend-item--scheduled">
+              <strong>{hours.scheduled}</strong>{' '}
+              {t('MYPACKAGES.CARD.LEGEND.SCHEDULED')}
+            </li>
+            <li className="packages-card__legend-item packages-card__legend-item--free">
+              <strong>{hours.unscheduled}</strong>{' '}
+              {t('MYPACKAGES.CARD.LEGEND.FREE')}
+            </li>
+            {hours.moved_out > 0 && (
+              <li className="packages-card__legend-item">
+                <strong>{hours.moved_out}</strong>{' '}
+                {t('MYPACKAGES.CARD.LEGEND.MOVED_OUT')}
+              </li>
+            )}
+          </ul>
+          {purchases.length > 0 && (
+            <ul className="packages-card__history">
+              {purchases.map((entry, index) => (
+                <li key={index}>
+                  {purchaseLabel(entry.kind)} {entry.hours}{' '}
+                  {t('MYPACKAGES.CARD.HOURS')}
+                  {entry.kind === 'moved_in' && entry.tutor_name
+                    ? ` (${entry.tutor_name})`
+                    : ''}{' '}
+                  ·{' '}
+                  {format(parseISO(entry.at), 'PP', {
+                    locale: locales[i18n.language as 'en' | 'ar'],
+                  })}
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
+
         <div className="packages-card__content-middle">
-          <div className={`prop-card ${rtlClass}`}>
-            <p className="title">{t('MYPACKAGES.CARD.TYPE')}</p>
-            <p className="value">
-              {packageData.package_type === 'group_course' ? (
-                <Group />
-              ) : (
-                <Person />
-              )}
-              {packageTypeLabel}
-            </p>
-          </div>
-          <div className={`prop-card ${rtlClass}`}>
-            <p className="title">{t('MYPACKAGES.CARD.REMAINING_HOURS')}</p>
-            <p className="value">
-              <AccessTime />
-              {packageData.remaining_hours ?? 0} {t('MYPACKAGES.CARD.HOURS')}
-            </p>
-          </div>
-          <div className={`prop-card ${rtlClass}`}>
-            <p className="title">{t('MYPACKAGES.CARD.ORIGINAL_HOURS')}</p>
-            <p className="value">
-              <AccessTime />
-              {packageData.original_hours ?? 0} {t('MYPACKAGES.CARD.HOURS')}
-            </p>
-          </div>
-          <div className={`prop-card ${rtlClass}`}>
+          <div className={`prop-card prop-card--wide ${rtlClass}`}>
             <p className="title">{t('MYPACKAGES.CARD.COURSE')}</p>
             <p className="value field">{courseName}</p>
           </div>
@@ -192,9 +272,11 @@ const PackageListCard: FC<PackageListCardProps> = ({ packageData }) => {
             <>
               <div className={`prop-card ${rtlClass}`}>
                 <p className="title">{t('MYPACKAGES.CARD.AMOUNT_PAID')}</p>
-                <p className="value">
+                <p className="value value--strong">
                   <Payment />
-                  {packageData.amount_paid ?? 0}{' '}
+                  {packageData.amount_paid_total ??
+                    packageData.amount_paid ??
+                    0}{' '}
                   {packageData.amount_paid_currency || ''}
                 </p>
               </div>
@@ -220,14 +302,18 @@ const PackageListCard: FC<PackageListCardProps> = ({ packageData }) => {
             <p className="title">{t('MYPACKAGES.CARD.UPDATED_DATE')}</p>
             <p className="value">
               <Schedule />
-              {format(parseISO(packageData.updated_at), 'PP', {
-                locale: locales[i18n.language as 'en' | 'ar'],
-              })}
+              {format(
+                parseISO(
+                  packageData.last_activity_at ?? packageData.updated_at,
+                ),
+                'PP',
+                { locale: locales[i18n.language as 'en' | 'ar'] },
+              )}
             </p>
           </div>
         </div>
       </div>
-    </div>
+    </article>
   );
 };
 

@@ -19,16 +19,18 @@ const CompleteRegisterSuccessModal: FC<CompleteRegisterSuccessModalProps> = ({
         src="https://tyro-app.s3-eu-west-1.amazonaws.com/checkout/Payment+Successful!%403x.png"
         alt="Success"
       />
-      <h4 className="u-font-weight-bold">
+      <h4 className="success-title">
         {t('CHECKOUT.MODALS.COMPLETE_REGISTER.TITLE')}
       </h4>
-      <p className="u-font-size-16">
+      <p className="success-text">
         {t('CHECKOUT.MODALS.COMPLETE_REGISTER.MESSAGE')}
       </p>
       <Button
         className="completeRegisterModal__btn"
         variant="contained"
         color="primary"
+        size="large"
+        fullWidth
         onClick={onClose}
       >
         {t('CHECKOUT.MODALS.COMPLETE_REGISTER.BUTTON')}

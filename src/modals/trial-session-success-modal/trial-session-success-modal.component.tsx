@@ -36,6 +36,8 @@ const TrialSessionSuccessModal: FC<TrialSessionSuccessModalProps> = ({
         className="trialSessionModal__button"
         variant="contained"
         color="primary"
+        size="large"
+        fullWidth
         onClick={navigateToMySessions}
       >
         {t('CHECKOUT.MODALS.TRIAL_SUCCESS.BUTTON')}

@@ -243,6 +243,29 @@ VITE_API_BASE_URL=https://api.example.com
 const apiUrl = import.meta.env.VITE_API_BASE_URL;
 ```
 
+### Chat (Stream Chat)
+
+Messaging between students, instructors and Nafham Support runs on
+[Stream Chat](https://getstream.io/chat/). The web app needs:
+
+```env
+# Public API key of the Stream app. Leave empty to hide chat entirely.
+VITE_STREAM_API_KEY=
+
+# Stream user id of the shared "Nafham Support" member added to every
+# conversation. Create this user in the Stream dashboard (or via the backend).
+VITE_STREAM_ADMIN_USER_ID=nafham-support
+
+# Development only. "true" signs user tokens in the browser with
+# client.devToken(); requires "Disable Auth Checks" in the Stream dashboard.
+# In staging/production leave it unset: the app calls POST /chat/token and
+# the backend signs the token with the Stream secret.
+VITE_STREAM_DEV_TOKENS=false
+```
+
+Attachment size and type limits are enforced in the Stream dashboard
+(App settings → File uploads). The UI copy assumes 25 MB per file.
+
 ### Important Rules:
 
 1. ✅ All Vite env vars **MUST** start with `VITE_`

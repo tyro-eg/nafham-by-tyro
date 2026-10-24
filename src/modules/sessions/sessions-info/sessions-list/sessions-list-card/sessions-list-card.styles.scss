@@ -1,211 +1,229 @@
 @import '../../../../../assets/styles/variables.scss';
 @import '../../../../../assets/styles/mixins.scss';
+@import '../../../session-tokens.scss';
 
 .sessions-card {
-  display: block;
-  border-radius: 8px;
-  border: 1px solid #eaeef1;
-  background-color: $color-white;
-  padding: 3.2rem 3.2rem 1.2rem;
-  margin-bottom: 2rem;
+  @include card($space-5);
+  display: flex;
+  align-items: flex-start;
+  gap: $space-5;
+  transition:
+    box-shadow $transition,
+    border-color $transition;
+
+  & + & {
+    margin-top: $space-4;
+  }
+
+  &:hover {
+    box-shadow: $shadow-md;
+  }
+
+  @include respond(tab-port) {
+    gap: $space-4;
+  }
 
   @include respond(phone) {
-    padding: 1.2rem;
+    flex-wrap: wrap;
+    gap: $space-3 $space-4;
+    padding: $space-4;
+
+    & + & {
+      margin-top: $space-3;
+    }
   }
-  &__content {
+
+  &--live {
+    border-color: $brand-300;
+    box-shadow:
+      0 0 0 3px $brand-50,
+      $shadow-sm;
+  }
+
+  // ---- Date tile -------------------------------------------------
+  &__date {
+    flex-shrink: 0;
     display: flex;
     flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 7.2rem;
+    padding: $space-3 $space-2;
+    border-radius: $radius-md;
+    background-color: $brand-50;
+    color: $brand-700;
+    text-align: center;
+    line-height: 1.1;
 
-    &-top {
-      display: flex;
-      justify-content: space-between;
-      border-bottom: 1px solid #eaeef1;
-      padding-bottom: 1.6rem;
+    @include respond(phone) {
+      width: 6rem;
+      padding: $space-2;
     }
 
-    &-middle {
-      display: flex;
-      flex-wrap: wrap;
-      margin-top: 1.6rem;
-      padding-bottom: 1.6rem;
+    &-month {
+      font-size: $font-xs;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
 
-      .prop-card {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        width: 20%;
+    &-day {
+      margin: 0.2rem 0;
+      font-size: 2.8rem;
+      font-weight: 700;
+      color: $text-strong;
 
-        &:not(:last-child) {
-          border-right: 1px solid #eaeef1;
-        }
+      @include respond(phone) {
+        font-size: 2.4rem;
+      }
+    }
 
-        &:not(:first-child) {
-          padding-left: 2rem;
-        }
+    &-weekday {
+      font-size: $font-xs;
+      font-weight: 500;
+      color: $text-muted;
+    }
+  }
 
-        &.rtl {
-          &:not(:last-child) {
-            border-left: 1px solid #eaeef1;
-            border-right: none;
-          }
+  &--past &__date {
+    background-color: $gray-100;
+    color: $gray-500;
 
-          &:not(:first-child) {
-            padding-left: 0;
-            padding-right: 2rem;
-          }
-        }
+    .sessions-card__date-day {
+      color: $gray-600;
+    }
+  }
 
-        @include respond(tab-port) {
-          width: 50%;
+  // ---- Main column -----------------------------------------------
+  &__main {
+    flex: 1 1 0;
+    display: flex;
+    flex-direction: column;
+    gap: $space-2;
+    min-width: 0;
+    text-align: start;
+  }
 
-          &:not(:last-child) {
-            border-right: none;
-          }
+  &__badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $space-2;
+  }
 
-          &:not(:first-child) {
-            padding-left: 0;
-          }
+  &__badge {
+    @include badge($gray-100, $gray-600);
+    @include session-badge-icon;
+    white-space: normal;
 
-          &:nth-child(odd):not(:last-child) {
-            border-right: 1px solid #eaeef1;
-          }
+    &--group {
+      @include session-type-badge(group);
+    }
 
-          &:not(:last-child) {
-            border-bottom: 1px solid #eaeef1;
-            margin-bottom: 1rem;
-            padding-bottom: 1rem;
-          }
+    &--private {
+      @include session-type-badge(private);
+    }
 
-          &:nth-child(even) {
-            padding-left: 2rem;
-          }
+    &--trial {
+      @include session-type-badge(trial);
+    }
 
-          &.rtl {
-            &:not(:last-child) {
-              border-left: none;
-            }
+    &--upcoming {
+      @include badge($brand-50, $brand-700);
+    }
 
-            &:not(:first-child) {
-              padding-right: 0;
-            }
+    &--completed {
+      @include badge($success-50, $success-500);
+    }
 
-            &:nth-child(odd):not(:last-child) {
-              border-left: 1px solid #eaeef1;
-              border-right: none;
-            }
+    &--missed {
+      @include badge($danger-50, $danger-500);
+    }
 
-            &:nth-child(even) {
-              padding-right: 2rem;
-              padding-left: 0;
-            }
-          }
-        }
+    &--canceled {
+      @include badge($gray-100, $gray-600);
+    }
+  }
 
-        .title {
-          font-weight: 600;
+  &__time {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: $space-1 $space-4;
+    margin-top: $space-1;
+
+    &-item {
+      display: inline-flex;
+      align-items: center;
+      gap: $space-1;
+      font-size: $font-h5;
+      font-weight: 700;
+      line-height: 1.3;
+      color: $text-strong;
+
+      svg {
+        font-size: 2rem;
+        color: $brand-600;
+      }
+
+      &--muted {
+        font-size: $font-sm;
+        font-weight: 500;
+        color: $text-muted;
+
+        svg {
           font-size: 1.6rem;
-          line-height: 19px;
-          color: $color-title;
-          margin-bottom: 2rem;
-          text-align: start;
-
-          @include respond(phone) {
-            font-size: 1.1rem;
-          }
-        }
-
-        .value {
-          display: flex;
-          align-items: center;
-          justify-content: flex-start;
-          font-weight: 500;
-          font-size: 1.6rem;
-          line-height: 150%;
-          color: $color-body;
-
-          svg {
-            font-size: 2rem;
-            margin-right: 0.7rem;
-
-            &.rtl {
-              margin-right: 0;
-              margin-left: 0.7rem;
-            }
-          }
-
-          @include respond(phone) {
-            font-size: 1.1rem;
-
-            svg {
-              font-size: 1.2rem;
-            }
-          }
-        }
-
-        .field {
-          padding: 4px 6px;
-          border-radius: 0.6rem;
-          background-color: #eaeef1;
-          color: $color-body;
-          font-weight: 500;
-          font-size: 1.6rem;
-          line-height: 150%;
-          margin-right: 2rem;
-
-          @include respond(phone) {
-            font-size: 1.1rem;
-          }
+          color: $gray-400;
         }
       }
     }
   }
 
-  &__img-container {
+  &--past .sessions-card__time-item:not(.sessions-card__time-item--muted) {
+    color: $gray-600;
+
+    svg {
+      color: $gray-400;
+    }
+  }
+
+  &__subject {
+    @include ellipsis(2);
+    font-size: $font-base;
+    font-weight: 600;
+    line-height: 1.5;
+    color: $text-body;
+  }
+
+  // ---- Person ----------------------------------------------------
+  &__person {
     display: flex;
     align-items: center;
+    gap: $space-3;
+    margin-top: $space-2;
+    min-width: 0;
+  }
 
-    img {
-      width: 4.9rem;
-      height: 4.9rem;
+  &__avatar {
+    flex-shrink: 0;
+    width: 4rem;
+    height: 4rem;
+    border-radius: 50%;
+    overflow: hidden;
+    background-color: $gray-100;
+
+    &.MuiButton-root {
+      min-width: 0;
+      min-height: 0;
+      padding: 0;
       border-radius: 50%;
     }
 
-    .user-info {
-      margin: 0 0.8rem;
-
-      .name {
-        font-weight: 700;
-        font-size: 2.4rem;
-        line-height: 140%;
-        color: $color-title;
-        text-align: start;
-
-        @include respond(phone) {
-          font-size: 1.6rem;
-        }
-      }
-
-      .review {
-        display: flex;
-        align-items: center;
-
-        &-stars {
-          display: flex;
-          justify-content: center;
-
-          .yellow {
-            color: $color-gold;
-          }
-
-          .grey {
-            color: rgba($color: $color-black, $alpha: 0.1);
-          }
-        }
-
-        &-ratings {
-          margin: 0 1rem;
-        }
-      }
+    img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
     }
   }
 
@@ -213,52 +231,59 @@
     cursor: pointer;
   }
 
+  &__person-info {
+    min-width: 0;
+  }
+
+  &__name {
+    @include ellipsis;
+    font-size: $font-sm;
+    font-weight: 600;
+    line-height: 1.4;
+    color: $text-strong;
+  }
+
+  &__rating {
+    @include accent-rating;
+  }
+
+  // ---- Actions ---------------------------------------------------
   &__actions {
+    flex-shrink: 0;
     display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    align-self: center;
+    gap: $space-2;
 
-    &-button:first-child {
-      margin-right: 2.4rem;
-    }
-
-    &.rtl {
-      .sessions-card__actions-button:first-child {
-        margin-left: 2.4rem;
-        margin-right: 0;
-      }
+    &:empty {
+      display: none;
     }
 
     @include respond(phone) {
-      flex-direction: column;
+      flex-basis: 100%;
+      justify-content: stretch;
 
-      &-button:first-child {
-        margin-bottom: 2.4rem;
-        margin-right: 0;
-      }
-
-      .rtl {
-        .sessions-card__actions-button:first-child {
-          margin-left: 0;
-        }
+      .MuiButton-root {
+        width: 100%;
       }
     }
   }
 
-  &__status {
-    padding: 1.2rem 0 0;
-    border-top: 1px solid #eaeef1;
+  &__status-wrapper {
+    display: flex;
+    gap: $space-2;
 
-    &-wrapper {
-      display: flex;
-      justify-content: center;
-      align-items: center;
+    @include respond(phone) {
+      width: 100%;
+    }
 
-      p {
-        margin: 0 1rem;
-
-        @include respond(phone) {
-          font-size: 1.2rem;
-        }
-      }
+    &-button.MuiButton-root {
+      min-height: 4rem;
+      padding: 0.8rem 1.8rem;
+      font-size: $font-sm;
+      font-weight: 600;
+      white-space: nowrap;
     }
   }
 }

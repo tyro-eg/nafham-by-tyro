@@ -1,0 +1,36 @@
+// Local tokens/mixins for session UI (no CSS output).
+// Soft badge variants keep the existing meaning of the session
+// type colours: group = $color-group, private = $color-private.
+
+$session-group-bg: rgba($color-group, 0.12);
+$session-group-text: mix($color-group, $navy-900, 40%);
+$session-private-bg: rgba($color-private, 0.22);
+$session-private-text: mix($color-private, #000, 42%);
+
+@mixin session-badge-icon {
+  svg {
+    font-size: 1.6rem;
+  }
+}
+
+@mixin session-type-badge($variant) {
+  @if $variant == group {
+    @include badge($session-group-bg, $session-group-text);
+  } @else if $variant == trial {
+    @include badge($success-50, $success-500);
+  } @else {
+    @include badge($session-private-bg, $session-private-text);
+  }
+  @include session-badge-icon;
+}
+
+// Star rating in the accent colour
+@mixin accent-rating {
+  .MuiRating-iconFilled {
+    color: $accent-500;
+  }
+
+  .MuiRating-iconEmpty {
+    color: $gray-300;
+  }
+}

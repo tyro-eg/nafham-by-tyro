@@ -1,29 +1,20 @@
+@import '../../assets/styles/variables.scss';
+@import '../../assets/styles/mixins.scss';
+@import '../modal-kit';
+
 .trialBookingModal {
   &__wrapper {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 3rem;
-    text-align: center;
+    @include modal-success;
+    min-width: min(36rem, 100%);
 
     img {
-      display: block;
-      height: 16rem;
-      margin: 0 auto 2rem auto;
+      width: auto;
+      height: 14rem;
+      margin-bottom: $space-4;
     }
 
-    p {
-      text-align: center;
-      font-size: 2.5rem;
-      font-weight: bold;
-      line-height: 30px;
-      margin-bottom: 2rem;
-    }
-
-    &-btn {
-      width: 14rem;
-      margin: auto;
+    .MuiButton-root {
+      margin-top: $space-5;
     }
   }
 }

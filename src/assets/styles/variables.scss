@@ -1,32 +1,141 @@
-// COLORS
-$color-primary: #3ac5f1;
-$color-secondary: #3a4b60;
+// ============================================================
+// DESIGN SYSTEM TOKENS
+// Refined Nafham brand: sky blue + deep navy, generous white
+// space, soft shadows, 12px card radius. Prefer these tokens in
+// new styles; legacy names below are mapped onto them.
+// ============================================================
 
-$color-title: #2c3e50;
-$color-body: #778699;
+// Brand (sky blue). Original brand colours are kept: #3ac5f1 is the
+// primary (400-600) and #41b7dc its darker/hover shade (700).
+$brand-50: #eef9fe;
+$brand-100: #d6f1fc;
+$brand-200: #ade3f8;
+$brand-300: #74d3f5;
+$brand-400: #3ac5f1;
+$brand-500: #3ac5f1;
+$brand-600: #3ac5f1;
+$brand-700: #41b7dc;
+$brand-800: #2fa3c9;
 
-$color-grey-light-0: #fafafa;
-$color-grey-light-1: #f6f6f9;
-$color-grey-light-2: #ececee;
-$color-grey-light-3: #eff3f6;
-$color-grey-light-4: #ecf0f3;
-$color-grey-light-5: #9a99a3;
-$color-grey-light-6: #dce1e7;
-$color-additional: #999999;
+// Dark brand colours (headings, dark sections, footer)
+$navy-950: #161c2d; // original midnight blue
+$navy-900: #2c3e50; // original title colour
+$navy-800: #3a4b60; // original secondary
+$navy-700: #4b5d74;
 
-$color-grey-dark-1: #110f24;
+// Neutrals
+$gray-50: #f6f9fc;
+$gray-100: #eef2f7;
+$gray-200: #e3e9f0;
+$gray-300: #cfd8e3;
+$gray-400: #9aa8b8;
+$gray-500: #6b7a8d;
+$gray-600: #778699; // original body text colour
+$gray-700: #334155;
+
+// Accent (use sparingly: highlights, ratings, badges)
+$accent-400: #ffc94a;
+$accent-500: #f5b301;
+
+// Status
+$success-500: #54c853;
+$success-50: #ecfdf3;
+$danger-500: #dc3545;
+$danger-50: #fef2f2;
+$warning-500: #d97706;
+$warning-50: #fffbeb;
+
+// Semantic
+$text-strong: $navy-900;
+$text-body: $gray-600;
+$text-muted: $gray-500;
+$text-on-dark: #ffffff;
+$text-on-dark-muted: rgba(255, 255, 255, 0.72);
+$surface: #ffffff;
+$surface-alt: $gray-50;
+$surface-dark: $navy-950;
+$border: $gray-200;
+$border-strong: $gray-300;
+$link: $brand-700;
+
+// Radius
+$radius-sm: 0.8rem;
+$radius-md: 1.2rem;
+$radius-lg: 1.6rem;
+$radius-xl: 2.4rem;
+$radius-pill: 999px;
+
+// Shadows
+$shadow-xs: 0 1px 2px rgba(15, 27, 45, 0.06);
+$shadow-sm:
+  0 1px 3px rgba(15, 27, 45, 0.08),
+  0 1px 2px rgba(15, 27, 45, 0.04);
+$shadow-md: 0 4px 16px rgba(15, 27, 45, 0.08);
+$shadow-lg: 0 12px 32px rgba(15, 27, 45, 0.12);
+$focus-ring: 0 0 0 3px rgba(58, 197, 241, 0.35);
+
+// Spacing scale (html is 62.5%, so 1rem = 10px)
+$space-1: 0.4rem;
+$space-2: 0.8rem;
+$space-3: 1.2rem;
+$space-4: 1.6rem;
+$space-5: 2.4rem;
+$space-6: 3.2rem;
+$space-7: 4.8rem;
+$space-8: 6.4rem;
+$space-9: 9.6rem;
+
+// Type scale
+$font-display: 5.6rem;
+$font-h1: 4.4rem;
+$font-h2: 3.6rem;
+$font-h3: 2.4rem;
+$font-h4: 2rem;
+$font-h5: 1.8rem;
+$font-lg: 1.8rem;
+$font-base: 1.6rem;
+$font-sm: 1.4rem;
+$font-xs: 1.2rem;
+
+// Layout
+$container-max: 120rem;
+$container-gutter: 2.4rem;
+$container-gutter-mobile: 1.6rem;
+$header-height: 7.2rem;
+$transition: 180ms ease;
+
+// ------------------------------------------------------------
+// LEGACY COLOUR NAMES (mapped onto the tokens above)
+// ------------------------------------------------------------
+$color-primary: $brand-400;
+$color-primary-strong: $brand-600;
+$color-secondary: $navy-800;
+
+$color-title: $text-strong;
+$color-body: $text-body;
+
+$color-grey-light-0: #fafbfc;
+$color-grey-light-1: $gray-50;
+$color-grey-light-2: $gray-100;
+$color-grey-light-3: $gray-100;
+$color-grey-light-4: $gray-200;
+$color-grey-light-5: $gray-400;
+$color-grey-light-6: $gray-200;
+$color-additional: $gray-500;
+
+$color-grey-dark-1: $navy-950;
 
 $color-white: #fff;
 $color-black: #000;
-$color-gold: #ffc94a;
-$color-midnight-blue: #161c2d;
-$color-blue-gray: #f4f7fa;
+$color-gold: $accent-400;
+$color-midnight-blue: $navy-900;
+$color-blue-gray: $gray-50;
 
-$color-green: #54c853;
+$color-green: $success-500;
 
-$color-disabled: #969699;
-$color-warning: #fcf8e3;
-$color-danger: #dc3545;
+$color-disabled: $gray-400;
+$color-warning: $warning-50;
+$color-danger: $danger-500;
 
 $color-warning-text: #8a6d3b;
 
@@ -47,7 +156,7 @@ $color-calendar-border: rgba(128, 128, 128, 0.16);
 $color-calendar-boxshadow: rgba($color-black, 0.05);
 
 // FONT
-$default-font-size: 1.4rem;
+$default-font-size: 1.6rem;
 
 // GRID
 $grid-width: 124rem;

@@ -1,0 +1,350 @@
+@import '../../assets/styles/variables.scss';
+@import '../../assets/styles/mixins.scss';
+
+// Tutors have no site header: the sidebar is the whole navigation.
+// Desktop: docked on the left (right in Arabic). Narrow screens: a slim
+// top bar opens the same sidebar as a slide-in drawer.
+$drawer-width: 28rem;
+$topbar-height: 6.4rem;
+
+.side-layout {
+  display: grid;
+  grid-template-columns: 26rem minmax(0, 1fr);
+  align-items: start;
+  min-height: 100vh;
+  background-color: $surface-alt;
+
+  @include respond(tab-port) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  // ---------- Narrow-screen top bar ----------
+  &__topbar {
+    display: none;
+
+    @include respond(tab-port) {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      display: flex;
+      align-items: center;
+      gap: $space-2;
+      height: $topbar-height;
+      padding: 0 $space-3;
+      background-color: rgba(255, 255, 255, 0.94);
+      backdrop-filter: saturate(180%) blur(12px);
+      border-bottom: 1px solid $border;
+
+      .side-layout__logo {
+        flex: 1;
+      }
+    }
+  }
+
+  &__menu.MuiIconButton-root {
+    color: $text-strong;
+
+    svg {
+      font-size: 2.6rem;
+    }
+  }
+
+  &__topbar-avatar.MuiAvatar-root {
+    width: 3.6rem;
+    height: 3.6rem;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: $brand-700;
+    background-color: $brand-50;
+  }
+
+  &__overlay {
+    display: none;
+
+    @include respond(tab-port) {
+      position: fixed;
+      inset: 0;
+      z-index: 40;
+      display: block;
+      background-color: rgba(22, 28, 45, 0.45);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 220ms ease;
+    }
+  }
+
+  &--open &__overlay {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  // ---------- Sidebar ----------
+  &__sidebar {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    display: flex;
+    flex-direction: column;
+    gap: $space-5;
+    height: 100vh;
+    padding: $space-5 $space-4 $space-4;
+    background-color: $surface;
+    border-inline-end: 1px solid $border;
+    overflow-y: auto;
+
+    @include respond(tab-port) {
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      inset-inline-start: 0;
+      z-index: 50;
+      width: $drawer-width;
+      max-width: 85vw;
+      height: 100%;
+      box-shadow: 0 0 40px rgba(15, 27, 45, 0.25);
+      transform: translateX(-100%);
+      visibility: hidden;
+      transition:
+        transform 260ms ease,
+        visibility 260ms;
+    }
+  }
+
+  &.rtl &__sidebar {
+    @include respond(tab-port) {
+      transform: translateX(100%);
+    }
+  }
+
+  &--open &__sidebar,
+  &.rtl.side-layout--open &__sidebar {
+    @include respond(tab-port) {
+      transform: translateX(0);
+      visibility: visible;
+    }
+  }
+
+  // ---------- Brand row ----------
+  &__brand {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: $space-2;
+    padding: 0 $space-2;
+  }
+
+  &__logo img {
+    display: block;
+    height: 4.4rem;
+    width: auto;
+
+    @include respond(tab-port) {
+      height: 3.6rem;
+    }
+  }
+
+  &__close.MuiIconButton-root {
+    display: none;
+    color: $gray-500;
+
+    @include respond(tab-port) {
+      display: inline-flex;
+    }
+  }
+
+  // ---------- Navigation ----------
+  &__nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    flex: 1;
+  }
+
+  &__link {
+    display: flex;
+    align-items: center;
+    gap: $space-3;
+    padding: 1.1rem $space-3;
+    border-radius: 1.2rem;
+    font-size: $font-sm;
+    font-weight: 600;
+    color: $text-body;
+    text-decoration: none;
+    white-space: nowrap;
+    transition:
+      background-color $transition,
+      color $transition;
+
+    &:hover {
+      background-color: $gray-50;
+      color: $text-strong;
+    }
+
+    &:focus-visible {
+      @include focus-ring;
+    }
+
+    &--active,
+    &--active:hover {
+      background-color: $brand-50;
+      color: $brand-700;
+      box-shadow: inset 3px 0 0 $brand-400;
+
+      .side-layout__icon {
+        color: $brand-400;
+      }
+    }
+
+    .rtl &--active {
+      box-shadow: inset -3px 0 0 $brand-400;
+    }
+
+    @include respond(tab-port) {
+      padding: 1.3rem $space-3;
+      font-size: $font-base;
+    }
+  }
+
+  &__icon {
+    display: inline-flex;
+    color: $gray-400;
+
+    svg {
+      font-size: 2.2rem;
+    }
+  }
+
+  &__label {
+    flex: 1;
+    min-width: 0;
+  }
+
+  // Unread messages count on the Messages item
+  &__badge {
+    @include badge($accent-500, $navy-950);
+    flex: none;
+    justify-content: center;
+    min-width: 2.2rem;
+    height: 2.2rem;
+    padding: 0 0.7rem;
+    font-size: 1.2rem;
+    font-weight: 700;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+
+  // ---------- Bottom block ----------
+  &__footer {
+    display: flex;
+    flex-direction: column;
+    gap: $space-3;
+    padding-top: $space-4;
+    border-top: 1px solid $border;
+  }
+
+  &__browse {
+    display: flex;
+    align-items: center;
+    gap: $space-2;
+    padding: 0.8rem $space-3;
+    border-radius: 1.2rem;
+    border: 1px dashed $border-strong;
+    font-size: $font-sm;
+    font-weight: 600;
+    color: $brand-700;
+    text-decoration: none;
+    transition:
+      background-color $transition,
+      border-color $transition;
+
+    svg {
+      font-size: 2rem;
+      color: $brand-400;
+    }
+
+    &:hover,
+    &--active {
+      background-color: $brand-50;
+      border-color: $brand-200;
+      color: $brand-700;
+    }
+
+    &:focus-visible {
+      @include focus-ring;
+    }
+  }
+
+  &__language .language-selector {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  &__account {
+    display: flex;
+    align-items: center;
+    gap: $space-2;
+    padding: $space-2;
+    border-radius: 1.6rem;
+    background: linear-gradient(135deg, #e8f8fe 0%, #f2efff 100%);
+  }
+
+  &__account-link {
+    display: flex;
+    align-items: center;
+    gap: $space-3;
+    flex: 1;
+    min-width: 0;
+    text-decoration: none;
+  }
+
+  &__avatar.MuiAvatar-root {
+    width: 4.4rem;
+    height: 4.4rem;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: $brand-700;
+    background-color: #fff;
+  }
+
+  &__who {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  &__name {
+    font-size: $font-sm;
+    font-weight: 700;
+    color: $text-strong;
+    @include ellipsis;
+  }
+
+  &__role {
+    font-size: $font-xs;
+    color: $text-muted;
+  }
+
+  &__logout.MuiIconButton-root {
+    flex: none;
+    color: $gray-500;
+
+    &:hover {
+      color: $danger-500;
+      background-color: rgba($danger-500, 0.08);
+    }
+
+    .rtl & svg {
+      transform: scaleX(-1);
+    }
+  }
+
+  // ---------- Content ----------
+  &__main {
+    min-width: 0;
+    min-height: 100vh;
+
+    @include respond(tab-port) {
+      min-height: 0;
+    }
+  }
+}

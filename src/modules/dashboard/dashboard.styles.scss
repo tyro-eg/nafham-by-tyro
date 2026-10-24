@@ -1,0 +1,906 @@
+@import '../../assets/styles/variables.scss';
+@import '../../assets/styles/mixins.scss';
+
+// Friendly tones used for stats, subjects and packages
+$tones: (
+  sky: (
+    bg: #e8f8fe,
+    fg: #1792ba,
+    solid: $brand-400,
+  ),
+  mint: (
+    bg: #eafaf0,
+    fg: #2f9a3a,
+    solid: $success-500,
+  ),
+  sun: (
+    bg: #fff6e0,
+    fg: #b07800,
+    solid: $accent-400,
+  ),
+  lilac: (
+    bg: #f2efff,
+    fg: #6a52d6,
+    solid: #8b7cf6,
+  ),
+  coral: (
+    bg: #fff0ee,
+    fg: #d4554a,
+    solid: #ff8a7a,
+  ),
+);
+
+$sd-radius: 2rem;
+
+.student-dashboard {
+  background:
+    radial-gradient(
+      60rem 30rem at 100% 0%,
+      rgba($brand-400, 0.08),
+      transparent 70%
+    ),
+    $surface-alt;
+  padding: $space-5 0 $space-8;
+  min-height: 60vh;
+
+  .container.sd-container {
+    margin-bottom: 0;
+  }
+
+  .sd-flip {
+    font-size: 1.8rem !important;
+  }
+
+  &.rtl .sd-flip {
+    transform: scaleX(-1);
+  }
+}
+
+// ---------- Welcome banner ----------
+.sd-hero {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 30rem;
+  align-items: center;
+  gap: $space-5;
+  padding: $space-6 $space-7;
+  border-radius: $sd-radius + 0.4rem;
+  overflow: hidden;
+  color: $text-on-dark;
+  background-color: $brand-400;
+  background-image:
+    url('../../assets/images/newLanding/group1.webp'),
+    linear-gradient(90deg, #01caff 0%, #0081fe 60%, #0036ff 100%);
+  background-size:
+    cover,
+    100% 100%;
+  background-position: top center;
+  box-shadow: 0 16px 40px rgba(0, 129, 254, 0.25);
+
+  @include respond(tab-port) {
+    grid-template-columns: minmax(0, 1fr);
+    padding: $space-5;
+  }
+
+  @include respond(phone) {
+    padding: $space-5 $space-4;
+    border-radius: $sd-radius;
+  }
+
+  &__content {
+    position: relative;
+    z-index: 1;
+  }
+
+  &__identity {
+    display: flex;
+    align-items: center;
+    gap: $space-3;
+    margin-bottom: $space-3;
+  }
+
+  &__avatar.MuiAvatar-root {
+    width: 5.6rem;
+    height: 5.6rem;
+    font-size: 2rem;
+    font-weight: 700;
+    color: $brand-700;
+    background-color: #fff;
+    border: 3px solid rgba(255, 255, 255, 0.6);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+  }
+
+  &__eyebrow {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.4rem 1.2rem;
+    border-radius: $radius-pill;
+    background-color: rgba(255, 255, 255, 0.18);
+    font-size: $font-sm;
+    font-weight: 600;
+    backdrop-filter: blur(4px);
+  }
+
+  &__title {
+    font-size: 4rem;
+    line-height: 1.15;
+    color: #fff;
+
+    @include respond(phone) {
+      font-size: 2.8rem;
+    }
+  }
+
+  &__message {
+    margin-top: $space-3;
+    max-width: 56rem;
+    font-size: $font-lg;
+    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.92);
+
+    @include respond(phone) {
+      font-size: $font-base;
+    }
+  }
+
+  &__skeleton.MuiSkeleton-root {
+    margin-top: $space-3;
+    background-color: rgba(255, 255, 255, 0.25);
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $space-3;
+    margin-top: $space-5;
+
+    @include respond(phone) {
+      flex-direction: column;
+    }
+  }
+
+  &__primary.MuiButton-root {
+    @include button-accent;
+    min-height: 4.8rem;
+    padding-inline: 2.4rem;
+    border-radius: $radius-pill;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  }
+
+  &__secondary.MuiButton-root {
+    @include button-ghost-on-dark;
+    min-height: 4.8rem;
+    padding-inline: 2.4rem;
+    border-radius: $radius-pill;
+  }
+
+  &__art {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 30rem;
+    justify-self: end;
+    filter: drop-shadow(0 16px 32px rgba(0, 0, 0, 0.2));
+
+    .rtl & {
+      justify-self: start;
+    }
+
+    @include respond(tab-port) {
+      display: none;
+    }
+  }
+}
+
+// ---------- Stats ----------
+.sd-stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: $space-4;
+  margin: $space-5 0;
+
+  @include respond(tab-land) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @include respond(phone) {
+    gap: $space-3;
+  }
+}
+
+.sd-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: $space-4 $space-5;
+  border-radius: $sd-radius;
+  border: 1px solid transparent;
+
+  @include respond(phone) {
+    padding: $space-4;
+  }
+
+  &__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 4.4rem;
+    height: 4.4rem;
+    margin-bottom: $space-2;
+    border-radius: 1.4rem;
+    background-color: #fff;
+    box-shadow: 0 4px 12px rgba(15, 27, 45, 0.06);
+
+    svg {
+      font-size: 2.4rem;
+    }
+  }
+
+  &__value {
+    font-size: 3.2rem;
+    font-weight: 800;
+    line-height: 1.1;
+    color: $text-strong;
+    font-variant-numeric: tabular-nums;
+  }
+
+  &__label {
+    font-size: $font-sm;
+    font-weight: 600;
+    color: $text-body;
+  }
+
+  @each $name, $tone in $tones {
+    &--#{$name} {
+      background-color: map-get($tone, bg);
+      border-color: rgba(map-get($tone, solid), 0.2);
+
+      .sd-stat__icon {
+        color: map-get($tone, fg);
+      }
+    }
+  }
+}
+
+// ---------- Layout ----------
+.sd-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 38rem;
+  gap: $space-5;
+  align-items: start;
+
+  @include respond(tab-land) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.sd-col {
+  display: flex;
+  flex-direction: column;
+  gap: $space-5;
+  min-width: 0;
+}
+
+// ---------- Cards ----------
+.sd-card {
+  padding: $space-5;
+  border-radius: $sd-radius;
+  background-color: $surface;
+  box-shadow:
+    0 2px 6px rgba(15, 27, 45, 0.04),
+    0 12px 32px rgba(15, 27, 45, 0.05);
+
+  @include respond(phone) {
+    padding: $space-4;
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: $space-3;
+    margin-bottom: $space-4;
+  }
+
+  &__title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: $text-strong;
+  }
+
+  &__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.6rem 1.2rem;
+    border-radius: $radius-pill;
+    background-color: $brand-50;
+    font-size: $font-sm;
+    font-weight: 600;
+    color: $brand-700;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background-color $transition;
+
+    &:hover {
+      background-color: $brand-100;
+      color: $brand-700;
+    }
+  }
+}
+
+.sd-subheading {
+  margin: $space-5 0 $space-3;
+  font-size: $font-sm;
+  font-weight: 700;
+  color: $text-muted;
+  letter-spacing: 0.02em;
+
+  .sd-progress & {
+    margin-top: 0;
+  }
+
+  &--spaced {
+    margin-top: $space-5 !important;
+  }
+}
+
+.sd-muted {
+  font-size: $font-sm;
+  color: $text-muted;
+}
+
+.sd-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $space-3;
+  padding: $space-4;
+  text-align: center;
+
+  &__art {
+    width: 12rem;
+    height: auto;
+    opacity: 0.9;
+  }
+
+  &__text {
+    max-width: 32rem;
+    font-size: $font-sm;
+    color: $text-body;
+  }
+}
+
+// ---------- Up next ----------
+.sd-next {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: $space-5;
+  padding: $space-4;
+  border-radius: $sd-radius - 0.4rem;
+  background: linear-gradient(135deg, #f1fbff 0%, #e6f6fe 100%);
+  border: 1px solid rgba($brand-400, 0.3);
+
+  @include respond(tab-port) {
+    grid-template-columns: auto minmax(0, 1fr);
+
+    .sd-next__join {
+      grid-column: 1 / -1;
+    }
+  }
+
+  &--live {
+    border-color: $brand-400;
+    box-shadow: 0 0 0 4px rgba($brand-400, 0.2);
+  }
+
+  &__date {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 7.6rem;
+    overflow: hidden;
+    border-radius: 1.6rem;
+    background-color: #fff;
+    box-shadow: 0 6px 16px rgba(0, 129, 254, 0.12);
+  }
+
+  &__month {
+    width: 100%;
+    padding: 0.4rem 0;
+    background-color: $brand-400;
+    color: #fff;
+    font-size: $font-xs;
+    font-weight: 700;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  &__daynum {
+    padding: 0.6rem 0 0.8rem;
+    font-size: 3rem;
+    font-weight: 800;
+    line-height: 1;
+    color: $text-strong;
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.4rem;
+    min-width: 0;
+  }
+
+  &__chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.3rem 1rem;
+    border-radius: $radius-pill;
+    background-color: #fff;
+    color: $brand-700;
+    font-size: $font-xs;
+    font-weight: 700;
+  }
+
+  &__pulse {
+    width: 0.8rem;
+    height: 0.8rem;
+    border-radius: 50%;
+    background-color: $success-500;
+    animation: sd-pulse 1.4s ease-in-out infinite;
+  }
+
+  &__subject {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: $text-strong;
+  }
+
+  &__when {
+    font-size: $font-sm;
+    color: $text-body;
+  }
+
+  &__tutor {
+    display: inline-flex;
+    align-items: center;
+    gap: $space-2;
+    margin-top: $space-1;
+    font-size: $font-sm;
+    font-weight: 600;
+    color: $text-strong;
+  }
+
+  &__join.MuiButton-root {
+    border-radius: $radius-pill;
+    white-space: nowrap;
+  }
+}
+
+@keyframes sd-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba($success-500, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgba($success-500, 0);
+  }
+}
+
+.sd-timeline {
+  position: relative;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset-inline-start: 0.7rem;
+    top: 1.4rem;
+    bottom: 1.4rem;
+    width: 2px;
+    background-color: $brand-100;
+  }
+
+  &__item {
+    position: relative;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    gap: $space-3;
+    padding: $space-1 0;
+  }
+
+  &__dot {
+    position: relative;
+    z-index: 1;
+    width: 1.6rem;
+    height: 1.6rem;
+    border-radius: 50%;
+    background-color: #fff;
+    border: 3px solid $brand-400;
+  }
+
+  &__card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: $space-3;
+    min-width: 0;
+    padding: $space-2 $space-3;
+    border-radius: 1.2rem;
+    background-color: $gray-50;
+
+    @include respond(phone) {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: $space-1;
+    }
+  }
+
+  &__main {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  &__subject {
+    font-size: $font-base;
+    font-weight: 600;
+    color: $text-strong;
+    @include ellipsis;
+  }
+
+  &__meta {
+    font-size: $font-sm;
+    color: $text-muted;
+  }
+
+  &__tutor {
+    display: inline-flex;
+    align-items: center;
+    gap: $space-2;
+    font-size: $font-sm;
+    color: $text-body;
+    white-space: nowrap;
+  }
+}
+
+// ---------- Progress ----------
+.sd-cheer {
+  display: flex;
+  align-items: center;
+  gap: $space-3;
+  padding: $space-3 $space-4;
+  margin-bottom: $space-5;
+  border-radius: 1.6rem;
+  background: linear-gradient(90deg, #fff6e0 0%, #fffaf0 100%);
+
+  &__icon {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 4.4rem;
+    height: 4.4rem;
+    border-radius: 50%;
+    background-color: #fff;
+    color: #f08c00;
+
+    svg {
+      font-size: 2.6rem;
+    }
+  }
+
+  &__text {
+    font-size: $font-base;
+    font-weight: 700;
+    color: $text-strong;
+  }
+
+  &__sub {
+    font-size: $font-sm;
+    color: $text-body;
+  }
+}
+
+.sd-progress {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  gap: $space-6;
+
+  @include respond(tab-port) {
+    grid-template-columns: minmax(0, 1fr);
+    gap: $space-5;
+  }
+}
+
+.sd-chart {
+  display: grid;
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+  gap: $space-2;
+  height: 20rem;
+
+  &__col {
+    display: grid;
+    grid-template-rows: 2rem minmax(0, 1fr) auto;
+    justify-items: center;
+    gap: 0.6rem;
+    min-width: 0;
+  }
+
+  &__value {
+    align-self: end;
+    font-size: $font-xs;
+    font-weight: 700;
+    color: $text-body;
+  }
+
+  &__track {
+    display: flex;
+    align-items: flex-end;
+    width: 100%;
+    max-width: 3.6rem;
+    height: 100%;
+    border-radius: 1.2rem;
+    background-color: $gray-50;
+    overflow: hidden;
+  }
+
+  &__bar {
+    display: block;
+    width: 100%;
+    border-radius: 1.2rem;
+    background: linear-gradient(180deg, #7ad9f6 0%, $brand-400 100%);
+    transition: height 500ms ease;
+  }
+
+  &__col--current &__bar {
+    background: linear-gradient(180deg, #ffd76e 0%, $accent-400 100%);
+  }
+
+  &__label {
+    font-size: 1.1rem;
+    color: $text-muted;
+    white-space: nowrap;
+  }
+
+  &__col--current &__label {
+    font-weight: 700;
+    color: $text-strong;
+  }
+}
+
+.sd-pills {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: $space-2;
+}
+
+.sd-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: $space-2;
+  padding: 0.6rem 1.4rem;
+  border-radius: $radius-pill;
+  font-size: $font-sm;
+  font-weight: 600;
+
+  strong {
+    font-weight: 800;
+  }
+
+  @each $name, $tone in $tones {
+    &--#{$name} {
+      background-color: map-get($tone, bg);
+      color: map-get($tone, fg);
+    }
+  }
+}
+
+.sd-attendance {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: $space-2;
+
+  &__item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: $space-3 $space-2;
+    border-radius: 1.4rem;
+    font-size: $font-xs;
+    font-weight: 600;
+    text-align: center;
+
+    strong {
+      font-size: 2.4rem;
+      font-weight: 800;
+      line-height: 1.2;
+    }
+
+    &--done {
+      background-color: map-get(map-get($tones, mint), bg);
+      color: map-get(map-get($tones, mint), fg);
+    }
+
+    &--missed {
+      background-color: map-get(map-get($tones, coral), bg);
+      color: map-get(map-get($tones, coral), fg);
+    }
+
+    &--canceled {
+      background-color: $gray-100;
+      color: $gray-500;
+    }
+  }
+}
+
+// ---------- Packages ----------
+.sd-packages {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: $space-3;
+}
+
+.sd-package {
+  display: flex;
+  align-items: center;
+  gap: $space-4;
+  padding: $space-3;
+  border-radius: 1.6rem;
+  background-color: $gray-50;
+
+  &__text {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  &__subject {
+    font-size: $font-base;
+    font-weight: 700;
+    color: $text-strong;
+    @include ellipsis;
+  }
+
+  &__tutor {
+    font-size: $font-sm;
+    color: $text-body;
+  }
+
+  &__meta {
+    margin-top: 0.2rem;
+    font-size: $font-xs;
+    font-weight: 600;
+    color: $text-muted;
+  }
+}
+
+.sd-ring {
+  position: relative;
+  flex: none;
+  width: 6.4rem;
+  height: 6.4rem;
+
+  svg {
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg);
+  }
+
+  &__track {
+    fill: none;
+    stroke: #fff;
+    stroke-width: 7;
+  }
+
+  &__value {
+    fill: none;
+    stroke-width: 7;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 600ms ease;
+  }
+
+  &__label {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: $text-strong;
+  }
+
+  @each $name, $tone in $tones {
+    &--#{$name} &__value {
+      stroke: map-get($tone, solid);
+    }
+  }
+}
+
+// ---------- Instructors ----------
+.sd-tutors {
+  list-style: none;
+  margin: 0 0 $space-4;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: $space-2;
+
+  &__find.MuiButton-root {
+    border-radius: $radius-pill;
+  }
+}
+
+.sd-tutor {
+  display: flex;
+  align-items: center;
+  gap: $space-3;
+  padding: $space-2 $space-3;
+  border-radius: 1.6rem;
+  text-decoration: none;
+  transition:
+    background-color $transition,
+    transform $transition;
+
+  &:hover {
+    background-color: $brand-50;
+    transform: translateY(-1px);
+  }
+
+  &__avatar.MuiAvatar-root {
+    width: 4.8rem;
+    height: 4.8rem;
+    border: 2px solid #fff;
+    box-shadow: 0 4px 10px rgba(15, 27, 45, 0.1);
+  }
+
+  &__text {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__name {
+    font-size: $font-base;
+    font-weight: 700;
+    color: $text-strong;
+  }
+
+  &__fields {
+    font-size: $font-sm;
+    color: $text-muted;
+    @include ellipsis;
+  }
+
+  &__rating {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.3rem 0.9rem;
+    border-radius: $radius-pill;
+    background-color: map-get(map-get($tones, sun), bg);
+    font-size: $font-xs;
+    font-weight: 700;
+    color: $text-strong;
+
+    span {
+      color: $accent-500;
+    }
+  }
+}

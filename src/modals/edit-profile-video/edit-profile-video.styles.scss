@@ -1,0 +1,48 @@
+@import '../../assets/styles/variables.scss';
+@import '../../assets/styles/mixins.scss';
+@import '../modal-kit';
+
+.edit-video-modal {
+  @include modal-shell;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: $space-4;
+    margin-bottom: $space-5;
+  }
+
+  &__icon {
+    @include modal-icon-chip;
+  }
+
+  &__title {
+    flex: 1;
+    min-width: 0;
+    margin: 0;
+    font-size: $font-lg;
+    font-weight: 600;
+    line-height: 1.4;
+    color: $text-strong;
+    text-align: start;
+
+    @include respond(phone) {
+      font-size: $font-base;
+    }
+  }
+
+  &__input {
+    @include input;
+    display: block;
+    min-height: 8rem;
+    height: auto;
+    font-family: inherit;
+    line-height: 1.5;
+    resize: vertical;
+    overflow-wrap: anywhere;
+  }
+
+  &__actions {
+    @include modal-footer;
+  }
+}

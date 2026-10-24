@@ -1,19 +1,33 @@
 @import '../../assets/styles/variables.scss';
 @import '../../assets/styles/mixins.scss';
+@import '../modal-kit';
 
 .session-view-calendar-modal {
-  padding: 5rem 10rem;
-
-  @include respond(phone) {
-    padding: 2rem;
-  }
+  @include modal-shell;
 
   &__head {
-    margin-bottom: 2.4rem;
+    margin-bottom: $space-5;
+    padding-bottom: $space-4;
+    border-bottom: 1px solid $border;
+  }
+
+  &__title {
+    @include modal-title;
+  }
+
+  &__subtitle {
+    @include modal-subtitle;
+    font-weight: 500;
+    letter-spacing: 0;
   }
 
   &__wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: $space-3;
+    max-height: 60vh;
     overflow-y: auto;
-    max-height: 70rem;
+    margin-inline: -0.4rem;
+    padding-inline: 0.4rem;
   }
 }

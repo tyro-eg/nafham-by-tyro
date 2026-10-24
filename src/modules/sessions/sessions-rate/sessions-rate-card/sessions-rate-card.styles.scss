@@ -1,16 +1,16 @@
 @import '../../../../assets/styles/variables.scss';
 @import '../../../../assets/styles/mixins.scss';
+@import '../../session-tokens.scss';
 
 .session-rate {
-  display: block;
-  border-radius: 8px;
-  border: 1px solid #eaeef1;
-  background-color: $color-white;
-  padding: 3.2rem 3.2rem 1.2rem;
-  margin-bottom: 2rem;
+  @include card($space-5);
+
+  & + & {
+    margin-top: $space-4;
+  }
 
   @include respond(phone) {
-    padding: 1.2rem;
+    padding: $space-4;
   }
 
   &__content {
@@ -19,138 +19,66 @@
 
     &-top {
       display: flex;
+      flex-wrap: wrap;
+      align-items: center;
       justify-content: space-between;
-      border-bottom: 1px solid #eaeef1;
-      padding-bottom: 1.6rem;
+      gap: $space-4;
+      padding-bottom: $space-4;
+      border-bottom: 1px solid $border;
     }
 
     &-middle {
-      display: flex;
-      flex-wrap: wrap;
-      margin-top: 1.6rem;
-      padding-bottom: 1.6rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+      gap: $space-4 $space-5;
+      padding-top: $space-4;
+
+      @include respond(phone) {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: $space-3 $space-4;
+      }
 
       .prop-card {
         display: flex;
         flex-direction: column;
         align-items: flex-start;
-        width: 20%;
-
-        &:not(:last-child) {
-          border-right: 1px solid #eaeef1;
-        }
-
-        &:not(:first-child) {
-          padding-left: 2rem;
-        }
-
-        &.rtl {
-          &:not(:last-child) {
-            border-left: 1px solid #eaeef1;
-            border-right: none;
-          }
-
-          &:not(:first-child) {
-            padding-left: 0;
-            padding-right: 2rem;
-          }
-        }
-
-        @include respond(tab-port) {
-          width: 50%;
-
-          &:not(:last-child) {
-            border-right: none;
-          }
-
-          &:not(:first-child) {
-            padding-left: 0;
-          }
-
-          &:nth-child(odd):not(:last-child) {
-            border-right: 1px solid #eaeef1;
-          }
-
-          &:not(:last-child) {
-            border-bottom: 1px solid #eaeef1;
-            margin-bottom: 1rem;
-            padding-bottom: 1rem;
-          }
-
-          &:nth-child(even) {
-            padding-left: 2rem;
-          }
-
-          &.rtl {
-            &:not(:last-child) {
-              border-left: none;
-            }
-
-            &:not(:first-child) {
-              padding-right: 0;
-            }
-
-            &:nth-child(odd):not(:last-child) {
-              border-left: 1px solid #eaeef1;
-              border-right: none;
-            }
-
-            &:nth-child(even) {
-              padding-right: 2rem;
-              padding-left: 0;
-            }
-          }
-        }
+        gap: $space-1;
+        min-width: 0;
 
         .title {
+          font-size: $font-xs;
           font-weight: 600;
-          font-size: 1.6rem;
-          line-height: 19px;
-          color: $color-title;
-          margin-bottom: 2rem;
+          line-height: 1.4;
+          letter-spacing: 0.04em;
+          text-transform: uppercase;
+          color: $text-muted;
           text-align: start;
 
-          @include respond(phone) {
-            font-size: 1.1rem;
+          [dir='rtl'] & {
+            letter-spacing: 0;
           }
         }
 
         .value {
           display: flex;
           align-items: center;
-          justify-content: flex-start;
-          font-weight: 500;
-          font-size: 1.6rem;
-          line-height: 150%;
-          color: $color-body;
+          gap: $space-1;
+          font-size: $font-sm;
+          font-weight: 600;
+          line-height: 1.5;
+          color: $text-strong;
+          text-align: start;
 
           svg {
-            font-size: 2rem;
-            margin-right: 0.7rem;
-
-            &.rtl {
-              margin-right: 0;
-              margin-left: 0.7rem;
-            }
-          }
-
-          @include respond(phone) {
-            font-size: 1.1rem;
-
-            svg {
-              font-size: 1.2rem;
-            }
+            flex-shrink: 0;
+            font-size: 1.8rem;
+            color: $brand-600;
           }
         }
 
         .field {
-          padding: 4px 6px;
-          border-radius: 0.6rem;
-          background-color: #eaeef1;
-          color: $color-body;
-          font-weight: 500;
-          font-size: 1.6rem;
-          line-height: 150%;
+          @include badge($gray-100, $gray-700);
+          font-size: $font-xs;
         }
       }
     }
@@ -159,26 +87,43 @@
   &__img-container {
     display: flex;
     align-items: center;
+    gap: $space-3;
+    min-width: 0;
+
+    .card-img {
+      flex-shrink: 0;
+      width: 4.8rem;
+      height: 4.8rem;
+      border-radius: 50%;
+      overflow: hidden;
+      background-color: $gray-100;
+
+      &.MuiButton-root {
+        min-width: 0;
+        min-height: 0;
+        padding: 0;
+        border-radius: 50%;
+      }
+    }
 
     img {
-      width: 4.9rem;
-      height: 4.9rem;
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
       border-radius: 50%;
     }
 
     .user-info {
-      margin: 0 0.8rem;
+      min-width: 0;
+      text-align: start;
 
       .name {
-        font-weight: 700;
-        font-size: 2.4rem;
-        line-height: 140%;
-        color: $color-title;
-        text-align: start;
-
-        @include respond(phone) {
-          font-size: 1.6rem;
-        }
+        @include ellipsis;
+        font-size: $font-h5;
+        font-weight: 600;
+        line-height: 1.3;
+        color: $text-strong;
       }
 
       .review {
@@ -187,19 +132,14 @@
 
         &-stars {
           display: flex;
-          justify-content: center;
-
-          .yellow {
-            color: $color-gold;
-          }
-
-          .grey {
-            color: rgba($color: $color-black, $alpha: 0.1);
-          }
+          align-items: center;
+          gap: $space-1;
+          @include accent-rating;
         }
 
-        &-ratings {
-          margin: 0 1rem;
+        &-numbers {
+          font-size: $font-xs;
+          color: $text-muted;
         }
       }
     }
@@ -208,7 +148,21 @@
   &__instructor-img {
     cursor: pointer;
   }
+
+  &__actions {
+    display: flex;
+    justify-content: flex-end;
+
+    @include respond(phone) {
+      width: 100%;
+
+      .MuiButton-root {
+        width: 100%;
+      }
+    }
+  }
 }
+
 .MuiDialog-paperWidthSm.MuiDialog-paperScrollBody {
   @include respond(phone) {
     max-width: 100% !important;

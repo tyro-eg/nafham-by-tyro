@@ -1,0 +1,83 @@
+@import '../../assets/styles/variables.scss';
+@import '../../assets/styles/mixins.scss';
+@import '../modal-kit';
+
+.request-sessions-modal {
+  @include modal-shell;
+
+  &__header {
+    @include modal-header;
+  }
+
+  &__icon {
+    @include modal-icon-chip;
+  }
+
+  &__heading {
+    @include modal-heading-text;
+  }
+
+  &__title {
+    @include modal-title;
+  }
+
+  &__subtitle {
+    @include modal-subtitle;
+  }
+
+  &__close {
+    @include modal-close;
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    gap: $space-4;
+  }
+
+  &__row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: $space-4;
+
+    @include respond(phone) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  &__field {
+    width: 100%;
+  }
+
+  &__label {
+    display: block;
+    margin-bottom: $space-2;
+    font-size: $font-sm;
+    font-weight: 600;
+    color: $text-strong;
+  }
+
+  &__hint {
+    margin: 0;
+    padding: $space-3 $space-4;
+    border-radius: $radius-sm;
+    background-color: $brand-50;
+    color: $brand-700;
+    font-size: $font-sm;
+  }
+
+  &__footer {
+    @include modal-footer;
+  }
+
+  &__success {
+    @include modal-success;
+  }
+
+  &__success-icon {
+    width: 7rem;
+    height: 7rem;
+    margin-bottom: $space-4;
+    color: $success-500;
+  }
+}

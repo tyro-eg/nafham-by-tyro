@@ -1,28 +1,45 @@
 @import '../../assets/styles/variables.scss';
 @import '../../assets/styles/mixins.scss';
+@import '../modal-kit';
 
 .email-confirm {
-  padding: 5rem 10rem;
+  @include modal-shell;
 
-  @include respond(phone) {
-    padding: 2rem;
+  &__header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: $space-4;
+    padding-top: $space-4;
+    text-align: center;
   }
 
-  h5 {
+  &__icon {
+    @include modal-icon-chip;
+  }
+
+  &__message {
+    max-width: 44rem;
+    margin: 0;
+    font-size: $font-lg;
+    font-weight: 500;
+    line-height: 1.5;
+    letter-spacing: 0;
+    color: $text-body;
     text-align: center;
+    overflow-wrap: anywhere;
+
+    b {
+      font-weight: 700;
+      color: $text-strong;
+    }
 
     @include respond(phone) {
-      font-size: 1.4rem;
+      font-size: $font-base;
     }
   }
 
   .button-wrapper {
-    margin-top: 4rem;
-    display: flex;
-    justify-content: space-between;
-
-    &__action {
-      min-width: 16rem;
-    }
+    @include modal-footer;
   }
 }

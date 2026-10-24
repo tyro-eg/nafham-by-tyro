@@ -2,33 +2,55 @@
 @import '../../../assets/styles/mixins.scss';
 
 .landing__start-learning {
-  background-color: $color-blue-gray;
-  padding: 4.8rem 0;
+  @include section;
 
-  .container {
-    display: flex;
-    justify-content: space-between;
+  .start-learning-panel {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
     align-items: center;
-    row-gap: 3rem;
+    gap: $space-7;
+    max-width: 104rem;
+    margin: 0 auto;
+    padding: $space-7 $space-8;
+    border: 1px solid $brand-100;
+    border-radius: $radius-xl;
+    background-color: $brand-50;
+    background-image: radial-gradient(
+      40rem 30rem at 100% 0%,
+      rgba($brand-200, 0.55),
+      transparent 70%
+    );
+
+    &.rtl {
+      background-image: radial-gradient(
+        40rem 30rem at 0% 0%,
+        rgba($brand-200, 0.55),
+        transparent 70%
+      );
+    }
 
     @include respond(tab-port) {
-      flex-direction: column-reverse;
-      justify-content: center;
+      grid-template-columns: minmax(0, 1fr);
+      gap: $space-5;
+      padding: $space-7 $space-5;
+    }
+
+    @include respond(phone) {
+      padding: $space-6 $space-4;
+      border-radius: $radius-lg;
     }
   }
 
   .image-container {
     display: flex;
-    justify-content: flex-end;
+    justify-content: center;
     align-items: center;
 
-    @include respond(tab-port) {
-      justify-content: center;
-    }
-
     .image {
-      max-width: 47rem;
-      max-height: 34rem;
+      display: block;
+      width: 100%;
+      max-width: 44rem;
+      height: auto;
       transform: scaleX(-1);
 
       &.rtl {
@@ -39,46 +61,39 @@
 
   .learning-content {
     display: flex;
-    justify-content: space-around;
-    align-items: flex-start;
     flex-direction: column;
-    row-gap: 2rem;
-
-    @include respond(tab-port) {
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-    }
+    align-items: flex-start;
+    gap: $space-4;
+    text-align: start;
 
     &__title {
-      color: $color-midnight-blue;
-      letter-spacing: -1.2px;
-      font-size: 4rem;
-      line-height: 4.4rem;
-      font-weight: 600;
+      font-size: $font-h2 + 0.4rem;
+      font-weight: 700;
+      line-height: 1.2;
+      color: $text-strong;
 
       @include respond(phone) {
         font-size: 2.8rem;
-        line-height: 3.2rem;
       }
     }
 
     &__description {
-      color: $color-midnight-blue;
-      font-size: 1.9rem;
-      font-weight: 600;
-      line-height: 3.2rem;
-      letter-spacing: -0.2px;
-      opacity: 0.7;
+      max-width: 48rem;
+      font-size: $font-lg;
+      line-height: 1.6;
+      color: $text-body;
 
       @include respond(phone) {
-        font-size: 1.6rem;
-        line-height: 1.8rem;
+        font-size: $font-base;
       }
     }
 
     &__button {
-      background-color: $color-primary !important;
+      margin-top: $space-2;
+
+      @include respond(phone) {
+        width: 100%;
+      }
     }
   }
 }

@@ -1,103 +1,97 @@
 @import '../../../assets/styles/variables.scss';
 @import '../../../assets/styles/mixins.scss';
 
+// Order summary card (component currently stubbed; styles kept ready
+// for when it is wired back into the checkout sidebar)
 .receipt {
-  padding: 2.4rem;
-  border-radius: 0.8rem;
-  background-color: $color-white;
+  @include card($space-5);
+
   @include respond(tab-port) {
-    margin-top: 2.2rem;
-    margin-bottom: 2.2rem;
+    margin: $space-4 0;
   }
 
   &__title {
     font-weight: 700;
-    font-size: 2.4rem;
-    line-height: 140%;
-    color: $color-body;
+    font-size: $font-h4;
+    line-height: 1.2;
+    color: $text-strong;
+    padding-bottom: $space-4;
+    border-bottom: 1px solid $border;
+    text-align: start;
+
     @include respond(phone) {
-      font-size: 1.6rem;
+      font-size: $font-h5;
     }
   }
 
   &__tutor-wrapper {
     display: flex;
     align-items: center;
+    gap: $space-3;
+
     .tutor-img {
-      width: 7.6rem;
-      height: 7.6rem;
+      width: 4.8rem;
+      height: 4.8rem;
       border-radius: 50%;
-      margin: 0 1rem;
+      object-fit: cover;
     }
 
     .tutor-title {
-      font-weight: 700;
-      font-size: 1.6rem;
-      line-height: 150%;
-      color: $color-body;
-    }
-  }
-
-  h4 {
-    &.rtl {
-      text-align: right;
+      font-weight: 600;
+      font-size: $font-base;
+      line-height: 1.4;
+      color: $text-strong;
     }
   }
 
   table {
     width: 100%;
-    font-size: 16px;
-    line-height: 150%;
-    border-collapse: separate;
-    border-spacing: 0 15px;
+    font-size: $font-sm;
+    line-height: 1.5;
+    border-collapse: collapse;
 
     tr {
-      color: $color-body;
+      color: $text-body;
 
       th,
       td {
-        padding: 1rem 0;
-        text-align: left;
+        padding: $space-2 0;
+        text-align: start;
+        vertical-align: top;
+
         &:nth-child(2) {
-          text-align: right;
+          text-align: end;
+          font-variant-numeric: tabular-nums;
+          white-space: nowrap;
+          padding-inline-start: $space-3;
         }
       }
 
       th {
-        border-bottom: 1px solid #f0f1f2;
+        border-bottom: 1px solid $border;
       }
 
       &.receipt__border {
         td {
-          border-top: 1px solid #f0f1f2;
-          padding-top: 3.2rem;
+          border-top: 1px solid $border;
+          padding-top: $space-4;
         }
       }
-      .total-title {
-        font-size: 2.4rem;
-        color: $color-title;
-        @include respond(phone) {
-          font-size: 1.8rem;
-        }
-      }
-      .total-price {
-        font-size: 3.2rem;
-        color: $color-primary;
-        font-weight: 800;
-        @include respond(phone) {
-          font-size: 2.4rem;
-        }
-      }
-    }
 
-    &.rtl {
-      tr {
-        th,
-        td {
-          text-align: right;
-          &:nth-child(2) {
-            text-align: left;
-          }
+      .total-title {
+        font-size: $font-base;
+        font-weight: 600;
+        color: $text-strong;
+      }
+
+      .total-price {
+        font-size: 2.8rem;
+        line-height: 1.2;
+        color: $text-strong;
+        font-weight: 700;
+
+        @include respond(phone) {
+          font-size: $font-h3;
         }
       }
     }

@@ -1,3 +1,4 @@
+@import '../../../assets/styles/variables.scss';
 @import '../../../assets/styles/mixins.scss';
 
 .impersonate-container {
@@ -5,18 +6,26 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: $space-5;
+  width: 100%;
   min-height: 80vh;
-  width: 99vw;
-  gap: 2rem;
-  background: linear-gradient(135deg, #667eea 0%, #3ac5f1 100%);
+  padding: $space-6 $container-gutter-mobile;
+  background:
+    radial-gradient(
+      ellipse 60% 50% at 50% 30%,
+      rgba($brand-100, 0.7),
+      transparent 70%
+    ),
+    $surface-alt;
 
   .impersonate-text {
-    color: #ffffff;
-    font-weight: 500;
+    font-size: $font-lg;
+    font-weight: 600;
+    color: $text-strong;
     text-align: center;
   }
 
   .MuiCircularProgress-root {
-    color: #ffffff;
+    color: $brand-600;
   }
 }

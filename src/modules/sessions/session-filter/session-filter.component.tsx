@@ -15,7 +15,7 @@ import {
   Box,
   Typography,
 } from '@mui/material';
-import { Search } from '@mui/icons-material';
+import { FilterListOutlined } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 
 import { useRtlClass } from '../../../assets/utils/utils';
@@ -139,7 +139,19 @@ const SessionFilter: FC<SessionFilterProps> = ({ onFiltersChange }) => {
 
   return (
     <div className="session-filter">
-      <div className="container session-filter__container">
+      <div className="session-filter__container">
+        <div className={`session-filter__field--filter ${rtlClass}`}>
+          <Button
+            onClick={toggleListBody}
+            startIcon={<FilterListOutlined />}
+            variant="outlined"
+            className={listBody ? 'active' : ''}
+            aria-expanded={listBody}
+          >
+            {t('COURSES.COURSE_FILTER.FILTERS')}
+          </Button>
+        </div>
+
         <div
           className={`session-filter__dropdown-container ${listBody ? 'visible' : 'hidden'}`}
         >
@@ -406,16 +418,6 @@ const SessionFilter: FC<SessionFilterProps> = ({ onFiltersChange }) => {
         </div>
 
         {/* Removed search box as per requirements */}
-
-        <div className={`session-filter__field--filter ${rtlClass}`}>
-          <Button
-            onClick={toggleListBody}
-            startIcon={<Search />}
-            className={listBody ? 'active' : ''}
-          >
-            {t('COURSES.COURSE_FILTER.FILTERS')}
-          </Button>
-        </div>
       </div>
     </div>
   );

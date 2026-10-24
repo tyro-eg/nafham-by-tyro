@@ -45,6 +45,15 @@ declare module '*.svg' {
  */
 interface ImportMetaEnv {
   readonly VITE_API_BASE_URL: string;
+  /** Stream Chat API key (public). Chat is disabled when missing. */
+  readonly VITE_STREAM_API_KEY?: string;
+  /** Stream user id of the shared "Nafham Support" admin member. */
+  readonly VITE_STREAM_ADMIN_USER_ID?: string;
+  /**
+   * "true" to sign Stream tokens in the browser (client.devToken).
+   * Development only: needs "Disable Auth Checks" in the Stream dashboard.
+   */
+  readonly VITE_STREAM_DEV_TOKENS?: string;
   // Add other environment variables as needed:
   // readonly VITE_ENABLE_ANALYTICS?: string;
   // readonly VITE_SENTRY_DSN?: string;

@@ -38,22 +38,33 @@ const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement,
 );
 
-root.render(
-  <React.StrictMode>
-    <ErrorBoundary>
-      <QueryClientProvider client={queryClient}>
-        <Provider store={store}>
-          <BrowserRouter>
-            <PersistGate loading={null} persistor={persistor}>
-              <App />
-            </PersistGate>
-          </BrowserRouter>
-        </Provider>
-        {/* TanStack Query DevTools - only visible in development */}
-        <ReactQueryDevtools initialIsOpen={false} />
-      </QueryClientProvider>
-    </ErrorBoundary>
-  </React.StrictMode>,
+// Local demo mode (?demo=student|tutor|off) with sample data. Dev server
+// only: this branch and the module are removed from production builds.
+const ready = import.meta.env.DEV
+  ? import('./dev/demo-mode')
+      .then((m) => m.setupDemoMode())
+      // eslint-disable-next-line no-console
+      .catch((error) => console.error('[demo] setup failed', error))
+  : Promise.resolve();
+
+ready.then(() =>
+  root.render(
+    <React.StrictMode>
+      <ErrorBoundary>
+        <QueryClientProvider client={queryClient}>
+          <Provider store={store}>
+            <BrowserRouter>
+              <PersistGate loading={null} persistor={persistor}>
+                <App />
+              </PersistGate>
+            </BrowserRouter>
+          </Provider>
+          {/* TanStack Query DevTools - only visible in development */}
+          <ReactQueryDevtools initialIsOpen={false} />
+        </QueryClientProvider>
+      </ErrorBoundary>
+    </React.StrictMode>,
+  ),
 );
 
 // Measure performance (optional)

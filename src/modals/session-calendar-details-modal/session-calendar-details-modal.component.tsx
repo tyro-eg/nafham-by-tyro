@@ -23,9 +23,10 @@ import './session-calendar-details-modal.styles.scss';
 const getStatusColor = (status: string): string => {
   const normalizedStatus = status.toLowerCase();
   if (normalizedStatus === 'completed') return '#4caf50'; // green
+  // Same meaning as the list view badges: missed = danger, canceled = neutral
   if (normalizedStatus === 'canceled' || normalizedStatus === 'cancelled')
-    return '#f44336'; // red
-  if (normalizedStatus === 'missed') return '#9e9e9e'; // gray
+    return '#9aa8b8'; // gray ($gray-400)
+  if (normalizedStatus === 'missed') return '#dc3545'; // red ($danger-500)
   if (normalizedStatus === 'open' || normalizedStatus === 'scheduled')
     return '#ff9800'; // orange
   return '#3ac5f1'; // default blue

@@ -21,13 +21,6 @@ interface SessionsScheduleCardProps {
   data: UserData;
 }
 
-const cardImageStyles = {
-  width: '100%',
-  height: 'auto',
-  borderRadius: 10,
-  cursor: 'pointer',
-};
-
 const SessionsScheduleCard: FC<SessionsScheduleCardProps> = ({ data }) => {
   const { t } = useTranslation();
   const [openScheduleSessionModal, setOpenScheduleSessionModal] =
@@ -42,11 +35,13 @@ const SessionsScheduleCard: FC<SessionsScheduleCardProps> = ({ data }) => {
 
   return (
     <div className="schedule-card">
-      <Button sx={{ padding: 0 }} onClick={gotoInstructorProfile}>
+      <Button
+        className="schedule-card__img-container"
+        onClick={gotoInstructorProfile}
+      >
         <img
           src={data.user_image || defaultProfileImage}
           alt={`${data.user_name}'s profile`}
-          style={{ ...cardImageStyles }}
           onError={(e) => {
             const target = e.target as HTMLImageElement;
             target.src = defaultProfileImage;
@@ -62,6 +57,7 @@ const SessionsScheduleCard: FC<SessionsScheduleCardProps> = ({ data }) => {
                 <Rating
                   name="sessions-schedule-card-rating"
                   value={Math.round(data.user_rating)}
+                  size="small"
                   readOnly
                 />
               </div>

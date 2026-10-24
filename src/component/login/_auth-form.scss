@@ -1,0 +1,351 @@
+// Shared auth form styles (login / register pages and modals).
+// Expects variables.scss and mixins.scss to be imported first.
+
+// Title + subtitle block above an auth form
+@mixin auth-heading($title-size: 3.2rem) {
+  .title,
+  &__title {
+    margin: 0;
+    font-size: $title-size;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    color: $text-strong;
+    text-align: start;
+
+    html[dir='rtl'] & {
+      letter-spacing: 0;
+    }
+
+    @include respond(phone) {
+      font-size: 2.6rem;
+    }
+  }
+
+  .sub-title,
+  &__subtitle {
+    margin-top: $space-2;
+    font-size: $font-base;
+    line-height: 1.6;
+    color: $text-body;
+    text-align: start;
+  }
+}
+
+// Card surface wrapping a whole auth form
+@mixin auth-card {
+  background-color: $surface;
+  border: 1px solid $border;
+  border-radius: $radius-lg;
+  box-shadow: $shadow-md;
+  padding: 4rem;
+
+  @include respond(tab-port) {
+    padding: $space-6;
+  }
+
+  @include respond(phone) {
+    padding: $space-5 2rem;
+  }
+}
+
+// react-phone-input-2 (material theme) restyled to match MUI outlined inputs
+@mixin phone-input-field {
+  .react-tel-input {
+    font-family: inherit;
+    direction: ltr;
+
+    .special-label {
+      display: none;
+    }
+
+    .form-control {
+      box-sizing: border-box;
+      width: 100%;
+      height: 4.45rem;
+      padding: 0 1.4rem 0 5.6rem;
+      font-family: inherit;
+      font-size: 1.5rem;
+      color: $text-strong;
+      background-color: $surface;
+      border: 1px solid $border-strong;
+      border-radius: $radius-sm;
+      box-shadow: none;
+      transition:
+        border-color $transition,
+        box-shadow $transition;
+
+      &::placeholder {
+        color: $gray-400;
+      }
+
+      &:hover {
+        border-color: $gray-400;
+      }
+
+      &:focus {
+        border-color: $brand-500;
+        box-shadow: $focus-ring;
+        outline: none;
+      }
+
+      &.is-invalid {
+        border-color: $danger-500;
+
+        &:focus {
+          box-shadow: 0 0 0 3px rgba($danger-500, 0.2);
+        }
+      }
+    }
+
+    .flag-dropdown {
+      border: none;
+      background: transparent;
+      border-radius: $radius-sm 0 0 $radius-sm;
+
+      &.open,
+      &.open .selected-flag {
+        background: transparent;
+      }
+    }
+
+    .selected-flag {
+      width: 4.8rem;
+      padding: 0 0 0 1.4rem;
+      border-radius: $radius-sm 0 0 $radius-sm;
+      transition: background-color $transition;
+
+      &:hover,
+      &:focus {
+        background-color: $gray-50;
+      }
+    }
+
+    .country-list {
+      width: 30rem;
+      max-width: calc(100vw - 6.4rem);
+      max-height: 26rem;
+      margin-top: $space-1;
+      padding: $space-1 0;
+      font-size: $font-sm;
+      text-align: start;
+      background-color: $surface;
+      border: 1px solid $border;
+      border-radius: 1rem;
+      box-shadow: $shadow-lg;
+
+      .country {
+        padding: 0.8rem 1.2rem;
+        color: $text-strong;
+
+        &:hover {
+          background-color: $gray-50;
+        }
+
+        &.highlight {
+          background-color: $brand-50;
+          color: $brand-700;
+        }
+
+        .dial-code {
+          color: $text-muted;
+        }
+      }
+
+      .divider {
+        border-bottom-color: $border;
+      }
+    }
+  }
+}
+
+// Fields, labels, submit button and the small links below it
+@mixin auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  text-align: start;
+
+  // Label + control pair
+  .auth-field {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .auth-field-row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 2rem $space-4;
+
+    @include respond(phone) {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  // Standalone InputLabel above each control
+  .MuiInputLabel-root {
+    margin-bottom: $space-2;
+    font-size: $font-sm;
+    font-weight: 600;
+    line-height: 1.4;
+    color: $text-strong;
+    white-space: normal;
+    overflow: visible;
+    transform: none;
+  }
+
+  .MuiTextField-root,
+  .MuiOutlinedInput-root {
+    width: 100%;
+  }
+
+  .MuiFormHelperText-root {
+    margin-inline: 0;
+    text-align: start;
+  }
+
+  .form-control-danger {
+    margin-top: 0.4rem;
+    font-size: 1.25rem;
+    line-height: 1.5;
+    color: $danger-500;
+  }
+
+  @include phone-input-field;
+
+  // Label row that can host an inline "forgot password?" link
+  .forget-password-label {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: $space-2;
+
+    .forget-password-btn {
+      min-height: 0;
+      padding: 0;
+      margin-bottom: $space-2;
+      font-size: $font-sm;
+      font-weight: 600;
+      color: $link;
+
+      &:hover {
+        background: none;
+        color: $brand-800;
+        text-decoration: underline;
+      }
+    }
+  }
+
+  // Primary submit
+  .btn-custom-style {
+    width: 100%;
+    min-height: 4.8rem;
+    margin-top: $space-2;
+    font-size: $font-base;
+  }
+
+  // "Don't have an account? Create one"
+  .no-account {
+    display: flex;
+    justify-content: center;
+
+    .register-text {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      margin: 0;
+      font-size: $font-sm;
+      line-height: 1.5;
+      color: $text-body;
+      text-align: center;
+    }
+
+    .register-link {
+      min-height: 0;
+      padding: 0.2rem 0.4rem;
+      font-size: $font-sm;
+      font-weight: 600;
+      line-height: 1.5;
+      color: $link;
+      text-decoration: none;
+
+      &:hover {
+        background: none;
+        color: $brand-800;
+        text-decoration: underline;
+      }
+    }
+  }
+
+  // Social sign-in (outlined buttons with icons)
+  .social-login {
+    display: flex;
+    flex-direction: column;
+    gap: $space-3;
+
+    .or-text {
+      display: flex;
+      align-items: center;
+      gap: $space-3;
+      font-size: $font-xs;
+      color: $text-muted;
+
+      &::before,
+      &::after {
+        content: '';
+        flex: 1;
+        height: 1px;
+        background-color: $border;
+      }
+    }
+
+    .social-btn {
+      width: 100%;
+      direction: ltr;
+    }
+  }
+
+  // Terms note
+  .term-body {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0.2rem;
+    padding-top: $space-4;
+    border-top: 1px solid $border;
+    text-align: center;
+
+    .term-first-text,
+    .term-second-text {
+      margin: 0;
+      font-size: $font-xs;
+      line-height: 1.5;
+    }
+
+    .term-first-text {
+      color: $text-muted;
+    }
+
+    .term-second-text {
+      color: $link;
+      font-weight: 600;
+    }
+
+    .MuiButton-root {
+      min-height: 0;
+      padding: 0.2rem 0.4rem;
+
+      &:hover {
+        background: none;
+
+        .term-second-text {
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+}

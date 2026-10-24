@@ -3,85 +3,122 @@
 
 .error-boundary {
   min-height: 100vh;
-  display: flex;
+  display: flex !important;
   align-items: center;
   justify-content: center;
-  padding: 2rem;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  padding: $space-7 $space-4 !important;
 
   &__content {
+    @include card($space-7 $space-6);
+    box-shadow: $shadow-md;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     text-align: center;
-    background: white;
-    padding: 3rem;
-    border-radius: 12px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-    max-width: 600px;
+    max-width: 56rem;
     width: 100%;
+
+    @include respond(phone) {
+      padding: $space-6 $space-4;
+    }
+  }
+
+  // Icon chip
+  &__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 6.4rem;
+    height: 6.4rem;
+    margin-bottom: $space-5;
+    border-radius: $radius-lg;
+    background-color: $brand-50;
+    color: $brand-600;
+
+    svg {
+      font-size: 3.2rem;
+    }
   }
 
   &__title {
-    font-size: 2rem;
-    font-weight: bold;
-    color: #333;
-    margin-bottom: 1rem;
+    &.MuiTypography-root {
+      font-size: $font-h3;
+      font-weight: 700;
+      line-height: 1.25;
+      letter-spacing: -0.02em;
+      color: $text-strong;
+      margin-bottom: $space-3;
 
-    @include respond('mobile') {
-      font-size: 1.5rem;
+      @include respond(phone) {
+        font-size: 2.2rem;
+      }
     }
   }
 
   &__description {
-    font-size: 1rem;
-    color: #666;
-    margin-bottom: 2rem;
-    line-height: 1.6;
+    &.MuiTypography-root {
+      font-size: $font-base;
+      color: $text-body;
+      line-height: 1.6;
+      max-width: 42rem;
+      margin-bottom: $space-6;
+    }
   }
 
   &__details {
-    background: #f8f9fa;
-    border: 1px solid #dee2e6;
-    border-radius: 8px;
-    padding: 1rem;
-    margin-bottom: 2rem;
-    text-align: left;
+    width: 100%;
+    background: $surface-alt;
+    border: 1px solid $border;
+    border-radius: $radius-sm;
+    padding: $space-4;
+    margin-bottom: $space-6;
+    text-align: start;
     max-height: 300px;
     overflow-y: auto;
   }
 
   &__details-title {
-    font-size: 0.875rem;
-    font-weight: bold;
-    margin-bottom: 0.5rem;
-    color: #dc3545;
+    &.MuiTypography-root {
+      font-size: $font-sm;
+      font-weight: 600;
+      margin-bottom: $space-2;
+      color: $danger-500;
+    }
   }
 
   &__details-message,
   &__details-stack {
-    font-size: 0.75rem;
-    font-family: 'Courier New', monospace;
-    color: #495057;
-    white-space: pre-wrap;
-    word-break: break-all;
+    &.MuiTypography-root {
+      font-size: $font-xs;
+      font-family: 'Courier New', monospace;
+      color: $gray-700;
+      white-space: pre-wrap;
+      word-break: break-all;
+      margin: 0;
+    }
   }
 
   &__details-stack {
-    margin-top: 1rem;
-    color: #6c757d;
+    &.MuiTypography-root {
+      margin-top: $space-3;
+      color: $text-muted;
+    }
   }
 
   &__actions {
     display: flex;
-    gap: 1rem;
+    gap: $space-3;
     justify-content: center;
     flex-wrap: wrap;
+    width: 100%;
   }
 
   &__button {
-    min-width: 150px;
+    min-width: 16rem;
+    min-height: 4.4rem;
 
-    @include respond('mobile') {
-      min-width: 120px;
-      font-size: 0.875rem;
+    @include respond(phone) {
+      flex: 1 1 100%;
     }
   }
 
@@ -89,12 +126,8 @@
   &.rtl {
     direction: rtl;
 
-    .error-boundary__details {
-      text-align: right;
-    }
-
-    .error-boundary__actions {
-      flex-direction: row-reverse;
+    .error-boundary__title.MuiTypography-root {
+      letter-spacing: 0;
     }
   }
 }

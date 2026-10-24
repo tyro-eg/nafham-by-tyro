@@ -1,281 +1,327 @@
 @import '../../../assets/styles/variables.scss';
 @import '../../../assets/styles/mixins.scss';
 
-.MuiPaper-elevation4.MuiAppBar-root {
-  box-shadow: none !important;
-  border-bottom: 2px solid $color-grey-light-4;
-}
+// Strip + bar heights are mirrored by the `.header` spacer
+// in ../index.styles.scss — keep them in sync.
+$header-strip-height: 3.6rem;
 
-.header-container {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
+.app-header {
+  &.MuiAppBar-root {
+    color: $text-strong;
+  }
 
-  .app-header {
+  &__inner {
+    @include container;
     display: flex;
-    justify-content: space-around;
     align-items: center;
-    width: 100%;
+    height: 100%;
+  }
 
-    &__top {
-      display: flex;
+  // ---------- Thin contact strip ----------
+  &__strip {
+    height: $header-strip-height;
+    background-color: $surface-alt;
+    border-bottom: 1px solid $border;
+
+    .app-header__inner {
       justify-content: space-between;
-      align-items: center;
-      margin-top: 0.9rem;
-      font-size: 1.4rem;
-      font-weight: 600;
-      line-height: 2.2rem;
-      color: $color-title;
-
-      a {
-        width: 6.2rem;
-        margin: 0 0.9rem;
-      }
-
-      &.rtl a {
-        display: inline-block;
-        width: auto;
-      }
-
-      .contact-menu {
-        display: flex;
-        direction: ltr;
-
-        a.item {
-          color: $color-body;
-          font-size: 1.4rem;
-          line-height: 2.2rem;
-          text-decoration: none;
-          width: unset;
-        }
-      }
-
-      &-links {
-        display: flex;
-        align-items: center;
-
-        &--lang {
-          width: 13rem;
-
-          @include respond(phone) {
-            width: 15rem;
-          }
-        }
-      }
-
-      .app-header__blog {
-        display: inline-block;
-        cursor: pointer;
-        width: 12rem;
-
-        &-title {
-          position: relative;
-          font-size: 1.6rem;
-          font-weight: 500;
-          line-height: 2.4rem;
-          color: $color-title;
-          margin: 0 1rem;
-
-          &.active {
-            color: $color-primary;
-            font-weight: 600;
-          }
-        }
-      }
+      gap: $space-4;
     }
 
-    &__bottom {
+    .contact-menu {
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      height: 7.2rem;
+      gap: $space-5;
+      min-width: 0;
 
-      .links {
-        display: flex;
+      .item {
+        display: inline-flex;
         align-items: center;
-      }
-
-      img {
-        width: 9.2rem;
-        height: 5.5rem;
-      }
-
-      a {
-        display: inline-block;
+        gap: 0.6rem;
+        font-size: $font-xs;
         font-weight: 500;
-        font-size: 1.6rem;
-        line-height: 24px;
-        color: $color-title;
-        margin-right: 3.2rem;
+        line-height: 1;
+        color: $text-muted;
+        text-decoration: none;
+        white-space: nowrap;
+        // Keep phone/email in LTR order in Arabic
+        direction: ltr;
 
-        &.active {
-          color: $color-primary;
-          font-weight: 600;
-        }
-      }
-
-      &.rtl {
-        a {
-          margin-right: 0;
-          margin-left: 3.2rem;
-        }
-      }
-
-      .app-header__user {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        column-gap: 0.8rem;
-        cursor: pointer;
-        min-width: 14rem;
-        height: 4rem;
-
-        .MuiAvatar-root {
-          background-color: $color-primary;
-          width: 24px;
-          height: 24px;
+        &:hover {
+          color: $brand-700;
         }
 
-        .MuiButton-endIcon {
-          margin-left: 0;
-        }
-
-        img {
-          background-color: $color-grey-light-4;
-          border-radius: 100%;
-          width: 3.2rem;
-          height: 3.2rem;
-          object-fit: cover;
-        }
-
-        &-center {
-          position: relative;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          flex-direction: column;
-
-          .name {
-            color: $color-title;
-            font-size: 1.6rem;
-            font-weight: 500;
-            line-height: 2.4rem;
-            display: flex;
-            align-items: center;
-
-            i {
-              margin: 0 0.8rem;
-              font-size: 2rem;
-            }
-          }
-
-          & > span {
-            color: $color-body;
-            font-size: 1.2rem;
-            line-height: 1.8rem;
-          }
+        &__icon {
+          font-size: 1.5rem;
+          color: $gray-400;
         }
       }
     }
   }
+
+  &__strip-link {
+    font-size: $font-xs;
+    font-weight: 600;
+    color: $brand-700;
+    text-decoration: none;
+    white-space: nowrap;
+
+    &:hover {
+      color: $brand-800;
+      text-decoration: underline;
+    }
+  }
+
+  // ---------- Main bar ----------
+  &__bar {
+    height: $header-height;
+
+    .app-header__inner {
+      gap: $space-6;
+
+      @include respond(tab-port) {
+        gap: $space-3;
+      }
+    }
+  }
+
+  &__logo {
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
+
+    img {
+      display: block;
+      width: auto;
+      height: 4.4rem;
+
+      @include respond(tab-port) {
+        height: 4rem;
+      }
+    }
+  }
+
+  &__nav {
+    display: flex;
+    align-items: center;
+    align-self: stretch;
+    gap: $space-1;
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    .menu-item {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      align-self: stretch;
+      padding: 0 1.2rem;
+      font-size: 1.5rem;
+      font-weight: 500;
+      color: $text-body;
+      text-decoration: none;
+      white-space: nowrap;
+      transition: color $transition;
+
+      @include respond(tab-port) {
+        padding: 0 0.8rem;
+        font-size: $font-sm;
+      }
+
+      &::after {
+        content: '';
+        position: absolute;
+        inset-inline: 1.2rem;
+        bottom: 0;
+        height: 2px;
+        border-radius: 2px 2px 0 0;
+        background-color: transparent;
+        transition: background-color $transition;
+
+        @include respond(tab-port) {
+          inset-inline: 0.8rem;
+        }
+      }
+
+      &:hover {
+        color: $text-strong;
+
+        &::after {
+          background-color: $gray-300;
+        }
+      }
+
+      &:focus-visible {
+        outline-offset: -2px;
+      }
+
+      &.active {
+        color: $brand-700;
+        font-weight: 600;
+
+        &::after {
+          background-color: $brand-600;
+        }
+      }
+    }
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: $space-2;
+    flex-shrink: 0;
+    margin-inline-start: auto;
+  }
+
+  &__login.MuiButton-root {
+    color: $text-strong;
+    min-height: 4.4rem;
+
+    &:hover {
+      background-color: $gray-50;
+    }
+  }
+
+  &__cta.MuiButton-root {
+    min-height: 4.4rem;
+    padding-inline: 2rem;
+    white-space: nowrap;
+  }
+
+  // ---------- Logged-in user button ----------
+  &__user.MuiButton-root {
+    gap: $space-2;
+    min-height: 4.4rem;
+    padding-block: 0.4rem;
+    padding-inline: 0.4rem 1rem;
+    border: 1px solid $border;
+    border-radius: $radius-pill;
+    color: $text-strong;
+    font-weight: 500;
+
+    &:hover {
+      background-color: $gray-50;
+      border-color: $border-strong;
+    }
+
+    .MuiButton-endIcon {
+      margin: 0;
+      color: $gray-500;
+    }
+  }
+
+  &__avatar {
+    width: 3.4rem;
+    height: 3.4rem;
+    border-radius: 50%;
+    object-fit: cover;
+    background-color: $gray-100;
+    flex-shrink: 0;
+  }
+
+  &__user-name {
+    max-width: 16rem;
+    font-size: $font-sm;
+    @include ellipsis;
+
+    @include respond(tab-port) {
+      display: none;
+    }
+  }
+}
+
+// ---------- Profile dropdown ----------
+.profile-popover-paper.MuiPaper-root {
+  margin-top: $space-2;
+  border: 1px solid $border;
+  border-radius: $radius-md;
+  box-shadow: $shadow-lg;
 }
 
 .profile-popover {
-  * {
-    font-family: 'Inter';
-  }
-
-  position: relative;
-  background-color: $color-white;
-  margin-top: 1.3rem;
-  padding: 3rem;
-  width: 23rem;
-  border: solid 1px $color-grey-light-6;
-  border-radius: 0.6rem;
   display: flex;
   flex-direction: column;
+  width: 26rem;
+  max-width: calc(100vw - 3.2rem);
 
-  .title {
-    width: 100%;
+  &__head {
+    display: flex;
+    align-items: center;
+    gap: $space-3;
+    padding: $space-4;
+    border-bottom: 1px solid $border;
+  }
+
+  &__avatar {
+    width: 4rem;
+    height: 4rem;
+    border-radius: 50%;
+    object-fit: cover;
+    background-color: $gray-100;
+    flex-shrink: 0;
+  }
+
+  &__meta {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 1.2rem;
+    min-width: 0;
 
     .name {
-      color: $color-title;
-      font-size: 1.4rem;
+      font-size: $font-sm;
+      font-weight: 600;
+      line-height: 1.4;
+      color: $text-strong;
+      @include ellipsis;
+    }
+
+    .email {
+      font-size: $font-xs;
+      line-height: 1.4;
+      color: $text-muted;
+      @include ellipsis;
+    }
+  }
+
+  &__links {
+    display: flex;
+    flex-direction: column;
+    padding: $space-2;
+    border-bottom: 1px solid $border;
+
+    .item {
+      display: flex;
+      align-items: center;
+      gap: $space-3;
+      min-height: 4rem;
+      padding: 0 $space-3;
+      border-radius: $radius-sm;
+      font-size: $font-sm;
       font-weight: 500;
-      line-height: 1.7rem;
-    }
+      color: $text-body;
+      text-decoration: none;
+      transition:
+        background-color $transition,
+        color $transition;
 
-    span {
-      color: $color-body;
-      font-size: 1rem;
-      line-height: 1.2rem;
-    }
-  }
+      &:hover {
+        background-color: $gray-50;
+        color: $text-strong;
+      }
 
-  .item {
-    width: 100%;
-    color: $color-body;
-    font-size: 1.4rem;
-    line-height: 2.2rem;
-    border-radius: 0.6rem;
-    padding: 0.5rem 0.8rem;
-    margin-bottom: 0;
-
-    &:hover {
-      background-color: $color-grey-light-1;
+      &__icon {
+        font-size: 2rem;
+        color: $gray-500;
+      }
     }
   }
 
-  .logout-button {
-    margin-top: 1.2rem;
-  }
-
-  &::before {
-    display: block;
-    content: ' ';
-    width: 1rem;
-    height: 1rem;
-    background-color: $color-white;
-    position: absolute;
-    top: -0.5rem;
-    left: calc(50% - 0.5rem);
-    transform: rotate(45deg);
-    border-top: 1px solid $color-grey-light-6;
-    border-left: 1px solid $color-grey-light-6;
-  }
-}
-
-.blog-popover {
-  * {
-    font-family: 'Inter';
-  }
-
-  position: relative;
-  background-color: $color-white;
-  padding: 1.5rem;
-  margin-top: 1.3rem;
-  width: 14rem;
-  border: solid 1px $color-grey-light-6;
-  border-radius: 0.6rem;
-  display: flex;
-  flex-direction: column;
-
-  &::before {
-    display: block;
-    content: ' ';
-    width: 1rem;
-    height: 1rem;
-    background-color: $color-white;
-    position: absolute;
-    top: -0.5rem;
-    left: calc(50% - 0.5rem);
-    transform: rotate(45deg);
-    border-top: 1px solid $color-grey-light-6;
-    border-left: 1px solid $color-grey-light-6;
+  &__footer {
+    padding: $space-3 $space-4 $space-4;
   }
 }

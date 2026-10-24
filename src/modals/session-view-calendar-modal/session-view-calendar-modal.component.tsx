@@ -35,12 +35,10 @@ const SessionViewCalendarModal: FC<SessionViewCalendarModalProps> = ({
 
   return (
     <div className="session-view-calendar-modal">
-      <div className="session-view-calendar-modal__head u-center-text">
-        <h2 className="u-color-title u-font-size-18 u-font-weight-bold">
-          Your Sessions on
-        </h2>
+      <div className="session-view-calendar-modal__head">
+        <h2 className="session-view-calendar-modal__title">Your Sessions on</h2>
         {sessionsArr.length > 0 && (
-          <h4 className="u-color-body u-font-size-14">
+          <h4 className="session-view-calendar-modal__subtitle">
             {myDateFormatter(sessionsArr[0].start_time!)}
           </h4>
         )}

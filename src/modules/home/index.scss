@@ -3,42 +3,58 @@
 
 .home {
   overflow: hidden;
-  background-color: $color-white;
+  background-color: $surface;
 
-  &.rtl {
-    text-align: right;
-  }
+  // Shared section heading: eyebrow + title + subtitle
+  .home-heading {
+    @include section-heading;
 
-  @include respond(phone) {
-    .container {
-      max-width: calc(100% - 4.4rem) !important;
+    .ds-eyebrow {
+      margin-bottom: $space-3;
+    }
+
+    .section-title:last-child {
+      margin-bottom: 0;
     }
   }
 
-  .custom-button {
-    padding: 1.2rem 3rem;
-    border-radius: 0.4rem;
-    background-color: $color-gold;
-    color: $color-white;
-    font-size: 1.6rem;
-    font-weight: 500;
-    line-height: 2.4rem;
-    text-align: center;
+  &.rtl .ds-eyebrow {
+    letter-spacing: 0;
   }
 
+  // Main marketing CTA ("Book a free session")
+  .custom-button.MuiButton-root {
+    @include button-accent;
+    min-height: 4.8rem;
+    padding: 1.2rem 2.8rem;
+    box-shadow: 0 6px 20px rgba($accent-500, 0.28);
+
+    &:hover {
+      box-shadow: 0 8px 24px rgba($accent-500, 0.36);
+    }
+  }
+
+  // Highlighted words inside headings (formerly a clip-path parallelogram)
   .parallelogram {
-    white-space: nowrap;
-    color: $color-white;
-    padding: 0 4px;
-    background-color: $color-primary;
-    clip-path: polygon(2% 0%, 100% 0%, 99% 100%, 0% 100%);
+    color: $brand-600;
+    padding: 0 0.1em;
+    background-image: linear-gradient(
+      transparent 64%,
+      rgba($brand-200, 0.6) 64%,
+      rgba($brand-200, 0.6) 92%,
+      transparent 92%
+    );
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
 
     &.gold {
-      background-color: $color-gold;
-    }
-
-    &.rtl {
-      clip-path: unset;
+      color: inherit;
+      background-image: linear-gradient(
+        transparent 64%,
+        rgba($accent-400, 0.55) 64%,
+        rgba($accent-400, 0.55) 92%,
+        transparent 92%
+      );
     }
   }
 }

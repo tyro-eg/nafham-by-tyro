@@ -1,0 +1,640 @@
+@import '../../assets/styles/variables.scss';
+@import '../../assets/styles/mixins.scss';
+
+// ============================================================
+// Messages page: conversation list + open thread.
+// Stream Chat components are themed below under .str-chat.
+// ============================================================
+
+$list-width: 34rem;
+$thread-bg: $surface-alt;
+$own-bubble: $brand-100;
+
+.messages {
+  display: flex;
+  height: calc(100vh - 2rem);
+  min-height: 48rem;
+  margin: 1rem;
+  overflow: hidden;
+  background-color: $surface;
+  border: 1px solid $border;
+  border-radius: $radius-md;
+  box-shadow: $shadow-sm;
+
+  @include respond(tab-port) {
+    height: calc(100vh - 6.4rem); // below the small-screen top bar
+    min-height: 0;
+    margin: 0;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  // ---------- Empty / loading / not configured ----------
+  &--state {
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__state,
+  &__placeholder,
+  &__empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: $space-2;
+    padding: $space-6 $space-5;
+    text-align: center;
+    color: $text-muted;
+
+    > svg {
+      font-size: 4.4rem;
+      color: $gray-300;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: $text-strong;
+    }
+
+    p {
+      margin: 0;
+      max-width: 36rem;
+      font-size: $font-sm;
+      line-height: 1.5;
+    }
+  }
+
+  &__placeholder {
+    flex: 1;
+    height: 100%;
+    background-color: $thread-bg;
+  }
+
+  &__placeholder-title,
+  &__empty-title {
+    font-size: $font-base;
+    font-weight: 700;
+    color: $text-strong;
+  }
+
+  &__empty .MuiButton-root {
+    margin-top: $space-3;
+  }
+
+  // ---------- Conversation list ----------
+  &__list {
+    display: flex;
+    flex: 0 0 $list-width;
+    flex-direction: column;
+    min-width: 0;
+    border-inline-end: 1px solid $border;
+    background-color: $surface;
+
+    @include respond(tab-land) {
+      flex-basis: 30rem;
+    }
+
+    @include respond(tab-port) {
+      flex: 1 1 auto;
+      border-inline-end: 0;
+    }
+  }
+
+  &__list-head {
+    display: flex;
+    flex-direction: column;
+    gap: $space-3;
+    padding: $space-5 $space-4 $space-3;
+  }
+
+  &__title {
+    margin: 0;
+    font-size: 2.2rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: $text-strong;
+
+    [dir='rtl'] & {
+      letter-spacing: 0;
+    }
+  }
+
+  &__search {
+    display: flex;
+    align-items: center;
+    gap: $space-2;
+    height: 4rem;
+    padding: 0 $space-3;
+    border: 1px solid $border;
+    border-radius: $radius-sm;
+    background-color: $surface-alt;
+    color: $gray-400;
+
+    &:focus-within {
+      border-color: $brand-400;
+      background-color: $surface;
+    }
+
+    .MuiInputBase-root {
+      flex: 1;
+      font-size: $font-sm;
+      color: $text-strong;
+    }
+  }
+
+  &__pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $space-2;
+  }
+
+  &__pill {
+    padding: 0.5rem 1.2rem;
+    border: 1px solid $border;
+    border-radius: $radius-pill;
+    background-color: $surface;
+    font-size: $font-xs;
+    font-weight: 600;
+    color: $gray-700;
+    cursor: pointer;
+    transition:
+      background-color $transition,
+      border-color $transition,
+      color $transition;
+
+    &:hover {
+      background-color: $surface-alt;
+    }
+
+    &:focus-visible {
+      @include focus-ring;
+    }
+
+    &--on,
+    &--on:hover {
+      border-color: $navy-900;
+      background-color: $navy-900;
+      color: $text-on-dark;
+    }
+  }
+
+  // Stream's list container; rows are our ConversationItem
+  .str-chat__channel-list,
+  .str-chat__channel-list-messenger,
+  .str-chat__channel-list-messenger__main {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-height: 0;
+    background: transparent;
+    border: 0;
+  }
+
+  .str-chat__channel-list-messenger__main {
+    gap: 0.2rem;
+    padding: 0 $space-3 $space-4;
+    overflow-y: auto;
+  }
+
+  // ---------- Thread ----------
+  &__thread {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    min-width: 0;
+    background-color: $thread-bg;
+
+    @include respond(tab-port) {
+      display: none;
+    }
+  }
+
+  // Phone: the list is the page; opening a thread swaps to it
+  &--thread-open {
+    @include respond(tab-port) {
+      .messages__list {
+        display: none;
+      }
+
+      .messages__thread {
+        display: flex;
+      }
+    }
+  }
+
+  &__hint {
+    margin: 0;
+    padding: 0 $space-4 $space-3;
+    font-size: $font-xs;
+    color: $text-muted;
+    background-color: $surface;
+  }
+}
+
+// ============================================================
+// Conversation row
+// ============================================================
+.conv-item {
+  display: flex;
+  align-items: flex-start;
+  gap: $space-3;
+  width: 100%;
+  padding: $space-3;
+  border: 0;
+  border-radius: 1.4rem;
+  background: transparent;
+  text-align: start;
+  font: inherit;
+  color: $text-body;
+  cursor: pointer;
+  transition: background-color $transition;
+
+  &:hover {
+    background-color: $surface-alt;
+  }
+
+  &:focus-visible {
+    @include focus-ring;
+  }
+
+  &--active,
+  &--active:hover {
+    background-color: $brand-50;
+  }
+
+  &__avatar {
+    position: relative;
+    flex: none;
+
+    .MuiAvatar-root {
+      width: 4.4rem;
+      height: 4.4rem;
+      font-size: $font-sm;
+      font-weight: 700;
+      color: $navy-900;
+      background-color: $brand-100;
+    }
+  }
+
+  &__admin-dot {
+    position: absolute;
+    inset-inline-end: -0.3rem;
+    bottom: -0.3rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.8rem;
+    height: 1.8rem;
+    border: 2px solid $surface;
+    border-radius: 50%;
+    background-color: $navy-900;
+    color: $text-on-dark;
+
+    svg {
+      font-size: 1rem;
+    }
+  }
+
+  &__body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 0.2rem;
+    min-width: 0;
+  }
+
+  &__row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: $space-2;
+  }
+
+  &__name {
+    @include ellipsis;
+    font-size: $font-sm;
+    font-weight: 600;
+    color: $text-strong;
+  }
+
+  &__time {
+    flex: none;
+    font-size: $font-xs;
+    color: $text-muted;
+    font-variant-numeric: tabular-nums;
+  }
+
+  &__subject {
+    @include ellipsis;
+    font-size: $font-xs;
+    color: $text-muted;
+  }
+
+  &__preview {
+    @include ellipsis;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 1.3rem;
+    color: $gray-700;
+
+    > span {
+      flex: none;
+    }
+  }
+
+  &__seen {
+    flex: none;
+    font-size: 1.5rem;
+    color: $brand-400;
+  }
+
+  &__kind {
+    flex: none;
+    font-size: 1.5rem;
+    color: $gray-500;
+  }
+
+  &__unread {
+    @include badge($accent-500, $navy-950);
+    flex: none;
+    justify-content: center;
+    min-width: 2rem;
+    height: 2rem;
+    padding: 0 0.6rem;
+    font-size: 1.1rem;
+    font-weight: 700;
+  }
+
+  &--unread &__name,
+  &--unread &__time,
+  &--unread &__preview {
+    font-weight: 700;
+    color: $text-strong;
+  }
+}
+
+// ============================================================
+// Thread header
+// ============================================================
+.thread-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: $space-3;
+  padding: $space-3 $space-4;
+  background-color: $surface;
+  border-bottom: 1px solid $border;
+
+  &__back.MuiIconButton-root {
+    display: none;
+    color: $text-strong;
+
+    @include respond(tab-port) {
+      display: inline-flex;
+    }
+  }
+
+  &__avatars {
+    display: flex;
+    align-items: center;
+    flex: none;
+
+    .MuiAvatar-root {
+      width: 4rem;
+      height: 4rem;
+      border: 2px solid $surface;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: $navy-900;
+      background-color: $brand-100;
+
+      + .MuiAvatar-root {
+        margin-inline-start: -1rem;
+      }
+    }
+  }
+
+  &__admin-avatar.MuiAvatar-root {
+    color: $text-on-dark;
+    background-color: $navy-900;
+
+    svg {
+      font-size: 1.8rem;
+    }
+  }
+
+  &__who {
+    flex: 1 1 16rem;
+    min-width: 0;
+  }
+
+  &__name {
+    @include ellipsis;
+    margin: 0;
+    font-size: 1.7rem;
+    font-weight: 700;
+    color: $text-strong;
+  }
+
+  &__meta {
+    @include ellipsis;
+    margin: 0.2rem 0 0;
+    font-size: 1.3rem;
+    color: $text-muted;
+  }
+
+  &__members {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    @include respond(tab-land) {
+      display: none;
+    }
+  }
+
+  &__chip {
+    @include badge($gray-100, $gray-700);
+    padding: 0.3rem 1rem;
+    font-size: $font-xs;
+
+    &--admin {
+      background-color: $navy-900;
+      color: $text-on-dark;
+
+      svg {
+        font-size: 1.2rem;
+      }
+    }
+  }
+
+  &__book.MuiButton-root {
+    flex: none;
+    border-radius: 1rem;
+    text-transform: none;
+    font-weight: 600;
+  }
+}
+
+// ============================================================
+// Stream Chat theming (bubbles, composer, voice notes)
+// ============================================================
+.messages .str-chat {
+  --str-chat__font-family: inherit;
+  --str-chat__accent-primary: #{$navy-900};
+  --str-chat__background-core-app: #{$thread-bg};
+  --str-chat__background-core-surface-default: #{$surface};
+
+  font-family: inherit;
+  font-size: $font-sm;
+  color: $text-strong;
+}
+
+.messages .str-chat__container,
+.messages .str-chat__main-panel,
+.messages .str-chat__main-panel-inner {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+  height: 100%;
+  background: transparent;
+}
+
+.messages .str-chat__list {
+  background-color: $thread-bg;
+}
+
+// Message rows: our wrapper adds the admin label and styling
+.nf-msg {
+  position: relative;
+
+  &__admin-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin: 0 0 0.2rem 5.2rem;
+    font-size: $font-xs;
+    font-weight: 700;
+    color: $navy-900;
+
+    svg {
+      font-size: 1.2rem;
+    }
+
+    [dir='rtl'] & {
+      margin: 0 5.2rem 0.2rem 0;
+    }
+  }
+
+  &--admin .str-chat__message-bubble,
+  &--admin .str-chat__message-text {
+    border-inline-start: 3px solid $navy-900 !important;
+  }
+
+  &--admin .str-chat__avatar-fallback {
+    background-color: $navy-900 !important;
+    color: $text-on-dark !important;
+  }
+}
+
+// Other people: white bubble with a border; own: light brand tint
+.messages .str-chat__message--other .str-chat__message-bubble,
+.messages .str-chat__message--other .str-chat__message-text {
+  background-color: $surface;
+  border: 1px solid $border;
+  color: $text-strong;
+}
+
+.messages .str-chat__message--me .str-chat__message-bubble,
+.messages .str-chat__message--me .str-chat__message-text {
+  background-color: $own-bubble;
+  border: 1px solid $own-bubble;
+  color: $text-strong;
+}
+
+.messages .str-chat__avatar-fallback {
+  background-color: $brand-100;
+  color: $navy-900;
+  font-weight: 700;
+}
+
+// Composer
+.messages .str-chat__message-composer,
+.messages .str-chat__message-input {
+  background-color: $surface;
+  border-top: 1px solid $border;
+}
+
+.messages .str-chat__message-composer-inner,
+.messages .str-chat__message-input-inner {
+  padding: $space-3 $space-4 $space-2;
+}
+
+.messages .str-chat__textarea textarea,
+.messages .str-chat__message-textarea textarea {
+  font-family: inherit;
+  font-size: $font-sm;
+  color: $text-strong;
+  border-color: $border-strong;
+  border-radius: $radius-sm;
+
+  &::placeholder {
+    color: $gray-400;
+  }
+}
+
+.messages .str-chat__send-button,
+.messages .str-chat__start-recording-audio-button,
+.messages .str-chat__attachment-selector__button,
+.messages .str-chat__file-input-container {
+  min-width: 4.4rem;
+  min-height: 4.4rem;
+  border-radius: $radius-sm;
+}
+
+.messages .str-chat__send-button:not(:disabled) {
+  background-color: $navy-900;
+  color: $text-on-dark;
+}
+
+.messages .str-chat__send-button:disabled {
+  background-color: $gray-300;
+  color: $text-on-dark;
+}
+
+// Voice note playback
+.messages .str-chat__voice-recording-widget {
+  background-color: transparent;
+}
+
+.messages .str-chat__voice-recording-widget__play-button,
+.messages .str-chat__audio_player-play-button,
+.messages .str-chat__voice-recording-widget__audio-player-button {
+  background-color: $navy-900;
+  color: $text-on-dark;
+  border-radius: 50%;
+}
+
+.messages .str-chat__wave-progress-bar__progress-indicator {
+  background-color: $brand-400;
+}
+
+.messages .str-chat__wave-progress-bar__amplitude-bar--active {
+  background-color: $brand-400;
+}
+
+// Recording in progress
+.messages .str-chat__recording-timer {
+  color: $danger-500;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}

@@ -21,6 +21,7 @@ import './login.styles.scss';
 // TODO: Uncomment when backend is ready
 // import ResetPasswordModal from '../../modals/reset-password/reset-password-modal.component';
 import { useSignIn } from '../../hooks/useAuth';
+import { getHomePath } from '../../assets/utils/home-path';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -54,7 +55,7 @@ const Login = () => {
     try {
       const userData = await signInMutation.mutateAsync(values);
       if (userData?.id) {
-        navigate('/home');
+        navigate(getHomePath(userData));
       }
     } catch (error) {
       console.error('Login error:', error);
@@ -63,64 +64,73 @@ const Login = () => {
 
   return (
     <div className="login-container">
-      <h3 className="title">{t('LOGIN.MAIN.TITLE')}</h3>
-      <p className="sub-title">{t('LOGIN.MAIN.SUBTITLE')}</p>
+      <div className="login-container__header">
+        <h1 className="title">{t('LOGIN.MAIN.TITLE')}</h1>
+        <p className="sub-title">{t('LOGIN.MAIN.SUBTITLE')}</p>
+      </div>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className={`login-container__form  ${rtlClass}`}
+        className={`login-container__form ${rtlClass}`}
       >
-        <InputLabel htmlFor="email">{t('LOGIN.LOGIN_EMAIL')}</InputLabel>
-        <Controller
-          name="email"
-          control={control}
-          render={({ field }) => (
-            <MuiTextField
-              {...field}
-              placeholder={t('LOGIN.LOGIN_EMAIL_INPUT_PLACEHOLDER')}
-              type="email"
-              variant="outlined"
-              className="custom-input-style"
-              id="email"
-              error={!!errors.email}
-              helperText={errors.email?.message}
-              fullWidth
-            />
-          )}
-        />
-        <div className="forget-password-label">
-          <InputLabel htmlFor="password">
-            {t('LOGIN.LOGIN_PASSWORD')}
-          </InputLabel>
-          {/* TODO: Uncomment when backend is ready */}
-          {/* <Button
-            variant="text"
-            className={`forget-password-btn ${rtlClass}`}
-            onClick={() => setOpenForgetPasswordModal(true)}
-          >
-            <span>{t('LOGIN.FORGET_PASSWORD')}</span>
-          </Button> */}
+        <div className="auth-field">
+          <InputLabel htmlFor="email">{t('LOGIN.LOGIN_EMAIL')}</InputLabel>
+          <Controller
+            name="email"
+            control={control}
+            render={({ field }) => (
+              <MuiTextField
+                {...field}
+                placeholder={t('LOGIN.LOGIN_EMAIL_INPUT_PLACEHOLDER')}
+                type="email"
+                variant="outlined"
+                className="custom-input-style"
+                id="email"
+                autoComplete="email"
+                error={!!errors.email}
+                helperText={errors.email?.message}
+                fullWidth
+              />
+            )}
+          />
         </div>
-        <Controller
-          name="password"
-          control={control}
-          render={({ field }) => (
-            <MuiTextField
-              {...field}
-              placeholder={t('LOGIN.LOGIN_PASSWORD_INPUT_PLACEHOLDER')}
-              variant="outlined"
-              type="password"
-              className="custom-input-style"
-              id="password"
-              error={!!errors.password}
-              helperText={errors.password?.message}
-              fullWidth
-            />
-          )}
-        />
+        <div className="auth-field">
+          <div className="forget-password-label">
+            <InputLabel htmlFor="password">
+              {t('LOGIN.LOGIN_PASSWORD')}
+            </InputLabel>
+            {/* TODO: Uncomment when backend is ready */}
+            {/* <Button
+              variant="text"
+              className={`forget-password-btn ${rtlClass}`}
+              onClick={() => setOpenForgetPasswordModal(true)}
+            >
+              <span>{t('LOGIN.FORGET_PASSWORD')}</span>
+            </Button> */}
+          </div>
+          <Controller
+            name="password"
+            control={control}
+            render={({ field }) => (
+              <MuiTextField
+                {...field}
+                placeholder={t('LOGIN.LOGIN_PASSWORD_INPUT_PLACEHOLDER')}
+                variant="outlined"
+                type="password"
+                className="custom-input-style"
+                id="password"
+                autoComplete="current-password"
+                error={!!errors.password}
+                helperText={errors.password?.message}
+                fullWidth
+              />
+            )}
+          />
+        </div>
         <Button
           type="submit"
           variant="contained"
           color="primary"
+          size="large"
           disabled={isSubmitting}
           className="btn-custom-style"
           fullWidth
@@ -157,7 +167,9 @@ const Login = () => {
         <div className="term-body">
           <p className="term-first-text">{t('REGISTER.TERMS')}</p>
           <Button onClick={goToTerms} variant="text">
-            <p className="term-second-text">{t('REGISTER.TERMS_GREEN')}</p>
+            <span className="term-second-text">
+              {t('REGISTER.TERMS_GREEN')}
+            </span>
           </Button>
         </div>
       </form>

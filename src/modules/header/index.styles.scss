@@ -1,18 +1,20 @@
 @import '../../assets/styles/variables.scss';
 @import '../../assets/styles/mixins.scss';
 
+// Spacer for the fixed header. Desktop/tablet = 3.6rem contact strip
+// + $header-height bar; phone = 6.4rem mobile bar (see mobile header).
 .header {
-  margin-bottom: 12rem;
+  margin-bottom: 3.6rem + $header-height;
 
   @include respond(phone) {
-    margin-bottom: 7.5rem;
+    margin-bottom: 6.4rem;
   }
 
   &__withBanner {
-    margin-bottom: 18rem;
+    margin-bottom: 3.6rem + $header-height + 6.3rem;
 
     @include respond(phone) {
-      margin-bottom: 13.7rem;
+      margin-bottom: 6.4rem + 6.3rem;
     }
   }
 
@@ -22,9 +24,9 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: $color-primary;
-    color: $color-white;
-    font-size: 1.6rem;
+    background-color: $brand-700;
+    color: $text-on-dark;
+    font-size: $font-sm;
     font-weight: 500;
 
     @include respond(phone) {

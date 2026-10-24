@@ -2,70 +2,65 @@
 @import '../../../../assets/styles/mixins.scss';
 
 .contact-details {
-  margin-bottom: 4.8rem;
+  margin-bottom: $space-5;
 
-  .form-container {
-    @include respond(phone) {
-      width: 94%;
-      max-width: unset !important;
-    }
-  }
-
+  // Page header
   .title-container {
-    background-color: $color-primary;
-    padding: 4.2rem 0;
-    margin-bottom: 2.1rem;
+    padding: $space-8 0 $space-6;
+
+    @include respond(phone) {
+      padding: $space-6 0 $space-5;
+    }
 
     .title {
       text-align: start;
-      color: $color-white;
-      font-weight: 800;
-      font-size: 4.8rem;
-      line-height: 64px;
+      color: $text-strong;
+      font-weight: 700;
+      font-size: $font-h2;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
 
       @include respond(phone) {
-        font-size: 3.2rem;
-        line-height: 48px;
+        font-size: 2.8rem;
       }
     }
   }
 
-  .sub-title {
-    font-weight: 700;
-    font-size: 2.4rem;
-    line-height: 140%;
-    color: $color-title;
-    margin-bottom: 2.1rem;
-    text-align: start;
-
-    @include respond(phone) {
-      margin-bottom: 1.8rem;
-    }
+  // Settings pages read better in a narrower, centered column
+  .title-container .container,
+  .form-container {
+    max-width: 88rem !important;
   }
 
+  // Section card
   &__form-container {
+    @include card(0);
+    overflow: hidden;
+  }
+
+  &__header {
     display: flex;
+    align-items: center;
     justify-content: space-between;
-    align-items: flex-start;
-    padding: 3.2rem;
-    background-color: $color-white;
-    border-radius: 8px;
+    gap: $space-3;
+    padding: $space-4 $space-5;
+    border-bottom: 1px solid $border;
 
     @include respond(phone) {
-      flex-direction: column;
+      padding: $space-4;
+    }
+
+    .sub-title {
+      font-weight: 600;
+      font-size: $font-h5;
+      line-height: 1.3;
+      color: $text-strong;
+      text-align: start;
     }
 
     .edit-btn {
-      font-weight: 700;
-      font-size: 21px;
-      line-height: 140%;
-      color: $color-primary;
-      cursor: pointer;
-
-      @include respond(phone) {
-        align-self: flex-end;
-        order: 1;
-      }
+      flex: none;
+      min-width: 8rem;
     }
   }
 
@@ -75,117 +70,124 @@
     display: flex;
     flex-direction: column;
 
-    @include respond(phone) {
-      order: 2;
-    }
-
     .form-inputs {
-      display: flex;
-      flex-wrap: wrap;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: $space-5;
+      margin: 0;
+      padding: $space-5;
+      border: 0;
+      min-width: 0;
+
+      @include respond(phone) {
+        grid-template-columns: minmax(0, 1fr);
+        gap: $space-4;
+        padding: $space-4;
+      }
 
       .form-group {
-        width: 36.4rem;
-        margin-right: 3.2rem;
-
-        &.rtl {
-          margin-right: 0;
-          margin-left: 3.2rem;
-        }
-
-        @include respond(phone) {
-          width: 100%;
-          margin-left: 0;
-          margin-right: 0;
-        }
+        display: flex;
+        flex-direction: column;
+        gap: $space-2;
+        min-width: 0;
       }
 
       .custom-input-style {
-        height: 4.8rem;
-        margin-bottom: 4.8rem;
         width: 100%;
       }
 
-      .phone-input {
-        margin-bottom: 4.8rem;
-      }
+      .MuiInputBase-root {
+        font-size: $font-base;
+        min-height: 4.4rem;
 
-      .gender-container {
-        .gender-radio-group {
-          flex-direction: row;
-          margin-bottom: 2.4rem;
+        &.Mui-disabled {
+          background-color: $surface-alt;
         }
       }
 
-      .MuiInputBase-root {
-        font-size: 1.4rem;
-        line-height: 2.2rem;
-        height: 4.4rem;
-        background: #f1f3f8;
-      }
-
-      .MuiOutlinedInput-input {
-        padding: 14.5px 14px;
-      }
-
-      .MuiOutlinedInput-notchedOutline {
-        border: none;
+      .MuiInputBase-input.Mui-disabled {
+        -webkit-text-fill-color: $text-body;
       }
 
       .MuiFormLabel-root {
         font-weight: 600;
-        font-size: 1.6rem;
-        line-height: 24px;
-        color: #2c3e50;
-        margin-bottom: 0.8rem;
+        font-size: $font-sm;
+        line-height: 1.4;
+        color: $text-strong;
       }
 
       .MuiFormHelperText-root {
-        font-size: 1.4rem;
-        margin: 0.3rem 0;
+        margin: $space-1 0 0;
         text-align: start;
       }
 
       .react-tel-input {
-        height: 4.4rem;
         font-family: inherit;
         direction: ltr;
 
         .form-control {
-          height: 100%;
-          border: none;
-          background: #f1f3f8;
+          width: 100%;
+          height: 4.4rem;
+          padding-block: 0;
+          font-size: $font-base;
+          color: $text-strong;
+          border: 1px solid $border-strong;
+          border-radius: $radius-sm;
+          background-color: $surface;
           box-shadow: none;
+          transition:
+            border-color $transition,
+            box-shadow $transition;
+
+          &:hover {
+            border-color: $gray-400;
+          }
+
+          &:focus {
+            border-color: $brand-500;
+            box-shadow: $focus-ring;
+          }
+
+          &:disabled {
+            background-color: $surface-alt;
+            color: $text-body;
+          }
+        }
+
+        .flag-dropdown,
+        .selected-flag {
+          border-radius: $radius-sm 0 0 $radius-sm;
         }
       }
     }
 
     .form-actions {
-      align-self: flex-end;
+      display: flex;
+      justify-content: flex-end;
+      gap: $space-3;
+      padding: $space-4 $space-5;
+      border-top: 1px solid $border;
+      background-color: $surface-alt;
 
-      .btn-custom-style {
-        width: 7.3rem;
-        height: 4.1rem;
-        border-radius: 6px;
-        line-height: 150%;
-        margin: 0 1.2rem;
-
-        @include respond(phone) {
-        }
+      @include respond(phone) {
+        padding: $space-4;
       }
 
+      .btn-custom-style,
       .cancel-btn {
-        color: $color-body;
-        font-weight: 300;
-        font-size: 1.6rem;
-        line-height: 150%;
-        opacity: 0.8;
+        min-width: 10rem;
+        min-height: 4.4rem;
       }
     }
   }
 
   .form-control-danger {
-    color: #f44336 !important;
-    font-size: 1.4rem;
-    margin-bottom: 0.5rem;
+    color: $danger-500 !important;
+    font-size: $font-xs;
+    margin-top: $space-1;
   }
+}
+
+html[dir='rtl'] .contact-details .title-container .title {
+  letter-spacing: 0;
 }
