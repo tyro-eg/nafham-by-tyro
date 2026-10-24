@@ -5,6 +5,9 @@ import { CalendarToday } from '@mui/icons-material';
 
 import { useInfiniteSessions } from '../../../../hooks/useSessions';
 import { SessionFilters } from '../../../../lib/queryKeys';
+import { useAppSelector } from '../../../../redux/store';
+import { selectCurrentUser } from '../../../../redux/user/user.selectors';
+import { counterpartName, useLiveSessionToast } from '../../session-state';
 
 import SessionListCard from './sessions-list-card/sessions-list-card.component';
 
@@ -36,6 +39,12 @@ const SessionsList: FC<SessionsListProps> = ({ filters }) => {
 
   // Flatten all pages into a single array
   const sessions = data?.pages.flatMap((page) => page.data) ?? [];
+  const currentUser = useAppSelector(selectCurrentUser);
+  useLiveSessionToast(data ? sessions : undefined, (session) =>
+    t('MYSESSIONS.MAIN.CARD.LIVE_TOAST', {
+      name: counterpartName(session, currentUser?.id),
+    }),
+  );
 
   if (isError) {
     return (
