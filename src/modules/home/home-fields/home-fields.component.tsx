@@ -1,26 +1,22 @@
 import { FC } from 'react';
 import { useTranslation } from 'react-i18next';
-import { SchoolOutlined } from '@mui/icons-material';
-
-import uae from '../../../assets/images/newLanding/uae.webp';
-import igcse from '../../../assets/images/newLanding/igcse.webp';
-import sat from '../../../assets/images/newLanding/sat.webp';
-import IB from '../../../assets/images/newLanding/ib.webp';
 
 import './home-fields.styles.scss';
 
 interface Curriculum {
-  image?: string;
+  mark: string;
   label: string;
+  tone: 'sky' | 'navy' | 'gold' | 'mint' | 'rose' | 'slate';
 }
 
+// The mark is a short typographic monogram; the tone only tints the tile
 const CURRICULA: Curriculum[] = [
-  { image: igcse, label: 'IGCSE' },
-  { image: IB, label: 'IB' },
-  { image: sat, label: 'SAT' },
-  { label: 'American System' },
-  { label: 'British System' },
-  { image: uae, label: 'UAE National' },
+  { mark: 'IG', label: 'IGCSE', tone: 'sky' },
+  { mark: 'IB', label: 'IB', tone: 'navy' },
+  { mark: 'SAT', label: 'SAT', tone: 'gold' },
+  { mark: 'US', label: 'American System', tone: 'rose' },
+  { mark: 'UK', label: 'British System', tone: 'slate' },
+  { mark: 'AE', label: 'UAE National', tone: 'mint' },
 ];
 
 const HomeFields: FC = () => {
@@ -38,12 +34,10 @@ const HomeFields: FC = () => {
         <ul className="curricula">
           {CURRICULA.map((curriculum) => (
             <li key={curriculum.label} className="curricula__item">
-              <span className="curricula__icon">
-                {curriculum.image ? (
-                  <img src={curriculum.image} alt="" loading="lazy" />
-                ) : (
-                  <SchoolOutlined aria-hidden="true" />
-                )}
+              <span
+                className={`curricula__mark curricula__mark--${curriculum.tone}`}
+              >
+                {curriculum.mark}
               </span>
               <span className="curricula__label">{curriculum.label}</span>
             </li>

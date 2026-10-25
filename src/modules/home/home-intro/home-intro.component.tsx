@@ -11,7 +11,11 @@ import {
 
 import { useRtlClass } from '../../../assets/utils/utils';
 
-import product from '../../../assets/images/newLanding/macbook.webp';
+import tutor from '../../../assets/images/newLanding/hero-tutor.webp';
+import student1 from '../../../assets/images/newLanding/hero-student1.webp';
+import student2 from '../../../assets/images/newLanding/hero-student2.webp';
+import student3 from '../../../assets/images/newLanding/hero-student3.webp';
+import student4 from '../../../assets/images/newLanding/hero-student4.webp';
 
 import './home-intro.styles.scss';
 
@@ -25,6 +29,8 @@ const PILL_AVATARS = [
   { initials: 'MK', tone: 'gold' },
   { initials: 'LN', tone: 'navy' },
 ];
+
+const STUDENTS = [student1, student2, student3, student4];
 
 const HomeIntro: FC<HomeIntroProps> = ({ openFreeTrail }) => {
   const { t } = useTranslation();
@@ -94,8 +100,40 @@ const HomeIntro: FC<HomeIntroProps> = ({ openFreeTrail }) => {
 
         <div className="hero__stage" aria-hidden="true">
           <div className="hero__glow" />
-          <div className="hero__frame">
-            <img className="hero__product" src={product} alt="" />
+          {/* A live session as the app shows it: tutor on stage, students aside */}
+          <div className="mock">
+            <div className="mock__bar">
+              <span className="mock__dots">
+                <span />
+                <span />
+                <span />
+              </span>
+              <span className="mock__title">
+                {t('LANDING.HERO.MOCK_TITLE')}
+              </span>
+              <span className="mock__timer">24:10</span>
+            </div>
+            <div className="mock__body">
+              <div className="mock__main">
+                <img src={tutor} alt="" />
+                <span className="mock__name">
+                  {t('LANDING.HERO.MOCK_TUTOR')}
+                </span>
+              </div>
+              <div className="mock__side">
+                {STUDENTS.map((student, index) => (
+                  <span key={index} className="mock__tile">
+                    <img src={student} alt="" />
+                  </span>
+                ))}
+              </div>
+            </div>
+            <div className="mock__controls">
+              <span />
+              <span />
+              <span />
+              <span className="mock__controls-end" />
+            </div>
           </div>
           <div className="hero__chip hero__chip--live">
             <span className="hero__live-dot" />

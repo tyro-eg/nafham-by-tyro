@@ -195,7 +195,9 @@
       "CHIP_LIVE": "Live session",
       "CHIP_COURSE_LABEL": "Today, 5:00 PM",
       "CHIP_COURSE": "IGCSE Maths · Year 10",
-      "CHIP_PROGRESS": "Package: 24 hours"
+      "CHIP_PROGRESS": "Package: 24 hours",
+      "MOCK_TITLE": "IGCSE Maths · Live session",
+      "MOCK_TUTOR": "Ms. Ghada · Tutor"
     },
     "PRESS": "As featured in",
     "STATS": {
@@ -238,6 +240,12 @@
     "CLOSING": {
       "EYEBROW": "Start with a free session",
       "NOTE": "No card needed. Pick a tutor, pick a time, and see the difference."
+    },
+    "TUTORS": {
+      "ENGLISH": "English",
+      "MATHS": "Maths",
+      "FRENCH": "French",
+      "ARABIC": "Arabic"
     }
   },
   "ENGLISH_COURSE": {

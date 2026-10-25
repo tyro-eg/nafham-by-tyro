@@ -31,24 +31,48 @@
       text-align: center;
     }
 
-    &__icon {
+    &__mark {
       display: inline-flex;
       align-items: center;
       justify-content: center;
       width: 6rem;
       height: 6rem;
       border-radius: $radius-md;
-      background-color: $brand-50;
-      color: $brand-700;
+      font-size: $font-h5;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      direction: ltr;
+      background-color: var(--tint);
+      color: var(--ink);
 
-      img {
-        width: 3.6rem;
-        height: 3.6rem;
-        object-fit: contain;
+      &--sky {
+        --tint: #{$brand-50};
+        --ink: #{$brand-800};
       }
 
-      .MuiSvgIcon-root {
-        font-size: 2.8rem;
+      &--navy {
+        --tint: #{$gray-100};
+        --ink: #{$navy-900};
+      }
+
+      &--gold {
+        --tint: #{$warning-50};
+        --ink: #{darken($accent-500, 10%)};
+      }
+
+      &--rose {
+        --tint: #{$danger-50};
+        --ink: #{darken($danger-500, 10%)};
+      }
+
+      &--slate {
+        --tint: #{$gray-100};
+        --ink: #{$gray-700};
+      }
+
+      &--mint {
+        --tint: #{$success-50};
+        --ink: #{darken($success-500, 18%)};
       }
     }
 
