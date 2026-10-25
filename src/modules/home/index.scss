@@ -1,60 +1,83 @@
 @import '../../assets/styles/variables.scss';
 @import '../../assets/styles/mixins.scss';
 
+// Shared pieces of the landing page: section rhythm, headings and the two
+// call-to-action button styles. Sections keep their own layout files.
 .home {
   overflow: hidden;
   background-color: $surface;
 
-  // Shared section heading: eyebrow + title + subtitle
   .home-heading {
     @include section-heading;
+    max-width: 64rem;
 
     .ds-eyebrow {
       margin-bottom: $space-3;
     }
 
+    .section-title {
+      font-size: 4rem;
+      letter-spacing: -0.03em;
+      color: $navy-950;
+
+      @include respond(phone) {
+        font-size: 3rem;
+      }
+    }
+
     .section-title:last-child {
       margin-bottom: 0;
     }
+
+    &--start {
+      margin-left: 0;
+      margin-right: 0;
+      text-align: start;
+    }
   }
 
-  &.rtl .ds-eyebrow {
+  &.rtl .ds-eyebrow,
+  &.rtl .home-heading .section-title {
     letter-spacing: 0;
   }
 
-  // Main marketing CTA ("Book a free session")
-  .custom-button.MuiButton-root {
-    @include button-accent;
-    min-height: 4.8rem;
+  // A highlighted word inside a heading: brand colour, nothing else
+  .accent {
+    color: $brand-700;
+  }
+
+  // Primary call to action, used by the hero and the closing band
+  .home-cta.MuiButton-root {
+    @include button-primary;
+    min-height: 5.2rem;
     padding: 1.2rem 2.8rem;
-    box-shadow: 0 6px 20px rgba($accent-500, 0.28);
+    border-radius: $radius-pill;
+    font-size: $font-base;
+    box-shadow: 0 10px 24px rgba($brand-600, 0.28);
 
     &:hover {
-      box-shadow: 0 8px 24px rgba($accent-500, 0.36);
+      box-shadow: 0 12px 28px rgba($brand-600, 0.36);
+    }
+
+    .MuiButton-endIcon {
+      margin-inline-start: $space-2;
+      margin-inline-end: 0;
     }
   }
 
-  // Highlighted words inside headings (formerly a clip-path parallelogram)
-  .parallelogram {
-    color: $brand-600;
-    padding: 0 0.1em;
-    background-image: linear-gradient(
-      transparent 64%,
-      rgba($brand-200, 0.6) 64%,
-      rgba($brand-200, 0.6) 92%,
-      transparent 92%
-    );
-    -webkit-box-decoration-break: clone;
-    box-decoration-break: clone;
+  // On the dark closing band the button goes gold
+  .home-cta--gold.MuiButton-root {
+    background-color: $accent-400;
+    color: $navy-950;
+    box-shadow: 0 10px 24px rgba($accent-500, 0.3);
 
-    &.gold {
-      color: inherit;
-      background-image: linear-gradient(
-        transparent 64%,
-        rgba($accent-400, 0.55) 64%,
-        rgba($accent-400, 0.55) 92%,
-        transparent 92%
-      );
+    &:hover {
+      background-color: $accent-500;
+      box-shadow: 0 12px 28px rgba($accent-500, 0.38);
     }
+  }
+
+  &.rtl .home-cta .MuiSvgIcon-root {
+    transform: scaleX(-1);
   }
 }
