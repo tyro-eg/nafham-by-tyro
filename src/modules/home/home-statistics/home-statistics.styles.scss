@@ -1,80 +1,72 @@
 @import '../../../assets/styles/variables.scss';
 @import '../../../assets/styles/mixins.scss';
 
+// A navy band: the one dark moment before the light sections
 .landing__statistics {
-  @include section;
+  padding: $space-8 0;
+  background-color: $navy-950;
+  background-image:
+    radial-gradient(
+      40rem 20rem at 10% 0%,
+      rgba($brand-500, 0.35),
+      transparent 70%
+    ),
+    radial-gradient(
+      36rem 20rem at 95% 100%,
+      rgba($accent-400, 0.18),
+      transparent 70%
+    );
 
-  .statistics-container {
+  @include respond(phone) {
+    padding: $space-6 0;
+  }
+
+  .stats {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    max-width: 104rem;
-    margin: 0 auto;
-    background-color: $surface;
-    border: 1px solid $border;
-    border-radius: $radius-lg;
-    box-shadow: $shadow-sm;
+    margin-bottom: 0;
 
-    @include respond(tab-port) {
+    @include respond(phone) {
       grid-template-columns: minmax(0, 1fr);
+      gap: $space-5;
     }
 
-    .statistics-card {
+    &__item {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: $space-2;
-      padding: $space-6 $space-5;
+      gap: $space-1;
+      padding: 0 $space-4;
       text-align: center;
 
-      &:not(:last-child) {
-        border-inline-end: 1px solid $border;
-
-        @include respond(tab-port) {
-          border-inline-end: 0;
-          border-bottom: 1px solid $border;
-        }
-      }
-
-      @include respond(phone) {
-        padding: $space-5 $space-4;
-      }
-
-      .title,
-      .title.parallelogram,
-      .title.parallelogram.gold {
-        padding: 0;
-        background: none;
-        font-size: 4.8rem;
-        font-weight: 700;
-        line-height: 1.1;
-        letter-spacing: -0.03em;
-        color: $brand-600;
-        direction: ltr;
+      & + & {
+        border-inline-start: 1px solid rgba(255, 255, 255, 0.12);
 
         @include respond(phone) {
-          font-size: 4rem;
+          border-inline-start: 0;
         }
       }
+    }
 
-      .description {
-        max-width: 28rem;
-        font-size: $font-base;
-        line-height: 1.6;
-        color: $text-body;
+    &__value {
+      margin: 0;
+      font-size: 5.6rem;
+      font-weight: 800;
+      line-height: 1;
+      letter-spacing: -0.03em;
+      color: $surface;
+      direction: ltr;
+      unicode-bidi: isolate;
+
+      @include respond(tab-port) {
+        font-size: 4.4rem;
       }
     }
-  }
 
-  .statistics-image {
-    display: flex;
-    justify-content: center;
-    margin-top: $space-7;
-
-    .image {
-      display: block;
-      width: 100%;
-      max-width: 72rem;
-      height: auto;
+    &__label {
+      font-size: $font-sm;
+      font-weight: 500;
+      color: $text-on-dark-muted;
     }
   }
 }

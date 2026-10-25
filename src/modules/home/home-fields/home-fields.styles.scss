@@ -1,93 +1,97 @@
 @import '../../../assets/styles/variables.scss';
 @import '../../../assets/styles/mixins.scss';
 
-.landing__learning-fields {
-  @include section;
+.landing__curricula {
+  @include section($surface);
+  overflow: hidden;
 
-  .fields-images {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: $space-5;
-    max-width: 104rem;
-    margin: 0 auto;
+  .home-heading {
+    margin-bottom: $space-6;
+  }
 
-    @include respond(tab-port) {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: $space-4;
-    }
+  .marquee {
+    position: relative;
+    // fade the strip out at both edges
+    mask-image: linear-gradient(
+      90deg,
+      transparent,
+      #000 12%,
+      #000 88%,
+      transparent
+    );
 
-    @include respond(phone) {
-      gap: $space-3;
-    }
-
-    &__card {
-      @include card($space-5);
-      @include card-hover;
+    &__track {
       display: flex;
-      align-items: center;
-      gap: $space-4;
-      min-height: 10.4rem;
+      gap: $space-3;
+      width: max-content;
+      list-style: none;
+      animation: marquee 38s linear infinite;
 
-      @include respond(phone) {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: $space-3;
-        min-height: 0;
-        padding: $space-4;
+      .rtl & {
+        animation-direction: reverse;
       }
 
-      .title {
-        font-size: $font-h4;
-        font-weight: 600;
-        line-height: 1.3;
-        color: $text-strong;
-        // Curriculum names are Latin acronyms; keep them LTR-safe
-        unicode-bidi: plaintext;
+      &:hover {
+        animation-play-state: paused;
+      }
 
-        @include respond(phone) {
-          font-size: $font-base;
-        }
+      @media (prefers-reduced-motion: reduce) {
+        animation: none;
+        flex-wrap: wrap;
+        width: auto;
+        justify-content: center;
+        padding: 0 $container-gutter;
       }
     }
 
-    &__icon {
+    &__pill {
+      display: inline-flex;
+      align-items: center;
+      gap: $space-3;
+      padding: 0.8rem 1.8rem 0.8rem 0.8rem;
+      border-radius: $radius-pill;
+      background-color: $surface;
+      border: 1px solid $border;
+      box-shadow: $shadow-xs;
+      font-size: $font-base;
+      font-weight: 600;
+      color: $text-strong;
+      white-space: nowrap;
+
+      .rtl & {
+        padding: 0.8rem 0.8rem 0.8rem 1.8rem;
+      }
+    }
+
+    // Logos sit in a white disc so square marks and round flags read the same
+    &__logo {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      flex-shrink: 0;
-      width: 5.6rem;
-      height: 5.6rem;
-      border-radius: $radius-md;
-      background-color: $gray-50;
+      flex: none;
+      width: 4.2rem;
+      height: 4.2rem;
+      border-radius: 50%;
+      background-color: $surface;
       border: 1px solid $border;
       overflow: hidden;
 
-      @include respond(phone) {
-        width: 4.8rem;
-        height: 4.8rem;
-      }
-
-      .image {
-        display: block;
-        width: 4rem;
-        height: 4rem;
+      img,
+      svg {
+        width: 3.2rem;
+        height: 3.2rem;
         object-fit: contain;
-
-        @include respond(phone) {
-          width: 3.4rem;
-          height: 3.4rem;
-        }
-      }
-
-      &--placeholder {
-        background-color: $brand-50;
-        border-color: $brand-100;
-        color: $brand-600;
-
-        .MuiSvgIcon-root {
-          font-size: 2.6rem;
-        }
       }
     }
+  }
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
   }
 }
