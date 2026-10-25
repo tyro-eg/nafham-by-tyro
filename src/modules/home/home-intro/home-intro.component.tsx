@@ -101,7 +101,7 @@ const HomeIntro: FC<HomeIntroProps> = ({ openFreeTrail }) => {
                   {t('LANDING.HERO.MOCK_TUTOR')}
                 </span>
                 <div className="window__pip">
-                  <img src={student1} alt="" />
+                  <img src={student2} alt="" />
                   <span>{t('LANDING.HERO.MOCK_STUDENT')}</span>
                 </div>
               </div>
