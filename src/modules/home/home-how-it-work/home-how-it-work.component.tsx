@@ -41,10 +41,10 @@ const HomeHowItWork: FC = () => {
         <ol className="steps">
           {steps.map(({ Icon, title, description }, index) => (
             <li key={title} className="steps__item">
-              <div className="steps__marker">
-                <span className="steps__number">{index + 1}</span>
+              <span className="steps__number">0{index + 1}</span>
+              <span className="steps__marker">
                 <Icon className="steps__icon" aria-hidden="true" />
-              </div>
+              </span>
               <h3 className="steps__title">{title}</h3>
               <p className="steps__description">{description}</p>
             </li>

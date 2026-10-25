@@ -197,7 +197,9 @@
       "CHIP_COURSE": "رياضيات IGCSE · الصف العاشر",
       "CHIP_PROGRESS": "الباقة: 24 ساعة",
       "MOCK_TITLE": "رياضيات IGCSE · حصة مباشرة",
-      "MOCK_TUTOR": "أ. غادة · المعلمة"
+      "MOCK_TUTOR": "أ. غادة · المعلمة",
+      "NEXT_LABEL": "الحصة القادمة",
+      "HOURS_META": "11 دُرّست · 6 محجوزة · 7 متاحة"
     },
     "PRESS": "كما ظهرنا في",
     "STATS": {

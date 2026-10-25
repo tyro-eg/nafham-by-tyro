@@ -2,43 +2,75 @@
 @import '../../../assets/styles/mixins.scss';
 
 .landing__curricula {
-  @include section($surface-alt);
+  @include section($surface);
+  overflow: hidden;
 
-  .curricula {
-    display: grid;
-    grid-template-columns: repeat(6, minmax(0, 1fr));
-    gap: $space-4;
-    max-width: 108rem;
-    margin: 0 auto;
-    list-style: none;
+  .home-heading {
+    margin-bottom: $space-6;
+  }
 
-    @include respond(tab-land) {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
+  .marquee {
+    position: relative;
+    // fade the strip out at both edges
+    mask-image: linear-gradient(
+      90deg,
+      transparent,
+      #000 12%,
+      #000 88%,
+      transparent
+    );
 
-    @include respond(phone) {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: $space-3;
-    }
-
-    &__item {
-      @include card($space-4);
-      @include card-hover;
+    &__track {
       display: flex;
-      flex-direction: column;
+      gap: $space-3;
+      width: max-content;
+      list-style: none;
+      animation: marquee 38s linear infinite;
+
+      .rtl & {
+        animation-direction: reverse;
+      }
+
+      &:hover {
+        animation-play-state: paused;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        animation: none;
+        flex-wrap: wrap;
+        width: auto;
+        justify-content: center;
+        padding: 0 $container-gutter;
+      }
+    }
+
+    &__pill {
+      display: inline-flex;
       align-items: center;
       gap: $space-3;
-      text-align: center;
+      padding: 0.8rem 1.8rem 0.8rem 0.8rem;
+      border-radius: $radius-pill;
+      background-color: $surface;
+      border: 1px solid $border;
+      box-shadow: $shadow-xs;
+      font-size: $font-base;
+      font-weight: 600;
+      color: $text-strong;
+      white-space: nowrap;
+
+      .rtl & {
+        padding: 0.8rem 0.8rem 0.8rem 1.8rem;
+      }
     }
 
     &__mark {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 6rem;
-      height: 6rem;
-      border-radius: $radius-md;
-      font-size: $font-h5;
+      width: 4rem;
+      height: 4rem;
+      border-radius: 50%;
+      font-size: $font-xs;
       font-weight: 800;
       letter-spacing: -0.02em;
       direction: ltr;
@@ -75,11 +107,15 @@
         --ink: #{darken($success-500, 18%)};
       }
     }
+  }
+}
 
-    &__label {
-      font-size: $font-sm;
-      font-weight: 600;
-      color: $text-strong;
-    }
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
   }
 }

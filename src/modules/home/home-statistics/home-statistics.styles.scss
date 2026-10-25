@@ -1,9 +1,21 @@
 @import '../../../assets/styles/variables.scss';
 @import '../../../assets/styles/mixins.scss';
 
+// A navy band: the one dark moment before the light sections
 .landing__statistics {
   padding: $space-8 0;
-  background-color: $surface;
+  background-color: $navy-950;
+  background-image:
+    radial-gradient(
+      40rem 20rem at 10% 0%,
+      rgba($brand-500, 0.35),
+      transparent 70%
+    ),
+    radial-gradient(
+      36rem 20rem at 95% 100%,
+      rgba($accent-400, 0.18),
+      transparent 70%
+    );
 
   @include respond(phone) {
     padding: $space-6 0;
@@ -28,7 +40,7 @@
       text-align: center;
 
       & + & {
-        border-inline-start: 1px solid $border;
+        border-inline-start: 1px solid rgba(255, 255, 255, 0.12);
 
         @include respond(phone) {
           border-inline-start: 0;
@@ -38,23 +50,23 @@
 
     &__value {
       margin: 0;
-      font-size: 5.2rem;
-      font-weight: 700;
+      font-size: 5.6rem;
+      font-weight: 800;
       line-height: 1;
       letter-spacing: -0.03em;
-      color: $navy-950;
+      color: $surface;
       direction: ltr;
       unicode-bidi: isolate;
 
       @include respond(tab-port) {
-        font-size: 4.2rem;
+        font-size: 4.4rem;
       }
     }
 
     &__label {
       font-size: $font-sm;
       font-weight: 500;
-      color: $text-muted;
+      color: $text-on-dark-muted;
     }
   }
 }

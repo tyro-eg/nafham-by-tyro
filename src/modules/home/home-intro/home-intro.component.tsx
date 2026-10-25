@@ -5,16 +5,15 @@ import {
   ArrowForward,
   PlayCircleOutline,
   Star,
-  VerifiedOutlined,
+  VerifiedRounded,
   EventAvailableOutlined,
 } from '@mui/icons-material';
 
 import { useRtlClass } from '../../../assets/utils/utils';
 
-import tutor from '../../../assets/images/newLanding/hero-tutor.webp';
+import tutor from '../../../assets/images/newLanding/instructor3-cutout.webp';
 import student1 from '../../../assets/images/newLanding/hero-student1.webp';
 import student2 from '../../../assets/images/newLanding/hero-student2.webp';
-import student3 from '../../../assets/images/newLanding/hero-student3.webp';
 import student4 from '../../../assets/images/newLanding/hero-student4.webp';
 
 import './home-intro.styles.scss';
@@ -23,15 +22,13 @@ interface HomeIntroProps {
   openFreeTrail: () => void;
 }
 
-// Three of the many: the faces behind the "students" pill
-const PILL_AVATARS = [
-  { initials: 'AY', tone: 'sky' },
-  { initials: 'MK', tone: 'gold' },
-  { initials: 'LN', tone: 'navy' },
-];
+const STUDENTS = [student1, student2, student4];
 
-const STUDENTS = [student1, student2, student3, student4];
-
+/**
+ * The hero: a headline that fits in two lines, two calls to action, and a
+ * tutor standing on a colour block with the proof around her (rating,
+ * next session, package hours).
+ */
 const HomeIntro: FC<HomeIntroProps> = ({ openFreeTrail }) => {
   const { t } = useTranslation();
   const rtlClass = useRtlClass();
@@ -42,13 +39,8 @@ const HomeIntro: FC<HomeIntroProps> = ({ openFreeTrail }) => {
         <div className="hero__content">
           <p className="hero__pill">
             <span className="hero__pill-avatars" aria-hidden="true">
-              {PILL_AVATARS.map((avatar) => (
-                <span
-                  key={avatar.initials}
-                  className={`hero__pill-avatar hero__pill-avatar--${avatar.tone}`}
-                >
-                  {avatar.initials}
-                </span>
+              {STUDENTS.map((student, index) => (
+                <img key={index} src={student} alt="" />
               ))}
             </span>
             {t('LANDING.HERO.PILL')}
@@ -56,7 +48,9 @@ const HomeIntro: FC<HomeIntroProps> = ({ openFreeTrail }) => {
 
           <h1 className="hero__title">
             {t('LANDING.HERO.TITLE_1')}{' '}
-            <span className="accent">{t('LANDING.HERO.TITLE_2')}</span>
+            <span className="hero__title-accent">
+              {t('LANDING.HERO.TITLE_2')}
+            </span>
           </h1>
           <p className="hero__lead">{t('LANDING.BLOCK1.DESCRIPTION')}</p>
 
@@ -81,14 +75,7 @@ const HomeIntro: FC<HomeIntroProps> = ({ openFreeTrail }) => {
 
           <ul className="hero__proof">
             <li>
-              <Star className="hero__proof-icon hero__proof-icon--gold" />
-              <span>
-                <strong>{t('LANDING.BLOCK4.ITEM3.TITLE')}</strong>{' '}
-                {t('LANDING.HERO.PROOF_RATING')}
-              </span>
-            </li>
-            <li>
-              <VerifiedOutlined className="hero__proof-icon" />
+              <VerifiedRounded className="hero__proof-icon" />
               <span>{t('LANDING.HERO.PROOF_TUTORS')}</span>
             </li>
             <li>
@@ -98,60 +85,46 @@ const HomeIntro: FC<HomeIntroProps> = ({ openFreeTrail }) => {
           </ul>
         </div>
 
-        <div className="hero__stage" aria-hidden="true">
-          <div className="hero__glow" />
-          {/* A live session as the app shows it: tutor on stage, students aside */}
-          <div className="mock">
-            <div className="mock__bar">
-              <span className="mock__dots">
-                <span />
-                <span />
-                <span />
-              </span>
-              <span className="mock__title">
-                {t('LANDING.HERO.MOCK_TITLE')}
-              </span>
-              <span className="mock__timer">24:10</span>
-            </div>
-            <div className="mock__body">
-              <div className="mock__main">
-                <img src={tutor} alt="" />
-                <span className="mock__name">
-                  {t('LANDING.HERO.MOCK_TUTOR')}
-                </span>
-              </div>
-              <div className="mock__side">
-                {STUDENTS.map((student, index) => (
-                  <span key={index} className="mock__tile">
-                    <img src={student} alt="" />
-                  </span>
-                ))}
-              </div>
-            </div>
-            <div className="mock__controls">
-              <span />
-              <span />
-              <span />
-              <span className="mock__controls-end" />
-            </div>
+        <div className="hero__visual" aria-hidden="true">
+          <div className="hero__block">
+            <span className="hero__ring hero__ring--1" />
+            <span className="hero__ring hero__ring--2" />
+            <img className="hero__tutor" src={tutor} alt="" />
           </div>
-          <div className="hero__chip hero__chip--live">
-            <span className="hero__live-dot" />
-            {t('LANDING.HERO.CHIP_LIVE')}
+
+          <div className="hero__card hero__card--rating">
+            <span className="hero__stars">
+              {[0, 1, 2, 3, 4].map((i) => (
+                <Star key={i} />
+              ))}
+            </span>
+            <strong>{t('LANDING.BLOCK4.ITEM3.TITLE')}</strong>
+            <span className="hero__card-label">
+              {t('LANDING.HERO.PROOF_RATING')}
+            </span>
           </div>
-          <div className="hero__chip hero__chip--course">
-            <span className="hero__chip-label">
-              {t('LANDING.HERO.CHIP_COURSE_LABEL')}
+
+          <div className="hero__card hero__card--next">
+            <span className="hero__card-label">
+              {t('LANDING.HERO.NEXT_LABEL')}
             </span>
             <strong>{t('LANDING.HERO.CHIP_COURSE')}</strong>
+            <span className="hero__card-meta">
+              <span className="hero__live-dot" />
+              {t('LANDING.HERO.CHIP_COURSE_LABEL')}
+            </span>
           </div>
-          <div className="hero__chip hero__chip--progress">
-            <span className="hero__chip-label">
+
+          <div className="hero__card hero__card--hours">
+            <span className="hero__card-label">
               {t('LANDING.HERO.CHIP_PROGRESS')}
             </span>
             <span className="hero__progress">
               <span className="hero__progress-used" />
               <span className="hero__progress-booked" />
+            </span>
+            <span className="hero__card-meta">
+              {t('LANDING.HERO.HOURS_META')}
             </span>
           </div>
         </div>
