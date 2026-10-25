@@ -1,20 +1,13 @@
 import { FC } from 'react';
 import { useTranslation } from 'react-i18next';
 import Button from '@mui/material/Button';
-import {
-  ArrowForward,
-  PlayCircleOutline,
-  Star,
-  VerifiedRounded,
-  EventAvailableOutlined,
-} from '@mui/icons-material';
+import { ArrowForward, PlayCircleOutline } from '@mui/icons-material';
 
 import { useRtlClass } from '../../../assets/utils/utils';
 
-import tutor from '../../../assets/images/newLanding/hero-tutor.webp';
+import board from '../../../assets/images/newLanding/hero-tutor.webp';
 import student1 from '../../../assets/images/newLanding/hero-student1.webp';
 import student2 from '../../../assets/images/newLanding/hero-student2.webp';
-import student3 from '../../../assets/images/newLanding/hero-student3.webp';
 import student4 from '../../../assets/images/newLanding/hero-student4.webp';
 
 import './home-intro.styles.scss';
@@ -23,12 +16,12 @@ interface HomeIntroProps {
   openFreeTrail: () => void;
 }
 
-const PILL_FACES = [student1, student2, student4];
+const STUDENTS = [student1, student2, student4];
 
 /**
- * The hero: a headline that fits in two lines, two calls to action, and a
- * grid of real faces: the tutor at her board, two students, a rating tile
- * and a package-hours tile.
+ * The hero, centred: pill, headline, two calls to action, and below them
+ * the product itself, a live session window with real faces, tilted back
+ * and fading into the page.
  */
 const HomeIntro: FC<HomeIntroProps> = ({ openFreeTrail }) => {
   const { t } = useTranslation();
@@ -37,96 +30,85 @@ const HomeIntro: FC<HomeIntroProps> = ({ openFreeTrail }) => {
   return (
     <section className={`hero ${rtlClass}`}>
       <div className="ds-container hero__inner">
-        <div className="hero__content">
-          <p className="hero__pill">
-            <span className="hero__pill-avatars" aria-hidden="true">
-              {PILL_FACES.map((face, index) => (
-                <img key={index} src={face} alt="" />
-              ))}
-            </span>
-            {t('LANDING.HERO.PILL')}
-          </p>
+        <p className="hero__pill">
+          <span className="hero__faces" aria-hidden="true">
+            {STUDENTS.map((face, index) => (
+              <img key={index} src={face} alt="" />
+            ))}
+          </span>
+          {t('LANDING.HERO.PILL')}
+        </p>
 
-          <h1 className="hero__title">
-            {t('LANDING.HERO.TITLE_1')}{' '}
-            <span className="hero__title-accent">
-              {t('LANDING.HERO.TITLE_2')}
-            </span>
-          </h1>
-          <p className="hero__lead">{t('LANDING.BLOCK1.DESCRIPTION')}</p>
+        <h1 className="hero__title">
+          {t('LANDING.HERO.TITLE_1')}{' '}
+          <span className="hero__title-accent">
+            {t('LANDING.HERO.TITLE_2')}
+          </span>
+        </h1>
+        <p className="hero__lead">{t('LANDING.BLOCK1.DESCRIPTION')}</p>
 
-          <div className="hero__actions">
-            <Button
-              className="home-cta"
-              size="large"
-              endIcon={<ArrowForward />}
-              onClick={openFreeTrail}
-            >
-              {t('LANDING.BLOCK1.ACTION')}
-            </Button>
-            <Button
-              className="hero__link"
-              size="large"
-              href="#how-it-works"
-              startIcon={<PlayCircleOutline />}
-            >
-              {t('LANDING.BLOCK8.TITLE')}
-            </Button>
-          </div>
-
-          <ul className="hero__proof">
-            <li>
-              <VerifiedRounded className="hero__proof-icon" />
-              <span>{t('LANDING.HERO.PROOF_TUTORS')}</span>
-            </li>
-            <li>
-              <EventAvailableOutlined className="hero__proof-icon" />
-              <span>{t('LANDING.HERO.PROOF_FLEX')}</span>
-            </li>
-          </ul>
+        <div className="hero__actions">
+          <Button
+            className="home-cta"
+            size="large"
+            endIcon={<ArrowForward />}
+            onClick={openFreeTrail}
+          >
+            {t('LANDING.BLOCK1.ACTION')}
+          </Button>
+          <Button
+            className="hero__secondary"
+            size="large"
+            href="#how-it-works"
+            startIcon={<PlayCircleOutline />}
+          >
+            {t('LANDING.BLOCK8.TITLE')}
+          </Button>
         </div>
 
-        <div className="hero__visual" aria-hidden="true">
-          <div className="collage">
-            <figure className="collage__tile collage__tile--main">
-              <img src={tutor} alt="" />
-              <figcaption className="collage__caption">
-                <span className="hero__live-dot" />
-                {t('LANDING.HERO.CHIP_COURSE')}
-              </figcaption>
-            </figure>
-
-            <figure className="collage__tile collage__tile--a">
-              <img src={student1} alt="" />
-            </figure>
-
-            <div className="collage__tile collage__tile--rating">
-              <span className="hero__stars">
-                {[0, 1, 2, 3, 4].map((i) => (
-                  <Star key={i} />
-                ))}
+        <div className="hero__stage" aria-hidden="true">
+          <div className="window">
+            <div className="window__bar">
+              <span className="window__dots">
+                <span />
+                <span />
+                <span />
               </span>
-              <strong>{t('LANDING.BLOCK4.ITEM3.TITLE')}</strong>
-              <span>{t('LANDING.HERO.PROOF_RATING')}</span>
+              <span className="window__title">
+                {t('LANDING.HERO.MOCK_TITLE')}
+              </span>
+              <span className="window__timer">24:10</span>
             </div>
-
-            <figure className="collage__tile collage__tile--b">
-              <img src={student3} alt="" />
-            </figure>
-
-            <div className="collage__tile collage__tile--hours">
-              <span className="collage__label">
-                {t('LANDING.HERO.CHIP_PROGRESS')}
-              </span>
-              <span className="hero__progress">
-                <span className="hero__progress-used" />
-                <span className="hero__progress-booked" />
-              </span>
-              <span className="collage__meta">
-                {t('LANDING.HERO.HOURS_META')}
-              </span>
+            <div className="window__body">
+              <div className="window__tile window__tile--main">
+                <img src={board} alt="" />
+                <span className="window__name">
+                  {t('LANDING.HERO.MOCK_TUTOR')}
+                </span>
+              </div>
+              <aside className="window__side">
+                <strong>{t('LANDING.HERO.CHAT_TITLE')}</strong>
+                <span className="window__msg">{t('LANDING.HERO.CHAT_1')}</span>
+                <span className="window__msg window__msg--me">
+                  {t('LANDING.HERO.CHAT_2')}
+                </span>
+                <span className="window__msg">{t('LANDING.HERO.CHAT_3')}</span>
+                <strong className="window__package">
+                  {t('LANDING.HERO.CHIP_PROGRESS')}
+                </strong>
+                <span className="window__bar-track">
+                  <span className="window__bar-used" />
+                  <span className="window__bar-booked" />
+                </span>
+              </aside>
+              {STUDENTS.map((face, index) => (
+                <div key={index} className="window__tile">
+                  <img src={face} alt="" />
+                </div>
+              ))}
             </div>
           </div>
+          <div className="hero__fade" />
         </div>
       </div>
     </section>

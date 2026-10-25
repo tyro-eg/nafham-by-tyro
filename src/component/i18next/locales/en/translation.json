@@ -199,7 +199,11 @@
       "MOCK_TITLE": "IGCSE Maths · Live session",
       "MOCK_TUTOR": "Ms. Ghada · Tutor",
       "NEXT_LABEL": "Next session",
-      "HOURS_META": "11 taught · 6 booked · 7 free"
+      "HOURS_META": "11 taught · 6 booked · 7 free",
+      "CHAT_TITLE": "Session chat",
+      "CHAT_1": "Can you show that step again?",
+      "CHAT_2": "Sure, watch the board.",
+      "CHAT_3": "Got it, thanks!"
     },
     "PRESS": "As featured in",
     "STATS": {
