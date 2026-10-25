@@ -1,120 +1,144 @@
 @import '../../../assets/styles/variables.scss';
 @import '../../../assets/styles/mixins.scss';
 
-.home-hero {
+// Light hero: a soft wash of brand colour behind a tight headline and a
+// product "stage" with floating cards that hint at the live experience.
+.hero {
   position: relative;
   overflow: hidden;
-  color: $text-on-dark;
-  // Original brand hero: sky-blue gradient artwork. Its bottom strip is
-  // transparent, so a matching gradient sits underneath to fill any gap.
-  background-color: $brand-400;
+  background-color: $surface;
   background-image:
-    url('../../../assets/images/newLanding/group1.webp'),
-    linear-gradient(
-      90deg,
-      #01caff 0%,
-      #00a5ff 25%,
-      #0081fe 50%,
-      #015dff 75%,
-      #0036ff 100%
-    );
-  background-size:
-    cover,
-    100% 100%;
-  background-position: top center;
-  background-repeat: no-repeat;
-
-  // On tall, narrow heroes scale by height so the transparent strip
-  // falls below the section instead of showing the fill gradient.
-  @include respond(tab-port) {
-    background-size:
-      auto 125%,
-      100% 100%;
-  }
+    radial-gradient(
+      60rem 36rem at 85% 10%,
+      rgba($brand-200, 0.55),
+      transparent 70%
+    ),
+    radial-gradient(
+      44rem 30rem at 10% 90%,
+      rgba($accent-400, 0.14),
+      transparent 70%
+    ),
+    linear-gradient(180deg, $gray-50 0%, $surface 60%);
 
   &__inner {
     display: grid;
-    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
-    align-items: end;
-    column-gap: $space-7;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+    align-items: center;
+    column-gap: $space-8;
+    min-height: calc(100vh - #{$header-height});
+    padding-top: $space-8;
+    padding-bottom: $space-8;
+
+    @include respond(tab-land) {
+      column-gap: $space-6;
+    }
 
     @include respond(tab-port) {
       grid-template-columns: minmax(0, 1fr);
+      row-gap: $space-7;
+      min-height: 0;
+      padding-top: $space-7;
+      padding-bottom: $space-7;
+    }
+
+    @include respond(phone) {
+      padding-top: $space-6;
+      padding-bottom: $space-6;
+      row-gap: $space-6;
     }
   }
 
   &__content {
-    padding: $space-9 0;
     text-align: start;
-
-    @include respond(tab-port) {
-      padding: $space-8 0 $space-6;
-    }
-
-    @include respond(phone) {
-      padding: $space-7 0 $space-5;
-    }
   }
 
-  &__eyebrow {
+  // ---------- "5,000+ students" pill ----------
+  &__pill {
     display: inline-flex;
     align-items: center;
     gap: $space-2;
-    margin-bottom: $space-4;
+    margin-bottom: $space-5;
+    padding: 0.5rem 1.4rem 0.5rem 0.6rem;
+    border: 1px solid $border;
+    border-radius: $radius-pill;
+    background-color: rgba($surface, 0.85);
+    box-shadow: $shadow-xs;
     font-size: $font-sm;
-    font-weight: 600;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: $accent-400;
-
-    &::before {
-      content: '';
-      width: 2.4rem;
-      height: 2px;
-      border-radius: 2px;
-      background-color: currentColor;
-    }
+    font-weight: 500;
+    color: $text-body;
+    backdrop-filter: blur(6px);
 
     .rtl & {
-      letter-spacing: 0;
-    }
-
-    @include respond(phone) {
-      font-size: $font-xs;
+      padding: 0.5rem 0.6rem 0.5rem 1.4rem;
     }
   }
 
-  &__title {
-    max-width: 16ch;
-    margin-bottom: $space-5;
-    font-size: $font-display;
+  &__pill-avatars {
+    display: inline-flex;
+  }
+
+  &__pill-avatar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.6rem;
+    height: 2.6rem;
+    border-radius: 50%;
+    border: 2px solid $surface;
+    font-size: 0.9rem;
     font-weight: 700;
-    line-height: 1.1;
-    letter-spacing: -0.03em;
-    color: $text-on-dark;
+    color: $surface;
+    letter-spacing: 0.02em;
+
+    & + & {
+      margin-inline-start: -0.8rem;
+    }
+
+    &--sky {
+      background-color: $brand-600;
+    }
+
+    &--gold {
+      background-color: $accent-500;
+    }
+
+    &--navy {
+      background-color: $navy-800;
+    }
+  }
+
+  // ---------- Headline ----------
+  &__title {
+    max-width: 14ch;
+    margin-bottom: $space-5;
+    font-size: 6.4rem;
+    font-weight: 700;
+    line-height: 1.02;
+    letter-spacing: -0.035em;
+    color: $navy-950;
 
     .rtl & {
-      max-width: 20ch;
-      line-height: 1.3;
+      max-width: 18ch;
+      line-height: 1.25;
       letter-spacing: 0;
     }
 
     @include respond(tab-land) {
-      font-size: $font-h1 + 0.4rem;
+      font-size: 5.2rem;
     }
 
     @include respond(phone) {
-      font-size: 3.4rem;
+      font-size: 4rem;
       margin-bottom: $space-4;
     }
   }
 
-  &__description {
-    max-width: 54rem;
+  &__lead {
+    max-width: 52rem;
     margin-bottom: $space-6;
     font-size: $font-lg;
     line-height: 1.65;
-    color: rgba(255, 255, 255, 0.8);
+    color: $text-body;
 
     @include respond(phone) {
       font-size: $font-base;
@@ -126,132 +150,223 @@
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: $space-3;
+    gap: $space-3 $space-4;
 
     @include respond(phone) {
       flex-direction: column;
       align-items: stretch;
     }
+  }
 
-    .MuiButton-root {
-      min-height: 5.2rem;
-      padding: 1.2rem 2.8rem;
-      font-size: $font-base;
+  &__link.MuiButton-root {
+    min-height: 5.2rem;
+    padding: 1.2rem 1.6rem;
+    border-radius: $radius-pill;
+    font-size: $font-base;
+    font-weight: 600;
+    text-transform: none;
+    color: $navy-900;
+
+    &:hover {
+      background-color: rgba($navy-900, 0.05);
+    }
+
+    .MuiButton-startIcon {
+      margin-inline-end: $space-2;
+      margin-inline-start: 0;
+      color: $brand-700;
     }
   }
 
-  &__secondary.MuiButton-root {
-    @include button-ghost-on-dark;
-    min-height: 5.2rem;
-  }
-
-  &.rtl &__cta-icon {
-    transform: scaleX(-1);
-  }
-
-  // ---------- Trust row ----------
-  &__trust {
+  // ---------- Proof row ----------
+  &__proof {
     display: flex;
     flex-wrap: wrap;
-    align-items: center;
-    gap: $space-4 $space-5;
+    gap: $space-3 $space-5;
     margin-top: $space-7;
     padding-top: $space-5;
-    border-top: 1px solid rgba(255, 255, 255, 0.12);
+    border-top: 1px solid $border;
+    list-style: none;
 
     @include respond(phone) {
       margin-top: $space-6;
-      gap: $space-4;
+      gap: $space-3;
+    }
+
+    li {
+      display: inline-flex;
+      align-items: center;
+      gap: $space-2;
+      font-size: $font-sm;
+      color: $text-body;
+
+      strong {
+        color: $text-strong;
+        font-weight: 600;
+        direction: ltr;
+        unicode-bidi: isolate;
+      }
     }
   }
 
-  &__rating {
-    display: inline-flex;
-    align-items: center;
-    gap: $space-2;
-  }
+  &__proof-icon.MuiSvgIcon-root {
+    font-size: 1.8rem;
+    color: $brand-700;
 
-  &__stars {
-    display: inline-flex;
-    color: $accent-400;
-
-    .MuiSvgIcon-root {
-      font-size: 1.8rem;
+    &--gold {
+      color: $accent-500;
     }
   }
 
-  &__rating-value {
-    font-size: $font-sm;
-    font-weight: 600;
-    color: $text-on-dark;
-    direction: ltr;
-    unicode-bidi: isolate;
-  }
-
-  &__trust-divider {
-    width: 1px;
-    height: 2.4rem;
-    background-color: rgba(255, 255, 255, 0.16);
-
-    @include respond(phone) {
-      display: none;
-    }
-  }
-
-  &__press {
-    display: inline-flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: $space-3 $space-4;
-  }
-
-  &__press-label {
-    font-size: $font-xs;
-    font-weight: 500;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: rgba(255, 255, 255, 0.6);
-
-    .rtl & {
-      letter-spacing: 0;
-    }
-  }
-
-  &__press-logos {
-    display: inline-flex;
-    align-items: center;
-    gap: $space-5;
-
-    img {
-      display: block;
-      height: 1.8rem;
-      width: auto;
-      // Render the press logos as quiet light marks on navy. Invert +
-      // screen also drops logos' solid white backgrounds (e.g. CNBC).
-      filter: grayscale(1) invert(1);
-      mix-blend-mode: screen;
-      opacity: 0.75;
-    }
-  }
-
-  // ---------- Media ----------
-  &__media {
-    display: flex;
-    justify-content: center;
-    align-self: end;
+  // ---------- Product stage ----------
+  &__stage {
+    position: relative;
+    padding: $space-6 $space-5;
 
     @include respond(tab-port) {
-      max-width: 52rem;
+      max-width: 60rem;
       width: 100%;
       margin: 0 auto;
     }
 
-    .macbook-image {
-      display: block;
-      width: 100%;
-      max-width: 56rem;
-      height: auto;
-      filter: drop-shadow(0 24px 48px rgba(0, 0, 0, 0.35));
+    @include respond(phone) {
+      padding: $space-5 $space-3;
     }
+  }
+
+  &__glow {
+    position: absolute;
+    inset: 8% 4% 8% 4%;
+    border-radius: $radius-xl;
+    background: linear-gradient(
+      135deg,
+      rgba($brand-300, 0.5),
+      rgba($brand-100, 0.2) 60%,
+      rgba($accent-400, 0.25)
+    );
+    filter: blur(2px);
+  }
+
+  &__frame {
+    position: relative;
+    border-radius: $radius-lg;
+    overflow: hidden;
+  }
+
+  &__product {
+    display: block;
+    width: 100%;
+    height: auto;
+    filter: drop-shadow(0 24px 40px rgba($navy-950, 0.22));
+  }
+
+  // Floating cards around the product
+  &__chip {
+    position: absolute;
+    display: inline-flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    padding: 1rem 1.4rem;
+    border-radius: $radius-md;
+    background-color: $surface;
+    border: 1px solid $border;
+    box-shadow: $shadow-lg;
+    font-size: $font-sm;
+    font-weight: 600;
+    color: $text-strong;
+    animation: hero-float 6s ease-in-out infinite;
+
+    @media (prefers-reduced-motion: reduce) {
+      animation: none;
+    }
+
+    &--live {
+      top: 10%;
+      inset-inline-start: 0;
+      flex-direction: row;
+      align-items: center;
+      gap: $space-2;
+      animation-delay: 0s;
+    }
+
+    &--course {
+      top: 42%;
+      inset-inline-end: 0;
+      animation-delay: 1.5s;
+    }
+
+    &--progress {
+      bottom: 8%;
+      inset-inline-start: 6%;
+      min-width: 18rem;
+      animation-delay: 3s;
+    }
+
+    @include respond(phone) {
+      padding: 0.8rem 1.2rem;
+      font-size: $font-xs;
+
+      &--progress {
+        min-width: 14rem;
+      }
+    }
+  }
+
+  &__chip-label {
+    font-size: $font-xs;
+    font-weight: 500;
+    color: $text-muted;
+  }
+
+  &__live-dot {
+    width: 0.8rem;
+    height: 0.8rem;
+    border-radius: 50%;
+    background-color: $success-500;
+    box-shadow: 0 0 0 0 rgba($success-500, 0.5);
+    animation: hero-pulse 1.8s ease-out infinite;
+
+    @media (prefers-reduced-motion: reduce) {
+      animation: none;
+    }
+  }
+
+  &__progress {
+    display: flex;
+    height: 0.6rem;
+    border-radius: $radius-pill;
+    background-color: $gray-200;
+    overflow: hidden;
+  }
+
+  &__progress-used {
+    width: 45%;
+    background-color: $navy-800;
+  }
+
+  &__progress-booked {
+    width: 25%;
+    background-color: $brand-500;
+  }
+}
+
+@keyframes hero-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-0.8rem);
+  }
+}
+
+@keyframes hero-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(84, 200, 83, 0.5);
+  }
+
+  100% {
+    box-shadow: 0 0 0 0.8rem rgba(84, 200, 83, 0);
   }
 }

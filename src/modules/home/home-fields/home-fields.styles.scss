@@ -1,93 +1,61 @@
 @import '../../../assets/styles/variables.scss';
 @import '../../../assets/styles/mixins.scss';
 
-.landing__learning-fields {
-  @include section;
+.landing__curricula {
+  @include section($surface-alt);
 
-  .fields-images {
+  .curricula {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: $space-5;
-    max-width: 104rem;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: $space-4;
+    max-width: 108rem;
     margin: 0 auto;
+    list-style: none;
 
-    @include respond(tab-port) {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: $space-4;
+    @include respond(tab-land) {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
     }
 
     @include respond(phone) {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: $space-3;
     }
 
-    &__card {
-      @include card($space-5);
+    &__item {
+      @include card($space-4);
       @include card-hover;
       display: flex;
+      flex-direction: column;
       align-items: center;
-      gap: $space-4;
-      min-height: 10.4rem;
-
-      @include respond(phone) {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: $space-3;
-        min-height: 0;
-        padding: $space-4;
-      }
-
-      .title {
-        font-size: $font-h4;
-        font-weight: 600;
-        line-height: 1.3;
-        color: $text-strong;
-        // Curriculum names are Latin acronyms; keep them LTR-safe
-        unicode-bidi: plaintext;
-
-        @include respond(phone) {
-          font-size: $font-base;
-        }
-      }
+      gap: $space-3;
+      text-align: center;
     }
 
     &__icon {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      flex-shrink: 0;
-      width: 5.6rem;
-      height: 5.6rem;
+      width: 6rem;
+      height: 6rem;
       border-radius: $radius-md;
-      background-color: $gray-50;
-      border: 1px solid $border;
-      overflow: hidden;
+      background-color: $brand-50;
+      color: $brand-700;
 
-      @include respond(phone) {
-        width: 4.8rem;
-        height: 4.8rem;
-      }
-
-      .image {
-        display: block;
-        width: 4rem;
-        height: 4rem;
+      img {
+        width: 3.6rem;
+        height: 3.6rem;
         object-fit: contain;
-
-        @include respond(phone) {
-          width: 3.4rem;
-          height: 3.4rem;
-        }
       }
 
-      &--placeholder {
-        background-color: $brand-50;
-        border-color: $brand-100;
-        color: $brand-600;
-
-        .MuiSvgIcon-root {
-          font-size: 2.6rem;
-        }
+      .MuiSvgIcon-root {
+        font-size: 2.8rem;
       }
+    }
+
+    &__label {
+      font-size: $font-sm;
+      font-weight: 600;
+      color: $text-strong;
     }
   }
 }

@@ -1,55 +1,28 @@
 import { FC } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { useRtlClass } from '../../../assets/utils/utils';
-
-import statistics from '../../../assets/images/newLanding/statistics.webp';
-
 import './home-statistics.styles.scss';
 
+/** Three numbers, no decoration: the scale of the platform at a glance */
 const HomeStatistics: FC = () => {
   const { t } = useTranslation();
-  const rtlClass = useRtlClass();
+
+  const stats = [
+    { value: t('LANDING.BLOCK4.ITEM1.TITLE'), label: t('LANDING.STATS.ITEM1') },
+    { value: t('LANDING.BLOCK4.ITEM2.TITLE'), label: t('LANDING.STATS.ITEM2') },
+    { value: t('LANDING.BLOCK4.ITEM3.TITLE'), label: t('LANDING.STATS.ITEM3') },
+  ];
 
   return (
     <section className="landing__statistics">
-      <div className="ds-container">
-        <div className="statistics-container">
-          <div className="statistics-card">
-            <h5 className={`title parallelogram ${rtlClass}`}>
-              {t('LANDING.BLOCK4.ITEM1.TITLE')}
-            </h5>
-            <p className="description">
-              {t('LANDING.BLOCK4.ITEM1.DESCRIPTION')}
-            </p>
+      <dl className="ds-container stats">
+        {stats.map((stat) => (
+          <div key={stat.label} className="stats__item">
+            <dd className="stats__value">{stat.value}</dd>
+            <dt className="stats__label">{stat.label}</dt>
           </div>
-          <div className="statistics-card">
-            <h5 className={`title parallelogram gold ${rtlClass}`}>
-              {t('LANDING.BLOCK4.ITEM2.TITLE')}
-            </h5>
-            <p className="description">
-              {t('LANDING.BLOCK4.ITEM2.DESCRIPTION')}
-            </p>
-          </div>
-          <div className="statistics-card">
-            <h5 className={`title parallelogram ${rtlClass}`}>
-              {t('LANDING.BLOCK4.ITEM3.TITLE')}
-            </h5>
-            <p className="description">
-              {t('LANDING.BLOCK4.ITEM3.DESCRIPTION')}
-            </p>
-          </div>
-        </div>
-
-        <div className="statistics-image">
-          <img
-            className="image"
-            src={statistics}
-            alt="statistics"
-            loading="lazy"
-          />
-        </div>
-      </div>
+        ))}
+      </dl>
     </section>
   );
 };

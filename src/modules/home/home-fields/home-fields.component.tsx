@@ -2,8 +2,6 @@ import { FC } from 'react';
 import { useTranslation } from 'react-i18next';
 import { SchoolOutlined } from '@mui/icons-material';
 
-import { useRtlClass } from '../../../assets/utils/utils';
-
 import uae from '../../../assets/images/newLanding/uae.webp';
 import igcse from '../../../assets/images/newLanding/igcse.webp';
 import sat from '../../../assets/images/newLanding/sat.webp';
@@ -11,59 +9,46 @@ import IB from '../../../assets/images/newLanding/ib.webp';
 
 import './home-fields.styles.scss';
 
-interface FieldCard {
-  image: string | undefined;
-  alt: string;
+interface Curriculum {
+  image?: string;
   label: string;
 }
 
+const CURRICULA: Curriculum[] = [
+  { image: igcse, label: 'IGCSE' },
+  { image: IB, label: 'IB' },
+  { image: sat, label: 'SAT' },
+  { label: 'American System' },
+  { label: 'British System' },
+  { image: uae, label: 'UAE National' },
+];
+
 const HomeFields: FC = () => {
   const { t } = useTranslation();
-  const rtlClass = useRtlClass();
-
-  const fields: FieldCard[] = [
-    { image: uae, alt: 'united-arab-emirates', label: 'UAE NATIONAL' },
-    { image: igcse, alt: 'igcse', label: 'IGCSE' },
-    { image: sat, alt: 'sat', label: 'SAT' },
-    { image: IB, alt: 'IB', label: 'IB' },
-    { image: undefined, alt: 'American System', label: 'American System' },
-    { image: undefined, alt: 'British System', label: 'British System' },
-  ];
 
   return (
-    <section className="landing__learning-fields">
+    <section className="landing__curricula">
       <div className="ds-container">
         <div className="home-heading">
           <p className="ds-eyebrow">{t('LANDING.BLOCK2.TITLE')}</p>
-          <h2 className="section-title">
-            <span className={`parallelogram ${rtlClass}`}>
-              {t('LANDING.BLOCK2.DESCRIPTION.PART1')}
-            </span>
-            <span>{t('LANDING.BLOCK2.DESCRIPTION.PART2')}</span>
-            <span className={`parallelogram ${rtlClass}`}>
-              {t('LANDING.BLOCK2.DESCRIPTION.PART3')}
-            </span>
-          </h2>
+          <h2 className="section-title">{t('LANDING.CURRICULA.TITLE')}</h2>
+          <p className="section-subtitle">{t('LANDING.CURRICULA.SUBTITLE')}</p>
         </div>
 
-        <div className="fields-images">
-          {fields.map((field, index) => (
-            <div key={index} className="fields-images__card">
-              <span
-                className={`fields-images__icon ${
-                  field.image ? '' : 'fields-images__icon--placeholder'
-                }`}
-              >
-                {field.image ? (
-                  <img className="image" src={field.image} alt={field.alt} />
+        <ul className="curricula">
+          {CURRICULA.map((curriculum) => (
+            <li key={curriculum.label} className="curricula__item">
+              <span className="curricula__icon">
+                {curriculum.image ? (
+                  <img src={curriculum.image} alt="" loading="lazy" />
                 ) : (
                   <SchoolOutlined aria-hidden="true" />
                 )}
               </span>
-              <h3 className="title">{field.label}</h3>
-            </div>
+              <span className="curricula__label">{curriculum.label}</span>
+            </li>
           ))}
-        </div>
+        </ul>
       </div>
     </section>
   );

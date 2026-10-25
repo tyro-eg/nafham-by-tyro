@@ -1,14 +1,17 @@
 import { FC } from 'react';
 import { useTranslation } from 'react-i18next';
 import Button from '@mui/material/Button';
-import { ArrowForward, Star } from '@mui/icons-material';
+import {
+  ArrowForward,
+  PlayCircleOutline,
+  Star,
+  VerifiedOutlined,
+  EventAvailableOutlined,
+} from '@mui/icons-material';
 
 import { useRtlClass } from '../../../assets/utils/utils';
 
-import main from '../../../assets/images/newLanding/macbook.webp';
-import cnbc from '../../../assets/images/newLanding/cnbc.webp';
-import bbc from '../../../assets/images/newLanding/bbc.webp';
-import wamda from '../../../assets/images/newLanding/wamda.webp';
+import product from '../../../assets/images/newLanding/macbook.webp';
 
 import './home-intro.styles.scss';
 
@@ -16,10 +19,11 @@ interface HomeIntroProps {
   openFreeTrail: () => void;
 }
 
-const pressLogos = [
-  { image: cnbc, alt: 'CNBC' },
-  { image: bbc, alt: 'BBC' },
-  { image: wamda, alt: 'Wamda' },
+// Three of the many: the faces behind the "students" pill
+const PILL_AVATARS = [
+  { initials: 'AY', tone: 'sky' },
+  { initials: 'MK', tone: 'gold' },
+  { initials: 'LN', tone: 'navy' },
 ];
 
 const HomeIntro: FC<HomeIntroProps> = ({ openFreeTrail }) => {
@@ -27,61 +31,91 @@ const HomeIntro: FC<HomeIntroProps> = ({ openFreeTrail }) => {
   const rtlClass = useRtlClass();
 
   return (
-    <section className={`home-hero ${rtlClass}`}>
-      <div className="ds-container home-hero__inner">
-        <div className="home-hero__content">
-          <p className="home-hero__eyebrow">{t('LANDING.BLOCK1.SUBTITLE')}</p>
-          <h1 className="home-hero__title">{t('LANDING.BLOCK1.TITLE')}</h1>
-          <p className="home-hero__description">
-            {t('LANDING.BLOCK1.DESCRIPTION')}
+    <section className={`hero ${rtlClass}`}>
+      <div className="ds-container hero__inner">
+        <div className="hero__content">
+          <p className="hero__pill">
+            <span className="hero__pill-avatars" aria-hidden="true">
+              {PILL_AVATARS.map((avatar) => (
+                <span
+                  key={avatar.initials}
+                  className={`hero__pill-avatar hero__pill-avatar--${avatar.tone}`}
+                >
+                  {avatar.initials}
+                </span>
+              ))}
+            </span>
+            {t('LANDING.HERO.PILL')}
           </p>
 
-          <div className="home-hero__actions">
+          <h1 className="hero__title">
+            {t('LANDING.HERO.TITLE_1')}{' '}
+            <span className="accent">{t('LANDING.HERO.TITLE_2')}</span>
+          </h1>
+          <p className="hero__lead">{t('LANDING.BLOCK1.DESCRIPTION')}</p>
+
+          <div className="hero__actions">
             <Button
-              className="custom-button home-hero__cta"
+              className="home-cta"
               size="large"
-              endIcon={<ArrowForward className="home-hero__cta-icon" />}
+              endIcon={<ArrowForward />}
               onClick={openFreeTrail}
             >
               {t('LANDING.BLOCK1.ACTION')}
             </Button>
             <Button
-              className="home-hero__secondary"
+              className="hero__link"
               size="large"
               href="#how-it-works"
+              startIcon={<PlayCircleOutline />}
             >
               {t('LANDING.BLOCK8.TITLE')}
             </Button>
           </div>
 
-          <div className="home-hero__trust">
-            <div className="home-hero__rating">
-              <span className="home-hero__stars" aria-hidden="true">
-                {[0, 1, 2, 3, 4].map((i) => (
-                  <Star key={i} />
-                ))}
+          <ul className="hero__proof">
+            <li>
+              <Star className="hero__proof-icon hero__proof-icon--gold" />
+              <span>
+                <strong>{t('LANDING.BLOCK4.ITEM3.TITLE')}</strong>{' '}
+                {t('LANDING.HERO.PROOF_RATING')}
               </span>
-              <span className="home-hero__rating-value">
-                {t('LANDING.BLOCK4.ITEM3.TITLE')}
-              </span>
-            </div>
-            <span className="home-hero__trust-divider" aria-hidden="true" />
-            <div className="home-hero__press">
-              <span className="home-hero__press-label">
-                {t('LANDING.BLOCK1.FEATURED.PART1')}{' '}
-                {t('LANDING.BLOCK1.FEATURED.PART2')}
-              </span>
-              <span className="home-hero__press-logos">
-                {pressLogos.map(({ image, alt }) => (
-                  <img key={alt} src={image} alt={alt} loading="lazy" />
-                ))}
-              </span>
-            </div>
-          </div>
+            </li>
+            <li>
+              <VerifiedOutlined className="hero__proof-icon" />
+              <span>{t('LANDING.HERO.PROOF_TUTORS')}</span>
+            </li>
+            <li>
+              <EventAvailableOutlined className="hero__proof-icon" />
+              <span>{t('LANDING.HERO.PROOF_FLEX')}</span>
+            </li>
+          </ul>
         </div>
 
-        <div className="home-hero__media">
-          <img className="macbook-image" src={main} alt="macbook" />
+        <div className="hero__stage" aria-hidden="true">
+          <div className="hero__glow" />
+          <div className="hero__frame">
+            <img className="hero__product" src={product} alt="" />
+          </div>
+          <div className="hero__chip hero__chip--live">
+            <span className="hero__live-dot" />
+            {t('LANDING.HERO.CHIP_LIVE')}
+          </div>
+          <div className="hero__chip hero__chip--course">
+            <span className="hero__chip-label">
+              {t('LANDING.HERO.CHIP_COURSE_LABEL')}
+            </span>
+            <strong>{t('LANDING.HERO.CHIP_COURSE')}</strong>
+          </div>
+          <div className="hero__chip hero__chip--progress">
+            <span className="hero__chip-label">
+              {t('LANDING.HERO.CHIP_PROGRESS')}
+            </span>
+            <span className="hero__progress">
+              <span className="hero__progress-used" />
+              <span className="hero__progress-booked" />
+            </span>
+          </div>
         </div>
       </div>
     </section>

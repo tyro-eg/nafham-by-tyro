@@ -184,7 +184,61 @@
         "DESCRIPTION": "Enjoy communicating online through interactive sessions."
       }
     },
-    "TESTIMONIAL": "Some special words from our students about us"
+    "TESTIMONIAL": "Some special words from our students about us",
+    "HERO": {
+      "PILL": "Trusted by 5,000+ students and parents",
+      "TITLE_1": "Tutoring that fits",
+      "TITLE_2": "your child's week.",
+      "PROOF_RATING": "average rating",
+      "PROOF_TUTORS": "Hand-picked, verified tutors",
+      "PROOF_FLEX": "Book, move or cancel in a tap",
+      "CHIP_LIVE": "Live session",
+      "CHIP_COURSE_LABEL": "Today, 5:00 PM",
+      "CHIP_COURSE": "IGCSE Maths · Year 10",
+      "CHIP_PROGRESS": "Package: 24 hours"
+    },
+    "PRESS": "As featured in",
+    "STATS": {
+      "ITEM1": "Sessions delivered",
+      "ITEM2": "Students taught",
+      "ITEM3": "Average rating"
+    },
+    "CURRICULA": {
+      "TITLE": "Every curriculum, one place",
+      "SUBTITLE": "From IGCSE to the UAE national system, with tutors who teach that exact syllabus."
+    },
+    "STEPS": {
+      "TITLE": "From first message to first lesson in a day"
+    },
+    "WHY": {
+      "ITEM4": {
+        "TITLE": "Progress you can see",
+        "DESCRIPTION": "Every package shows the hours taught, the hours booked and what is still free, so nothing is a surprise."
+      },
+      "TUTOR_CARD": {
+        "INITIALS": "GA",
+        "NAME": "Ghada A.",
+        "SUBJECT": "IGCSE Mathematics · 8 years",
+        "SESSIONS": "1,200 sessions",
+        "VERIFIED": "Verified"
+      },
+      "SCHEDULE": {
+        "DAYS": "Sat,Sun,Mon,Tue,Wed"
+      },
+      "SUPPORT": {
+        "QUESTION": "Can we move Tuesday's session to 6pm?",
+        "ANSWER": "Done. Your tutor has confirmed 6pm."
+      },
+      "PROGRESS": {
+        "USED": "Taught",
+        "SCHEDULED": "Booked",
+        "FREE": "Free to book"
+      }
+    },
+    "CLOSING": {
+      "EYEBROW": "Start with a free session",
+      "NOTE": "No card needed. Pick a tutor, pick a time, and see the difference."
+    }
   },
   "ENGLISH_COURSE": {
     "BLOCK1": {
