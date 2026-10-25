@@ -203,7 +203,8 @@
       "CHAT_TITLE": "Session chat",
       "CHAT_1": "Can you show that step again?",
       "CHAT_2": "Sure, watch the board.",
-      "CHAT_3": "Got it, thanks!"
+      "CHAT_3": "Got it, thanks!",
+      "MOCK_STUDENT": "Adam · Student"
     },
     "PRESS": "As featured in",
     "STATS": {

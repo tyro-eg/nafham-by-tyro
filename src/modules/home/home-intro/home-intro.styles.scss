@@ -233,23 +233,49 @@
       }
     }
 
+    // One-to-one: the tutor's stage takes the width, the chat sits beside it
     &__body {
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr)) 1.6fr;
+      grid-template-columns: minmax(0, 2.6fr) minmax(0, 1fr);
       gap: $space-2;
       padding: $space-2;
 
       @include respond(phone) {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-columns: minmax(0, 1fr);
       }
     }
 
     &__tile {
       position: relative;
-      aspect-ratio: 4 / 3;
       border-radius: $radius-sm;
       overflow: hidden;
       background-color: #222a44;
+
+      &--main {
+        aspect-ratio: 16 / 9;
+      }
+    }
+
+    &__video {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: 70% 25%;
+    }
+
+    // The student, picture-in-picture
+    &__pip {
+      position: absolute;
+      bottom: 0.8rem;
+      inset-inline-end: 0.8rem;
+      width: 24%;
+      min-width: 9rem;
+      aspect-ratio: 4 / 3;
+      border-radius: $radius-sm;
+      overflow: hidden;
+      border: 2px solid rgba(255, 255, 255, 0.5);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
 
       img {
         display: block;
@@ -258,17 +284,16 @@
         object-fit: cover;
       }
 
-      &--main {
-        grid-column: 1 / span 3;
-        aspect-ratio: 16 / 7;
-
-        img {
-          object-position: 70% 25%;
-        }
-
-        @include respond(phone) {
-          grid-column: 1 / span 2;
-        }
+      span {
+        position: absolute;
+        bottom: 0.4rem;
+        inset-inline-start: 0.5rem;
+        padding: 0.1rem 0.6rem;
+        border-radius: $radius-pill;
+        background-color: rgba($navy-950, 0.65);
+        color: $surface;
+        font-size: 1rem;
+        font-weight: 600;
       }
     }
 
@@ -286,8 +311,6 @@
     }
 
     &__side {
-      grid-column: 4;
-      grid-row: 1 / span 2;
       display: flex;
       flex-direction: column;
       gap: $space-2;
@@ -301,11 +324,6 @@
       strong {
         color: $surface;
         font-size: $font-sm;
-      }
-
-      @include respond(phone) {
-        grid-column: 1 / span 2;
-        grid-row: auto;
       }
     }
 

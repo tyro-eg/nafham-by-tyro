@@ -12,16 +12,22 @@ import student4 from '../../../assets/images/newLanding/hero-student4.webp';
 
 import './home-intro.styles.scss';
 
+// Stock footage of a tutor and student at a whiteboard. Drop the file at
+// public/videos/hero-session.mp4 (H.264, muted, 10 to 15 s, under 3 MB);
+// until it exists the whiteboard still is shown instead.
+const SESSION_VIDEO = '/videos/hero-session.mp4';
+
+const PILL_FACES = [student1, student2, student4];
+
 interface HomeIntroProps {
   openFreeTrail: () => void;
 }
 
-const STUDENTS = [student1, student2, student4];
-
 /**
  * The hero, centred: pill, headline, two calls to action, and below them
- * the product itself, a live session window with real faces, tilted back
- * and fading into the page.
+ * the product itself, a one-to-one session window (tutor on stage, the
+ * student picture-in-picture, the chat beside), tilted back and fading
+ * into the page.
  */
 const HomeIntro: FC<HomeIntroProps> = ({ openFreeTrail }) => {
   const { t } = useTranslation();
@@ -32,7 +38,7 @@ const HomeIntro: FC<HomeIntroProps> = ({ openFreeTrail }) => {
       <div className="ds-container hero__inner">
         <p className="hero__pill">
           <span className="hero__faces" aria-hidden="true">
-            {STUDENTS.map((face, index) => (
+            {PILL_FACES.map((face, index) => (
               <img key={index} src={face} alt="" />
             ))}
           </span>
@@ -81,10 +87,23 @@ const HomeIntro: FC<HomeIntroProps> = ({ openFreeTrail }) => {
             </div>
             <div className="window__body">
               <div className="window__tile window__tile--main">
-                <img src={board} alt="" />
+                <video
+                  className="window__video"
+                  src={SESSION_VIDEO}
+                  poster={board}
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  preload="metadata"
+                />
                 <span className="window__name">
                   {t('LANDING.HERO.MOCK_TUTOR')}
                 </span>
+                <div className="window__pip">
+                  <img src={student1} alt="" />
+                  <span>{t('LANDING.HERO.MOCK_STUDENT')}</span>
+                </div>
               </div>
               <aside className="window__side">
                 <strong>{t('LANDING.HERO.CHAT_TITLE')}</strong>
@@ -101,11 +120,6 @@ const HomeIntro: FC<HomeIntroProps> = ({ openFreeTrail }) => {
                   <span className="window__bar-booked" />
                 </span>
               </aside>
-              {STUDENTS.map((face, index) => (
-                <div key={index} className="window__tile">
-                  <img src={face} alt="" />
-                </div>
-              ))}
             </div>
           </div>
           <div className="hero__fade" />
