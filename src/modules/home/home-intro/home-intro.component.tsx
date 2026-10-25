@@ -5,17 +5,12 @@ import { ArrowForward, PlayCircleOutline } from '@mui/icons-material';
 
 import { useRtlClass } from '../../../assets/utils/utils';
 
-import board from '../../../assets/images/newLanding/hero-tutor.webp';
+import videocall from '../../../assets/images/newLanding/hero-videocall.webp';
 import student1 from '../../../assets/images/newLanding/hero-student1.webp';
 import student2 from '../../../assets/images/newLanding/hero-student2.webp';
 import student4 from '../../../assets/images/newLanding/hero-student4.webp';
 
 import './home-intro.styles.scss';
-
-// Stock footage of a tutor and student at a whiteboard. Drop the file at
-// public/videos/hero-session.mp4 (H.264, muted, 10 to 15 s, under 3 MB);
-// until it exists the whiteboard still is shown instead.
-const SESSION_VIDEO = '/videos/hero-session.mp4';
 
 const PILL_FACES = [student1, student2, student4];
 
@@ -25,9 +20,9 @@ interface HomeIntroProps {
 
 /**
  * The hero, centred: pill, headline, two calls to action, and below them
- * the product itself, a one-to-one session window (tutor on stage, the
- * student picture-in-picture, the chat beside), tilted back and fading
- * into the page.
+ * the product itself, a one-to-one session window (the tutor on the call with
+ * the board behind him, the student's camera picture-in-picture, the chat
+ * beside), tilted back and fading into the page.
  */
 const HomeIntro: FC<HomeIntroProps> = ({ openFreeTrail }) => {
   const { t } = useTranslation();
@@ -87,16 +82,7 @@ const HomeIntro: FC<HomeIntroProps> = ({ openFreeTrail }) => {
             </div>
             <div className="window__body">
               <div className="window__tile window__tile--main">
-                <video
-                  className="window__video"
-                  src={SESSION_VIDEO}
-                  poster={board}
-                  autoPlay
-                  muted
-                  loop
-                  playsInline
-                  preload="metadata"
-                />
+                <img className="window__video" src={videocall} alt="" />
                 <span className="window__name">
                   {t('LANDING.HERO.MOCK_TUTOR')}
                 </span>
