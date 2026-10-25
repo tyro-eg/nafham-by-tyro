@@ -21,7 +21,7 @@ interface HomeIntroProps {
 /**
  * The hero, centred: pill, headline, two calls to action, and below them
  * the product itself, a one-to-one session window (the tutor on the call with
- * the board behind him, the student's camera picture-in-picture, the chat
+ * the board behind her, the student's camera picture-in-picture, the chat
  * beside), tilted back and fading into the page.
  */
 const HomeIntro: FC<HomeIntroProps> = ({ openFreeTrail }) => {
