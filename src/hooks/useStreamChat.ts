@@ -5,6 +5,9 @@ import { useTranslation } from 'react-i18next';
 import { useStreamChatContext } from '../component/stream-chat/stream-chat-provider';
 import { findOrCreateConversation } from '../lib/streamChat';
 import { snackActions } from '../assets/utils/toaster';
+import { useAppSelector } from '../redux/store';
+import { selectCurrentUser } from '../redux/user/user.selectors';
+import { useMyInstructors } from './useInstructors';
 
 /**
  * Stream Chat connection state and the total unread count.
@@ -45,4 +48,26 @@ export function useStartConversation() {
   );
 
   return { startConversation, isStarting, isAvailable: !!client };
+}
+
+/**
+ * Whether the current user may open a conversation with another user.
+ * Chat must be configured, and a student may only message instructors
+ * they have a package with (the backend refuses anything else with 403).
+ * Tutors reach their students through pages that already list package
+ * students only.
+ */
+export function useCanMessage(userId?: number | string): boolean {
+  const currentUser = useAppSelector(selectCurrentUser);
+  const { client } = useStreamChatContext();
+  const isStudent = currentUser?.type === 'Student';
+  const myInstructors = useMyInstructors(undefined, {
+    enabled: !!client && isStudent && !!userId,
+  });
+
+  if (!client || !currentUser || !userId) return false;
+  if (!isStudent) return true;
+  return (myInstructors.data?.data ?? []).some(
+    (instructor) => String(instructor.id) === String(userId),
+  );
 }

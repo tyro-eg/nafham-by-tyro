@@ -13,8 +13,10 @@ import type { CurrentUser } from '../assets/types';
  * Every conversation is a `messaging` channel with three members: the
  * student, the instructor and the shared Nafham admin user
  * ("Nafham Support"). Stream stores the messages, attachments and voice
- * notes; the backend only vouches for who the user is by signing a token
- * at POST /chat/token (see tokenProvider below).
+ * notes. The backend signs the user token (POST /chat/token, see
+ * tokenProvider) and creates the conversations (POST /chat/conversations,
+ * see findOrCreateConversation): a student may only message instructors
+ * they have a package with, and the backend adds Nafham Support.
  */
 
 export const STREAM_API_KEY = import.meta.env.VITE_STREAM_API_KEY || '';
@@ -119,9 +121,10 @@ export const isAdminUser = (userId?: string): boolean =>
   userId === STREAM_ADMIN_USER_ID;
 
 /**
- * Find or create the conversation between the current user and another
- * user. Channels without an id are "distinct": Stream returns the same
- * channel for the same set of members, so this is idempotent.
+ * Open the conversation with another user. The backend creates the
+ * channel (student, instructor and Nafham Support) once it has checked
+ * that the two share a package, and answers 403 otherwise; the app only
+ * watches the channel it is given back.
  */
 export const findOrCreateConversation = async (
   otherUserId: number | string,
@@ -131,10 +134,16 @@ export const findOrCreateConversation = async (
   if (!chat.userID) {
     throw new Error('Stream user is not connected');
   }
-  const members = Array.from(
-    new Set([chat.userID, toStreamUserId(otherUserId), STREAM_ADMIN_USER_ID]),
-  );
-  const channel = chat.channel(CHANNEL_TYPE, { members, ...data });
+  const response = await post('/chat/conversations', {
+    user_id: otherUserId,
+    subject: data.subject,
+  });
+  const body = response.data?.data ?? response.data;
+  const id: unknown = body?.id;
+  if (typeof id !== 'string' || !id) {
+    throw new Error('POST /chat/conversations returned no channel id');
+  }
+  const channel = chat.channel(CHANNEL_TYPE, id);
   await channel.watch();
   return channel;
 };

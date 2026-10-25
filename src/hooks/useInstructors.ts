@@ -203,10 +203,15 @@ export function useUpdateTutorProfile() {
  * Fetch user's instructors (instructors they've booked sessions with)
  * Endpoint: /me/instructors
  * @param filters - Optional filters (grade_subject_id)
+ * @param options - `enabled: false` skips the request (e.g. for tutors)
  */
-export function useMyInstructors(filters?: InstructorFilters) {
+export function useMyInstructors(
+  filters?: InstructorFilters,
+  options: { enabled?: boolean } = {},
+) {
   return useQuery({
     queryKey: [...queryKeys.instructors.all, 'my-instructors', filters],
+    enabled: options.enabled ?? true,
     queryFn: async () => {
       const params: Record<string, any> = {};
       if (filters?.grade_subject_id) {
