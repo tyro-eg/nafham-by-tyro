@@ -111,11 +111,27 @@ const PackageListCard: FC<PackageListCardProps> = ({ packageData }) => {
 
   const remainingHours = packageData.remaining_hours ?? 0;
   const originalHours = packageData.original_hours ?? 0;
-  // Purely presentational: share of the package still available
-  const remainingPercent =
-    originalHours > 0
-      ? Math.min(100, Math.max(0, (remainingHours / originalHours) * 100))
-      : 0;
+  // Older API responses carry only the balance: then everything not free is "used"
+  const hours = packageData.hours ?? {
+    bought: originalHours,
+    moved_out: 0,
+    used: Math.max(originalHours - remainingHours, 0),
+    scheduled: 0,
+    unscheduled: remainingHours,
+    consistent: true,
+  };
+  const active = Math.max(hours.bought - hours.moved_out, 0);
+  // Only taught or missed hours count as gone; a booking is still the student's
+  const hoursLeft = Math.max(active - hours.used, 0);
+  const share = (value: number) =>
+    active > 0 ? Math.min(100, Math.max(0, (value / active) * 100)) : 0;
+  const purchases = packageData.purchases ?? [];
+  const purchaseLabel = (kind: string) =>
+    kind === 'top_up'
+      ? t('MYPACKAGES.CARD.HISTORY.TOP_UP')
+      : kind === 'moved_in'
+        ? t('MYPACKAGES.CARD.HISTORY.MOVED_IN')
+        : t('MYPACKAGES.CARD.HISTORY.BOUGHT');
 
   return (
     <article className="packages-card">
@@ -178,15 +194,13 @@ const PackageListCard: FC<PackageListCardProps> = ({ packageData }) => {
               </span>
               <span className="value value--strong">
                 <AccessTime />
-                {remainingHours} {t('MYPACKAGES.CARD.HOURS')}
+                {hoursLeft} {t('MYPACKAGES.CARD.HOURS')}
               </span>
             </div>
             <div className="packages-card__progress-stat packages-card__progress-stat--end">
-              <span className="label">
-                {t('MYPACKAGES.CARD.ORIGINAL_HOURS')}
-              </span>
+              <span className="label">{t('MYPACKAGES.CARD.BOUGHT_HOURS')}</span>
               <span className="value">
-                {originalHours} {t('MYPACKAGES.CARD.HOURS')}
+                {hours.bought} {t('MYPACKAGES.CARD.HOURS')}
               </span>
             </div>
           </div>
@@ -194,15 +208,59 @@ const PackageListCard: FC<PackageListCardProps> = ({ packageData }) => {
             className="packages-card__progress-track"
             role="progressbar"
             aria-valuemin={0}
-            aria-valuemax={originalHours}
-            aria-valuenow={remainingHours}
+            aria-valuemax={active}
+            aria-valuenow={hoursLeft}
             aria-label={t('MYPACKAGES.CARD.REMAINING_HOURS')}
           >
             <span
-              className="packages-card__progress-bar"
-              style={{ width: `${remainingPercent}%` }}
+              className="packages-card__progress-bar packages-card__progress-bar--used"
+              style={{ width: `${share(hours.used)}%` }}
+            />
+            <span
+              className="packages-card__progress-bar packages-card__progress-bar--scheduled"
+              style={{ width: `${share(hours.scheduled)}%` }}
+            />
+            <span
+              className="packages-card__progress-bar packages-card__progress-bar--free"
+              style={{ width: `${share(hours.unscheduled)}%` }}
             />
           </div>
+          <ul className="packages-card__legend">
+            <li className="packages-card__legend-item packages-card__legend-item--used">
+              <strong>{hours.used}</strong> {t('MYPACKAGES.CARD.LEGEND.USED')}
+            </li>
+            <li className="packages-card__legend-item packages-card__legend-item--scheduled">
+              <strong>{hours.scheduled}</strong>{' '}
+              {t('MYPACKAGES.CARD.LEGEND.SCHEDULED')}
+            </li>
+            <li className="packages-card__legend-item packages-card__legend-item--free">
+              <strong>{hours.unscheduled}</strong>{' '}
+              {t('MYPACKAGES.CARD.LEGEND.FREE')}
+            </li>
+            {hours.moved_out > 0 && (
+              <li className="packages-card__legend-item">
+                <strong>{hours.moved_out}</strong>{' '}
+                {t('MYPACKAGES.CARD.LEGEND.MOVED_OUT')}
+              </li>
+            )}
+          </ul>
+          {purchases.length > 0 && (
+            <ul className="packages-card__history">
+              {purchases.map((entry, index) => (
+                <li key={index}>
+                  {purchaseLabel(entry.kind)} {entry.hours}{' '}
+                  {t('MYPACKAGES.CARD.HOURS')}
+                  {entry.kind === 'moved_in' && entry.tutor_name
+                    ? ` (${entry.tutor_name})`
+                    : ''}{' '}
+                  ·{' '}
+                  {format(parseISO(entry.at), 'PP', {
+                    locale: locales[i18n.language as 'en' | 'ar'],
+                  })}
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
 
         <div className="packages-card__content-middle">
@@ -216,7 +274,9 @@ const PackageListCard: FC<PackageListCardProps> = ({ packageData }) => {
                 <p className="title">{t('MYPACKAGES.CARD.AMOUNT_PAID')}</p>
                 <p className="value value--strong">
                   <Payment />
-                  {packageData.amount_paid ?? 0}{' '}
+                  {packageData.amount_paid_total ??
+                    packageData.amount_paid ??
+                    0}{' '}
                   {packageData.amount_paid_currency || ''}
                 </p>
               </div>
@@ -242,9 +302,13 @@ const PackageListCard: FC<PackageListCardProps> = ({ packageData }) => {
             <p className="title">{t('MYPACKAGES.CARD.UPDATED_DATE')}</p>
             <p className="value">
               <Schedule />
-              {format(parseISO(packageData.updated_at), 'PP', {
-                locale: locales[i18n.language as 'en' | 'ar'],
-              })}
+              {format(
+                parseISO(
+                  packageData.last_activity_at ?? packageData.updated_at,
+                ),
+                'PP',
+                { locale: locales[i18n.language as 'en' | 'ar'] },
+              )}
             </p>
           </div>
         </div>

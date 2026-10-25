@@ -4,77 +4,289 @@
 .landing__why-us {
   @include section($surface-alt);
 
-  .strong-points {
+  .bento {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: $space-5;
-    max-width: 104rem;
+    grid-auto-rows: minmax(26rem, auto);
+    gap: $space-4;
+    max-width: 110rem;
     margin: 0 auto;
 
     @include respond(tab-port) {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    @include respond(phone) {
       grid-template-columns: minmax(0, 1fr);
-      max-width: 56rem;
-      gap: $space-4;
+      grid-auto-rows: auto;
     }
 
     &__card {
-      @include card(0);
-      @include card-hover;
+      @include card($space-5);
       display: flex;
       flex-direction: column;
+      justify-content: space-between;
+      gap: $space-5;
       overflow: hidden;
+      border-radius: $radius-lg;
       text-align: start;
 
-      .image-wrap {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        height: 20rem;
-        margin-bottom: $space-5;
-        background-color: $brand-50;
-        border-bottom: 1px solid $border;
+      &--tutors {
+        grid-column: span 2;
+        background: linear-gradient(135deg, $surface 55%, $brand-50);
 
         @include respond(phone) {
-          height: 16rem;
+          grid-column: auto;
         }
       }
 
-      &.green .image-wrap {
-        background-color: $success-50;
-      }
+      &--progress {
+        grid-column: span 2;
 
-      &.primary .image-wrap {
-        background-color: $brand-50;
-      }
-
-      &.gold .image-wrap {
-        background-color: $warning-50;
-      }
-
-      .image {
-        display: block;
-        height: 13.2rem;
-        max-width: 80%;
+        @include respond(tab-port) {
+          grid-column: span 2;
+        }
 
         @include respond(phone) {
-          height: 11rem;
+          grid-column: auto;
         }
       }
+    }
 
-      .title {
-        padding: 0 $space-5;
-        margin-bottom: $space-2;
-        font-size: $font-h4;
-        font-weight: 600;
-        line-height: 1.3;
-        color: $text-strong;
+    &__title {
+      margin-bottom: $space-2;
+      font-size: $font-h4;
+      font-weight: 600;
+      line-height: 1.3;
+      color: $text-strong;
+    }
+
+    &__description {
+      max-width: 40rem;
+      font-size: $font-base;
+      line-height: 1.6;
+      color: $text-body;
+    }
+
+    &__visual {
+      align-self: flex-start;
+    }
+  }
+
+  // ---------- Tutor card mock ----------
+  .tutor-card {
+    position: relative;
+    display: inline-grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: $space-3;
+    align-items: center;
+    min-width: 28rem;
+    padding: $space-3 $space-4;
+    border-radius: $radius-md;
+    background-color: $surface;
+    border: 1px solid $border;
+    box-shadow: $shadow-md;
+
+    @include respond(phone) {
+      min-width: 0;
+      width: 100%;
+    }
+
+    &__avatar {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 4.8rem;
+      height: 4.8rem;
+      border-radius: 50%;
+      background-color: $navy-900;
+      color: $surface;
+      font-size: $font-sm;
+      font-weight: 700;
+    }
+
+    &__body {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+      min-width: 0;
+    }
+
+    &__name {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: $font-base;
+      font-weight: 600;
+      color: $text-strong;
+    }
+
+    &__verified.MuiSvgIcon-root {
+      font-size: 1.6rem;
+      color: $brand-600;
+    }
+
+    &__subject {
+      font-size: $font-xs;
+      color: $text-muted;
+    }
+
+    &__rating {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin-top: 0.2rem;
+      font-size: $font-xs;
+      color: $text-body;
+
+      .MuiSvgIcon-root {
+        font-size: 1.4rem;
+        color: $accent-500;
       }
 
-      .description {
-        padding: 0 $space-5 $space-5;
-        font-size: $font-base;
-        line-height: 1.6;
+      span {
+        margin-inline-start: 0.4rem;
+      }
+    }
+
+    &__badge {
+      @include badge($success-50, darken($success-500, 18%));
+      position: absolute;
+      top: -1rem;
+      inset-inline-end: $space-3;
+    }
+  }
+
+  // ---------- Week strip ----------
+  .week {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: $space-2;
+    width: 100%;
+
+    &__day {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      padding: $space-2;
+      border-radius: $radius-sm;
+      background-color: $surface;
+      border: 1px solid $border;
+
+      &--picked {
+        border-color: $brand-400;
+        box-shadow: 0 0 0 3px rgba($brand-400, 0.18);
+
+        .week__slot:first-of-type {
+          background-color: $brand-500;
+        }
+      }
+    }
+
+    &__name {
+      font-size: $font-xs;
+      font-weight: 600;
+      text-align: center;
+      color: $text-muted;
+    }
+
+    &__slot {
+      height: 0.8rem;
+      border-radius: $radius-pill;
+      background-color: $gray-200;
+    }
+  }
+
+  // ---------- Chat mock ----------
+  .chat {
+    display: flex;
+    flex-direction: column;
+    gap: $space-2;
+    width: 100%;
+
+    &__bubble {
+      display: inline-flex;
+      align-items: center;
+      gap: $space-2;
+      max-width: 90%;
+      padding: 0.8rem 1.2rem;
+      border-radius: $radius-md;
+      font-size: $font-xs;
+      font-weight: 500;
+      line-height: 1.4;
+
+      .MuiSvgIcon-root {
+        font-size: 1.6rem;
+        flex: none;
+      }
+
+      &--in {
+        align-self: flex-start;
+        background-color: $gray-100;
         color: $text-body;
+      }
+
+      &--out {
+        align-self: flex-end;
+        background-color: $brand-600;
+        color: $surface;
+      }
+    }
+  }
+
+  // ---------- Hours bar ----------
+  .hours {
+    display: flex;
+    flex-direction: column;
+    gap: $space-3;
+    width: 100%;
+
+    &__bar {
+      display: flex;
+      height: 1.2rem;
+      border-radius: $radius-pill;
+      background-color: $brand-100;
+      overflow: hidden;
+    }
+
+    &__used {
+      width: 40%;
+      background-color: $navy-800;
+    }
+
+    &__booked {
+      width: 22%;
+      background-color: $brand-500;
+    }
+
+    &__legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: $space-2 $space-5;
+    }
+
+    &__key {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: $font-xs;
+      font-weight: 500;
+      color: $text-body;
+
+      &::before {
+        content: '';
+        width: 1rem;
+        height: 1rem;
+        border-radius: 50%;
+        background-color: $brand-100;
+      }
+
+      &--used::before {
+        background-color: $navy-800;
+      }
+
+      &--booked::before {
+        background-color: $brand-500;
       }
     }
   }

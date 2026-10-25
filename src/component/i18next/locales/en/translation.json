@@ -184,7 +184,83 @@
         "DESCRIPTION": "Enjoy communicating online through interactive sessions."
       }
     },
-    "TESTIMONIAL": "Some special words from our students about us"
+    "TESTIMONIAL": "Some special words from our students about us",
+    "HERO": {
+      "PILL": "Trusted by 5,000+ students and parents",
+      "TITLE_1": "Tutoring that fits",
+      "TITLE_2": "your child's week.",
+      "PROOF_RATING": "average rating",
+      "PROOF_TUTORS": "Hand-picked, verified tutors",
+      "PROOF_FLEX": "Book, move or cancel in a tap",
+      "CHIP_LIVE": "Live session",
+      "CHIP_COURSE_LABEL": "Today, 5:00 PM",
+      "CHIP_COURSE": "IGCSE Maths · Year 10",
+      "CHIP_PROGRESS": "Package: 24 hours",
+      "MOCK_TITLE": "IGCSE Maths · Live session",
+      "MOCK_TUTOR": "Ms. Ghada · Tutor",
+      "NEXT_LABEL": "Next session",
+      "HOURS_META": "11 taught · 6 booked · 7 free",
+      "CHAT_TITLE": "Session chat",
+      "CHAT_1": "Can you show that step again?",
+      "CHAT_2": "Sure, watch the board.",
+      "CHAT_3": "Got it, thanks!",
+      "MOCK_STUDENT": "Adam · Student"
+    },
+    "PRESS": "As featured in",
+    "STATS": {
+      "ITEM1": "Sessions delivered",
+      "ITEM2": "Students taught",
+      "ITEM3": "Average rating"
+    },
+    "CURRICULA": {
+      "TITLE": "Every curriculum, one place",
+      "SUBTITLE": "From IGCSE to the UAE national system, with tutors who teach that exact syllabus."
+    },
+    "STEPS": {
+      "TITLE": "From first message to first lesson in a day"
+    },
+    "WHY": {
+      "ITEM4": {
+        "TITLE": "Progress you can see",
+        "DESCRIPTION": "Every package shows the hours taught, the hours booked and what is still free, so nothing is a surprise."
+      },
+      "TUTOR_CARD": {
+        "INITIALS": "GA",
+        "NAME": "Ghada A.",
+        "SUBJECT": "IGCSE Mathematics · 8 years",
+        "SESSIONS": "1,200 sessions",
+        "VERIFIED": "Verified"
+      },
+      "SCHEDULE": {
+        "DAYS": "Sat,Sun,Mon,Tue,Wed"
+      },
+      "SUPPORT": {
+        "QUESTION": "Can we move Tuesday's session to 6pm?",
+        "ANSWER": "Done. Your tutor has confirmed 6pm."
+      },
+      "PROGRESS": {
+        "USED": "Taught",
+        "SCHEDULED": "Booked",
+        "FREE": "Free to book"
+      }
+    },
+    "CLOSING": {
+      "EYEBROW": "Start with a free session",
+      "NOTE": "No card needed. Pick a tutor, pick a time, and see the difference."
+    },
+    "TUTORS": {
+      "ENGLISH": "English",
+      "MATHS": "Maths",
+      "FRENCH": "French",
+      "ARABIC": "Arabic",
+      "TITLE": "Tutors families ask for by name",
+      "SUBTITLE": "Hand-picked for the subject and the syllabus, and rated by the students they teach."
+    },
+    "TESTIMONIALS": {
+      "TITLE": "What parents and students say",
+      "SUBTITLE": "Unedited, from families who learn with us.",
+      "ROLE": "Parent"
+    }
   },
   "ENGLISH_COURSE": {
     "BLOCK1": {
@@ -792,7 +868,7 @@
       "TRIAL_SESSION": "Trial Session",
       "PRIVATE_SESSION": "Private Session",
       "GROUP_COURSE": "Group Course",
-      "REMAINING_HOURS": "Remaining Hours",
+      "REMAINING_HOURS": "Hours Left",
       "ORIGINAL_HOURS": "Original Hours",
       "HOURS": "Hours",
       "COURSE": "Course",
@@ -807,10 +883,23 @@
         "WESTERN_UNION": "Western Union"
       },
       "CREATED_DATE": "Created Date",
-      "UPDATED_DATE": "Updated Date",
+      "UPDATED_DATE": "Last Activity",
       "CURRENCY": "EGP",
       "OTHER": "Other",
-      "NOT_AVAILABLE": "Not Available"
+      "NOT_AVAILABLE": "Not Available",
+      "BOUGHT_HOURS": "Hours Bought",
+      "UNSCHEDULED_HOURS": "Free to Book",
+      "HISTORY": {
+        "BOUGHT": "Bought",
+        "TOP_UP": "Topped up",
+        "MOVED_IN": "Moved in"
+      },
+      "LEGEND": {
+        "USED": "used",
+        "SCHEDULED": "scheduled",
+        "FREE": "free to book",
+        "MOVED_OUT": "moved to another tutor"
+      }
     }
   },
   "DIRECTORY": {
@@ -865,6 +954,13 @@
     "TAB": {
       "STUDENT": "Student",
       "INSTRUCTOR": "Instructor"
+    },
+    "PANEL": {
+      "EYEBROW": "Nafham Learning",
+      "TITLE": "Pick up right where you left off.",
+      "SUBTITLE": "Your sessions, packages and tutors are waiting.",
+      "QUOTE": "She is the best teacher we've dealt with. Ahmed got better at school and she follows up with him every week.",
+      "QUOTE_BY": "Ahmed's parent"
     }
   },
   "IMPERSONATE": {

@@ -122,7 +122,10 @@ const HomeTestimonial: FC = () => {
       <div className="ds-container">
         <div className="home-heading">
           <p className="ds-eyebrow">{t('LANDING.BLOCK5.TITLE')}</p>
-          <h2 className="section-title">{t('LANDING.TESTIMONIAL')}</h2>
+          <h2 className="section-title">{t('LANDING.TESTIMONIALS.TITLE')}</h2>
+          <p className="section-subtitle">
+            {t('LANDING.TESTIMONIALS.SUBTITLE')}
+          </p>
         </div>
 
         <div className="testimonials-carousel">
@@ -147,8 +150,13 @@ const HomeTestimonial: FC = () => {
                     >
                       {getNameInitials(testimonial.name)}
                     </span>
-                    <span className="testimonial-card__name">
-                      {testimonial.name}
+                    <span className="testimonial-card__who">
+                      <span className="testimonial-card__name">
+                        {testimonial.name}
+                      </span>
+                      <span className="testimonial-card__role">
+                        {t('LANDING.TESTIMONIALS.ROLE')}
+                      </span>
                     </span>
                   </figcaption>
                 </figure>
