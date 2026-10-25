@@ -63,48 +63,24 @@
       }
     }
 
-    &__mark {
+    // Logos sit in a white disc so square marks and round flags read the same
+    &__logo {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 4rem;
-      height: 4rem;
+      flex: none;
+      width: 4.2rem;
+      height: 4.2rem;
       border-radius: 50%;
-      font-size: $font-xs;
-      font-weight: 800;
-      letter-spacing: -0.02em;
-      direction: ltr;
-      background-color: var(--tint);
-      color: var(--ink);
+      background-color: $surface;
+      border: 1px solid $border;
+      overflow: hidden;
 
-      &--sky {
-        --tint: #{$brand-50};
-        --ink: #{$brand-800};
-      }
-
-      &--navy {
-        --tint: #{$gray-100};
-        --ink: #{$navy-900};
-      }
-
-      &--gold {
-        --tint: #{$warning-50};
-        --ink: #{darken($accent-500, 10%)};
-      }
-
-      &--rose {
-        --tint: #{$danger-50};
-        --ink: #{darken($danger-500, 10%)};
-      }
-
-      &--slate {
-        --tint: #{$gray-100};
-        --ink: #{$gray-700};
-      }
-
-      &--mint {
-        --tint: #{$success-50};
-        --ink: #{darken($success-500, 18%)};
+      img,
+      svg {
+        width: 3.2rem;
+        height: 3.2rem;
+        object-fit: contain;
       }
     }
   }

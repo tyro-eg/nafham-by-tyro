@@ -11,9 +11,10 @@ import {
 
 import { useRtlClass } from '../../../assets/utils/utils';
 
-import tutor from '../../../assets/images/newLanding/instructor3-cutout.webp';
+import tutor from '../../../assets/images/newLanding/hero-tutor.webp';
 import student1 from '../../../assets/images/newLanding/hero-student1.webp';
 import student2 from '../../../assets/images/newLanding/hero-student2.webp';
+import student3 from '../../../assets/images/newLanding/hero-student3.webp';
 import student4 from '../../../assets/images/newLanding/hero-student4.webp';
 
 import './home-intro.styles.scss';
@@ -22,12 +23,12 @@ interface HomeIntroProps {
   openFreeTrail: () => void;
 }
 
-const STUDENTS = [student1, student2, student4];
+const PILL_FACES = [student1, student2, student4];
 
 /**
  * The hero: a headline that fits in two lines, two calls to action, and a
- * tutor standing on a colour block with the proof around her (rating,
- * next session, package hours).
+ * grid of real faces: the tutor at her board, two students, a rating tile
+ * and a package-hours tile.
  */
 const HomeIntro: FC<HomeIntroProps> = ({ openFreeTrail }) => {
   const { t } = useTranslation();
@@ -39,8 +40,8 @@ const HomeIntro: FC<HomeIntroProps> = ({ openFreeTrail }) => {
         <div className="hero__content">
           <p className="hero__pill">
             <span className="hero__pill-avatars" aria-hidden="true">
-              {STUDENTS.map((student, index) => (
-                <img key={index} src={student} alt="" />
+              {PILL_FACES.map((face, index) => (
+                <img key={index} src={face} alt="" />
               ))}
             </span>
             {t('LANDING.HERO.PILL')}
@@ -86,46 +87,45 @@ const HomeIntro: FC<HomeIntroProps> = ({ openFreeTrail }) => {
         </div>
 
         <div className="hero__visual" aria-hidden="true">
-          <div className="hero__block">
-            <span className="hero__ring hero__ring--1" />
-            <span className="hero__ring hero__ring--2" />
-            <img className="hero__tutor" src={tutor} alt="" />
-          </div>
+          <div className="collage">
+            <figure className="collage__tile collage__tile--main">
+              <img src={tutor} alt="" />
+              <figcaption className="collage__caption">
+                <span className="hero__live-dot" />
+                {t('LANDING.HERO.CHIP_COURSE')}
+              </figcaption>
+            </figure>
 
-          <div className="hero__card hero__card--rating">
-            <span className="hero__stars">
-              {[0, 1, 2, 3, 4].map((i) => (
-                <Star key={i} />
-              ))}
-            </span>
-            <strong>{t('LANDING.BLOCK4.ITEM3.TITLE')}</strong>
-            <span className="hero__card-label">
-              {t('LANDING.HERO.PROOF_RATING')}
-            </span>
-          </div>
+            <figure className="collage__tile collage__tile--a">
+              <img src={student1} alt="" />
+            </figure>
 
-          <div className="hero__card hero__card--next">
-            <span className="hero__card-label">
-              {t('LANDING.HERO.NEXT_LABEL')}
-            </span>
-            <strong>{t('LANDING.HERO.CHIP_COURSE')}</strong>
-            <span className="hero__card-meta">
-              <span className="hero__live-dot" />
-              {t('LANDING.HERO.CHIP_COURSE_LABEL')}
-            </span>
-          </div>
+            <div className="collage__tile collage__tile--rating">
+              <span className="hero__stars">
+                {[0, 1, 2, 3, 4].map((i) => (
+                  <Star key={i} />
+                ))}
+              </span>
+              <strong>{t('LANDING.BLOCK4.ITEM3.TITLE')}</strong>
+              <span>{t('LANDING.HERO.PROOF_RATING')}</span>
+            </div>
 
-          <div className="hero__card hero__card--hours">
-            <span className="hero__card-label">
-              {t('LANDING.HERO.CHIP_PROGRESS')}
-            </span>
-            <span className="hero__progress">
-              <span className="hero__progress-used" />
-              <span className="hero__progress-booked" />
-            </span>
-            <span className="hero__card-meta">
-              {t('LANDING.HERO.HOURS_META')}
-            </span>
+            <figure className="collage__tile collage__tile--b">
+              <img src={student3} alt="" />
+            </figure>
+
+            <div className="collage__tile collage__tile--hours">
+              <span className="collage__label">
+                {t('LANDING.HERO.CHIP_PROGRESS')}
+              </span>
+              <span className="hero__progress">
+                <span className="hero__progress-used" />
+                <span className="hero__progress-booked" />
+              </span>
+              <span className="collage__meta">
+                {t('LANDING.HERO.HOURS_META')}
+              </span>
+            </div>
           </div>
         </div>
       </div>

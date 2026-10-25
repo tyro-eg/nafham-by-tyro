@@ -949,6 +949,13 @@
     "TAB": {
       "STUDENT": "Student",
       "INSTRUCTOR": "Instructor"
+    },
+    "PANEL": {
+      "EYEBROW": "Nafham Learning",
+      "TITLE": "Pick up right where you left off.",
+      "SUBTITLE": "Your sessions, packages and tutors are waiting.",
+      "QUOTE": "She is the best teacher we've dealt with. Ahmed got better at school and she follows up with him every week.",
+      "QUOTE_BY": "Ahmed's parent"
     }
   },
   "IMPERSONATE": {
