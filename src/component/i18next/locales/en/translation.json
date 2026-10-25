@@ -245,7 +245,14 @@
       "ENGLISH": "English",
       "MATHS": "Maths",
       "FRENCH": "French",
-      "ARABIC": "Arabic"
+      "ARABIC": "Arabic",
+      "TITLE": "Tutors families ask for by name",
+      "SUBTITLE": "Hand-picked for the subject and the syllabus, and rated by the students they teach."
+    },
+    "TESTIMONIALS": {
+      "TITLE": "What parents and students say",
+      "SUBTITLE": "Unedited, from families who learn with us.",
+      "ROLE": "Parent"
     }
   },
   "ENGLISH_COURSE": {

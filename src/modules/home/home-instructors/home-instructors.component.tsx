@@ -56,12 +56,8 @@ const HomeInstructors: FC = () => {
       <div className="ds-container">
         <div className="home-heading">
           <p className="ds-eyebrow">{t('LANDING.BLOCK3.TITLE')}</p>
-          <h2 className="section-title">
-            {t('LANDING.BLOCK3.DESCRIPTION.PART1')}
-            <span className="accent">
-              {t('LANDING.BLOCK3.DESCRIPTION.PART2')}
-            </span>
-          </h2>
+          <h2 className="section-title">{t('LANDING.TUTORS.TITLE')}</h2>
+          <p className="section-subtitle">{t('LANDING.TUTORS.SUBTITLE')}</p>
         </div>
 
         <ul className="tutors">
