@@ -44,7 +44,7 @@ const ThreadHeader: FC<ThreadHeaderProps> = ({
     ? t('MESSAGES.NAFHAM_SUPPORT')
     : other?.user?.name || t('MESSAGES.UNKNOWN_USER');
   const subject = support
-    ? t('MESSAGES.SUPPORT.META')
+    ? `${t('MESSAGES.SUPPORT.META')} · ${t('MESSAGES.SUPPORT.REPLY_TIME')}`
     : (channel.data?.subject as string | undefined) || '';
   const otherRole = support
     ? t('MESSAGES.ROLE.SUPPORT')

@@ -39,6 +39,7 @@ import { useRtlClass } from '../../assets/utils/utils';
 import ConversationItem from './conversation-item.component';
 import ThreadHeader from './thread-header.component';
 import NafhamMessageUI from './nafham-message-ui.component';
+import ThreadEmptyState from './thread-empty-state.component';
 import { getStreamI18n } from './stream-i18n';
 
 import 'stream-chat-react/dist/css/index.css';
@@ -144,6 +145,7 @@ const Messages: FC = () => {
           overrides={{
             MessageUI: NafhamMessageUI,
             ChannelListHeader: NoHeader,
+            EmptyStateIndicator: ThreadEmptyState,
           }}
         >
           <section className="messages__list" aria-label={t('MESSAGES.TITLE')}>
