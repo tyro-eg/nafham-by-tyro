@@ -1429,7 +1429,8 @@
     "ROLE": {
       "STUDENT": "Student",
       "INSTRUCTOR": "Instructor",
-      "ADMIN": "Admin"
+      "ADMIN": "Admin",
+      "SUPPORT": "Support"
     },
     "UNKNOWN_USER": "Unknown user",
     "BACK": "Back to messages",
@@ -1463,7 +1464,12 @@
     "ERRORS": {
       "NOT_CONNECTED": "Chat is not connected yet. Please try again in a moment.",
       "START_FAILED": "Could not open the conversation. Please try again."
-    }
+    },
+    "SUPPORT": {
+      "BUTTON": "Chat with Nafham Support",
+      "META": "Support conversation"
+    },
+    "ANNOUNCEMENT": "Announcement"
   },
   "SESSION_REQUEST": {
     "TITLE": "Request sessions",

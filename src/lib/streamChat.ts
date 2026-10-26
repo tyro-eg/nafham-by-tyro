@@ -98,15 +98,26 @@ export const disconnectStreamUser = async () => {
   }
 };
 
+/** "lesson" (student + instructor) or "support" (one person + Nafham Support) */
+export const channelKind = (channel: Channel): 'lesson' | 'support' =>
+  channel.data?.kind === 'support' ? 'support' : 'lesson';
+
+export const isSupportConversation = (channel: Channel): boolean =>
+  channelKind(channel) === 'support';
+
 /**
  * The person the current user is talking to: the member who is neither
- * the current user nor the Nafham admin.
+ * the current user nor the Nafham admin. In a support conversation that
+ * is Nafham Support itself.
  */
 export const getCounterpart = (
   channel: Channel,
   currentUserId: string,
 ): ChannelMemberResponse | undefined => {
   const members = Object.values(channel.state.members);
+  if (isSupportConversation(channel)) {
+    return members.find((m) => m.user_id === STREAM_ADMIN_USER_ID);
+  }
   return (
     members.find(
       (m) => m.user_id !== currentUserId && m.user_id !== STREAM_ADMIN_USER_ID,
@@ -124,6 +135,16 @@ export const isAdminUser = (userId?: string): boolean =>
 interface ConversationResponse {
   data: { id: string; cid: string; type: string };
 }
+
+/** Watch the channel the backend created or found */
+const watchConversation = async (response: {
+  data: ConversationResponse;
+}): Promise<Channel> => {
+  const { id } = response.data.data;
+  const channel = getStreamClient().channel(CHANNEL_TYPE, id);
+  await channel.watch();
+  return channel;
+};
 
 /**
  * Open the conversation with another user. The backend creates the
@@ -143,10 +164,20 @@ export const findOrCreateConversation = async (
     user_id: otherUserId,
     subject: data.subject,
   });
-  const { id } = (response.data as ConversationResponse).data;
-  const channel = chat.channel(CHANNEL_TYPE, id);
-  await channel.watch();
-  return channel;
+  return watchConversation(response as { data: ConversationResponse });
+};
+
+/**
+ * Open the current user's direct conversation with Nafham Support (any
+ * active student or instructor may have one).
+ */
+export const openSupportConversation = async (): Promise<Channel> => {
+  const chat = getStreamClient();
+  if (!chat.userID) {
+    throw new Error('Stream user is not connected');
+  }
+  const response = await post('/chat/conversations', { kind: 'support' });
+  return watchConversation(response as { data: ConversationResponse });
 };
 
 /** Initials for a member without an avatar image. */

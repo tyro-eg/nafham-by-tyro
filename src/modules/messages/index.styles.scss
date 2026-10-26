@@ -544,6 +544,30 @@ $own-bubble: $brand-100;
     background-color: $navy-900 !important;
     color: $text-on-dark !important;
   }
+
+  // Announcements (the welcome message): quieter, no accent bar
+  &--system .str-chat__message-bubble,
+  &--system .str-chat__message-text {
+    background-color: $surface-alt !important;
+    border-inline-start: 0 !important;
+    color: $text-strong;
+  }
+
+  &--system .nf-msg__admin-label {
+    color: $text-muted;
+  }
+}
+
+// "Chat with Nafham Support" under the filter pills
+.messages__support {
+  align-self: flex-start;
+  margin-top: 0.4rem;
+}
+
+.conv-item__support-avatar,
+.thread-header__admin-avatar {
+  background-color: $navy-900 !important;
+  color: $text-on-dark !important;
 }
 
 // Other people: white bubble with a border; own: light brand tint

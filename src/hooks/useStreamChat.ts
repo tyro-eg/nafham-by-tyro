@@ -3,7 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
 import { useStreamChatContext } from '../component/stream-chat/stream-chat-provider';
-import { findOrCreateConversation } from '../lib/streamChat';
+import {
+  findOrCreateConversation,
+  openSupportConversation,
+} from '../lib/streamChat';
 import { snackActions } from '../assets/utils/toaster';
 import { useAppSelector } from '../redux/store';
 import { selectCurrentUser } from '../redux/user/user.selectors';
@@ -48,6 +51,35 @@ export function useStartConversation() {
   );
 
   return { startConversation, isStarting, isAvailable: !!client };
+}
+
+/**
+ * Opens the conversation with Nafham Support and navigates to it.
+ */
+export function useOpenSupportConversation() {
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+  const { client, isConnected } = useStreamChatContext();
+  const [isStarting, setIsStarting] = useState(false);
+
+  const open = useCallback(async () => {
+    if (!client || !isConnected) {
+      snackActions.error(t('MESSAGES.ERRORS.NOT_CONNECTED'));
+      return;
+    }
+    setIsStarting(true);
+    try {
+      const channel = await openSupportConversation();
+      navigate(`/messages/${channel.id}`);
+    } catch (err) {
+      console.error('Could not open the support conversation', err);
+      snackActions.error(t('MESSAGES.ERRORS.START_FAILED'));
+    } finally {
+      setIsStarting(false);
+    }
+  }, [client, isConnected, navigate, t]);
+
+  return { open, isStarting, isAvailable: !!client };
 }
 
 /**
