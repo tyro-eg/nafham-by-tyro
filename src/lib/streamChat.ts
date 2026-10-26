@@ -120,6 +120,11 @@ export const hasAdminMember = (channel: Channel): boolean =>
 export const isAdminUser = (userId?: string): boolean =>
   userId === STREAM_ADMIN_USER_ID;
 
+/** Body of a successful POST /chat/conversations */
+interface ConversationResponse {
+  data: { id: string; cid: string; type: string };
+}
+
 /**
  * Open the conversation with another user. The backend creates the
  * channel (student, instructor and Nafham Support) once it has checked
@@ -138,11 +143,7 @@ export const findOrCreateConversation = async (
     user_id: otherUserId,
     subject: data.subject,
   });
-  const body = response.data?.data ?? response.data;
-  const id: unknown = body?.id;
-  if (typeof id !== 'string' || !id) {
-    throw new Error('POST /chat/conversations returned no channel id');
-  }
+  const { id } = (response.data as ConversationResponse).data;
   const channel = chat.channel(CHANNEL_TYPE, id);
   await channel.watch();
   return channel;
