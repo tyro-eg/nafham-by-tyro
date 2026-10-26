@@ -1,4 +1,5 @@
 import { useCallback, useState } from 'react';
+import type { Channel } from 'stream-chat';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
@@ -19,67 +20,59 @@ import { useMyInstructors } from './useInstructors';
 export const useStreamChat = () => useStreamChatContext();
 
 /**
- * Opens (or creates) the conversation with another user and navigates
- * to it. The Nafham admin is always added as the third member.
+ * Runs an opener (a function that returns a Stream channel) and navigates
+ * to the channel, with the shared connection check, busy flag and toasts.
  */
-export function useStartConversation() {
+function useConversationOpener<Args extends unknown[]>(
+  opener: (...args: Args) => Promise<Channel>,
+) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { client, isConnected } = useStreamChatContext();
   const [isStarting, setIsStarting] = useState(false);
 
-  const startConversation = useCallback(
-    async (otherUserId: number | string, subject?: string) => {
+  const open = useCallback(
+    async (...args: Args) => {
       if (!client || !isConnected) {
         snackActions.error(t('MESSAGES.ERRORS.NOT_CONNECTED'));
         return;
       }
       setIsStarting(true);
       try {
-        const channel = await findOrCreateConversation(otherUserId, {
-          subject,
-        });
+        const channel = await opener(...args);
         navigate(`/messages/${channel.id}`);
       } catch (err) {
-        console.error('Could not start conversation', err);
+        console.error('Could not open the conversation', err);
         snackActions.error(t('MESSAGES.ERRORS.START_FAILED'));
       } finally {
         setIsStarting(false);
       }
     },
-    [client, isConnected, navigate, t],
+    [client, isConnected, navigate, opener, t],
   );
 
-  return { startConversation, isStarting, isAvailable: !!client };
+  return { open, isStarting, isAvailable: !!client };
+}
+
+/**
+ * Opens (or creates) the conversation with another user and navigates
+ * to it. The backend adds Nafham Support as the third member.
+ */
+export function useStartConversation() {
+  const opener = useCallback(
+    (otherUserId: number | string, subject?: string) =>
+      findOrCreateConversation(otherUserId, { subject }),
+    [],
+  );
+  const { open, isStarting, isAvailable } = useConversationOpener(opener);
+  return { startConversation: open, isStarting, isAvailable };
 }
 
 /**
  * Opens the conversation with Nafham Support and navigates to it.
  */
 export function useOpenSupportConversation() {
-  const { t } = useTranslation();
-  const navigate = useNavigate();
-  const { client, isConnected } = useStreamChatContext();
-  const [isStarting, setIsStarting] = useState(false);
-
-  const open = useCallback(async () => {
-    if (!client || !isConnected) {
-      snackActions.error(t('MESSAGES.ERRORS.NOT_CONNECTED'));
-      return;
-    }
-    setIsStarting(true);
-    try {
-      const channel = await openSupportConversation();
-      navigate(`/messages/${channel.id}`);
-    } catch (err) {
-      console.error('Could not open the support conversation', err);
-      snackActions.error(t('MESSAGES.ERRORS.START_FAILED'));
-    } finally {
-      setIsStarting(false);
-    }
-  }, [client, isConnected, navigate, t]);
-
-  return { open, isStarting, isAvailable: !!client };
+  return useConversationOpener(openSupportConversation);
 }
 
 /**
