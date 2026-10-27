@@ -36,17 +36,31 @@
 
   .testimonial-card {
     @include card($space-5);
+    position: relative;
     display: flex !important;
     flex-direction: column;
     width: 100%;
     margin: 0;
+    border-radius: $radius-lg;
+    box-shadow: none;
     text-align: start;
+    transition:
+      box-shadow $transition,
+      border-color $transition;
 
+    &:hover {
+      box-shadow: $shadow-md;
+      border-color: $border-strong;
+    }
+
+    // A large, faint quotation mark in the corner instead of an icon in the flow
     &__quote.MuiSvgIcon-root {
-      font-size: 3.6rem;
-      color: $brand-400;
-      margin-inline-start: -0.4rem;
-      margin-bottom: $space-2;
+      position: absolute;
+      top: $space-3;
+      inset-inline-end: $space-4;
+      font-size: 6.4rem;
+      color: $brand-100;
+      margin: 0;
 
       .rtl & {
         transform: scaleX(-1);
@@ -56,6 +70,7 @@
     &__text {
       flex: 1 1 auto;
       margin: 0 0 $space-5;
+      padding-inline-end: 3.6rem; // clear of the quotation mark
 
       & > .profile-p {
         display: block;
@@ -87,16 +102,27 @@
       width: 4.4rem;
       height: 4.4rem;
       border-radius: 50%;
-      background-color: $brand-50;
-      color: $brand-700;
+      background: linear-gradient(135deg, $brand-100, $brand-300);
+      color: $navy-900;
       font-size: $font-sm;
       font-weight: 700;
+    }
+
+    &__who {
+      display: flex;
+      flex-direction: column;
+      gap: 0.1rem;
     }
 
     &__name {
       font-size: $font-base;
       font-weight: 600;
       color: $text-strong;
+    }
+
+    &__role {
+      font-size: $font-xs;
+      color: $text-muted;
     }
   }
 }

@@ -1,87 +1,114 @@
 import { FC } from 'react';
 import { useTranslation } from 'react-i18next';
 import Button from '@mui/material/Button';
-import { ArrowForward, Star } from '@mui/icons-material';
+import { ArrowForward, PlayCircleOutline } from '@mui/icons-material';
 
 import { useRtlClass } from '../../../assets/utils/utils';
 
-import main from '../../../assets/images/newLanding/macbook.webp';
-import cnbc from '../../../assets/images/newLanding/cnbc.webp';
-import bbc from '../../../assets/images/newLanding/bbc.webp';
-import wamda from '../../../assets/images/newLanding/wamda.webp';
+import videocall from '../../../assets/images/newLanding/hero-videocall.webp';
+import student1 from '../../../assets/images/newLanding/hero-student1.webp';
+import student2 from '../../../assets/images/newLanding/hero-student2.webp';
+import student4 from '../../../assets/images/newLanding/hero-student4.webp';
 
 import './home-intro.styles.scss';
+
+const PILL_FACES = [student1, student2, student4];
 
 interface HomeIntroProps {
   openFreeTrail: () => void;
 }
 
-const pressLogos = [
-  { image: cnbc, alt: 'CNBC' },
-  { image: bbc, alt: 'BBC' },
-  { image: wamda, alt: 'Wamda' },
-];
-
+/**
+ * The hero, centred: pill, headline, two calls to action, and below them
+ * the product itself, a one-to-one session window (the tutor on the call with
+ * the board behind her, the student's camera picture-in-picture, the chat
+ * beside), tilted back and fading into the page.
+ */
 const HomeIntro: FC<HomeIntroProps> = ({ openFreeTrail }) => {
   const { t } = useTranslation();
   const rtlClass = useRtlClass();
 
   return (
-    <section className={`home-hero ${rtlClass}`}>
-      <div className="ds-container home-hero__inner">
-        <div className="home-hero__content">
-          <p className="home-hero__eyebrow">{t('LANDING.BLOCK1.SUBTITLE')}</p>
-          <h1 className="home-hero__title">{t('LANDING.BLOCK1.TITLE')}</h1>
-          <p className="home-hero__description">
-            {t('LANDING.BLOCK1.DESCRIPTION')}
-          </p>
+    <section className={`hero ${rtlClass}`}>
+      <div className="ds-container hero__inner">
+        <p className="hero__pill">
+          <span className="hero__faces" aria-hidden="true">
+            {PILL_FACES.map((face, index) => (
+              <img key={index} src={face} alt="" />
+            ))}
+          </span>
+          {t('LANDING.HERO.PILL')}
+        </p>
 
-          <div className="home-hero__actions">
-            <Button
-              className="custom-button home-hero__cta"
-              size="large"
-              endIcon={<ArrowForward className="home-hero__cta-icon" />}
-              onClick={openFreeTrail}
-            >
-              {t('LANDING.BLOCK1.ACTION')}
-            </Button>
-            <Button
-              className="home-hero__secondary"
-              size="large"
-              href="#how-it-works"
-            >
-              {t('LANDING.BLOCK8.TITLE')}
-            </Button>
-          </div>
+        <h1 className="hero__title">
+          {t('LANDING.HERO.TITLE_1')}{' '}
+          <span className="hero__title-accent">
+            {t('LANDING.HERO.TITLE_2')}
+          </span>
+        </h1>
+        <p className="hero__lead">{t('LANDING.BLOCK1.DESCRIPTION')}</p>
 
-          <div className="home-hero__trust">
-            <div className="home-hero__rating">
-              <span className="home-hero__stars" aria-hidden="true">
-                {[0, 1, 2, 3, 4].map((i) => (
-                  <Star key={i} />
-                ))}
-              </span>
-              <span className="home-hero__rating-value">
-                {t('LANDING.BLOCK4.ITEM3.TITLE')}
-              </span>
-            </div>
-            <span className="home-hero__trust-divider" aria-hidden="true" />
-            <div className="home-hero__press">
-              <span className="home-hero__press-label">
-                {t('LANDING.BLOCK1.FEATURED.PART1')}{' '}
-                {t('LANDING.BLOCK1.FEATURED.PART2')}
-              </span>
-              <span className="home-hero__press-logos">
-                {pressLogos.map(({ image, alt }) => (
-                  <img key={alt} src={image} alt={alt} loading="lazy" />
-                ))}
-              </span>
-            </div>
-          </div>
+        <div className="hero__actions">
+          <Button
+            className="home-cta"
+            size="large"
+            endIcon={<ArrowForward />}
+            onClick={openFreeTrail}
+          >
+            {t('LANDING.BLOCK1.ACTION')}
+          </Button>
+          <Button
+            className="hero__secondary"
+            size="large"
+            href="#how-it-works"
+            startIcon={<PlayCircleOutline />}
+          >
+            {t('LANDING.BLOCK8.TITLE')}
+          </Button>
         </div>
 
-        <div className="home-hero__media">
-          <img className="macbook-image" src={main} alt="macbook" />
+        <div className="hero__stage" aria-hidden="true">
+          <div className="window">
+            <div className="window__bar">
+              <span className="window__dots">
+                <span />
+                <span />
+                <span />
+              </span>
+              <span className="window__title">
+                {t('LANDING.HERO.MOCK_TITLE')}
+              </span>
+              <span className="window__timer">24:10</span>
+            </div>
+            <div className="window__body">
+              <div className="window__tile window__tile--main">
+                <img className="window__video" src={videocall} alt="" />
+                <span className="window__name">
+                  {t('LANDING.HERO.MOCK_TUTOR')}
+                </span>
+                <div className="window__pip">
+                  <img src={student2} alt="" />
+                  <span>{t('LANDING.HERO.MOCK_STUDENT')}</span>
+                </div>
+              </div>
+              <aside className="window__side">
+                <strong>{t('LANDING.HERO.CHAT_TITLE')}</strong>
+                <span className="window__msg">{t('LANDING.HERO.CHAT_1')}</span>
+                <span className="window__msg window__msg--me">
+                  {t('LANDING.HERO.CHAT_2')}
+                </span>
+                <span className="window__msg">{t('LANDING.HERO.CHAT_3')}</span>
+                <strong className="window__package">
+                  {t('LANDING.HERO.CHIP_PROGRESS')}
+                </strong>
+                <span className="window__bar-track">
+                  <span className="window__bar-used" />
+                  <span className="window__bar-booked" />
+                </span>
+              </aside>
+            </div>
+          </div>
+          <div className="hero__fade" />
         </div>
       </div>
     </section>
