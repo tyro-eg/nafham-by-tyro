@@ -14,6 +14,7 @@ import {
   TutorReview,
   TutorPackage,
 } from '../assets/types';
+import type { Assignment, Rubric } from '../hooks/useAssignments';
 import type { DemoRole } from './demo-mode';
 import instructor1 from '../assets/images/newLanding/instructor1.webp';
 import instructor2 from '../assets/images/newLanding/instructor2.webp';
@@ -738,6 +739,180 @@ const availabilityFor = (
 };
 
 // ---------------------------------------------------------------------------
+// Homework (one assignment per status, so every page state renders)
+// ---------------------------------------------------------------------------
+
+const rubrics: Rubric[] = [
+  {
+    id: 801,
+    title: 'Problem set',
+    shared: true,
+    created_at: TS,
+    criteria: [
+      {
+        name: 'Accuracy',
+        description: 'Correct final answers',
+        max_points: 10,
+      },
+      { name: 'Working', description: 'Steps shown clearly', max_points: 5 },
+      { name: 'Presentation', description: null, max_points: 5 },
+    ],
+  },
+  {
+    id: 802,
+    title: 'Lab report',
+    shared: false,
+    created_at: TS,
+    criteria: [
+      { name: 'Method', description: null, max_points: 10 },
+      { name: 'Results and analysis', description: null, max_points: 10 },
+    ],
+  },
+];
+
+const assignmentPerson = (id: number) => {
+  const s = studentById.get(id)!;
+  return {
+    id: s.id,
+    first_name: s.first_name,
+    last_name: s.last_name,
+    email: studentEmail(s),
+    phone_number: studentPhone(s),
+    country_code: 'EG',
+    nationality: 'Egyptian',
+    active: true,
+    type: 'Student' as const,
+  };
+};
+
+const assignmentTutor = (id: number): Assignment['tutor'] => {
+  const t = tutor(id);
+  return {
+    id: t.id,
+    first_name: t.first_name,
+    last_name: t.last_name,
+    email: t.email,
+    phone_number: t.phone_number,
+    active: true,
+    type: 'Tutor',
+  };
+};
+
+const makeAssignment = (
+  seed: Pick<Assignment, 'id' | 'slug' | 'title' | 'status'> & {
+    tutorId: number;
+    studentId: number;
+    gradeSubjectId: number;
+    dueAt: Date;
+    instructions?: string;
+    rubric?: Rubric;
+    submission?: Assignment['submission'];
+    review?: Assignment['review'];
+    openedAt?: Date;
+  },
+): Assignment => ({
+  id: seed.id,
+  slug: seed.slug,
+  title: seed.title,
+  status: seed.status,
+  instructions: seed.instructions ?? null,
+  due_at: seed.dueAt.toISOString(),
+  opened_at: seed.openedAt?.toISOString() ?? null,
+  created_at: TS,
+  updated_at: TS,
+  tutor: assignmentTutor(seed.tutorId),
+  student: assignmentPerson(seed.studentId),
+  grade_subject: {
+    id: seed.gradeSubjectId,
+    full_course_name: gs(seed.gradeSubjectId).full_course_name,
+  },
+  rubric: seed.rubric
+    ? {
+        id: seed.rubric.id,
+        title: seed.rubric.title,
+        criteria: seed.rubric.criteria,
+      }
+    : null,
+  attachments: [],
+  submission: seed.submission ?? null,
+  review: seed.review ?? null,
+});
+
+const assignments: Assignment[] = [
+  makeAssignment({
+    id: 1,
+    slug: 'HW-10000001',
+    title: 'Quadratic equations: exercises 4.1 to 4.3',
+    status: 'assigned',
+    tutorId: TUTOR_ID,
+    studentId: STUDENT_ID,
+    gradeSubjectId: 11,
+    dueAt: at(4, 18),
+    instructions:
+      'Solve every exercise in sections 4.1 to 4.3.\nShow your working for each one; a bare answer gets no marks.',
+    rubric: rubrics[0],
+  }),
+  makeAssignment({
+    id: 2,
+    slug: 'HW-10000002',
+    title: 'Forces and motion worksheet',
+    status: 'submitted',
+    tutorId: TUTOR_ID,
+    studentId: 900202,
+    gradeSubjectId: 15,
+    dueAt: at(-1, 18),
+    instructions: 'Complete the worksheet from our last session.',
+    rubric: rubrics[1],
+    openedAt: at(-3, 10),
+    submission: {
+      id: 21,
+      body: 'Attached my answers. I was not sure about question 6, so I explained my reasoning there.',
+      submitted_at: at(-1, 15, 20).toISOString(),
+      files: [],
+    },
+  }),
+  makeAssignment({
+    id: 3,
+    slug: 'HW-10000003',
+    title: 'SAT practice: reading passages 1 and 2',
+    status: 'reviewed',
+    tutorId: TUTOR_ID,
+    studentId: STUDENT_ID,
+    gradeSubjectId: 13,
+    dueAt: at(-8, 18),
+    instructions:
+      'Answer both passages under timed conditions (13 minutes each).',
+    rubric: rubrics[0],
+    openedAt: at(-10, 9),
+    submission: {
+      id: 31,
+      body: 'Passage 1: 9/10. Passage 2: 7/10. I ran out of time on the last two questions.',
+      submitted_at: at(-9, 20).toISOString(),
+      files: [],
+    },
+    review: {
+      id: 41,
+      criterion_marks: [
+        { name: 'Accuracy', max_points: 10, points: 8 },
+        { name: 'Working', max_points: 5, points: 4 },
+        { name: 'Presentation', max_points: 5, points: 5 },
+      ],
+      total_points: 17,
+      max_points: 20,
+      feedback:
+        'Good progress. Watch the timing on inference questions: skim the question stems first, then read the passage.',
+      status: 'released',
+      released_at: at(-7, 12).toISOString(),
+    },
+  }),
+];
+
+const assignmentsFor = (role: DemoRole): Assignment[] =>
+  role === 'tutor'
+    ? assignments
+    : assignments.filter((a) => a.student.id === STUDENT_ID);
+
+// ---------------------------------------------------------------------------
 // Request resolver
 // ---------------------------------------------------------------------------
 
@@ -890,6 +1065,29 @@ export function resolveDemoRequest(
       return paginate(packagesByRole[role] ?? [], params);
     }
 
+    if (cleanPath === '/assignments') {
+      const status = params.get('status');
+      const studentId = numberParam(params, 'student_id');
+      const gradeSubjectId = numberParam(params, 'grade_subject_id');
+      const list = assignmentsFor(role).filter(
+        (a) =>
+          (!status || a.status === status) &&
+          (!studentId || a.student.id === studentId) &&
+          (!gradeSubjectId || a.grade_subject.id === gradeSubjectId),
+      );
+      return paginate(list, params);
+    }
+
+    if ((match = cleanPath.match(/^\/assignments\/([\w-]+)$/))) {
+      const slug = match[1];
+      const found = assignmentsFor(role).find((a) => a.slug === slug);
+      return found
+        ? ok({ data: found })
+        : { status: 404, data: { errors: ['Assignment not found'] } };
+    }
+
+    if (cleanPath === '/rubrics') return ok({ data: rubrics });
+
     if ((match = cleanPath.match(/^\/sessions\/(\d+)\/(cancel|end)$/))) {
       return ok({ data: { id: Number(match[1]) } });
     }
@@ -901,6 +1099,15 @@ export function resolveDemoRequest(
       return { status: 201, data: { data: { id: 9999 } } };
     }
     if (cleanPath === '/availabilities') return { status: 201, data: {} };
+    if (cleanPath === '/assignments') {
+      return { status: 201, data: { data: assignments[0] } };
+    }
+    if (cleanPath === '/rubrics') {
+      return { status: 201, data: { data: rubrics[1] } };
+    }
+    if (/^\/assignments\/[\w-]+\/submission$/.test(cleanPath)) {
+      return ok({ data: assignments[1] });
+    }
     if (cleanPath === '/users/sign_in' || cleanPath === '/users/sign_up') {
       return ok({ data: user });
     }
@@ -917,11 +1124,15 @@ export function resolveDemoRequest(
       return ok({ data: { ...user, ...changes } });
     }
     if (/^\/\w+\/passwords$/.test(cleanPath)) return ok({});
+    if (/^\/assignments\/[\w-]+\/review$/.test(cleanPath)) {
+      return ok({ data: assignments[2] });
+    }
   }
 
   if (method === 'DELETE') {
     if (cleanPath === '/users/sign_out') return ok({});
     if (cleanPath === '/availabilities') return ok({});
+    if (/^\/assignments\/[\w-]+$/.test(cleanPath)) return ok({});
   }
 
   return {

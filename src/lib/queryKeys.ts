@@ -39,6 +39,12 @@ export interface AvailabilityParams {
   [key: string]: any; // Allow additional dynamic params
 }
 
+export interface AssignmentFilters {
+  status?: string;
+  student_id?: number;
+  grade_subject_id?: number;
+}
+
 export const queryKeys = {
   // User/Instructor keys
   users: {
@@ -107,5 +113,22 @@ export const queryKeys = {
     all: ['session_requests'] as const,
     list: (status?: string) =>
       [...queryKeys.sessionRequests.all, 'list', status] as const,
+  },
+
+  // Homework assignment keys (tutor assigns, student submits, tutor reviews)
+  assignments: {
+    all: ['assignments'] as const,
+    lists: () => [...queryKeys.assignments.all, 'list'] as const,
+    list: (filters?: AssignmentFilters) =>
+      [...queryKeys.assignments.lists(), filters] as const,
+    details: () => [...queryKeys.assignments.all, 'detail'] as const,
+    detail: (slug: string) =>
+      [...queryKeys.assignments.details(), slug] as const,
+  },
+
+  // Rubric keys (the tutor's own rubrics plus shared ones)
+  rubrics: {
+    all: ['rubrics'] as const,
+    list: () => [...queryKeys.rubrics.all, 'list'] as const,
   },
 } as const;
