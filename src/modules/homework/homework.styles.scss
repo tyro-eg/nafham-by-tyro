@@ -1,0 +1,318 @@
+@import '../../assets/styles/variables.scss';
+@import '../../assets/styles/mixins.scss';
+@import './hw-tokens';
+
+.homework {
+  background:
+    radial-gradient(
+      60rem 30rem at 100% 0%,
+      rgba($brand-400, 0.08),
+      transparent 70%
+    ),
+    $surface-alt;
+  padding: $space-6 0 $space-8;
+  min-height: 60vh;
+
+  .container.hw-container {
+    margin-bottom: 0;
+  }
+}
+
+.hw-chip {
+  @include hw-chip;
+}
+
+// ---------- Header ----------
+.hw-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: $space-4;
+  margin-bottom: $space-5;
+
+  &__title {
+    display: flex;
+    align-items: center;
+    gap: $space-3;
+    font-size: $font-h2;
+    color: $text-strong;
+
+    @include respond(phone) {
+      font-size: 2.8rem;
+    }
+  }
+
+  &__count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 3.6rem;
+    height: 3.6rem;
+    padding: 0 1rem;
+    border-radius: $radius-pill;
+    background-color: $brand-50;
+    color: $brand-700;
+    font-size: $font-base;
+    font-weight: 700;
+    letter-spacing: 0;
+  }
+
+  &__subtitle {
+    margin-top: $space-1;
+    font-size: $font-base;
+    color: $text-body;
+  }
+
+  &__assign.MuiButton-root {
+    flex: none;
+    border-radius: $radius-pill;
+    padding-inline: $space-5;
+
+    @include respond(phone) {
+      width: 100%;
+    }
+  }
+}
+
+// ---------- Toolbar ----------
+.hw-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: $space-3;
+  margin-bottom: $space-5;
+  padding: $space-3;
+  border-radius: $hw-radius;
+  background-color: $surface;
+  box-shadow: 0 2px 6px rgba(15, 27, 45, 0.04);
+
+  &__select {
+    flex: 0 1 26rem;
+
+    @include respond(phone) {
+      flex: 1 1 100%;
+    }
+  }
+
+  .MuiOutlinedInput-root {
+    border-radius: $radius-pill;
+  }
+}
+
+.hw-segment {
+  display: inline-flex;
+  padding: 0.4rem;
+  border-radius: $radius-pill;
+  background-color: $gray-100;
+
+  @include respond(phone) {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
+  &__btn {
+    flex: 1;
+    padding: 0.7rem 1.6rem;
+    border: 0;
+    border-radius: $radius-pill;
+    background: transparent;
+    font: inherit;
+    font-size: $font-sm;
+    font-weight: 600;
+    color: $text-body;
+    white-space: nowrap;
+    cursor: pointer;
+    transition:
+      background-color $transition,
+      color $transition;
+
+    &:hover {
+      color: $text-strong;
+    }
+
+    &:focus-visible {
+      @include focus-ring;
+    }
+
+    &--on {
+      background-color: #fff;
+      color: $brand-700;
+      box-shadow: 0 2px 6px rgba(15, 27, 45, 0.08);
+    }
+  }
+}
+
+// ---------- Grid / cards ----------
+.hw-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(32rem, 1fr));
+  gap: $space-5;
+
+  @include respond(phone) {
+    grid-template-columns: minmax(0, 1fr);
+    gap: $space-4;
+  }
+}
+
+.hw-card {
+  border-radius: $hw-radius;
+  background-color: $surface;
+  box-shadow: $hw-shadow;
+  transition:
+    box-shadow $transition,
+    transform $transition;
+
+  &:hover {
+    box-shadow:
+      0 4px 10px rgba(15, 27, 45, 0.06),
+      0 18px 40px rgba(15, 27, 45, 0.08);
+    transform: translateY(-2px);
+  }
+
+  &__link {
+    display: flex;
+    flex-direction: column;
+    gap: $space-4;
+    height: 100%;
+    padding: $space-5;
+    border-radius: inherit;
+    color: inherit;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: none;
+    }
+
+    &:focus-visible {
+      @include focus-ring;
+    }
+
+    @include respond(phone) {
+      padding: $space-4;
+    }
+  }
+
+  &__top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: $space-3;
+  }
+
+  &__title {
+    flex: 1;
+    min-width: 0;
+    margin: 0;
+    font-size: $font-lg;
+    font-weight: 700;
+    line-height: 1.3;
+    color: $text-strong;
+    @include ellipsis(2);
+  }
+
+  &__facts {
+    display: flex;
+    flex-direction: column;
+    gap: $space-2;
+    margin: 0;
+
+    > div {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: $space-3;
+      font-size: $font-sm;
+    }
+
+    dt {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      color: $text-muted;
+      white-space: nowrap;
+
+      svg {
+        font-size: 1.6rem;
+        color: $brand-400;
+      }
+    }
+
+    dd {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      margin: 0;
+      min-width: 0;
+      font-weight: 600;
+      color: $text-strong;
+      text-align: end;
+    }
+  }
+
+  &__relative {
+    font-weight: 600;
+  }
+
+  &__absolute {
+    font-size: $font-xs;
+    font-weight: 500;
+    color: $text-muted;
+  }
+
+  &__cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    margin-top: auto;
+    padding: 0.8rem 1.6rem;
+    border-radius: $radius-pill;
+    background-color: $brand-600;
+    color: $text-on-dark;
+    font-size: $font-sm;
+    font-weight: 700;
+
+    svg {
+      font-size: 1.8rem;
+    }
+
+    .rtl & svg {
+      transform: scaleX(-1);
+    }
+  }
+}
+
+// ---------- Empty ----------
+.hw-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $space-2;
+  padding: $space-7 $space-4;
+  border-radius: $hw-radius;
+  background-color: $surface;
+  text-align: center;
+
+  img {
+    width: 16rem;
+    margin-bottom: $space-3;
+  }
+
+  h2 {
+    font-size: 2rem;
+  }
+
+  p {
+    max-width: 44rem;
+    color: $text-body;
+  }
+
+  .MuiButton-root {
+    margin-top: $space-3;
+    border-radius: $radius-pill;
+  }
+}

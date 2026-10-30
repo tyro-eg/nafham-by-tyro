@@ -337,9 +337,10 @@ export const post = (
   data: unknown,
   config: AxiosRequestConfig = {},
 ): Promise<AxiosResponse> => {
+  const isFormData = data instanceof FormData;
   return axios.post(`${baseURL}${url}`, data, {
     ...config,
-    headers: createDefaultHeaders(config),
+    headers: createDefaultHeaders(config, isFormData),
   });
 };
 
@@ -366,9 +367,10 @@ export const putRequest = (
   data: unknown,
   config: AxiosRequestConfig = {},
 ): Promise<AxiosResponse> => {
+  const isFormData = data instanceof FormData;
   return axios.put(`${baseURL}${url}`, data, {
     ...config,
-    headers: createDefaultHeaders(config),
+    headers: createDefaultHeaders(config, isFormData),
   });
 };
 
