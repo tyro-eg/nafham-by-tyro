@@ -1,8 +1,9 @@
 import { FC, ReactNode, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
+  CancelOutlined,
+  CheckCircleOutlined,
   EventAvailableOutlined,
-  HistoryOutlined,
   HourglassEmptyOutlined,
 } from '@mui/icons-material';
 
@@ -13,6 +14,8 @@ interface SessionsOverviewProps {
     upcoming_sessions_count: number;
     total_unscheduled_time_in_hours: number;
     previous_sessions_count: number;
+    /** Sessions that drew on a package: taught, or missed and charged */
+    completed_sessions_count: number;
     canceled_sessions_count: number;
   };
 }
@@ -44,15 +47,17 @@ const SessionsOverview: FC<SessionsOverviewProps> = memo(({ overViewData }) => {
         tone="accent"
       />
       <SessionCard
-        title={t('MYSESSIONS.OVERVIEW.PREVIOUS')}
-        value={overViewData.previous_sessions_count}
-        icon={<HistoryOutlined />}
-        tone="neutral"
+        title={t('MYSESSIONS.OVERVIEW.COMPLETED')}
+        value={overViewData.completed_sessions_count}
+        icon={<CheckCircleOutlined />}
+        tone="brand"
       />
-      {/* <SessionCard
+      <SessionCard
         title={t('MYSESSIONS.OVERVIEW.CANCELLED')}
         value={overViewData.canceled_sessions_count}
-      /> */}
+        icon={<CancelOutlined />}
+        tone="neutral"
+      />
     </section>
   );
 });
