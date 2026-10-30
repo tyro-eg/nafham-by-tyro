@@ -1,9 +1,11 @@
+import { useEffect } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { post, patch, remove, get } from '../assets/utils/api';
+import { selectCurrentUser } from '../redux/user/user.selectors';
 import { snackActions } from '../assets/utils/toaster';
 import { showSpinner, hideSpinner } from '../assets/utils/utils';
 import { useNavigate } from 'react-router-dom';
-import { useAppDispatch } from '../redux/store';
+import { useAppDispatch, useAppSelector } from '../redux/store';
 import { setCurrentUser, clearCurrentUser } from '../redux/user/user.slice';
 import { CurrentUser, ApiError, AuthHeaders } from '../assets/types';
 
@@ -270,6 +272,9 @@ export function useImpersonate() {
     onSuccess: (userData) => {
       dispatch(setCurrentUser(userData));
       snackActions.success('Impersonation successful');
+      // A full load, so nothing of the admin's previous state survives and
+      // the route that started the exchange is gone for good
+      window.location.replace('/dashboard');
     },
     onError: (error: ApiError) => {
       const errorMessage =
@@ -279,4 +284,25 @@ export function useImpersonate() {
       snackActions.error(errorMessage);
     },
   });
+}
+
+/**
+ * The signed-in user is kept in local storage, so its counters (upcoming,
+ * completed and cancelled sessions, hours left) would otherwise stay as they
+ * were at sign-in. Fetches /me once per page load while a session exists.
+ */
+export function useRefreshCurrentUser() {
+  const dispatch = useAppDispatch();
+  const signedIn = !!useAppSelector(selectCurrentUser);
+
+  useEffect(() => {
+    if (!signedIn || !localStorage.getItem('tyro.token')) return;
+    get('/me')
+      .then(({ data }) => {
+        if (data?.id) dispatch(setCurrentUser(data));
+      })
+      .catch(() => {
+        // an expired session is handled by the API client; nothing to do here
+      });
+  }, [signedIn, dispatch]);
 }

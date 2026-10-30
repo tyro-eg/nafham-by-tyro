@@ -27,9 +27,10 @@ const Sessions: FC = () => {
   const overViewData = useMemo(() => {
     return {
       previous_sessions_count: currentUser?.previous_sessions_count ?? 0,
+      completed_sessions_count: currentUser?.completed_sessions_count ?? 0,
       upcoming_sessions_count: currentUser?.upcoming_sessions_count ?? 0,
       total_unscheduled_time_in_hours: currentUser?.unscheduled_hours ?? 0,
-      canceled_sessions_count: 0, // Not available in user data
+      canceled_sessions_count: currentUser?.cancelled_sessions_count ?? 0,
     };
   }, [currentUser]);
 
