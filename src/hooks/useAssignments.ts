@@ -1,4 +1,9 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  useMutation,
+  useQuery,
+  useQueryClient,
+  type QueryClient,
+} from '@tanstack/react-query';
 import { get, patch, post, remove } from '../assets/utils/api';
 import { queryKeys, type AssignmentFilters } from '../lib/queryKeys';
 
@@ -135,6 +140,8 @@ export interface RubricPayload {
 
 interface AssignmentsResponse {
   data: Assignment[];
+  /** How many there are in all; the page holds the first PAGE_SIZE of them */
+  total: number;
 }
 
 interface RubricsResponse {
@@ -143,6 +150,11 @@ interface RubricsResponse {
 
 // Enough to list every assignment without paging through the API
 const PAGE_SIZE = 100;
+
+/** Every list and detail of homework is stale once any of it changes */
+const refreshAssignments = (queryClient: QueryClient) => () => {
+  queryClient.invalidateQueries({ queryKey: queryKeys.assignments.all });
+};
 
 /** Rails nested keys: assignment[title], assignment[attachments][] ... */
 const assignmentFormData = (payload: AssignmentPayload): FormData => {
@@ -173,18 +185,20 @@ const submissionFormData = (payload: SubmissionPayload): FormData => {
 /**
  * The current user's assignments: a tutor gets the ones they set, a student
  * gets their own. Open ones come first by due date, then reviewed ones
- * newest first.
+ * newest first. The first PAGE_SIZE are returned with the total count.
  *
  * @param filters - Optional status / student / course filters
  */
 export function useAssignments(filters: AssignmentFilters = {}) {
   return useQuery({
     queryKey: queryKeys.assignments.list(filters),
-    queryFn: async () => {
+    queryFn: async (): Promise<AssignmentsResponse> => {
       const response = await get('/assignments', {
         params: { ...filters, per_page: PAGE_SIZE, page: 1 },
       });
-      return response.data as AssignmentsResponse;
+      const { data } = response.data as { data: Assignment[] };
+      const total = Number(response.headers['total-count']) || data.length;
+      return { data, total };
     },
     staleTime: 60 * 1000,
   });
@@ -218,9 +232,7 @@ export function useCreateAssignment() {
       const response = await post('/assignments', assignmentFormData(payload));
       return response.data.data as Assignment;
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.assignments.all });
-    },
+    onSuccess: refreshAssignments(queryClient),
   });
 }
 
@@ -241,9 +253,7 @@ export function useUpdateAssignment() {
       );
       return response.data.data as Assignment;
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.assignments.all });
-    },
+    onSuccess: refreshAssignments(queryClient),
   });
 }
 
@@ -258,9 +268,7 @@ export function useDeleteAssignment() {
       await remove(`/assignments/${slug}`);
       return slug;
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.assignments.all });
-    },
+    onSuccess: refreshAssignments(queryClient),
   });
 }
 
@@ -282,9 +290,7 @@ export function useSubmitAssignment() {
       );
       return response.data.data as Assignment;
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.assignments.all });
-    },
+    onSuccess: refreshAssignments(queryClient),
   });
 }
 
@@ -303,9 +309,7 @@ export function useReviewAssignment() {
       const response = await patch(`/assignments/${slug}/review`, { review });
       return response.data.data as Assignment;
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.assignments.all });
-    },
+    onSuccess: refreshAssignments(queryClient),
   });
 }
 

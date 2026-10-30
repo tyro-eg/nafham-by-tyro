@@ -22,6 +22,7 @@ import { snackActions } from '../../../assets/utils/toaster';
 import AttachmentList from './attachment-list.component';
 import ReviewView from './review-view.component';
 import StudentSubmission from './student-submission.component';
+import SubmissionView from './submission-view.component';
 import TutorReview from './tutor-review.component';
 import {
   formatDateTime,
@@ -258,22 +259,7 @@ const HomeworkDetail: FC = () => {
                 {t('HOMEWORK.REVIEW.FEEDBACK_TITLE')}
               </h2>
               {assignment.submission && (
-                <div className="hw-submission">
-                  <p className="hw-submission__meta">
-                    {t('HOMEWORK.SUBMISSION.SUBMITTED_AT', {
-                      date: formatDateTime(
-                        assignment.submission.submitted_at,
-                        i18n.language,
-                      ),
-                    })}
-                  </p>
-                  {assignment.submission.body && (
-                    <p className="hw-prose" dir="auto">
-                      {assignment.submission.body}
-                    </p>
-                  )}
-                  <AttachmentList files={assignment.submission.files} />
-                </div>
+                <SubmissionView submission={assignment.submission} />
               )}
               <ReviewView review={assignment.review} />
             </section>
@@ -292,22 +278,7 @@ const HomeworkDetail: FC = () => {
                 {t('HOMEWORK.SUBMISSION.TITLE_TUTOR')}
               </h2>
               {assignment.submission ? (
-                <div className="hw-submission">
-                  <p className="hw-submission__meta">
-                    {t('HOMEWORK.SUBMISSION.SUBMITTED_AT', {
-                      date: formatDateTime(
-                        assignment.submission.submitted_at,
-                        i18n.language,
-                      ),
-                    })}
-                  </p>
-                  {assignment.submission.body && (
-                    <p className="hw-prose" dir="auto">
-                      {assignment.submission.body}
-                    </p>
-                  )}
-                  <AttachmentList files={assignment.submission.files} />
-                </div>
+                <SubmissionView submission={assignment.submission} />
               ) : (
                 <div className="hw-submission hw-submission--empty">
                   <strong>{t('HOMEWORK.SUBMISSION.NONE')}</strong>

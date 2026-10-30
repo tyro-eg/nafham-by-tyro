@@ -18,7 +18,7 @@ import {
   type Assignment,
   type AssignmentStatus,
 } from '../../hooks/useAssignments';
-import { usePackages } from '../../hooks/usePackages';
+import { useTutorStudents } from '../../hooks/useTutorStudents';
 import { useRtlClass } from '../../assets/utils/utils';
 import { snackActions } from '../../assets/utils/toaster';
 import AssignHomeworkModal from '../../modals/assign-homework-modal/assign-homework-modal.component';
@@ -32,8 +32,6 @@ import emptyArt from '../../assets/images/newLanding/rafiki.svg?url';
 
 import './homework.styles.scss';
 
-// Enough packages to list every student without paging through the API
-const PACKAGES_SIZE = 100;
 const ALL = 'all';
 
 type StatusFilter = AssignmentStatus | typeof ALL;
@@ -65,7 +63,7 @@ const Homework: FC = () => {
     ...(status !== ALL ? { status } : {}),
     ...(studentId !== ALL ? { student_id: Number(studentId) } : {}),
   });
-  const packagesQuery = usePackages(1, PACKAGES_SIZE);
+  const { students } = useTutorStudents(isTutor);
 
   useEffect(() => {
     if (assignmentsQuery.isError) {
@@ -83,18 +81,6 @@ const Homework: FC = () => {
     () => assignmentsQuery.data?.data ?? [],
     [assignmentsQuery.data],
   );
-
-  /** Unique students across the tutor's packages, for the filter */
-  const students = useMemo(() => {
-    if (!isTutor) return [];
-    const map = new Map<number, string>();
-    (packagesQuery.data?.data ?? []).forEach((pkg) => {
-      map.set(pkg.student.id, fullName(pkg.student));
-    });
-    return Array.from(map, ([id, name]) => ({ id, name })).sort((a, b) =>
-      a.name.localeCompare(b.name),
-    );
-  }, [isTutor, packagesQuery.data]);
 
   const loading = assignmentsQuery.isLoading;
   const filtered = status !== ALL || studentId !== ALL;
@@ -168,7 +154,9 @@ const Homework: FC = () => {
             <h1 className="hw-header__title">
               {t('HOMEWORK.TITLE')}
               {!loading && (
-                <span className="hw-header__count">{assignments.length}</span>
+                <span className="hw-header__count">
+                  {assignmentsQuery.data?.total ?? assignments.length}
+                </span>
               )}
             </h1>
             <p className="hw-header__subtitle">
