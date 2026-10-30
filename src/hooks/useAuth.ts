@@ -270,6 +270,9 @@ export function useImpersonate() {
     onSuccess: (userData) => {
       dispatch(setCurrentUser(userData));
       snackActions.success('Impersonation successful');
+      // A full load, so nothing of the admin's previous state survives and
+      // the route that started the exchange is gone for good
+      window.location.replace('/dashboard');
     },
     onError: (error: ApiError) => {
       const errorMessage =
