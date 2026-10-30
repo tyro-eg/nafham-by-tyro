@@ -223,6 +223,9 @@ export type CurrentUser = {
     updated_at: string;
   }>;
   previous_sessions_count?: number;
+  /** Sessions that drew on a package: taught, or missed and charged */
+  completed_sessions_count?: number;
+  cancelled_sessions_count?: number;
   recommended?: boolean;
   unscheduled_hours?: number;
   upcoming_sessions_count?: number;

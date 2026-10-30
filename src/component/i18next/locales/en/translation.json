@@ -819,6 +819,7 @@
       "UPCOMING": "Upcoming Sessions",
       "UNSCHEDULED": "Unscheduled Hours",
       "PREVIOUS": "Previous Sessions",
+      "COMPLETED": "Completed Sessions",
       "CANCELLED": "Cancelled Sessions"
     },
     "SCHEDULE": {
@@ -1298,6 +1299,7 @@
     "STATS": {
       "UPCOMING": "Upcoming sessions",
       "HOURS_LEARNED": "Hours learned",
+      "COMPLETED": "Completed sessions",
       "HOURS_REMAINING": "Hours remaining",
       "ATTENDANCE": "Attendance"
     },
