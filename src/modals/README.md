@@ -174,58 +174,6 @@ interface ResetPasswordModalProps {
 
 ### Booking Modals
 
-#### `/calendar-stepper-modal`
-
-**Purpose**: Multi-step wizard for booking free trial sessions.
-
-**Features**:
-
-- Step 1: Select subject/field
-- Step 2: Schedule session (choose time slot)
-- FullCalendar integration with time slot visualization
-- Warning for already booked slots
-- Opens register/login modal if user not authenticated
-- Success modal after booking
-- Supports trial booking from instructor profile or trail modal
-
-**Props**:
-
-```typescript
-interface CalendarStepperModalProps {
-  handleClose: () => void;
-  instructor: Instructor;
-  fromTrailModal?: boolean;
-}
-```
-
-**Usage**:
-
-```tsx
-<Dialog open={isStepperOpen} onClose={handleClose}>
-  <CalendarStepperModal
-    handleClose={handleClose}
-    instructor={selectedInstructor}
-    fromTrailModal={false}
-  />
-</Dialog>
-```
-
-**Sub-Component**: `/calendar-stepper-modal/stepper-calendar`
-
-- FullCalendar with custom buttons
-- RTL support
-- Time zone display
-- Slot selection with visual feedback
-- Color-coded availability legend
-
-**Dependencies**:
-
-- `useSlots` hook from `@/hooks/useCalendar`
-- `@fullcalendar/react` and related plugins
-- Material-UI `Stepper` components
-
----
-
 #### `/mysession-calendar`
 
 **Purpose**: Schedule or reschedule private sessions.
@@ -278,33 +226,6 @@ interface MySessionCalendarProps {
 
 ---
 
-#### `/free-trail-modal`
-
-**Purpose**: Display list of available instructors for free trial.
-
-**Features**:
-
-- Displays up to 6 instructors
-- Uses `TrailModalCard` component for each instructor
-- Integration with TanStack Query (`useInstructors` hook)
-
-**Props**: None (no props)
-
-**Usage**:
-
-```tsx
-<Dialog open={isFreeTrialOpen} onClose={handleClose}>
-  <FreeTrailModal />
-</Dialog>
-```
-
-**Dependencies**:
-
-- `useInstructors` hook from `@/hooks/useInstructors`
-- `TrailModalCard` component
-
----
-
 ### Success/Confirmation Modals
 
 #### `/trial-session-success-modal`
@@ -334,34 +255,6 @@ interface TrialSessionSuccessModalProps {
 ```
 
 **Styling**: Uses SCSS classes (no inline styles)
-
----
-
-#### `/trial-booking-success-modal`
-
-**Purpose**: Confirmation message after trial booking completion.
-
-**Features**:
-
-- Success GIF animation
-- Confirmation message
-- OK button to close
-
-**Props**:
-
-```typescript
-interface TrialBookingSuccessModalProps {
-  handleClose: () => void;
-}
-```
-
-**Usage**:
-
-```tsx
-<Dialog open={isSuccessOpen} onClose={handleClose}>
-  <TrialBookingSuccessModal handleClose={handleClose} />
-</Dialog>
-```
 
 ---
 
@@ -615,12 +508,6 @@ interface ProfileModalProps {
 
 ```
 src/modals/
-├── calendar-stepper-modal/
-│   ├── calendar-stepper-modal.tsx
-│   ├── calendar-stepper-modal.styles.scss
-│   └── stepper-calendar/
-│       ├── stepper-calendar.component.tsx
-│       └── stepper-calendar.styles.scss
 ├── cancel-session-modal/
 │   ├── cancel-session-modal.component.tsx
 │   └── cancel-session-modal.styles.scss
@@ -634,9 +521,6 @@ src/modals/
 ├── email-confirmation-modal/
 │   ├── email-confirmation-modal.component.tsx
 │   └── email-confirmation-modal.styles.scss
-├── free-trail-modal/
-│   ├── free-trail-modal.component.tsx
-│   └── free-trail-modal.styles.scss
 ├── login-modal/
 │   ├── login-modal.component.tsx
 │   └── login-modal.styles.scss
@@ -655,9 +539,6 @@ src/modals/
 ├── session-view-calendar-modal/
 │   ├── session-view-calendar-modal.component.tsx
 │   └── session-view-calendar-modal.styles.scss
-├── trial-booking-success-modal/
-│   ├── trial-booking-success-modal.component.tsx
-│   └── trial-booking-success-modal.styles.scss
 ├── trial-session-success-modal/
 │   ├── trial-session-success-modal.component.tsx
 │   └── trial-session-success-modal.styles.scss

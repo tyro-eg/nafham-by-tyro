@@ -34,6 +34,8 @@ interface RegisterModalProps {
   modalData: {
     courseItem?: any;
     fromCheckout?: boolean;
+    /** Where to go once signed up (default: the dashboard) */
+    returnTo?: string;
   };
 }
 
@@ -114,7 +116,7 @@ const RegisterModal: FC<RegisterModalProps> = ({
       });
 
       if (userData?.id) {
-        navigate('/dashboard');
+        navigate(modalData?.returnTo ?? '/dashboard');
       }
     } catch (error) {
       console.error('Registration error:', error);

@@ -7,6 +7,7 @@ import {
   AssignmentRounded,
   CalendarMonthRounded,
   CloseRounded,
+  CardGiftcardRounded,
   DashboardRounded,
   EditCalendarRounded,
   EventNoteRounded,
@@ -19,6 +20,7 @@ import {
   PeopleAltRounded,
   PersonSearchRounded,
   SettingsRounded,
+  AutoAwesomeRounded,
 } from '@mui/icons-material';
 
 import { useAppSelector } from '../../redux/store';
@@ -109,6 +111,11 @@ const SidebarLayout: FC<SidebarLayoutProps> = ({ children }) => {
       label: t('NAVIGATION.HOMEWORK'),
     },
     {
+      to: '/assistant',
+      icon: <AutoAwesomeRounded />,
+      label: t('NAVIGATION.ASSISTANT'),
+    },
+    {
       to: '/calendar',
       icon: <CalendarMonthRounded />,
       label: t('NAVIGATION.CALENDAR'),
@@ -146,6 +153,11 @@ const SidebarLayout: FC<SidebarLayoutProps> = ({ children }) => {
       to: '/my_instructors',
       icon: <PeopleAltRounded />,
       label: t('NAVIGATION.MY_INSTRUCTORS'),
+    },
+    {
+      to: '/trial',
+      icon: <CardGiftcardRounded />,
+      label: t('NAVIGATION.FREE_TRIAL'),
     },
     {
       to: '/my_sessions',

@@ -53,8 +53,10 @@ const HomeworkDetail = lazy(
   () => import('../../modules/homework/homework-detail/index.component'),
 );
 const Packages = lazy(() => import('../../modules/packages/index.component'));
+const Assistant = lazy(() => import('../../modules/assistant/index.component'));
 const Checkout = lazy(() => import('../../modules/checkout/index.component'));
 const Terms = lazy(() => import('../../modules/terms/index.component'));
+const TrialPage = lazy(() => import('../../modules/trial/index.component'));
 const NotFound404 = lazy(() => import('../../modules/404/index.component'));
 
 interface RoutesProps {
@@ -152,6 +154,15 @@ const RoutesComponent: React.FC<RoutesProps> = ({ currentUser }) => (
           />
         }
       />
+      <Route
+        path="/assistant"
+        element={
+          <GuardedRoute
+            element={<Assistant />}
+            auth={!!currentUser && currentUser.type === 'Tutor'}
+          />
+        }
+      />
       {/* <Route path="/courses" element={<CoursesList />} />
       <Route path="/course/:courseId" element={<CourseDetails />} /> */}
       <Route
@@ -186,6 +197,8 @@ const RoutesComponent: React.FC<RoutesProps> = ({ currentUser }) => (
           <GuardedRoute element={<EditProfile />} auth={!!currentUser} />
         }
       />
+      {/* The free-trial wizard: visitors register at the last step */}
+      <Route path="/trial" element={<TrialPage />} />
       <Route path="/checkout" element={<Checkout />} />
       <Route path="/terms" element={<Terms />} />
       <Route path="*" element={<NotFound404 />} />
