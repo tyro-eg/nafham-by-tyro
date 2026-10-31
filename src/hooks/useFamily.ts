@@ -250,7 +250,8 @@ export function useActiveChild(children: FamilyChild[] | undefined) {
     (id: ActiveChild) => {
       if (id === getActiveChildId()) return;
       setActiveChildId(id);
-      queryClient.removeQueries({
+      // Everything on screen is about the previous child: fetch it afresh
+      queryClient.resetQueries({
         predicate: (q) => q.queryKey[0] !== 'family',
       });
     },
