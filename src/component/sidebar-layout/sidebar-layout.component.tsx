@@ -204,6 +204,11 @@ const SidebarLayout: FC<SidebarLayoutProps> = ({ children }) => {
       label: t('NAVIGATION.FREE_TRIAL'),
     },
     {
+      to: '/my_instructors',
+      icon: <PeopleAltRounded />,
+      label: t('NAVIGATION.MY_INSTRUCTORS'),
+    },
+    {
       to: '/my_sessions',
       icon: <EventNoteRounded />,
       label: t('NAVIGATION.SESSIONS'),
