@@ -160,49 +160,50 @@
     }
   }
 
-  // ---------- the course step's rows of choices ----------
-  &__choice {
-    display: grid;
-    gap: $space-2;
+  // ---------- the course step's fields ----------
+  &__select {
+    .MuiOutlinedInput-root {
+      padding-top: 0.5rem;
+      padding-bottom: 0.5rem;
+      border-radius: 1.4rem;
+      background: $surface;
+      font-weight: 600;
+      transition: box-shadow 0.15s;
 
-    &--off {
-      opacity: 0.45;
-    }
-  }
+      &.Mui-focused {
+        box-shadow: 0 0 0 4px rgba($brand-500, 0.15);
+      }
 
-  &__choice-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: $space-2;
-  }
+      .MuiOutlinedInput-notchedOutline {
+        border-width: 1.5px;
+        border-color: $border;
+      }
 
-  &__option {
-    padding: 0.7rem 1.4rem;
-    border: 1.5px solid $border;
-    border-radius: $radius-pill;
-    background: $surface;
-    color: $text-strong;
-    font: inherit;
-    font-size: $font-sm;
-    font-weight: 600;
-    cursor: pointer;
-    transition:
-      border-color 0.15s,
-      background-color 0.15s,
-      color 0.15s;
+      &:hover .MuiOutlinedInput-notchedOutline {
+        border-color: $brand-300;
+      }
 
-    &:hover:not(:disabled) {
-      border-color: $brand-300;
+      &.Mui-focused .MuiOutlinedInput-notchedOutline {
+        border-color: $brand-700;
+      }
     }
 
-    &:disabled {
-      cursor: default;
+    .MuiInputLabel-root {
+      font-weight: 600;
+      color: $text-muted;
+
+      &.Mui-focused {
+        color: $brand-700;
+      }
     }
 
-    &--on {
-      border-color: $brand-700;
-      background: $brand-700;
-      color: $surface;
+    &-icon .MuiSvgIcon-root {
+      font-size: 2.1rem;
+      color: $brand-700;
+    }
+
+    .Mui-disabled .trial__select-icon .MuiSvgIcon-root {
+      color: $gray-300;
     }
   }
 

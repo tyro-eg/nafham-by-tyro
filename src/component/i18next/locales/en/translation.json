@@ -1631,7 +1631,9 @@
       "EXAM_BOARD": "Exam board",
       "GENERAL": "General",
       "LOADING": "Loading courses...",
-      "EMPTY": "No courses are open for free trials right now. Please check back soon."
+      "EMPTY": "No courses are open for free trials right now. Please check back soon.",
+      "SEARCH": "Type to search",
+      "NO_MATCH": "Nothing matches"
     },
     "WHEN": {
       "TITLE": "When suits you?",

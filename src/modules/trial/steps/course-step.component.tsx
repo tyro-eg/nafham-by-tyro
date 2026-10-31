@@ -1,7 +1,20 @@
 import { FC, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button, CircularProgress } from '@mui/material';
-import { ArrowForward } from '@mui/icons-material';
+import {
+  Autocomplete,
+  Button,
+  CircularProgress,
+  InputAdornment,
+  TextField,
+} from '@mui/material';
+import {
+  ArrowForward,
+  AutoStoriesRounded,
+  SchoolRounded,
+  StairsRounded,
+  VerifiedRounded,
+  WorkspacePremiumRounded,
+} from '@mui/icons-material';
 
 import type { GradeSubject } from '../../../assets/types';
 
@@ -133,32 +146,52 @@ const CourseStep: FC<CourseStepProps> = ({
     });
   };
 
-  // One row of choices per level; a greyed row waits for the one above
-  const choices = (
+  // One searchable field per level; a field waits for the one above it
+  const ICONS: Record<keyof Picks, JSX.Element> = {
+    curriculum: <SchoolRounded />,
+    sub: <WorkspacePremiumRounded />,
+    grade: <StairsRounded />,
+    subject: <AutoStoriesRounded />,
+    board: <VerifiedRounded />,
+  };
+  const field = (
     key: keyof Picks,
     label: string,
     options: Option[],
     value: number | undefined,
     disabled = false,
   ) => (
-    <div className={`trial__choice${disabled ? ' trial__choice--off' : ''}`}>
-      <span className="trial__label">{label}</span>
-      <div className="trial__choice-row" role="radiogroup" aria-label={label}>
-        {options.map((option) => (
-          <button
-            key={option.id}
-            type="button"
-            role="radio"
-            aria-checked={value === option.id}
-            disabled={disabled}
-            className={`trial__option${value === option.id ? ' trial__option--on' : ''}`}
-            onClick={() => pick(key, String(option.id))}
-          >
-            {option.name}
-          </button>
-        ))}
-      </div>
-    </div>
+    <Autocomplete
+      className="trial__select"
+      options={options}
+      getOptionLabel={(option) => option.name}
+      isOptionEqualToValue={(option, chosen) => option.id === chosen.id}
+      value={options.find((option) => option.id === value) ?? null}
+      onChange={(_, option) => pick(key, option ? String(option.id) : NONE)}
+      disabled={disabled}
+      disableClearable={value === undefined}
+      autoHighlight
+      openOnFocus
+      noOptionsText={t('TRIAL.COURSE.NO_MATCH')}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          label={label}
+          placeholder={t('TRIAL.COURSE.SEARCH')}
+          InputProps={{
+            ...params.InputProps,
+            startAdornment: (
+              <>
+                <InputAdornment position="start" className="trial__select-icon">
+                  {ICONS[key]}
+                </InputAdornment>
+                {params.InputProps.startAdornment}
+              </>
+            ),
+          }}
+        />
+      )}
+    />
   );
 
   if (loading) {
@@ -177,23 +210,23 @@ const CourseStep: FC<CourseStepProps> = ({
   return (
     <div className="trial__step">
       <h2 className="trial__step-title">{t('TRIAL.COURSE.TITLE')}</h2>
-      <div className="trial__fields">
-        {choices(
+      <div className="trial__fields trial__fields--row">
+        {field(
           'curriculum',
           t('TRIAL.COURSE.CURRICULUM'),
           curriculumOptions,
           curriculum,
         )}
         {hasSubs &&
-          choices('sub', t('TRIAL.COURSE.SUB_CURRICULUM'), subOptions, sub)}
-        {choices(
+          field('sub', t('TRIAL.COURSE.SUB_CURRICULUM'), subOptions, sub)}
+        {field(
           'grade',
           t('TRIAL.COURSE.GRADE'),
           gradeOptions,
           grade,
           sub === undefined,
         )}
-        {choices(
+        {field(
           'subject',
           t('TRIAL.COURSE.SUBJECT'),
           subjectOptions,
@@ -201,7 +234,7 @@ const CourseStep: FC<CourseStepProps> = ({
           grade === undefined,
         )}
         {hasBoards &&
-          choices(
+          field(
             'board',
             t('TRIAL.COURSE.EXAM_BOARD'),
             boardOptions,
