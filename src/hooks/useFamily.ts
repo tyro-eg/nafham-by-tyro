@@ -259,3 +259,28 @@ export const familyErrorMessage = (
   }
   return fallback;
 };
+
+/** The session counts of the chosen child: what a student's own /me carries */
+export interface ChildStats {
+  id: number;
+  upcoming_sessions_count: number;
+  unscheduled_hours: number;
+  previous_sessions_count: number;
+}
+
+/**
+ * For a parent, the chosen child's session counts, refetched when the pick
+ * changes. Disabled for students and tutors, whose counts come with /me.
+ */
+export function useChildStats(enabled: boolean) {
+  const [childId, setChildId] = useState<number | null>(getActiveChildId());
+  useEffect(
+    () => onActiveChildChange(() => setChildId(getActiveChildId())),
+    [],
+  );
+  return useQuery<ChildStats>({
+    queryKey: ['me', 'child', childId],
+    queryFn: async () => (await get('/me/child')).data,
+    enabled: enabled && childId !== null,
+  });
+}

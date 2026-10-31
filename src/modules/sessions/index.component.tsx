@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { SessionFilters } from '../../lib/queryKeys';
 import { useAppSelector } from '../../redux/store';
 import { selectCurrentUser } from '../../redux/user/user.selectors';
+import { useChildStats } from '../../hooks/useFamily';
 
 import SessionsInfo from './sessions-info/sessions-info.component';
 import SessionsOverview from './sessions-overview/sessions-overview.component';
@@ -22,16 +23,19 @@ const Sessions: FC = () => {
   const { t } = useTranslation();
   const [filters, setFilters] = useState<SessionFilters>({});
   const currentUser = useAppSelector(selectCurrentUser);
+  // A parent sees the chosen child's counts; a student their own
+  const childStats = useChildStats(currentUser?.type === 'Parent');
 
-  // Get overview data from current user
   const overViewData = useMemo(() => {
+    const source =
+      currentUser?.type === 'Parent' ? childStats.data : currentUser;
     return {
-      previous_sessions_count: currentUser?.previous_sessions_count ?? 0,
-      upcoming_sessions_count: currentUser?.upcoming_sessions_count ?? 0,
-      total_unscheduled_time_in_hours: currentUser?.unscheduled_hours ?? 0,
+      previous_sessions_count: source?.previous_sessions_count ?? 0,
+      upcoming_sessions_count: source?.upcoming_sessions_count ?? 0,
+      total_unscheduled_time_in_hours: source?.unscheduled_hours ?? 0,
       canceled_sessions_count: 0, // Not available in user data
     };
-  }, [currentUser]);
+  }, [currentUser, childStats.data]);
 
   const handleFiltersChange = (newFilters: SessionFilters) => {
     setFilters(newFilters);
