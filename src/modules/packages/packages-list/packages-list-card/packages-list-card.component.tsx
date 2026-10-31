@@ -163,6 +163,12 @@ const PackageListCard: FC<PackageListCardProps> = ({ packageData }) => {
             </Button>
             <div className="user-info">
               <p className="name">{userName}</p>
+              {currentUser?.type === 'Parent' &&
+                packageData.student?.first_name && (
+                  <p className="packages-card__for">
+                    {t('FAMILY.FOR', { name: packageData.student.first_name })}
+                  </p>
+                )}
               {displayUser.type === 'Tutor' && !!displayUser.average_rating && (
                 <RatingSummary
                   className="review"

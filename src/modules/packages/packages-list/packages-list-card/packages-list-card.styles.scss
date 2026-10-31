@@ -319,3 +319,11 @@
     }
   }
 }
+
+// A parent's list: whose package this is
+.packages-card__for {
+  margin: 0.1rem 0 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: $brand-700;
+}
