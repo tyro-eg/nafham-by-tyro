@@ -1,0 +1,1050 @@
+@import '../../assets/styles/variables.scss';
+@import '../../assets/styles/mixins.scss';
+
+// The free-trial wizard: a soft gradient page, a summary rail that fills
+// in as the student chooses, and one generous card per step.
+
+$trial-radius: 2rem;
+$gold-bg: #fff6e0;
+$gold-fg: #b07800;
+
+@keyframes trial-rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.trial {
+  min-height: 70vh;
+  padding: $space-7 0 $space-9;
+  background:
+    radial-gradient(
+      70rem 36rem at 0% 0%,
+      rgba($brand-400, 0.12),
+      transparent 70%
+    ),
+    radial-gradient(
+      60rem 30rem at 100% 100%,
+      rgba($accent-400, 0.1),
+      transparent 70%
+    ),
+    $surface-alt;
+
+  @include respond(phone) {
+    padding: $space-5 0 $space-7;
+  }
+
+  &__container.container {
+    max-width: 112rem;
+  }
+
+  // ---------- Page heading ----------
+  &__header {
+    max-width: 64rem;
+    margin: 0 auto $space-6;
+    text-align: center;
+  }
+
+  &__eyebrow {
+    @include eyebrow;
+    margin-bottom: $space-3;
+  }
+
+  &__title {
+    margin: 0;
+    font-size: 4rem;
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.03em;
+    color: $navy-950;
+
+    @include respond(phone) {
+      font-size: 2.8rem;
+    }
+  }
+
+  &.rtl &__title,
+  &.rtl &__eyebrow {
+    letter-spacing: 0;
+  }
+
+  &__subtitle {
+    margin: $space-3 0 0;
+    font-size: $font-lg;
+    line-height: 1.6;
+    color: $text-body;
+
+    @include respond(phone) {
+      font-size: $font-base;
+    }
+  }
+
+  // ---------- Rail + card ----------
+  &__layout {
+    display: grid;
+    grid-template-columns: 30rem minmax(0, 1fr);
+    gap: $space-5;
+    align-items: start;
+
+    @include respond(tab-port) {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  &__rail {
+    position: sticky;
+    top: calc(#{$header-height} + #{$space-4});
+    padding: $space-5;
+    border-radius: $trial-radius;
+    color: $text-on-dark;
+    background:
+      radial-gradient(
+        28rem 20rem at 100% 0%,
+        rgba(255, 255, 255, 0.16),
+        transparent 70%
+      ),
+      linear-gradient(160deg, #0b7ddb 0%, $navy-950 100%);
+    box-shadow: 0 16px 40px rgba(0, 81, 160, 0.25);
+
+    @include respond(tab-port) {
+      position: static;
+      padding: $space-4;
+    }
+  }
+
+  &__rail-title {
+    @include eyebrow;
+    margin: 0 0 $space-4;
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  &__progress {
+    display: grid;
+    gap: $space-2;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    @include respond(tab-port) {
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: $space-1;
+    }
+  }
+
+  &__progress-btn {
+    display: flex;
+    align-items: center;
+    gap: $space-3;
+    width: 100%;
+    padding: $space-2 $space-3;
+    border: 0;
+    border-radius: $radius-md;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    text-align: start;
+    cursor: pointer;
+    transition: background-color $transition;
+
+    &:hover:not(:disabled) {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    &:disabled {
+      cursor: default;
+    }
+
+    @include respond(tab-port) {
+      flex-direction: column;
+      gap: $space-1;
+      padding: $space-1;
+      text-align: center;
+    }
+  }
+
+  &__progress-icon {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 3.6rem;
+    height: 3.6rem;
+    border-radius: 50%;
+    border: 1.5px solid rgba(255, 255, 255, 0.35);
+    color: rgba(255, 255, 255, 0.75);
+    transition:
+      background-color $transition,
+      color $transition,
+      border-color $transition;
+
+    svg {
+      font-size: 1.9rem;
+    }
+  }
+
+  &__progress-text {
+    display: grid;
+    gap: 0.1rem;
+    min-width: 0;
+  }
+
+  &__progress-label {
+    font-size: $font-sm;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  &__progress-value {
+    font-size: $font-xs;
+    line-height: 1.4;
+    color: rgba(255, 255, 255, 0.6);
+    @include ellipsis(2);
+
+    @include respond(tab-port) {
+      display: none;
+    }
+  }
+
+  &__progress-item.is-active {
+    .trial__progress-icon {
+      border-color: $accent-400;
+      background-color: $accent-400;
+      color: $navy-950;
+    }
+
+    .trial__progress-label {
+      color: #fff;
+    }
+  }
+
+  &__progress-item.is-done {
+    .trial__progress-icon {
+      border-color: transparent;
+      background-color: rgba(255, 255, 255, 0.18);
+      color: #fff;
+    }
+
+    .trial__progress-value {
+      color: rgba(255, 255, 255, 0.85);
+    }
+  }
+
+  &__card {
+    @include card($space-6);
+    border-radius: $trial-radius;
+    box-shadow: $shadow-md;
+    animation: trial-rise 240ms ease-out;
+
+    @include respond(phone) {
+      padding: $space-4;
+    }
+
+    &--center {
+      display: grid;
+      gap: $space-4;
+      justify-items: center;
+      text-align: center;
+    }
+
+    &--success {
+      max-width: 56rem;
+      margin: 0 auto;
+    }
+  }
+
+  &__step-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: $space-3;
+    margin-bottom: $space-4;
+  }
+
+  &__step-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 4.4rem;
+    height: 4.4rem;
+    border-radius: $radius-md;
+    background-color: $brand-50;
+    color: $brand-700;
+
+    svg {
+      font-size: 2.2rem;
+    }
+  }
+
+  &__step-count {
+    @include badge($gray-100, $text-muted);
+  }
+
+  &__step {
+    display: grid;
+    gap: $space-5;
+  }
+
+  &__step-title {
+    margin: 0;
+    font-size: 2.4rem;
+    font-weight: 700;
+    line-height: 1.25;
+    letter-spacing: -0.02em;
+    color: $navy-950;
+
+    @include respond(phone) {
+      font-size: 2rem;
+    }
+  }
+
+  &.rtl &__step-title {
+    letter-spacing: 0;
+  }
+
+  &__hint {
+    margin: $space-2 0 0;
+    font-size: $font-sm;
+    line-height: 1.6;
+    color: $text-muted;
+  }
+
+  &__notice {
+    display: flex;
+    align-items: center;
+    gap: $space-2;
+    margin: 0;
+    padding: $space-3 $space-4;
+    border-radius: $radius-md;
+    background-color: $brand-50;
+    color: $brand-800;
+    font-size: $font-sm;
+    font-weight: 500;
+
+    svg {
+      font-size: 1.8rem;
+    }
+  }
+
+  &__resolved-board {
+    @include badge(#fff, #1f7a2e);
+    margin-inline-start: auto;
+  }
+
+  &__resolved {
+    display: flex;
+    align-items: center;
+    gap: $space-2;
+    margin: 0;
+    padding: $space-3 $space-4;
+    border-radius: $radius-md;
+    background-color: $success-50;
+    color: #1f7a2e;
+    font-weight: 600;
+
+    svg {
+      font-size: 2rem;
+      color: $success-500;
+    }
+  }
+
+  &__fields {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(22rem, 1fr));
+    gap: $space-4;
+  }
+
+  &__dates {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+    gap: $space-3;
+
+    .MuiOutlinedInput-root {
+      border-radius: $radius-sm;
+      background-color: $surface;
+    }
+  }
+
+  &__days {
+    display: flex;
+    gap: $space-2;
+    overflow-x: auto;
+    padding-bottom: $space-1;
+    scroll-snap-type: x proximity;
+  }
+
+  &__times {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr));
+    gap: $space-2;
+  }
+
+  &__empty {
+    margin: 0;
+    font-size: $font-base;
+    line-height: 1.6;
+    color: $text-body;
+  }
+
+  &__empty-box {
+    padding: $space-5;
+    border: 1px dashed $border-strong;
+    border-radius: $radius-md;
+    background-color: $surface-alt;
+    text-align: center;
+  }
+
+  &__loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: $space-3;
+    min-height: 16rem;
+    color: $text-muted;
+  }
+
+  &__tutors {
+    display: grid;
+    gap: $space-4;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  &__guardian .MuiOutlinedInput-root {
+    border-radius: $radius-sm;
+  }
+
+  // ---------- Actions ----------
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    gap: $space-3;
+    padding-top: $space-4;
+    border-top: 1px solid $border;
+
+    @include respond(phone) {
+      .trial__cta,
+      .trial__back {
+        flex: 1 1 auto;
+      }
+    }
+  }
+
+  &__cta.MuiButton-root {
+    @include button-primary;
+    min-height: 4.8rem;
+    padding: 1.1rem 2.6rem;
+    border-radius: $radius-pill;
+    box-shadow: 0 10px 24px rgba($brand-600, 0.28);
+
+    &:hover {
+      box-shadow: 0 12px 28px rgba($brand-600, 0.36);
+    }
+
+    &.Mui-disabled {
+      box-shadow: none;
+      background-color: $gray-200;
+      color: $gray-500;
+      opacity: 1;
+    }
+
+    &.trial__cta--gold {
+      background-color: $accent-400;
+      color: $navy-950;
+      box-shadow: 0 10px 24px rgba($accent-500, 0.3);
+
+      &:hover {
+        background-color: $accent-500;
+      }
+    }
+  }
+
+  &__back.MuiButton-root {
+    @include button-secondary;
+    min-height: 4.8rem;
+    border-radius: $radius-pill;
+  }
+
+  &__link.MuiButton-root {
+    text-transform: none;
+    font-weight: 600;
+    color: $brand-800;
+  }
+
+  &.rtl .MuiButton-startIcon,
+  &.rtl .MuiButton-endIcon {
+    transform: scaleX(-1);
+  }
+}
+
+// ---------- A labelled group of pill choices ----------
+.trial-choice {
+  display: grid;
+  gap: $space-2;
+  animation: trial-rise 200ms ease-out;
+
+  &__label {
+    margin: 0;
+    font-size: $font-xs;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: $text-muted;
+  }
+
+  &__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $space-2;
+
+    &--tiles {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(10.5rem, 1fr));
+      gap: $space-3;
+    }
+  }
+
+  &__item {
+    display: inline-flex;
+    align-items: center;
+    gap: $space-2;
+    min-height: 4.2rem;
+    padding: 0.8rem 1.8rem;
+    border: 1.5px solid $border-strong;
+    border-radius: $radius-pill;
+    background-color: $surface;
+    color: $text-strong;
+    font: inherit;
+    font-size: $font-sm;
+    font-weight: 600;
+    line-height: 1.3;
+    cursor: pointer;
+    transition:
+      border-color $transition,
+      background-color $transition,
+      color $transition,
+      box-shadow $transition,
+      transform $transition;
+
+    &:hover:not(:disabled) {
+      border-color: $brand-400;
+      background-color: $brand-50;
+    }
+
+    &:focus-visible {
+      @include focus-ring;
+    }
+
+    &.is-selected,
+    &.is-selected:hover:not(:disabled) {
+      border-color: $brand-600;
+      background-color: $brand-600;
+      color: #fff;
+      box-shadow: 0 8px 18px rgba($brand-600, 0.3);
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+
+  &__list--tiles &__item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: $space-2;
+    padding: $space-4;
+    border-radius: $radius-md;
+    text-align: start;
+
+    &.is-selected,
+    &.is-selected:hover:not(:disabled) {
+      background-color: $surface;
+      color: $text-strong;
+      border-color: $brand-600;
+      box-shadow:
+        0 0 0 3px rgba($brand-400, 0.2),
+        $shadow-md;
+
+      .trial-choice__icon {
+        background-color: $brand-600;
+        color: #fff;
+      }
+    }
+  }
+
+  &__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 4rem;
+    height: 4rem;
+    border-radius: $radius-sm;
+    background-color: $brand-50;
+    color: $brand-700;
+    transition:
+      background-color $transition,
+      color $transition;
+
+    svg {
+      font-size: 2.2rem;
+    }
+  }
+
+  &__text {
+    display: grid;
+    gap: 0.2rem;
+  }
+
+  &__name {
+    font-weight: 600;
+  }
+
+  &__hint {
+    font-size: $font-xs;
+    font-weight: 500;
+    color: $text-muted;
+  }
+}
+
+// ---------- A day in the slot strip ----------
+.trial-day {
+  display: grid;
+  flex-shrink: 0;
+  justify-items: center;
+  gap: 0.1rem;
+  min-width: 8.4rem;
+  padding: $space-3 $space-2;
+  border: 1.5px solid $border-strong;
+  border-radius: $radius-md;
+  background-color: $surface;
+  color: $text-strong;
+  font: inherit;
+  cursor: pointer;
+  scroll-snap-align: start;
+  transition:
+    border-color $transition,
+    background-color $transition,
+    box-shadow $transition;
+
+  &:hover {
+    border-color: $brand-400;
+  }
+
+  &:focus-visible {
+    @include focus-ring;
+  }
+
+  &__weekday {
+    font-size: $font-xs;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: $text-muted;
+  }
+
+  &__number {
+    font-size: 2.4rem;
+    font-weight: 700;
+    line-height: 1.1;
+  }
+
+  &__month {
+    font-size: $font-xs;
+    color: $text-muted;
+  }
+
+  &__count {
+    @include badge($brand-50, $brand-700);
+    margin-top: $space-1;
+  }
+
+  &.is-selected {
+    border-color: $brand-600;
+    background-color: $brand-600;
+    color: #fff;
+    box-shadow: 0 8px 18px rgba($brand-600, 0.3);
+
+    .trial-day__weekday,
+    .trial-day__month {
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    .trial-day__count {
+      background-color: rgba(255, 255, 255, 0.2);
+      color: #fff;
+    }
+  }
+}
+
+// ---------- A slot chip on a tutor card ----------
+.trial-slot-chip {
+  @include badge($brand-50, $brand-800);
+  padding: 0.6rem 1.2rem;
+  border: 1px solid transparent;
+  font: inherit;
+  font-size: $font-xs;
+  font-weight: 600;
+  line-height: 1.4;
+  cursor: pointer;
+  transition:
+    background-color $transition,
+    border-color $transition,
+    color $transition;
+
+  &:hover:not(:disabled) {
+    background-color: $brand-600;
+    color: #fff;
+  }
+
+  &:focus-visible {
+    @include focus-ring;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+// ---------- One tutor the wizard offers ----------
+.trial-tutor {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    'main action'
+    'slots slots';
+  gap: $space-4;
+  align-items: start;
+  padding: $space-5;
+  border: 1.5px solid $border;
+  border-radius: $radius-lg;
+  background-color: $surface;
+  transition:
+    box-shadow $transition,
+    border-color $transition,
+    transform $transition;
+
+  &:hover {
+    border-color: $brand-300;
+    box-shadow: $shadow-md;
+  }
+
+  @include respond(phone) {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      'main'
+      'slots'
+      'action';
+    padding: $space-4;
+  }
+
+  &--top {
+    border-color: $brand-400;
+    background:
+      linear-gradient(180deg, rgba($brand-400, 0.06), transparent 40%), $surface;
+    box-shadow: $shadow-md;
+  }
+
+  &--used {
+    opacity: 0.75;
+  }
+
+  &__ribbon {
+    position: absolute;
+    top: -1.2rem;
+    inset-inline-start: $space-5;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.3rem 1.2rem;
+    border-radius: $radius-pill;
+    background-color: $accent-400;
+    color: $navy-950;
+    font-size: $font-xs;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    box-shadow: 0 6px 14px rgba($accent-500, 0.35);
+
+    svg {
+      font-size: 1.6rem;
+    }
+  }
+
+  &__main {
+    grid-area: main;
+    display: flex;
+    gap: $space-4;
+    min-width: 0;
+  }
+
+  &__avatar {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 7.2rem;
+    height: 7.2rem;
+    border: 3px solid $surface;
+    border-radius: 50%;
+    background-color: $brand-50;
+    background-size: cover;
+    background-position: center;
+    box-shadow: 0 0 0 2px $brand-200;
+    color: $brand-700;
+    font-size: 2.2rem;
+    font-weight: 700;
+
+    @include respond(phone) {
+      width: 5.6rem;
+      height: 5.6rem;
+      font-size: 1.8rem;
+    }
+  }
+
+  &__body {
+    display: grid;
+    gap: $space-2;
+    min-width: 0;
+  }
+
+  &__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: $space-2;
+  }
+
+  &__name {
+    margin: 0;
+    font-size: $font-h5;
+    font-weight: 700;
+    color: $navy-950;
+  }
+
+  &__pick {
+    @include badge($gold-bg, $gold-fg);
+
+    svg {
+      font-size: 1.5rem;
+    }
+  }
+
+  &__rating {
+    display: inline-flex;
+    align-items: center;
+
+    .MuiRating-iconFilled {
+      color: $accent-500;
+    }
+  }
+
+  &__boards {
+    margin: 0;
+    font-size: $font-xs;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: $brand-800;
+  }
+
+  &__bio {
+    margin: 0;
+    font-size: $font-sm;
+    line-height: 1.65;
+    color: $text-body;
+  }
+
+  &__slots {
+    grid-area: slots;
+    display: grid;
+    gap: $space-2;
+    padding-top: $space-3;
+    border-top: 1px dashed $border;
+  }
+
+  &__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $space-2;
+  }
+
+  &__action {
+    grid-area: action;
+    display: flex;
+    align-items: center;
+
+    .MuiButton-root {
+      white-space: nowrap;
+    }
+
+    @include respond(phone) {
+      .MuiButton-root {
+        width: 100%;
+      }
+    }
+  }
+
+  &__used {
+    @include badge($gray-100, $text-muted);
+  }
+}
+
+// ---------- The confirm summary ----------
+.trial-receipt {
+  position: relative;
+  padding: $space-5;
+  border-radius: $radius-lg;
+  background:
+    radial-gradient(
+      30rem 16rem at 100% 0%,
+      rgba($accent-400, 0.18),
+      transparent 70%
+    ),
+    $brand-50;
+
+  @include respond(phone) {
+    padding: $space-4;
+  }
+
+  &__badge {
+    @include badge($accent-400, $navy-950);
+    margin-bottom: $space-4;
+    padding: 0.4rem 1.2rem;
+    font-size: $font-sm;
+
+    svg {
+      font-size: 1.8rem;
+    }
+  }
+
+  &__rows {
+    display: grid;
+    gap: $space-3;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  &__row {
+    display: flex;
+    align-items: flex-start;
+    gap: $space-3;
+  }
+
+  &__icon {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 3.6rem;
+    height: 3.6rem;
+    border-radius: $radius-sm;
+    background-color: $surface;
+    color: $brand-700;
+    box-shadow: $shadow-xs;
+
+    svg {
+      font-size: 2rem;
+    }
+  }
+
+  &__text {
+    display: grid;
+    gap: 0.1rem;
+    min-width: 0;
+  }
+
+  &__label {
+    font-size: $font-xs;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: $text-muted;
+  }
+
+  &__value {
+    font-size: $font-base;
+    font-weight: 600;
+    color: $navy-950;
+  }
+}
+
+// ---------- A labelled dropdown in the course step ----------
+.trial-field {
+  display: grid;
+  gap: $space-2;
+  animation: trial-rise 200ms ease-out;
+
+  &__label {
+    font-size: $font-xs;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: $text-muted;
+  }
+}
+
+.trial-select.MuiOutlinedInput-root {
+  min-height: 5.2rem;
+  border-radius: $radius-md;
+  background-color: $surface;
+  font-size: $font-base;
+  font-weight: 600;
+  color: $text-strong;
+
+  .MuiOutlinedInput-notchedOutline {
+    border: 1.5px solid $border-strong;
+    transition: border-color $transition;
+  }
+
+  &:hover .MuiOutlinedInput-notchedOutline {
+    border-color: $brand-400;
+  }
+
+  &.Mui-focused .MuiOutlinedInput-notchedOutline {
+    border-color: $brand-600;
+    box-shadow: $focus-ring;
+  }
+
+  .MuiSelect-select {
+    padding: 1.3rem 1.6rem;
+  }
+
+  .MuiSelect-icon {
+    color: $brand-700;
+  }
+}
+
+.trial-select__placeholder {
+  font-weight: 500;
+  color: $gray-400;
+}
+
+.trial-select__menu .MuiPaper-root {
+  margin-top: $space-1;
+  border: 1px solid $border;
+  border-radius: $radius-md;
+  box-shadow: $shadow-lg;
+
+  .MuiMenuItem-root {
+    min-height: 4.2rem;
+    font-size: $font-sm;
+    font-weight: 500;
+
+    &.Mui-selected {
+      background-color: $brand-50;
+      color: $brand-800;
+      font-weight: 600;
+    }
+  }
+}
