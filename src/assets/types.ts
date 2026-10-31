@@ -216,9 +216,18 @@ export type CurrentUser = {
   first_name: string;
   last_name: string;
   phone_number: string;
-  type: 'Tutor' | 'Student';
+  type: 'Tutor' | 'Student' | 'Parent';
   updated_at: string;
   email_confirmed?: boolean;
+  /** Parents: the family and the children they can pick */
+  family_id?: number;
+  children?: Array<{
+    id: number;
+    first_name: string;
+    last_name: string;
+    login_enabled: boolean;
+    email: string | null;
+  }>;
   grade_subjects?: Array<{
     id: number;
     created_at: string;

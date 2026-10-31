@@ -28,6 +28,8 @@ interface SignUpPayload {
   type?: string;
   country_code?: string;
   nationality?: string;
+  /** Parent sign-up: the first child, a profile without a login */
+  child?: { first_name: string; last_name: string };
 }
 
 /**

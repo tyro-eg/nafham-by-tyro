@@ -46,6 +46,8 @@ const HomeworkDetail: FC = () => {
   const navigate = useNavigate();
   const currentUser = useAppSelector(selectCurrentUser);
   const isTutor = currentUser?.type === 'Tutor';
+  // A parent sees the child's homework as the child does, but cannot answer
+  const isParent = currentUser?.type === 'Parent';
   const viewer = isTutor ? 'tutor' : 'student';
 
   const query = useAssignment(slug);
@@ -276,6 +278,35 @@ const HomeworkDetail: FC = () => {
                 </div>
               )}
               <ReviewView review={assignment.review} />
+            </section>
+          ) : isParent ? (
+            <section className="hw-section">
+              <h2 className="hw-section__title">
+                {t('HOMEWORK.SUBMISSION.TITLE_TUTOR')}
+              </h2>
+              {assignment.submission ? (
+                <div className="hw-submission">
+                  <p className="hw-submission__meta">
+                    {t('HOMEWORK.SUBMISSION.SUBMITTED_AT', {
+                      date: formatDateTime(
+                        assignment.submission.submitted_at,
+                        i18n.language,
+                      ),
+                    })}
+                  </p>
+                  {assignment.submission.body && (
+                    <p className="hw-prose" dir="auto">
+                      {assignment.submission.body}
+                    </p>
+                  )}
+                  <AttachmentList files={assignment.submission.files} />
+                </div>
+              ) : (
+                <div className="hw-submission hw-submission--empty">
+                  <strong>{t('HOMEWORK.SUBMISSION.NONE')}</strong>
+                  <p className="hw-muted">{t('FAMILY.HOMEWORK_PARENT_HINT')}</p>
+                </div>
+              )}
             </section>
           ) : (
             <StudentSubmission

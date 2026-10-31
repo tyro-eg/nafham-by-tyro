@@ -8,6 +8,7 @@ import axios, {
 import store from '@/redux/store';
 import { clearCurrentUser } from '@/redux/user/user.slice';
 import { queryClient } from '@/lib/queryClient';
+import { getActiveChildId } from '@/lib/family-child';
 
 // ============================================================================
 // Types
@@ -207,6 +208,12 @@ axios.interceptors.request.use(
     // Set authorization header
     if (accessToken && config.headers) {
       config.headers['Authorization'] = accessToken;
+    }
+
+    // A parent's requests are about the child they picked
+    const childId = getActiveChildId();
+    if (childId && config.headers) {
+      config.headers['X-Child-Id'] = String(childId);
     }
 
     return config;

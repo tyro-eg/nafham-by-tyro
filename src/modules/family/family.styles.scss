@@ -1,0 +1,173 @@
+@import '../../assets/styles/variables.scss';
+
+$hw-muted: $text-muted;
+$hw-surface: $surface;
+$hw-border: $border;
+
+.family {
+  padding-block: 1.5rem 3rem;
+
+  &__header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+  }
+
+  &__title {
+    margin: 0;
+    font-size: 1.75rem;
+    font-weight: 700;
+  }
+
+  &__subtitle {
+    margin: 0.25rem 0 0;
+    color: $hw-muted;
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
+    gap: 1rem;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  &__card {
+    background: $hw-surface;
+    border: 1px solid $hw-border;
+    border-radius: 16px;
+    padding: 1.25rem;
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  &__card-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+
+  &__name {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 700;
+  }
+
+  &__facts {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem 1rem;
+    margin: 0;
+
+    div {
+      display: grid;
+      gap: 0.1rem;
+    }
+
+    dt {
+      color: $hw-muted;
+      font-size: 0.8rem;
+    }
+
+    dd {
+      margin: 0;
+      font-weight: 600;
+    }
+  }
+
+  &__card-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.25rem;
+  }
+
+  &__section {
+    background: $hw-surface;
+    border: 1px solid $hw-border;
+    border-radius: 16px;
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  &__section-title {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 700;
+  }
+
+  &__row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  &__muted {
+    color: $hw-muted;
+    margin: 0;
+  }
+
+  &__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  &__empty {
+    text-align: center;
+    padding: 2rem 1rem;
+    color: $hw-muted;
+  }
+
+  &__back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
+    color: $text-body;
+
+    .rtl & svg {
+      transform: scaleX(-1);
+    }
+
+    &:hover {
+      color: $brand-700;
+    }
+  }
+
+  &__prose {
+    margin: 0;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    line-height: 1.7;
+    text-align: start;
+  }
+
+  &__chip {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.3rem 0.9rem;
+    border-radius: $radius-pill;
+    font-size: $font-xs;
+    font-weight: 700;
+    background: #f2efff;
+    color: #6a52d6;
+  }
+}

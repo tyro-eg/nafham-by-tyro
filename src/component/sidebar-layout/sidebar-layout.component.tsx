@@ -21,6 +21,8 @@ import {
   PersonSearchRounded,
   SettingsRounded,
   AutoAwesomeRounded,
+  FamilyRestroomRounded,
+  MenuBookRounded,
 } from '@mui/icons-material';
 
 import { useAppSelector } from '../../redux/store';
@@ -29,6 +31,7 @@ import { useSignOut } from '../../hooks/useAuth';
 import { useStreamChat } from '../../hooks/useStreamChat';
 import { useRtlClass } from '../../assets/utils/utils';
 import LanguageSelector from '../i18next/LanguageSelector';
+import ChildSwitcher from '../../modules/family/child-switcher.component';
 import logo from '../../assets/images/logo.png';
 
 import './sidebar-layout.styles.scss';
@@ -71,6 +74,7 @@ const SidebarLayout: FC<SidebarLayoutProps> = ({ children }) => {
   if (!currentUser) return <>{children}</>;
 
   const isTutor = currentUser.type === 'Tutor';
+  const isParent = currentUser.type === 'Parent';
 
   // Shown to both roles once Stream Chat is configured
   const messagesItem = chatClient
@@ -182,9 +186,58 @@ const SidebarLayout: FC<SidebarLayoutProps> = ({ children }) => {
     },
   ];
 
-  const items = isTutor ? tutorItems : studentItems;
-  const accountLink = isTutor ? `/profile/${currentUser.id}` : '/dashboard';
-  const roleLabel = isTutor ? t('TUTOR_DASHBOARD.ROLE') : t('DASHBOARD.ROLE');
+  // Parents: the family home first, then the picked child's pages
+  const parentItems = [
+    {
+      to: '/family',
+      icon: <FamilyRestroomRounded />,
+      label: t('NAVIGATION.FAMILY'),
+    },
+    {
+      to: '/family/notes',
+      icon: <MenuBookRounded />,
+      label: t('NAVIGATION.NOTES'),
+    },
+    {
+      to: '/my_sessions',
+      icon: <EventNoteRounded />,
+      label: t('NAVIGATION.SESSIONS'),
+    },
+    {
+      to: '/homework',
+      icon: <AssignmentRounded />,
+      label: t('NAVIGATION.HOMEWORK'),
+    },
+    {
+      to: '/calendar',
+      icon: <CalendarMonthRounded />,
+      label: t('NAVIGATION.CALENDAR'),
+    },
+    ...messagesItem,
+    {
+      to: '/my_packages',
+      icon: <Inventory2Rounded />,
+      label: t('NAVIGATION.PACKAGES'),
+    },
+    {
+      to: '/family/settings',
+      icon: <SettingsRounded />,
+      label: t('HEADER.USER.SETTINGS'),
+    },
+  ];
+
+  const items = isTutor ? tutorItems : isParent ? parentItems : studentItems;
+  const homeLink = isParent ? '/family' : '/dashboard';
+  const accountLink = isTutor
+    ? `/profile/${currentUser.id}`
+    : isParent
+      ? '/family/settings'
+      : '/dashboard';
+  const roleLabel = isTutor
+    ? t('TUTOR_DASHBOARD.ROLE')
+    : isParent
+      ? t('FAMILY.ROLE')
+      : t('DASHBOARD.ROLE');
 
   const initials = `${currentUser.first_name?.[0] || ''}${
     currentUser.last_name?.[0] || ''
@@ -219,7 +272,7 @@ const SidebarLayout: FC<SidebarLayoutProps> = ({ children }) => {
         >
           <MenuRounded />
         </IconButton>
-        <Link to="/dashboard" className="side-layout__logo">
+        <Link to={homeLink} className="side-layout__logo">
           <img src={logo} alt="Nafham by Tyro" />
         </Link>
         <Avatar
@@ -239,7 +292,7 @@ const SidebarLayout: FC<SidebarLayoutProps> = ({ children }) => {
 
       <aside className="side-layout__sidebar" id="app-sidebar">
         <div className="side-layout__brand">
-          <Link to="/dashboard" className="side-layout__logo">
+          <Link to={homeLink} className="side-layout__logo">
             <img src={logo} alt="Nafham by Tyro" />
           </Link>
           <IconButton
@@ -250,6 +303,12 @@ const SidebarLayout: FC<SidebarLayoutProps> = ({ children }) => {
             <CloseRounded />
           </IconButton>
         </div>
+
+        {isParent && (
+          <div className="side-layout__child-switcher">
+            <ChildSwitcher />
+          </div>
+        )}
 
         <nav className="side-layout__nav" aria-label={t('NAVIGATION.MENU')}>
           {items.map((item) => (
@@ -282,7 +341,7 @@ const SidebarLayout: FC<SidebarLayoutProps> = ({ children }) => {
         </nav>
 
         <div className="side-layout__footer">
-          {!isTutor && (
+          {!isTutor && !isParent && (
             <NavLink
               to="/home"
               onClick={() => setDrawerOpen(false)}

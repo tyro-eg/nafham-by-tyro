@@ -54,7 +54,9 @@
     "AVAILABILITY": "Availability",
     "HOMEWORK": "Homework",
     "ASSISTANT": "AI Teaching Assistant",
-    "FREE_TRIAL": "Book a free trial"
+    "FREE_TRIAL": "Book a free trial",
+    "FAMILY": "My family",
+    "NOTES": "Lesson notes"
   },
   "CARDS": {
     "FREE_ASSESMENT": {
@@ -1016,6 +1018,16 @@
     "MAIN": {
       "TITLE": "Welcome  👋",
       "SUBTITLE": "Enter your details below."
+    },
+    "ROLE": {
+      "LABEL": "I am a",
+      "STUDENT": "Student",
+      "PARENT": "Parent",
+      "PARENT_HINT": "You hold the account for your children. Add your first child below; you can add more later."
+    },
+    "CHILD": {
+      "FIRST_NAME": "Child's first name",
+      "LAST_NAME": "Child's last name"
     }
   },
   "REGISTERED": {
@@ -2013,6 +2025,87 @@
       "NOTE_READY": "Lesson note",
       "OPEN": "Open in Assistant",
       "RECORDING": "Recording being processed"
+    }
+  },
+  "FAMILY": {
+    "ROLE": "Parent",
+    "TITLE": "The {{name}} family",
+    "SUBTITLE": "Where each child stands, and what to do next.",
+    "SUPPORT": "Message support",
+    "EMPTY": "No children yet. Add your first child to get started.",
+    "ERROR": "Something went wrong. Please try again.",
+    "CANCEL": "Cancel",
+    "BACK": "Back to the family",
+    "SWITCHER": "Which child",
+    "HOMEWORK_PARENT_HINT": "Only the student can hand in the homework. You can follow it here.",
+    "CARD": {
+      "NEW_NOTE": "New lesson note",
+      "NEXT_LESSON": "Next lesson",
+      "NO_LESSON": "Nothing booked",
+      "HOURS_LEFT": "Hours left",
+      "HOURS_one": "{{count}} hour",
+      "HOURS_other": "{{count}} hours",
+      "HOMEWORK_DUE": "Homework due this week",
+      "LESSONS": "Lessons completed",
+      "OPEN": "Open sessions"
+    },
+    "TOP_UP": {
+      "BUTTON": "Request more hours",
+      "TITLE": "More hours for {{name}}",
+      "TEXT": "Tell us how many hours you would like. Our team confirms the price with you before anything is charged.",
+      "PACKAGE": "Package",
+      "HOURS": "Hours",
+      "NOTE": "Anything we should know?",
+      "SEND": "Send request",
+      "SENT": "Request sent. We will get back to you shortly."
+    },
+    "NOTES": {
+      "TITLE": "Lesson notes",
+      "SUBTITLE": "What each lesson covered, where your child struggled and what comes next.",
+      "ALL_CHILDREN": "All children",
+      "EMPTY": "No lesson notes yet. They appear after the first recorded lesson.",
+      "COVERED": "Covered",
+      "STRUGGLED": "Needs work",
+      "NEXT": "Next"
+    },
+    "TERMS": {
+      "TITLE": "Terms and consent",
+      "PENDING": "Please review and accept the terms for your family.",
+      "REVIEW": "Review",
+      "TEXT": "You accept the terms on behalf of your children.",
+      "READ": "Read the terms",
+      "ACCEPT": "Accept",
+      "ACCEPTED": "Terms accepted. Thank you.",
+      "ACCEPTED_ON": "Accepted on {{date}}."
+    },
+    "SETTINGS": {
+      "TITLE": "Family settings",
+      "SUBTITLE": "Your contact details, the children, their logins and recording consent.",
+      "CONTACTS": "Contact details",
+      "FAMILY_NAME": "Family name",
+      "PHONE": "Phone",
+      "EMAIL": "Email",
+      "SAVE": "Save",
+      "SAVED": "Saved.",
+      "CHILDREN": "Children",
+      "ADD_CHILD": "Add a child",
+      "ADD": "Add",
+      "ADD_HINT": "A child is a learner profile under your account. You can give them their own login later.",
+      "FIRST_NAME": "First name",
+      "LAST_NAME": "Last name",
+      "CHILD_ADDED": "{{name}} added.",
+      "OWN_LOGIN": "Has their own login",
+      "THROUGH_YOU": "Through your account",
+      "CHILD_EMAIL": "Child's email",
+      "GIVE_LOGIN": "Give a login",
+      "LOGIN_HINT": "They get an email to set a password. You keep full access.",
+      "LOGIN_SENT": "Login invitation sent to {{name}}.",
+      "REMOVE_LOGIN": "Remove login",
+      "LOGIN_REMOVED": "{{name}} now signs in through your account.",
+      "CONSENT_TEXT": "Lesson recording lets the tutor review the lesson and powers the lesson notes. Switch it on per course.",
+      "CONSENT_FOR": "Recording consent for {{course}}",
+      "CONSENTED": "Consented {{date}}",
+      "NOT_CONSENTED": "Not recorded"
     }
   }
 }

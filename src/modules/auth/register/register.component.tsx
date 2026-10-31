@@ -1,4 +1,4 @@
-import { FC, useMemo } from 'react';
+import { FC, useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import {
@@ -8,6 +8,8 @@ import {
   MenuItem,
   Select,
   Divider,
+  ToggleButton,
+  ToggleButtonGroup,
 } from '@mui/material';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -37,6 +39,12 @@ const Register: FC = () => {
 
   const countries = useMemo(() => getCountries(), []);
   const nationalities = useMemo(() => getNationalities(), []);
+  // Who is signing up: a student with their own account, or a parent
+  // who holds the account for their children
+  const [role, setRole] = useState<'Student' | 'Parent'>('Student');
+  const [child, setChild] = useState({ first_name: '', last_name: '' });
+  const childMissing =
+    role === 'Parent' && (!child.first_name.trim() || !child.last_name.trim());
 
   const {
     control,
@@ -62,16 +70,25 @@ const Register: FC = () => {
   const onSubmit = async (values: RegisterFormData) => {
     try {
       const { phone_number, ...submitValues } = values;
+      if (childMissing) return;
       const userData = await signUpMutation.mutateAsync({
         ...submitValues,
         phone_number: phone_number.startsWith('+')
           ? phone_number
           : `+${phone_number}`,
-        type: 'Student',
+        type: role,
+        ...(role === 'Parent'
+          ? {
+              child: {
+                first_name: child.first_name.trim(),
+                last_name: child.last_name.trim(),
+              },
+            }
+          : {}),
       });
 
       if (userData?.id) {
-        navigate('/dashboard');
+        navigate(role === 'Parent' ? '/family' : '/dashboard');
       }
     } catch (error) {
       console.error('Registration error:', error);
@@ -94,6 +111,28 @@ const Register: FC = () => {
               onSubmit={handleSubmit(onSubmit)}
               className={`second-section__form ${rtlClass}`}
             >
+              <ToggleButtonGroup
+                exclusive
+                fullWidth
+                size="small"
+                value={role}
+                onChange={(_, value) => value && setRole(value)}
+                aria-label={t('REGISTER.ROLE.LABEL')}
+                sx={{ mb: 2 }}
+              >
+                <ToggleButton value="Student">
+                  {t('REGISTER.ROLE.STUDENT')}
+                </ToggleButton>
+                <ToggleButton value="Parent">
+                  {t('REGISTER.ROLE.PARENT')}
+                </ToggleButton>
+              </ToggleButtonGroup>
+              {role === 'Parent' && (
+                <p className="register__hint">
+                  {t('REGISTER.ROLE.PARENT_HINT')}
+                </p>
+              )}
+
               <div className="group-inputs auth-field-row">
                 <div className="group1 auth-field">
                   <InputLabel htmlFor="first_name">
@@ -332,6 +371,41 @@ const Register: FC = () => {
                 </div>
               </div>
 
+              {role === 'Parent' && (
+                <div className="group-inputs auth-field-row">
+                  <div className="group1 auth-field">
+                    <InputLabel htmlFor="child_first_name">
+                      {t('REGISTER.CHILD.FIRST_NAME')}
+                    </InputLabel>
+                    <TextField
+                      id="child_first_name"
+                      fullWidth
+                      size="small"
+                      value={child.first_name}
+                      onChange={(e) =>
+                        setChild({ ...child, first_name: e.target.value })
+                      }
+                      error={isSubmitting && !child.first_name.trim()}
+                    />
+                  </div>
+                  <div className="group2 auth-field">
+                    <InputLabel htmlFor="child_last_name">
+                      {t('REGISTER.CHILD.LAST_NAME')}
+                    </InputLabel>
+                    <TextField
+                      id="child_last_name"
+                      fullWidth
+                      size="small"
+                      value={child.last_name}
+                      onChange={(e) =>
+                        setChild({ ...child, last_name: e.target.value })
+                      }
+                      error={isSubmitting && !child.last_name.trim()}
+                    />
+                  </div>
+                </div>
+              )}
+
               <div className="phone-input auth-field">
                 <InputLabel htmlFor="phone_number">
                   {t('REGISTER.REGISTER_PHONE_NUMBER')}
@@ -364,7 +438,7 @@ const Register: FC = () => {
                 variant="contained"
                 color="primary"
                 size="large"
-                disabled={isSubmitting}
+                disabled={isSubmitting || childMissing}
                 type="submit"
                 className="btn-custom-style"
                 fullWidth

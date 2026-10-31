@@ -274,6 +274,24 @@ $topbar-height: 6.4rem;
     }
   }
 
+  &__child-switcher {
+    padding: 0 1.2rem 0.8rem;
+
+    .MuiInputBase-root {
+      background: rgba(255, 255, 255, 0.08);
+      color: inherit;
+      border-radius: 1rem;
+    }
+
+    .MuiSelect-icon {
+      color: inherit;
+    }
+
+    .MuiOutlinedInput-notchedOutline {
+      border-color: rgba(255, 255, 255, 0.25);
+    }
+  }
+
   &__language .language-selector {
     width: 100%;
     justify-content: flex-start;
