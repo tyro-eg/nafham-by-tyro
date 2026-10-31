@@ -17,6 +17,12 @@ import {
 
 import { useAppSelector } from '../../redux/store';
 import { selectCurrentUser } from '../../redux/user/user.selectors';
+import {
+  canJoin,
+  counterpartName,
+  useLiveSessionToast,
+  useNow,
+} from '../sessions/session-state';
 import { useSessions } from '../../hooks/useSessions';
 import { usePackages } from '../../hooks/usePackages';
 import { useInstructor } from '../../hooks/useInstructors';
@@ -88,7 +94,8 @@ const TutorDashboard: FC = () => {
   const packagesQuery = usePackages(1, HISTORY_SIZE);
   const profileQuery = useInstructor(currentUser?.id || 0, !!currentUser);
 
-  const now = useMemo(() => new Date(), []);
+  // Ticks every 30 s so the countdown and the Join button move on their own
+  const now = useNow();
   const locale = `${i18n.language}-u-nu-latn`;
   const loading = sessionsQuery.isLoading;
 
@@ -157,6 +164,11 @@ const TutorDashboard: FC = () => {
     0,
   );
 
+  useLiveSessionToast(sessionsQuery.data ? sessions : undefined, (session) =>
+    t('MYSESSIONS.MAIN.CARD.LIVE_TOAST', {
+      name: counterpartName(session, currentUser?.id),
+    }),
+  );
   const nextSession = upcoming[0];
   const laterSessions = upcoming.slice(1, 4);
   const studentName = (s: SessionType) =>
@@ -372,9 +384,7 @@ const TutorDashboard: FC = () => {
                     variant="contained"
                     size="large"
                     startIcon={<VideocamRounded />}
-                    disabled={
-                      nextSession.status !== 'open' || !nextSession.session_link
-                    }
+                    disabled={!canJoin(nextSession, now, true)}
                     onClick={() =>
                       window.open(nextSession.session_link, '_blank')
                     }

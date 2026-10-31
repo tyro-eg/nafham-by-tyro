@@ -271,4 +271,8 @@ export type SessionType = {
   };
   updated_at: string;
   session_link: string;
+  /** zoom | manual | none: where the join link leads */
+  meeting_provider?: 'zoom' | 'manual' | 'none';
+  /** Over, but not yet closed from attendance or by support */
+  awaiting_confirmation?: boolean;
 };
