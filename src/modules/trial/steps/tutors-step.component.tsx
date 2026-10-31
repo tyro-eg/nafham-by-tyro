@@ -1,7 +1,12 @@
 import { FC, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Alert, Button, Chip, CircularProgress, Rating } from '@mui/material';
-import { ArrowBack, StarRounded } from '@mui/icons-material';
+import { Alert, Button, CircularProgress, Rating } from '@mui/material';
+import {
+  ArrowBackRounded,
+  ArrowForwardRounded,
+  StarRounded,
+  WorkspacePremiumRounded,
+} from '@mui/icons-material';
 
 import type { GradeSubject } from '../../../assets/types';
 import { getNameInitials } from '../../../assets/utils/utils';
@@ -24,7 +29,7 @@ interface TutorsStepProps {
 }
 
 const TOP = 3;
-const BIO_LENGTH = 140;
+const BIO_LENGTH = 160;
 
 /**
  * The tutors who can give the trial, best first as our team ranks them for
@@ -50,7 +55,12 @@ const TutorsStep: FC<TutorsStepProps> = ({
   const hidden = tutors.length - visible.length;
 
   const back = (
-    <Button variant="outlined" startIcon={<ArrowBack />} onClick={onBack}>
+    <Button
+      className="trial__back"
+      variant="outlined"
+      startIcon={<ArrowBackRounded />}
+      onClick={onBack}
+    >
       {t('TRIAL.ACTIONS.BACK')}
     </Button>
   );
@@ -76,9 +86,14 @@ const TutorsStep: FC<TutorsStepProps> = ({
   if (!tutors.length) {
     return (
       <div className="trial__step">
-        <p className="trial__empty">
-          {t('TRIAL.TUTORS.EMPTY', { course: course?.full_course_name ?? '' })}
-        </p>
+        <h2 className="trial__step-title">{t('TRIAL.TUTORS.TITLE')}</h2>
+        <div className="trial__empty-box">
+          <p className="trial__empty">
+            {t('TRIAL.TUTORS.EMPTY', {
+              course: course?.full_course_name ?? '',
+            })}
+          </p>
+        </div>
         <div className="trial__actions">{back}</div>
       </div>
     );
@@ -86,69 +101,99 @@ const TutorsStep: FC<TutorsStepProps> = ({
 
   return (
     <div className="trial__step">
-      <h2 className="trial__step-title">{t('TRIAL.TUTORS.TITLE')}</h2>
-      <p className="trial__hint">
-        {t('TRIAL.TUTORS.SUBTITLE', { course: course?.full_course_name ?? '' })}
-      </p>
+      <div>
+        <h2 className="trial__step-title">{t('TRIAL.TUTORS.TITLE')}</h2>
+        <p className="trial__hint">
+          {t('TRIAL.TUTORS.SUBTITLE', {
+            course: course?.full_course_name ?? '',
+          })}
+        </p>
+      </div>
 
       <ul className="trial__tutors">
         {visible.map((tutor, index) => {
           const name = `${tutor.first_name} ${tutor.last_name}`.trim();
           const used = eligibility.data?.[tutor.id]?.enabled === false;
           const bio = tutor.bio ?? '';
+          const top = index === 0;
           return (
             <li
               key={tutor.id}
-              className={`trial-tutor ${index < TOP ? 'trial-tutor--top' : ''}`}
+              className={`trial-tutor ${top ? 'trial-tutor--top' : ''} ${used ? 'trial-tutor--used' : ''}`}
             >
-              <div
-                className="trial-tutor__avatar"
-                style={
-                  tutor.avatar
-                    ? { backgroundImage: `url(${tutor.avatar})` }
-                    : undefined
-                }
-              >
-                {tutor.avatar ? null : getNameInitials(name)}
-              </div>
-              <div className="trial-tutor__body">
-                <div className="trial-tutor__head">
-                  <h3 className="trial-tutor__name">{name}</h3>
-                  {tutor.recommended && (
-                    <Chip
-                      size="small"
-                      color="secondary"
-                      icon={<StarRounded />}
-                      label={t('TRIAL.TUTORS.OPS_PICK')}
-                    />
-                  )}
-                  {tutor.ops_rating ? (
-                    <span
-                      className="trial-tutor__rating"
-                      title={t('TRIAL.TUTORS.RATED')}
-                    >
-                      <Rating value={tutor.ops_rating} size="small" readOnly />
-                    </span>
-                  ) : null}
+              {top && (
+                <span className="trial-tutor__ribbon">
+                  <WorkspacePremiumRounded />
+                  {t('TRIAL.TUTORS.TOP')}
+                </span>
+              )}
+              <div className="trial-tutor__main">
+                <div
+                  className="trial-tutor__avatar"
+                  style={
+                    tutor.avatar
+                      ? { backgroundImage: `url(${tutor.avatar})` }
+                      : undefined
+                  }
+                >
+                  {tutor.avatar ? null : getNameInitials(name)}
                 </div>
-                <p className="trial-tutor__bio" dir="auto">
-                  {bio.length > BIO_LENGTH
-                    ? `${bio.slice(0, BIO_LENGTH)}…`
-                    : bio}
-                </p>
-                <p className="trial__label">{t('TRIAL.TUTORS.NEXT_SLOTS')}</p>
-                <div className="trial__chips">
+                <div className="trial-tutor__body">
+                  <div className="trial-tutor__head">
+                    <h3 className="trial-tutor__name">{name}</h3>
+                    {tutor.recommended && (
+                      <span className="trial-tutor__pick">
+                        <StarRounded />
+                        {t('TRIAL.TUTORS.OPS_PICK')}
+                      </span>
+                    )}
+                    {tutor.ops_rating ? (
+                      <span
+                        className="trial-tutor__rating"
+                        title={t('TRIAL.TUTORS.RATED')}
+                      >
+                        <Rating
+                          value={tutor.ops_rating}
+                          size="small"
+                          readOnly
+                        />
+                      </span>
+                    ) : null}
+                  </div>
+                  {tutor.exam_boards.length > 0 && (
+                    <p className="trial-tutor__boards">
+                      {tutor.exam_boards.map((b) => b.name).join(' · ')}
+                    </p>
+                  )}
+                  {bio && (
+                    <p className="trial-tutor__bio" dir="auto">
+                      {bio.length > BIO_LENGTH
+                        ? `${bio.slice(0, BIO_LENGTH)}…`
+                        : bio}
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              <div className="trial-tutor__slots">
+                <span className="trial-choice__label">
+                  {t('TRIAL.TUTORS.NEXT_SLOTS')}
+                </span>
+                <div className="trial-tutor__chips">
                   {tutor.slots.slice(0, 3).map((slot) => (
-                    <Chip
+                    <button
                       key={slot.id}
-                      label={formatSlot(slot.start_time, locale)}
-                      variant="outlined"
+                      type="button"
+                      className="trial-slot-chip"
                       disabled={used}
                       onClick={() => onPickSlot(tutor.id, slot)}
-                    />
+                    >
+                      {formatSlot(slot.start_time, locale)}
+                    </button>
                   ))}
                 </div>
               </div>
+
               <div className="trial-tutor__action">
                 {used ? (
                   <span className="trial-tutor__used">
@@ -156,8 +201,9 @@ const TutorsStep: FC<TutorsStepProps> = ({
                   </span>
                 ) : (
                   <Button
-                    variant="contained"
-                    color="primary"
+                    className={top ? 'trial__cta' : 'trial__back'}
+                    variant={top ? 'contained' : 'outlined'}
+                    endIcon={<ArrowForwardRounded />}
                     onClick={() => onPickTutor(tutor.id)}
                   >
                     {t('TRIAL.TUTORS.CHOOSE', { name: tutor.first_name })}
@@ -172,12 +218,20 @@ const TutorsStep: FC<TutorsStepProps> = ({
       <div className="trial__actions">
         {back}
         {hidden > 0 && (
-          <Button variant="text" onClick={() => setShowAll(true)}>
+          <Button
+            className="trial__link"
+            variant="text"
+            onClick={() => setShowAll(true)}
+          >
             {t('TRIAL.TUTORS.MORE', { count: hidden })}
           </Button>
         )}
         {showAll && tutors.length > TOP && (
-          <Button variant="text" onClick={() => setShowAll(false)}>
+          <Button
+            className="trial__link"
+            variant="text"
+            onClick={() => setShowAll(false)}
+          >
             {t('TRIAL.TUTORS.LESS')}
           </Button>
         )}

@@ -7,10 +7,21 @@ import {
   Dialog,
   TextField,
 } from '@mui/material';
-import { ArrowBack, CardGiftcardRounded } from '@mui/icons-material';
+import {
+  ArrowBackRounded,
+  CardGiftcardRounded,
+  EventRounded,
+  LockOutlined,
+  MenuBookRounded,
+  PersonRounded,
+} from '@mui/icons-material';
 
 import type { GradeSubject } from '../../../assets/types';
-import type { TrialSlot, TrialTutor } from '../../../hooks/useTrial';
+import type {
+  ExamBoardOption,
+  TrialSlot,
+  TrialTutor,
+} from '../../../hooks/useTrial';
 import {
   bookingErrorMessage,
   useBookTrialSession,
@@ -21,6 +32,7 @@ import { formatSlot } from '../trial.types';
 
 interface ConfirmStepProps {
   course?: GradeSubject;
+  examBoard?: ExamBoardOption;
   tutor?: TrialTutor;
   slot?: TrialSlot;
   loading: boolean;
@@ -40,6 +52,7 @@ const SLOT_MINUTES = 30;
  */
 const ConfirmStep: FC<ConfirmStepProps> = ({
   course,
+  examBoard,
   tutor,
   slot,
   loading,
@@ -76,6 +89,7 @@ const ConfirmStep: FC<ConfirmStepProps> = ({
         grade_subject_id: course.id,
         start_time: slot.start_time,
         guardian_phone: guardianPhone.trim() || undefined,
+        exam_board_id: examBoard?.id,
       });
       onBooked();
     } catch (err) {
@@ -83,24 +97,50 @@ const ConfirmStep: FC<ConfirmStepProps> = ({
     }
   };
 
+  const rows = [
+    {
+      icon: <MenuBookRounded />,
+      label: t('TRIAL.CONFIRM.COURSE'),
+      value: examBoard
+        ? `${course.full_course_name} · ${examBoard.name}`
+        : course.full_course_name,
+    },
+    {
+      icon: <PersonRounded />,
+      label: t('TRIAL.CONFIRM.TUTOR'),
+      value: `${tutor.first_name} ${tutor.last_name}`.trim(),
+    },
+    {
+      icon: <EventRounded />,
+      label: t('TRIAL.CONFIRM.WHEN'),
+      value: `${formatSlot(slot.start_time, locale)} · ${t('TRIAL.CONFIRM.DURATION', { minutes: minutes || SLOT_MINUTES })}`,
+    },
+  ];
+
   return (
     <div className="trial__step">
       <h2 className="trial__step-title">{t('TRIAL.CONFIRM.TITLE')}</h2>
-      <dl className="trial__summary">
-        <dt>{t('TRIAL.CONFIRM.COURSE')}</dt>
-        <dd>{course.full_course_name}</dd>
-        <dt>{t('TRIAL.CONFIRM.TUTOR')}</dt>
-        <dd>{`${tutor.first_name} ${tutor.last_name}`.trim()}</dd>
-        <dt>{t('TRIAL.CONFIRM.WHEN')}</dt>
-        <dd>
-          {formatSlot(slot.start_time, locale)} ·{' '}
-          {t('TRIAL.CONFIRM.DURATION', { minutes: minutes || SLOT_MINUTES })}
-        </dd>
-      </dl>
+
+      <div className="trial-receipt">
+        <div className="trial-receipt__badge">
+          <CardGiftcardRounded />
+          <span>{t('TRIAL.CONFIRM.FREE')}</span>
+        </div>
+        <ul className="trial-receipt__rows">
+          {rows.map((row) => (
+            <li key={row.label} className="trial-receipt__row">
+              <span className="trial-receipt__icon">{row.icon}</span>
+              <span className="trial-receipt__text">
+                <span className="trial-receipt__label">{row.label}</span>
+                <span className="trial-receipt__value">{row.value}</span>
+              </span>
+            </li>
+          ))}
+        </ul>
+      </div>
 
       <TextField
         className="trial__guardian"
-        size="small"
         type="tel"
         fullWidth
         label={t('TRIAL.CONFIRM.GUARDIAN_PHONE')}
@@ -113,16 +153,26 @@ const ConfirmStep: FC<ConfirmStepProps> = ({
 
       {error && <Alert severity="error">{error}</Alert>}
 
-      {!signedIn && <p className="trial__hint">{t('TRIAL.CONFIRM.VISITOR')}</p>}
+      {!signedIn && (
+        <p className="trial__notice">
+          <LockOutlined />
+          {t('TRIAL.CONFIRM.VISITOR')}
+        </p>
+      )}
 
       <div className="trial__actions">
-        <Button variant="outlined" startIcon={<ArrowBack />} onClick={onBack}>
+        <Button
+          className="trial__back"
+          variant="outlined"
+          startIcon={<ArrowBackRounded />}
+          onClick={onBack}
+        >
           {t('TRIAL.ACTIONS.BACK')}
         </Button>
         {signedIn ? (
           <Button
+            className="trial__cta trial__cta--gold"
             variant="contained"
-            color="primary"
             startIcon={<CardGiftcardRounded />}
             disabled={bookTrial.isPending}
             onClick={book}
@@ -133,12 +183,16 @@ const ConfirmStep: FC<ConfirmStepProps> = ({
           </Button>
         ) : (
           <>
-            <Button variant="text" onClick={() => setAuth('login')}>
+            <Button
+              className="trial__link"
+              variant="text"
+              onClick={() => setAuth('login')}
+            >
               {t('TRIAL.CONFIRM.LOGIN')}
             </Button>
             <Button
+              className="trial__cta trial__cta--gold"
               variant="contained"
-              color="primary"
               onClick={() => setAuth('register')}
             >
               {t('TRIAL.CONFIRM.REGISTER')}

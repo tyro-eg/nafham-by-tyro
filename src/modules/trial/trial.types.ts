@@ -24,9 +24,12 @@ export type Step = (typeof STEPS)[number];
 export const stepsFor = (parent: boolean): readonly Step[] =>
   parent ? STEPS : STEPS.filter((step) => step !== 'child');
 
-/** How far ahead the search looks by default and at most */
-export const DEFAULT_DAYS = 14;
+/** How far ahead "flexible" looks, and how far a picked date may be */
+export const FLEXIBLE_DAYS = 14;
 export const MAX_DAYS = 30;
+
+/** Which day(s) the student wants: today, tomorrow, one date, or any day soon */
+export type DayChoice = 'today' | 'tomorrow' | 'date' | 'flexible';
 
 /** Everything the student has picked so far */
 export interface TrialDraft {
@@ -34,9 +37,11 @@ export interface TrialDraft {
   /** A parent's pick: which child the trial is for */
   childId?: number;
   courseId?: number;
-  /** yyyy-mm-dd, local */
-  from: string;
-  to: string;
+  /** The exam board the student sits, when the course's tutors declare boards */
+  examBoardId?: number;
+  day: DayChoice;
+  /** yyyy-mm-dd, local; used when day is "date" */
+  date: string;
   window: TimeWindow;
   tutorId?: number;
   slot?: TrialSlot;
@@ -56,12 +61,27 @@ export const addDays = (yyyymmdd: string, days: number) => {
   return isoDate(date);
 };
 
-export const tomorrow = () => addDays(isoDate(new Date()), 1);
+export const today = () => isoDate(new Date());
+export const tomorrow = () => addDays(today(), 1);
+
+/** The search's first and last day for a day choice */
+export const rangeFor = (day: DayChoice, date: string) => {
+  switch (day) {
+    case 'today':
+      return { from: today(), to: today() };
+    case 'tomorrow':
+      return { from: tomorrow(), to: tomorrow() };
+    case 'date':
+      return { from: date, to: date };
+    default:
+      return { from: today(), to: addDays(today(), FLEXIBLE_DAYS) };
+  }
+};
 
 export const emptyDraft = (): TrialDraft => ({
   step: 'course',
-  from: tomorrow(),
-  to: addDays(tomorrow(), DEFAULT_DAYS),
+  day: 'tomorrow',
+  date: tomorrow(),
   window: 'any',
   guardianPhone: '',
 });
@@ -76,9 +96,11 @@ export const loadDraft = (): TrialDraft => {
     if (!raw) return emptyDraft();
     const saved = JSON.parse(raw) as Partial<TrialDraft>;
     const draft = { ...emptyDraft(), ...saved };
-    // Dates in the past are no use any more
-    if (draft.from < tomorrow()) draft.from = tomorrow();
-    if (draft.to <= draft.from) draft.to = addDays(draft.from, DEFAULT_DAYS);
+    // A picked date in the past is no use any more
+    if (!draft.date || draft.date < today()) draft.date = tomorrow();
+    if (!['today', 'tomorrow', 'date', 'flexible'].includes(draft.day)) {
+      draft.day = 'tomorrow';
+    }
     return draft;
   } catch {
     return emptyDraft();
@@ -133,3 +155,11 @@ export const dayOf = (iso: string) => {
   const date = new Date(iso);
   return isoDate(date);
 };
+
+/** "Tue 3 Nov", for tiles and the summary rail */
+export const formatDate = (yyyymmdd: string, locale: string) =>
+  new Date(`${yyyymmdd}T00:00:00`).toLocaleDateString(locale, {
+    weekday: 'short',
+    day: 'numeric',
+    month: 'short',
+  });

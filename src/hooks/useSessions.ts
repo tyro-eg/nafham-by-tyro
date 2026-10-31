@@ -19,6 +19,8 @@ export interface TrialSessionData {
   start_time: string;
   grade_subject_id: number;
   guardian_phone?: string;
+  /** The exam board the student sits, when the course's tutors declare boards */
+  exam_board_id?: number;
 }
 
 /**

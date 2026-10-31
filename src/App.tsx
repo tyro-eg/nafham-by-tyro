@@ -9,6 +9,7 @@ import NotistackProvider from './component/app/NotistackProvider';
 import AnalyticsTracker from './component/app/AnalyticsTracker';
 import Layout from './component/app/Layout';
 import RoutesComponent from './component/app/Routes';
+import { useRefreshCurrentUser } from './hooks/useAuth';
 import { StreamChatProvider } from './component/stream-chat/stream-chat-provider';
 
 import './assets/styles/main.scss';
@@ -35,6 +36,7 @@ import './App.scss';
  */
 const App: React.FC = () => {
   const currentUser = useAppSelector(selectCurrentUser);
+  useRefreshCurrentUser();
 
   // Update Sentry user context and GA user ID when user logs in/out
   useEffect(() => {

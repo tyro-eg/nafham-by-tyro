@@ -833,6 +833,7 @@
       "UPCOMING": "Upcoming Sessions",
       "UNSCHEDULED": "Unscheduled Hours",
       "PREVIOUS": "Previous Sessions",
+      "COMPLETED": "Completed Sessions",
       "CANCELLED": "Cancelled Sessions"
     },
     "SCHEDULE": {
@@ -1325,6 +1326,7 @@
     "STATS": {
       "UPCOMING": "Upcoming sessions",
       "HOURS_LEARNED": "Hours learned",
+      "COMPLETED": "Completed sessions",
       "HOURS_REMAINING": "Hours remaining",
       "ATTENDANCE": "Attendance"
     },
@@ -1613,7 +1615,7 @@
   },
   "TRIAL": {
     "TITLE": "Book your free trial",
-    "SUBTITLE": "A free session with one of our tutors, in {{count}} quick steps.",
+    "SUBTITLE": "A free session with one of our tutors, in five quick steps.",
     "STEPS": {
       "COURSE": "Course",
       "WHEN": "When",
@@ -1632,19 +1634,26 @@
       "GENERAL": "General",
       "LOADING": "Loading courses...",
       "EMPTY": "No courses are open for free trials right now. Please check back soon.",
-      "SEARCH": "Type to search",
-      "NO_MATCH": "Nothing matches"
+      "PLACEHOLDER": "Choose…"
     },
     "WHEN": {
       "TITLE": "When suits you?",
-      "FROM": "From",
-      "TO": "To",
       "WINDOW": "Time of day",
       "ANY": "Any time",
       "MORNING": "Morning (6–12)",
       "AFTERNOON": "Afternoon (12–17)",
       "EVENING": "Evening (17–23)",
-      "TIMEZONE": "Times are shown in your local timezone ({{tz}})."
+      "TIMEZONE": "Times are shown in your local timezone ({{tz}}).",
+      "ANY_HINT": "Whenever a tutor is free",
+      "DAY": "Day",
+      "TODAY": "Today",
+      "TOMORROW": "Tomorrow",
+      "DATE": "Pick a date",
+      "DATE_HINT": "Any day in the next month",
+      "FLEXIBLE": "I'm flexible",
+      "FLEXIBLE_HINT": "Any day in the next {{days}} days",
+      "FROM": "From",
+      "TO": "To"
     },
     "TUTORS": {
       "TITLE": "Our top picks for you",
@@ -1657,12 +1666,15 @@
       "LESS": "Show fewer",
       "EMPTY": "No tutor is free for {{course}} in that window. Try wider dates or another time of day.",
       "USED": "Free trial already used with this tutor",
-      "LOADING": "Finding your tutors..."
+      "LOADING": "Finding your tutors...",
+      "TOP": "Top pick"
     },
     "SLOT": {
       "TITLE": "Pick a time with {{name}}",
       "DAY": "Day",
-      "TIME": "Time"
+      "TIME": "Time",
+      "TIMES_one": "{{count}} time",
+      "TIMES_other": "{{count}} times"
     },
     "CONFIRM": {
       "TITLE": "Confirm your free trial",
@@ -1676,7 +1688,8 @@
       "REGISTER": "Create account",
       "LOGIN": "I already have an account",
       "BOOK": "Book my free trial",
-      "BOOKING": "Booking..."
+      "BOOKING": "Booking...",
+      "FREE": "Free · no payment needed"
     },
     "ACTIONS": {
       "BACK": "Back",
@@ -1685,21 +1698,15 @@
     "TUTOR_ACCOUNT": "Free trials are for students. You are signed in as a tutor.",
     "ERROR": "We couldn't book your trial. Please pick another time.",
     "ERROR_LOADING": "We couldn't load the tutors. Please try again.",
+    "EYEBROW": "Free trial",
+    "SUMMARY": "Your booking",
+    "PENDING": "Not chosen yet",
+    "STEP_COUNT": "Step {{step}} of {{count}}",
     "CHILD": {
       "TITLE": "Who is the trial for?",
       "TEXT": "Pick the child; the tutors and times are matched to them.",
       "ADD": "Add a child",
       "NONE": "No children yet. Add your first child, then come back to book the trial."
-    },
-    "SUMMARY": {
-      "TITLE": "Your trial",
-      "PENDING": "Not picked yet"
-    },
-    "EXPECT": {
-      "TITLE": "What to expect",
-      "LENGTH": "A 30-minute lesson, one to one, at the time you pick.",
-      "ONLINE": "Online on Zoom; the link appears in My Sessions before the lesson.",
-      "FREE": "Free, with nothing to pay and no card needed."
     }
   },
   "AVAILABILITY": {
