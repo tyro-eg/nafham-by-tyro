@@ -10,12 +10,15 @@ import { SessionType, ApiError } from '../assets/types';
 import { snackActions } from '../assets/utils/toaster';
 
 /**
- * Trial session booking data
+ * Trial session booking data (POST /sessions/trial). The backend decides the
+ * length; the student picks the start of an open slot and may leave a
+ * parent's phone number.
  */
 export interface TrialSessionData {
   tutor_id: number;
   start_time: string;
   grade_subject_id: number;
+  guardian_phone?: string;
 }
 
 /**
@@ -176,33 +179,44 @@ export function useEndSession() {
 }
 
 /**
- * Book a trial session
+ * Book a free trial. Students book these themselves; the caller shows the
+ * backend's reasons when the booking is refused (bookingErrorMessage).
  */
 export function useBookTrialSession() {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (sessionData: TrialSessionData) => {
-      await post(`/sessions/trial`, { trial_session: sessionData });
+      const response = await post(`/sessions/trial`, {
+        trial_session: sessionData,
+      });
+      return response.data.data as SessionType;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: queryKeys.sessions.all,
-      });
-      queryClient.invalidateQueries({
-        queryKey: queryKeys.calendar.all,
-      });
-      snackActions.success('Trial session booked successfully');
-    },
-    onError: (error: ApiError) => {
-      const errorMessage =
-        error.response?.data?.error ||
-        error.message ||
-        'Failed to book trial session';
-      snackActions.error(errorMessage);
+      queryClient.invalidateQueries({ queryKey: queryKeys.sessions.all });
+      // The slot is now reserved, and the tutor's free trial is claimed
+      queryClient.invalidateQueries({ queryKey: queryKeys.calendar.all });
+      queryClient.invalidateQueries({ queryKey: queryKeys.instructors.all });
     },
   });
 }
+
+/**
+ * The reasons a booking was refused, as the backend states them
+ */
+export const bookingErrorMessage = (
+  error: unknown,
+  fallback: string,
+): string => {
+  const data = (error as { response?: { data?: unknown } })?.response?.data;
+  if (data && typeof data === 'object') {
+    const errors = (data as { errors?: unknown }).errors;
+    if (Array.isArray(errors) && errors.length) return errors.join(' ');
+    const message = (data as { error?: unknown }).error;
+    if (typeof message === 'string') return message;
+  }
+  return fallback;
+};
 
 /**
  * Book a private session

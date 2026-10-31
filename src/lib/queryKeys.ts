@@ -131,4 +131,21 @@ export const queryKeys = {
     all: ['rubrics'] as const,
     list: () => [...queryKeys.rubrics.all, 'list'] as const,
   },
+
+  // AI Teaching Assistant keys (tutor only), per student and course
+  coach: {
+    all: ['coach'] as const,
+    students: () => [...queryKeys.coach.all, 'students'] as const,
+    insights: () => [...queryKeys.coach.all, 'insight'] as const,
+    insight: (studentId: number, courseId: number) =>
+      [...queryKeys.coach.insights(), studentId, courseId] as const,
+    allPlans: () => [...queryKeys.coach.all, 'plans'] as const,
+    plans: (studentId: number, courseId: number) =>
+      [...queryKeys.coach.allPlans(), studentId, courseId] as const,
+    plan: (id: number) => [...queryKeys.coach.all, 'plan', id] as const,
+    allHomework: () => [...queryKeys.coach.all, 'homework'] as const,
+    homework: (studentId: number, courseId: number) =>
+      [...queryKeys.coach.allHomework(), studentId, courseId] as const,
+    me: () => [...queryKeys.coach.all, 'me'] as const,
+  },
 } as const;
