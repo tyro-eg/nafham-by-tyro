@@ -544,6 +544,69 @@ $own-bubble: $brand-100;
     background-color: $navy-900 !important;
     color: $text-on-dark !important;
   }
+
+  // Announcements (the welcome message): quieter, no accent bar
+  &--system .str-chat__message-bubble,
+  &--system .str-chat__message-text {
+    background-color: $surface-alt !important;
+    border-inline-start: 0 !important;
+    color: $text-strong;
+  }
+
+  &--system .nf-msg__admin-label {
+    color: $text-muted;
+  }
+}
+
+// Empty thread: who you are talking to and what the chat is for
+.thread-empty {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: $space-6 $space-5;
+  text-align: center;
+  color: $text-muted;
+
+  svg {
+    font-size: 3.6rem;
+    color: $gray-400;
+    margin-bottom: 0.4rem;
+  }
+
+  &__title {
+    margin: 0;
+    font-size: $font-base;
+    font-weight: 700;
+    color: $text-strong;
+  }
+
+  &__text {
+    max-width: 36rem;
+    margin: 0;
+    font-size: $font-sm;
+    line-height: 1.5;
+  }
+}
+
+// "Chat with Nafham Support" under the filter pills
+.messages__support {
+  align-self: flex-start;
+  margin-top: 0.4rem;
+}
+
+.conv-item__support-avatar,
+.thread-header__admin-avatar {
+  background-color: $navy-900 !important;
+  color: $text-on-dark !important;
+}
+
+// Whole words wrap; Stream's auto hyphenation chops words mid-bubble
+.messages .str-chat__message-text,
+.messages .str-chat__message-text-inner {
+  hyphens: manual;
 }
 
 // Other people: white bubble with a border; own: light brand tint
@@ -567,11 +630,18 @@ $own-bubble: $brand-100;
   font-weight: 700;
 }
 
-// Composer
+// Composer: Stream gives it flex: 1, which would split the column with the
+// message list; it only needs its own height, pinned under the list
+.messages .str-chat__dropzone-root,
 .messages .str-chat__message-composer,
 .messages .str-chat__message-input {
+  flex: 0 0 auto;
   background-color: $surface;
   border-top: 1px solid $border;
+}
+
+.messages .str-chat__main-panel-inner {
+  flex: 1 1 auto;
 }
 
 .messages .str-chat__message-composer-inner,

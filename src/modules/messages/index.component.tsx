@@ -6,6 +6,7 @@ import {
   ChatBubbleOutlineRounded,
   PersonSearchRounded,
   SearchRounded,
+  SupportAgentRounded,
 } from '@mui/icons-material';
 import type {
   Channel as StreamChannel,
@@ -24,17 +25,21 @@ import {
 
 import { useAppSelector } from '../../redux/store';
 import { selectCurrentUser } from '../../redux/user/user.selectors';
-import { useStreamChat } from '../../hooks/useStreamChat';
+import {
+  useOpenSupportConversation,
+  useStreamChat,
+} from '../../hooks/useStreamChat';
 import {
   CHANNEL_TYPE,
   getCounterpart,
-  isAdminUser,
+  isSupportConversation,
   toStreamUserId,
 } from '../../lib/streamChat';
 import { useRtlClass } from '../../assets/utils/utils';
 import ConversationItem from './conversation-item.component';
 import ThreadHeader from './thread-header.component';
 import NafhamMessageUI from './nafham-message-ui.component';
+import ThreadEmptyState from './thread-empty-state.component';
 import { getStreamI18n } from './stream-i18n';
 
 import 'stream-chat-react/dist/css/index.css';
@@ -60,6 +65,7 @@ const Messages: FC = () => {
   const { channelId } = useParams<{ channelId?: string }>();
   const currentUser = useAppSelector(selectCurrentUser);
   const { client, isConnected, error } = useStreamChat();
+  const support = useOpenSupportConversation();
 
   const [filter, setFilter] = useState<ListFilter>('all');
   const [query, setQuery] = useState('');
@@ -82,10 +88,8 @@ const Messages: FC = () => {
       const q = query.trim().toLowerCase();
       return channels.filter((channel) => {
         if (filter === 'unread' && channel.countUnread() === 0) return false;
-        if (filter === 'nafham') {
-          const last = channel.state.latestMessages.at(-1);
-          if (!isAdminUser(last?.user?.id)) return false;
-        }
+        if (filter === 'nafham' && !isSupportConversation(channel))
+          return false;
         if (!q) return true;
         const other = getCounterpart(channel, userId);
         const haystack = `${other?.user?.name ?? ''} ${
@@ -141,6 +145,7 @@ const Messages: FC = () => {
           overrides={{
             MessageUI: NafhamMessageUI,
             ChannelListHeader: NoHeader,
+            EmptyStateIndicator: ThreadEmptyState,
           }}
         >
           <section className="messages__list" aria-label={t('MESSAGES.TITLE')}>
@@ -171,6 +176,16 @@ const Messages: FC = () => {
                   </button>
                 ))}
               </div>
+              <Button
+                className="messages__support"
+                variant="text"
+                size="small"
+                startIcon={<SupportAgentRounded />}
+                disabled={support.isStarting}
+                onClick={() => support.open()}
+              >
+                {t('MESSAGES.SUPPORT.BUTTON')}
+              </Button>
             </div>
 
             <ChannelList
@@ -190,6 +205,16 @@ const Messages: FC = () => {
                       ? t('MESSAGES.EMPTY.TUTOR_TEXT')
                       : t('MESSAGES.EMPTY.STUDENT_TEXT')}
                   </p>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    size="small"
+                    startIcon={<SupportAgentRounded />}
+                    disabled={support.isStarting}
+                    onClick={() => support.open()}
+                  >
+                    {t('MESSAGES.SUPPORT.BUTTON')}
+                  </Button>
                   {!isTutor && (
                     <Button
                       variant="outlined"

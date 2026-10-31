@@ -6,7 +6,7 @@ import { ArrowRightAlt, ChatBubbleOutlineRounded } from '@mui/icons-material';
 
 import { useAppSelector } from '../../redux/store';
 import { selectCurrentUser } from '../../redux/user/user.selectors';
-import { useStartConversation } from '../../hooks/useStreamChat';
+import { useCanMessage, useStartConversation } from '../../hooks/useStreamChat';
 
 import ReadMore from '../read-more/read-more.component';
 import RatingSummary from '../rating-summary/rating-summary.component';
@@ -37,9 +37,8 @@ const InstructorCard: React.FC<{ instructor: Instructor }> = memo(
     const { t } = useTranslation();
     const rtlClass = useRtlClass();
     const currentUser = useAppSelector(selectCurrentUser);
-    const { startConversation, isStarting, isAvailable } =
-      useStartConversation();
-    const canMessage = isAvailable && currentUser?.type === 'Student';
+    const { startConversation, isStarting } = useStartConversation();
+    const canMessage = useCanMessage(instructor.id);
     // Students cannot book sessions themselves; they send a request to
     // support. Visitors are sent to register first.
     const canRequest = !currentUser || currentUser.type === 'Student';

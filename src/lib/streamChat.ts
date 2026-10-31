@@ -13,8 +13,10 @@ import type { CurrentUser } from '../assets/types';
  * Every conversation is a `messaging` channel with three members: the
  * student, the instructor and the shared Nafham admin user
  * ("Nafham Support"). Stream stores the messages, attachments and voice
- * notes; the backend only vouches for who the user is by signing a token
- * at POST /chat/token (see tokenProvider below).
+ * notes. The backend signs the user token (POST /chat/token, see
+ * tokenProvider) and creates the conversations (POST /chat/conversations,
+ * see findOrCreateConversation): a student may only message instructors
+ * they have a package with, and the backend adds Nafham Support.
  */
 
 export const STREAM_API_KEY = import.meta.env.VITE_STREAM_API_KEY || '';
@@ -96,15 +98,26 @@ export const disconnectStreamUser = async () => {
   }
 };
 
+/** "lesson" (student + instructor) or "support" (one person + Nafham Support) */
+export const channelKind = (channel: Channel): 'lesson' | 'support' =>
+  channel.data?.kind === 'support' ? 'support' : 'lesson';
+
+export const isSupportConversation = (channel: Channel): boolean =>
+  channelKind(channel) === 'support';
+
 /**
  * The person the current user is talking to: the member who is neither
- * the current user nor the Nafham admin.
+ * the current user nor the Nafham admin. In a support conversation that
+ * is Nafham Support itself.
  */
 export const getCounterpart = (
   channel: Channel,
   currentUserId: string,
 ): ChannelMemberResponse | undefined => {
   const members = Object.values(channel.state.members);
+  if (isSupportConversation(channel)) {
+    return members.find((m) => m.user_id === STREAM_ADMIN_USER_ID);
+  }
   return (
     members.find(
       (m) => m.user_id !== currentUserId && m.user_id !== STREAM_ADMIN_USER_ID,
@@ -118,10 +131,26 @@ export const hasAdminMember = (channel: Channel): boolean =>
 export const isAdminUser = (userId?: string): boolean =>
   userId === STREAM_ADMIN_USER_ID;
 
+/** Body of a successful POST /chat/conversations */
+interface ConversationResponse {
+  data: { id: string; cid: string; type: string };
+}
+
+/** Watch the channel the backend created or found */
+const watchConversation = async (response: {
+  data: ConversationResponse;
+}): Promise<Channel> => {
+  const { id } = response.data.data;
+  const channel = getStreamClient().channel(CHANNEL_TYPE, id);
+  await channel.watch();
+  return channel;
+};
+
 /**
- * Find or create the conversation between the current user and another
- * user. Channels without an id are "distinct": Stream returns the same
- * channel for the same set of members, so this is idempotent.
+ * Open the conversation with another user. The backend creates the
+ * channel (student, instructor and Nafham Support) once it has checked
+ * that the two share a package, and answers 403 otherwise; the app only
+ * watches the channel it is given back.
  */
 export const findOrCreateConversation = async (
   otherUserId: number | string,
@@ -131,12 +160,24 @@ export const findOrCreateConversation = async (
   if (!chat.userID) {
     throw new Error('Stream user is not connected');
   }
-  const members = Array.from(
-    new Set([chat.userID, toStreamUserId(otherUserId), STREAM_ADMIN_USER_ID]),
-  );
-  const channel = chat.channel(CHANNEL_TYPE, { members, ...data });
-  await channel.watch();
-  return channel;
+  const response = await post('/chat/conversations', {
+    user_id: otherUserId,
+    subject: data.subject,
+  });
+  return watchConversation(response as { data: ConversationResponse });
+};
+
+/**
+ * Open the current user's direct conversation with Nafham Support (any
+ * active student or instructor may have one).
+ */
+export const openSupportConversation = async (): Promise<Channel> => {
+  const chat = getStreamClient();
+  if (!chat.userID) {
+    throw new Error('Stream user is not connected');
+  }
+  const response = await post('/chat/conversations', { kind: 'support' });
+  return watchConversation(response as { data: ConversationResponse });
 };
 
 /** Initials for a member without an avatar image. */

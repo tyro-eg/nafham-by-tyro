@@ -14,6 +14,7 @@ import {
   getCounterpart,
   hasAdminMember,
   initialsOf,
+  isSupportConversation,
 } from '../../lib/streamChat';
 import { useRtlClass } from '../../assets/utils/utils';
 
@@ -37,12 +38,19 @@ const ThreadHeader: FC<ThreadHeaderProps> = ({
   const { t } = useTranslation();
   const rtl = useRtlClass() === 'rtl';
 
+  const support = isSupportConversation(channel);
   const other = getCounterpart(channel, currentUserId);
-  const name = other?.user?.name || t('MESSAGES.UNKNOWN_USER');
-  const subject = (channel.data?.subject as string | undefined) || '';
-  const otherRole = isTutor
-    ? t('MESSAGES.ROLE.STUDENT')
-    : t('MESSAGES.ROLE.INSTRUCTOR');
+  const name = support
+    ? t('MESSAGES.NAFHAM_SUPPORT')
+    : other?.user?.name || t('MESSAGES.UNKNOWN_USER');
+  const subject = support
+    ? `${t('MESSAGES.SUPPORT.META')} · ${t('MESSAGES.SUPPORT.REPLY_TIME')}`
+    : (channel.data?.subject as string | undefined) || '';
+  const otherRole = support
+    ? t('MESSAGES.ROLE.SUPPORT')
+    : isTutor
+      ? t('MESSAGES.ROLE.STUDENT')
+      : t('MESSAGES.ROLE.INSTRUCTOR');
 
   return (
     <header className="thread-header">
@@ -55,10 +63,16 @@ const ThreadHeader: FC<ThreadHeaderProps> = ({
       </IconButton>
 
       <div className="thread-header__avatars" aria-hidden="true">
-        <Avatar src={other?.user?.image} alt="">
-          {initialsOf(other?.user?.name)}
-        </Avatar>
-        {hasAdminMember(channel) && (
+        {support ? (
+          <Avatar className="thread-header__admin-avatar" alt="">
+            <ShieldRounded />
+          </Avatar>
+        ) : (
+          <Avatar src={other?.user?.image} alt="">
+            {initialsOf(other?.user?.name)}
+          </Avatar>
+        )}
+        {!support && hasAdminMember(channel) && (
           <Avatar className="thread-header__admin-avatar" alt="">
             <ShieldRounded />
           </Avatar>
@@ -77,9 +91,10 @@ const ThreadHeader: FC<ThreadHeaderProps> = ({
       <ul className="thread-header__members" aria-label={t('MESSAGES.MEMBERS')}>
         <li className="thread-header__chip">{t('MESSAGES.YOU')}</li>
         <li className="thread-header__chip" dir="auto">
-          {other?.user?.name?.split(' ')[0] || name} · {otherRole}
+          {support ? name : other?.user?.name?.split(' ')[0] || name} ·{' '}
+          {otherRole}
         </li>
-        {hasAdminMember(channel) && (
+        {!support && hasAdminMember(channel) && (
           <li className="thread-header__chip thread-header__chip--admin">
             <ShieldRounded aria-hidden="true" />
             {t('MESSAGES.NAFHAM_SUPPORT')} · {t('MESSAGES.ROLE.ADMIN')}
@@ -87,7 +102,7 @@ const ThreadHeader: FC<ThreadHeaderProps> = ({
         )}
       </ul>
 
-      {!isTutor && other?.user_id && (
+      {!isTutor && !support && other?.user_id && (
         <Button
           className="thread-header__book"
           variant="outlined"

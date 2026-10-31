@@ -14,6 +14,7 @@ import {
   hasAdminMember,
   initialsOf,
   isAdminUser,
+  isSupportConversation,
 } from '../../lib/streamChat';
 import { formatConversationTime } from './messages.utils';
 
@@ -50,9 +51,14 @@ const ConversationItem: FC<ConversationItemProps> = ({
     return () => subs.forEach((s) => s.unsubscribe());
   }, [channel]);
 
+  const support = isSupportConversation(channel);
   const other = getCounterpart(channel, currentUserId);
-  const name = other?.user?.name || t('MESSAGES.UNKNOWN_USER');
-  const subject = (channel.data?.subject as string | undefined) || '';
+  const name = support
+    ? t('MESSAGES.NAFHAM_SUPPORT')
+    : other?.user?.name || t('MESSAGES.UNKNOWN_USER');
+  const subject = support
+    ? t('MESSAGES.SUPPORT.META')
+    : (channel.data?.subject as string | undefined) || '';
   const unread = channel.countUnread();
   const latest: LocalMessage | undefined =
     channel.state.latestMessages[channel.state.latestMessages.length - 1];
@@ -83,10 +89,16 @@ const ConversationItem: FC<ConversationItemProps> = ({
       onClick={() => onSelect(channel)}
     >
       <span className="conv-item__avatar">
-        <Avatar src={other?.user?.image} alt="">
-          {initialsOf(other?.user?.name)}
-        </Avatar>
-        {hasAdminMember(channel) && (
+        {support ? (
+          <Avatar className="conv-item__support-avatar" alt="">
+            <ShieldRounded />
+          </Avatar>
+        ) : (
+          <Avatar src={other?.user?.image} alt="">
+            {initialsOf(other?.user?.name)}
+          </Avatar>
+        )}
+        {!support && hasAdminMember(channel) && (
           <span
             className="conv-item__admin-dot"
             title={t('MESSAGES.ADMIN_IN_CHAT')}

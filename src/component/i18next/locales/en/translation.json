@@ -1513,7 +1513,8 @@
     "ROLE": {
       "STUDENT": "Student",
       "INSTRUCTOR": "Instructor",
-      "ADMIN": "Admin"
+      "ADMIN": "Admin",
+      "SUPPORT": "Support"
     },
     "UNKNOWN_USER": "Unknown user",
     "BACK": "Back to messages",
@@ -1542,11 +1543,23 @@
     "CONNECTION_FAILED": "Could not connect to chat. Please try again later.",
     "COMPOSER": {
       "PLACEHOLDER": "Write a message…",
-      "HINT": "Enter to send · Shift+Enter for a new line · Voice notes up to 5 min · Files up to 25 MB"
+      "HINT": "Enter to send · Shift+Enter for a new line"
     },
     "ERRORS": {
       "NOT_CONNECTED": "Chat is not connected yet. Please try again in a moment.",
       "START_FAILED": "Could not open the conversation. Please try again."
+    },
+    "SUPPORT": {
+      "BUTTON": "Chat with Nafham Support",
+      "META": "Support conversation",
+      "REPLY_TIME": "We reply as soon as we can"
+    },
+    "ANNOUNCEMENT": "Announcement",
+    "THREAD_EMPTY": {
+      "LESSON_TITLE": "Say hello to {{name}}",
+      "LESSON_TEXT": "Agree on what to cover, share material, and book sessions through the app. Nafham Support is here in the conversation if you need us.",
+      "SUPPORT_TITLE": "How can we help?",
+      "SUPPORT_TEXT": "Tell us about bookings, packages, payments or anything else. Nafham Support replies as soon as we can."
     }
   },
   "SESSION_REQUEST": {

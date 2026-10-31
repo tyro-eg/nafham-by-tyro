@@ -4,6 +4,7 @@ import {
   TimerTwoTone,
   CheckCircle,
   Cancel,
+  ChatBubbleOutlineRounded,
   Group,
   Person,
   Schedule,
@@ -24,6 +25,10 @@ import { enUS } from 'date-fns/locale/en-US';
 import RatingSummary from '../../../../../component/rating-summary/rating-summary.component';
 import { selectCurrentUser } from '../../../../../redux/user/user.selectors';
 import { useRtlClass } from '../../../../../assets/utils/utils';
+import {
+  useCanMessage,
+  useStartConversation,
+} from '../../../../../hooks/useStreamChat';
 
 import { useAppSelector } from '../../../../../redux/store';
 import { SessionType } from '../../../../../assets/types';
@@ -50,6 +55,10 @@ const SessionListCard: React.FC<SessionListCardProps> = ({ session }) => {
 
   const [isInstructor, setIsInstructor] = useState(false);
   const [sessionName, setSessionName] = useState('');
+  // The other person in the session; chat only when the backend allows it
+  const counterpart = isInstructor ? session.student : session.tutor;
+  const canMessage = useCanMessage(counterpart?.id);
+  const chat = useStartConversation();
   const [sessionDuration, setSessionDuration] = useState(0);
   // const [isWithinTwelveHours, setIsWithinTwelveHours] = useState(false);
   // const [openCancelSessionModal, setOpenCancelSessionModal] = useState(false);
@@ -320,6 +329,18 @@ const SessionListCard: React.FC<SessionListCardProps> = ({ session }) => {
       </div>
 
       <div className={`sessions-card__actions ${rtlClass}`}>
+        {canMessage && counterpart?.id && (
+          <Button
+            className="sessions-card__actions-button"
+            variant="outlined"
+            color="secondary"
+            startIcon={<ChatBubbleOutlineRounded />}
+            disabled={chat.isStarting}
+            onClick={() => chat.startConversation(counterpart.id, sessionName)}
+          >
+            {t('MESSAGES.MESSAGE_BUTTON')}
+          </Button>
+        )}
         {/* {(session.state === 'scheduled' ||
           session.state === 'rescheduled') &&
           isWithinTwelveHours && (
