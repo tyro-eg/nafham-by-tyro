@@ -217,7 +217,8 @@ const CourseStep: FC<CourseStepProps> = ({
         {hasSubs &&
           curriculum !== undefined &&
           field('sub', t('TRIAL.COURSE.SUB_CURRICULUM'), subOptions, sub)}
-        {sub !== undefined &&
+        {curriculum !== undefined &&
+          sub !== undefined &&
           field('grade', t('TRIAL.COURSE.GRADE'), gradeOptions, grade)}
         {grade !== undefined &&
           field('subject', t('TRIAL.COURSE.SUBJECT'), subjectOptions, subject)}
