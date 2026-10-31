@@ -164,8 +164,10 @@ const ChildDashboard: FC<{
 }> = ({ child, onOpen, onTopUp }) => {
   const { t, i18n } = useTranslation();
   const locale = `${i18n.language}-u-nu-latn`;
-  const next = child.upcoming[0] ?? null;
-  const later = child.upcoming.slice(1);
+  // A cached family from before the field existed has no upcoming list
+  const upcoming = child.upcoming ?? [];
+  const next = upcoming[0] ?? null;
+  const later = upcoming.slice(1);
   const live = next?.status === 'open';
 
   const day = (iso: string, opts: Intl.DateTimeFormatOptions) =>
@@ -379,8 +381,9 @@ const FamilyHome: FC = () => {
       lessonsThisWeek: kids.reduce(
         (sum, c) =>
           sum +
-          c.upcoming.filter((s) => new Date(s.start_time).getTime() < weekAhead)
-            .length,
+          (c.upcoming ?? []).filter(
+            (s) => new Date(s.start_time).getTime() < weekAhead,
+          ).length,
         0,
       ),
       homework: kids.reduce((sum, c) => sum + c.homework_due, 0),
