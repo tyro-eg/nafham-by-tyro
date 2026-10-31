@@ -104,6 +104,11 @@
 }
 
 .cal-legend {
+  &__child {
+    font-weight: 700;
+    color: $text-strong;
+  }
+
   display: flex;
   flex-wrap: wrap;
   align-items: center;

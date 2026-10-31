@@ -1,7 +1,10 @@
-import { FC, useState } from 'react';
+import { FC, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useRtlClass } from '../../assets/utils/utils';
+import { useAppSelector } from '../../redux/store';
+import { selectCurrentUser } from '../../redux/user/user.selectors';
+import { useFamily } from '../../hooks/useFamily';
 import SessionsCalendarContainer from '../sessions/sessions-info/sessions-calendar-container/sessions-calendar-container.component';
 
 import './calendar.styles.scss';
@@ -19,6 +22,9 @@ const LEGEND = [
   { key: 'CANCELED', color: '#9aa8b8' },
 ] as const;
 
+// One colour per child on a parent's calendar, away from the status colours
+const CHILD_COLORS = ['#1792ba', '#6a52d6', '#0f9d8a', '#d6457a', '#b07800'];
+
 /**
  * Calendar page for students and tutors: their sessions on a month/week
  * calendar, scheduled sessions by default.
@@ -27,6 +33,29 @@ const CalendarPage: FC = () => {
   const { t } = useTranslation();
   const rtlClass = useRtlClass();
   const [filter, setFilter] = useState<CalendarFilter>('scheduled');
+  const currentUser = useAppSelector(selectCurrentUser);
+  const isParent = currentUser?.type === 'Parent';
+  const family = useFamily(isParent);
+
+  // A parent tells the children apart by colour; the legend says which is which
+  const children = useMemo(
+    () =>
+      isParent
+        ? (family.data?.children ?? []).map((child, i) => ({
+            id: child.id,
+            name: child.first_name,
+            color: CHILD_COLORS[i % CHILD_COLORS.length],
+          }))
+        : [],
+    [isParent, family.data],
+  );
+  const colorByStudent = useMemo(
+    () =>
+      children.length
+        ? Object.fromEntries(children.map((c) => [c.id, c.color]))
+        : undefined,
+    [children],
+  );
 
   return (
     <div className={`calendar-page ${rtlClass}`}>
@@ -57,8 +86,19 @@ const CalendarPage: FC = () => {
 
         <section className="cal-card">
           <ul className="cal-legend">
+            {children.map((child) => (
+              <li key={child.id} className="cal-legend__child">
+                <span
+                  className="cal-legend__dot"
+                  style={{ backgroundColor: child.color }}
+                />
+                {child.name}
+              </li>
+            ))}
             {LEGEND.filter(
-              (item) => filter === 'all' || item.key === 'SCHEDULED',
+              (item) =>
+                !colorByStudent &&
+                (filter === 'all' || item.key === 'SCHEDULED'),
             ).map((item) => (
               <li key={item.key}>
                 <span
@@ -74,6 +114,7 @@ const CalendarPage: FC = () => {
           <SessionsCalendarContainer
             enableWeekView
             onlyStatuses={filter === 'scheduled' ? UPCOMING : undefined}
+            colorByStudent={colorByStudent}
           />
         </section>
       </div>
