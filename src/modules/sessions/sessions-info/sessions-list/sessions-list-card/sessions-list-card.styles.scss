@@ -391,3 +391,67 @@
   font-weight: 600;
   color: $brand-700;
 }
+
+// A parent's card: the tutor and the child as two blocks side by side
+.sessions-card__parties {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+}
+
+.sessions-card__party {
+  --kid: #{$brand-700};
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.6rem 1.2rem 0.6rem 0.6rem;
+  border-radius: 1.4rem;
+  background: $surface-alt;
+
+  html[dir='rtl'] & {
+    padding: 0.6rem 0.6rem 0.6rem 1.2rem;
+  }
+
+  &-avatar.MuiAvatar-root {
+    width: 3.4rem;
+    height: 3.4rem;
+    font-size: 1.4rem;
+    font-weight: 700;
+    background: $brand-700;
+  }
+
+  &--student &-avatar.MuiAvatar-root {
+    background: var(--kid);
+  }
+
+  &--student {
+    background: color-mix(in srgb, var(--kid) 10%, white);
+  }
+
+  &-text {
+    display: grid;
+    line-height: 1.2;
+  }
+
+  &-label {
+    font-size: 1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: $text-muted;
+
+    html[dir='rtl'] & {
+      letter-spacing: 0;
+    }
+  }
+
+  &--student &-label {
+    color: var(--kid);
+  }
+
+  &-name {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: $text-strong;
+  }
+}
