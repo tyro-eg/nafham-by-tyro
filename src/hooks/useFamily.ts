@@ -234,13 +234,16 @@ export function useActiveChild(children: FamilyChild[] | undefined) {
     [],
   );
 
-  // A single child is picked without asking; a stale pick is replaced
+  // With one child that child is picked without asking; with several the
+  // parent starts on all of them; a stale pick is replaced
   useEffect(() => {
     if (!children?.length) return;
     const valid =
       (childId === ALL_CHILDREN && children.length > 1) ||
       children.some((child) => child.id === childId);
-    if (!valid) setActiveChildId(children[0].id);
+    if (!valid) {
+      setActiveChildId(children.length > 1 ? ALL_CHILDREN : children[0].id);
+    }
   }, [children, childId]);
 
   const choose = useCallback(

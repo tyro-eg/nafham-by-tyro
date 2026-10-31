@@ -22,7 +22,10 @@ const Packages: FC = () => {
   return (
     <section className={`packages ${rtlClass}`}>
       <div className="packages__container container">
-        <h1 className="packages__title">{t('MYPACKAGES.TITLE')}</h1>
+        <header className="packages__header">
+          <h1 className="packages__title">{t('MYPACKAGES.TITLE')}</h1>
+          <p className="packages__subtitle">{t('MYPACKAGES.SUBTITLE')}</p>
+        </header>
         <PackagesList />
       </div>
     </section>

@@ -1,329 +1,287 @@
 @import '../../../../assets/styles/variables.scss';
 @import '../../../../assets/styles/mixins.scss';
 
-.packages-card {
-  @include card($space-5);
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  transition:
-    box-shadow $transition,
-    border-color $transition;
+// One package: course and hours left up top, the person, the hours bar, the money and dates
+.pk-card {
+  --kid: #{$brand-700};
+  display: grid;
+  gap: 1.2rem;
+  padding: 1.8rem;
+  border: 1px solid $border;
+  border-top: 4px solid var(--kid);
+  border-radius: 2rem;
+  background: $surface;
+  box-shadow:
+    0 2px 6px rgba(15, 27, 45, 0.04),
+    0 12px 32px rgba(15, 27, 45, 0.05);
 
-  &:hover {
-    box-shadow: $shadow-md;
-    border-color: $border-strong;
+  &--done {
+    opacity: 0.8;
   }
 
-  @include respond(phone) {
-    padding: $space-4;
-  }
-
-  &__content {
+  &__head {
     display: flex;
-    flex-direction: column;
-    gap: $space-4;
-    height: 100%;
-
-    &-top {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: $space-3;
-
-      // Phones: the type badge always gets its own row above the person,
-      // whatever the length of the name.
-      @include respond(phone) {
-        flex-direction: column;
-        gap: $space-2;
-
-        .packages-card__type {
-          order: -1;
-        }
-      }
-    }
-
-    // Detail list
-    &-middle {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: $space-4 $space-5;
-      padding-top: $space-4;
-      border-top: 1px solid $border;
-
-      @include respond(phone) {
-        gap: $space-3 $space-4;
-      }
-
-      .prop-card {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        gap: $space-1;
-        min-width: 0;
-
-        &--wide {
-          grid-column: 1 / -1;
-        }
-
-        .title {
-          font-weight: 500;
-          font-size: $font-xs;
-          line-height: 1.4;
-          letter-spacing: 0.04em;
-          text-transform: uppercase;
-          color: $text-muted;
-          text-align: start;
-        }
-
-        .value {
-          display: flex;
-          align-items: center;
-          gap: $space-2;
-          font-weight: 500;
-          font-size: $font-sm;
-          line-height: 1.5;
-          color: $text-strong;
-          text-align: start;
-          min-width: 0;
-
-          svg {
-            flex: none;
-            font-size: 1.8rem;
-            color: $gray-500;
-          }
-
-          &--strong {
-            font-weight: 700;
-            font-variant-numeric: tabular-nums;
-          }
-        }
-
-        .field {
-          @include badge($gray-100, $text-strong);
-          font-size: $font-sm;
-          font-weight: 500;
-          line-height: 1.5;
-          padding: 0.3rem 1.2rem;
-          max-width: 100%;
-          white-space: normal;
-        }
-      }
-    }
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
   }
 
-  // Package type pill
+  &__course {
+    min-width: 0;
+    display: grid;
+    gap: 0.3rem;
+  }
+
   &__type {
-    @include badge($brand-50, $brand-700);
-    flex: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    width: fit-content;
+    padding: 0.2rem 0.8rem;
+    border-radius: $radius-pill;
+    background: $brand-50;
+    color: $brand-700;
+    font-size: 1.1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
 
     svg {
-      font-size: 1.6rem;
+      font-size: 1.4rem;
     }
 
-    &--group_course {
-      background-color: $success-50;
-      color: $success-500;
-    }
-
-    &--trial_session {
-      background-color: $warning-50;
-      color: $warning-500;
+    html[dir='rtl'] & {
+      letter-spacing: 0;
     }
   }
 
-  // Remaining-hours meter
-  &__progress {
+  &__title {
+    margin: 0;
+    font-size: 2rem;
+    font-weight: 800;
+    line-height: 1.2;
+    color: $text-strong;
+    overflow-wrap: anywhere;
+  }
+
+  &__full {
+    margin: 0;
+    font-size: 1.2rem;
+    color: $text-muted;
+  }
+
+  &__left {
+    flex: none;
+    display: grid;
+    justify-items: center;
+    gap: 0.2rem;
+  }
+
+  &__left-label {
+    font-size: 1.1rem;
+    color: $text-muted;
+    white-space: nowrap;
+  }
+
+  &__person {
     display: flex;
-    flex-direction: column;
-    gap: $space-2;
-    padding: $space-4;
-    background-color: $surface-alt;
-    border-radius: $radius-sm;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.2rem;
+    border-radius: 1.4rem;
+    background: $surface-alt;
+  }
 
-    &-labels {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      gap: $space-3;
+  &__avatar-link {
+    display: inline-flex;
+  }
+
+  &__avatar.MuiAvatar-root {
+    width: 4.2rem;
+    height: 4.2rem;
+    font-weight: 700;
+    background: var(--kid);
+  }
+
+  &__who {
+    display: grid;
+    gap: 0.1rem;
+    min-width: 0;
+  }
+
+  &__name {
+    font-weight: 700;
+    color: $text-strong;
+  }
+
+  &__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1rem;
+    font-size: 1.2rem;
+    color: $text-muted;
+  }
+
+  &__rating {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.2rem;
+
+    svg {
+      font-size: 1.4rem;
+      color: $accent-400;
+    }
+  }
+
+  &__for {
+    font-weight: 700;
+    color: var(--kid);
+  }
+
+  &__bar {
+    display: flex;
+    height: 0.9rem;
+    overflow: hidden;
+    border-radius: $radius-pill;
+    background: $gray-100;
+  }
+
+  &__seg {
+    display: block;
+    height: 100%;
+    transition: width 0.3s;
+
+    &--used {
+      background: $gray-400;
     }
 
-    &-stat {
-      display: flex;
-      flex-direction: column;
-      gap: 0.2rem;
-      text-align: start;
-
-      &--end {
-        align-items: flex-end;
-        text-align: end;
-      }
-
-      .label {
-        font-size: $font-xs;
-        font-weight: 500;
-        color: $text-muted;
-      }
-
-      .value {
-        display: inline-flex;
-        align-items: center;
-        gap: $space-1;
-        font-size: $font-sm;
-        font-weight: 500;
-        color: $text-body;
-        font-variant-numeric: tabular-nums;
-
-        svg {
-          font-size: 1.8rem;
-          color: $brand-600;
-        }
-
-        &--strong {
-          font-size: $font-lg;
-          font-weight: 700;
-          color: $text-strong;
-        }
-      }
+    &--scheduled {
+      background: $brand-500;
     }
 
-    // Three segments: used, scheduled, free; the free share stays on the end
-    &-track {
-      display: flex;
-      height: 0.8rem;
-      border-radius: $radius-pill;
-      background-color: $gray-200;
-      overflow: hidden;
-    }
-
-    &-bar {
-      display: block;
-      height: 100%;
-      transition: width $transition;
-
-      &--used {
-        background-color: $gray-500;
-      }
-
-      &--scheduled {
-        background-color: $brand-800;
-      }
-
-      &--free {
-        background-color: $brand-500;
-      }
+    &--free {
+      background: #2f9a3a;
     }
   }
 
   &__legend {
     display: flex;
     flex-wrap: wrap;
-    gap: $space-1 $space-4;
+    gap: 0.4rem 1.4rem;
+    margin: -0.4rem 0 0;
+    padding: 0;
     list-style: none;
+    font-size: 1.2rem;
+    color: $text-body;
+  }
+
+  &__legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    &::before {
+      content: '';
+      width: 0.8rem;
+      height: 0.8rem;
+      border-radius: 50%;
+      background: $gray-300;
+    }
+
+    &--used::before {
+      background: $gray-400;
+    }
+
+    &--scheduled::before {
+      background: $brand-500;
+    }
+
+    &--free::before {
+      background: #2f9a3a;
+    }
+  }
+
+  &__facts {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.8rem 1.2rem;
+    margin: 0;
+    padding-top: 1.2rem;
+    border-top: 1px dashed $border;
+
+    div {
+      display: grid;
+      gap: 0.1rem;
+      min-width: 0;
+    }
+
+    dt {
+      font-size: 1.1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: $text-muted;
+
+      html[dir='rtl'] & {
+        letter-spacing: 0;
+      }
+    }
+
+    dd {
+      margin: 0;
+      font-weight: 700;
+      color: $text-strong;
+    }
+  }
+
+  &__facts-sub {
+    display: block;
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: $text-muted;
+  }
+
+  &__history {
     margin: 0;
     padding: 0;
-
-    &-item {
-      display: inline-flex;
-      align-items: center;
-      gap: $space-1;
-      font-size: $font-xs;
-      color: $text-muted;
-      font-variant-numeric: tabular-nums;
-
-      strong {
-        color: $text-strong;
-        font-weight: 700;
-      }
-
-      &::before {
-        content: '';
-        width: 0.8rem;
-        height: 0.8rem;
-        border-radius: 50%;
-        background-color: $gray-300;
-      }
-
-      &--used::before {
-        background-color: $gray-500;
-      }
-
-      &--scheduled::before {
-        background-color: $brand-800;
-      }
-
-      &--free::before {
-        background-color: $brand-500;
-      }
-    }
-  }
-
-  // "Bought 24 hours · Oct 21" lines: the hours side of the package's history
-  &__history {
     list-style: none;
-    margin: 0;
-    padding: $space-2 0 0;
-    border-top: 1px dashed $border;
-    font-size: $font-xs;
+    font-size: 1.1rem;
     color: $text-muted;
-    display: flex;
-    flex-direction: column;
-    gap: 0.2rem;
-    text-align: start;
-  }
-
-  &__img-container {
-    flex: 1 1 auto;
-    display: flex;
-    align-items: center;
-    gap: $space-3;
-    min-width: 0;
-
-    img {
-      width: 4.8rem;
-      height: 4.8rem;
-      border-radius: 50%;
-      object-fit: cover;
-      display: block;
-    }
-
-    .user-info {
-      min-width: 0;
-
-      .name {
-        font-weight: 600;
-        font-size: $font-lg;
-        line-height: 1.3;
-        color: $text-strong;
-        text-align: start;
-        @include ellipsis;
-      }
-
-      .review {
-        margin-top: 0.2rem;
-      }
-    }
-  }
-
-  &__user-img {
-    cursor: pointer;
-    padding: 0 !important;
-    min-width: auto !important;
-    min-height: 0 !important;
-    border-radius: 50% !important;
-    flex: none;
-
-    &:disabled {
-      cursor: default;
-      opacity: 1;
-    }
   }
 }
 
-// A parent's list: whose package this is
-.packages-card__for {
-  margin: 0.1rem 0 0;
-  font-size: 1.2rem;
-  font-weight: 600;
-  color: $brand-700;
+.pk-ring {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  width: 6.4rem;
+  height: 6.4rem;
+
+  svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg);
+  }
+
+  &__track {
+    fill: none;
+    stroke: $gray-100;
+    stroke-width: 6;
+  }
+
+  &__value {
+    fill: none;
+    stroke: var(--kid, #{$brand-700});
+    stroke-width: 6;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 0.4s;
+  }
+
+  &__label {
+    position: relative;
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: $text-strong;
+  }
 }

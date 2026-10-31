@@ -932,6 +932,15 @@
         "FREE": "متاحة للحجز",
         "MOVED_OUT": "نُقلت إلى معلم آخر"
       }
+    },
+    "SUBTITLE": "الساعات المشتراة والمستخدمة والمتاحة للحجز، لكل معلّم.",
+    "GROUP": {
+      "SUMMARY_zero": "لا باقات",
+      "SUMMARY_one": "باقة واحدة · {{hours}} ساعة متبقية",
+      "SUMMARY_two": "باقتان · {{hours}} ساعة متبقية",
+      "SUMMARY_few": "{{count}} باقات · {{hours}} ساعة متبقية",
+      "SUMMARY_many": "{{count}} باقة · {{hours}} ساعة متبقية",
+      "SUMMARY_other": "{{count}} باقة · {{hours}} ساعة متبقية"
     }
   },
   "DIRECTORY": {
