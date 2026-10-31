@@ -176,8 +176,8 @@ $hw-border: $border;
 .family-home {
   .sd-hero.fam-hero {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    align-items: end;
+    grid-template-columns: minmax(0, 1fr) max-content;
+    align-items: center;
     gap: 1.5rem;
     min-height: 0;
     padding: 2.4rem 2.8rem;
@@ -217,14 +217,21 @@ $hw-border: $border;
     }
   }
 
+  // One narrow column of buttons beside the words; a row under them on phones
   &__actions {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
     gap: 0.6rem;
-    justify-content: flex-end;
+    justify-items: stretch;
+    min-width: 20rem;
+
+    .MuiButton-root {
+      justify-content: flex-start;
+    }
 
     @media (max-width: 900px) {
-      justify-content: flex-start;
+      display: flex;
+      flex-wrap: wrap;
+      min-width: 0;
     }
   }
 }
