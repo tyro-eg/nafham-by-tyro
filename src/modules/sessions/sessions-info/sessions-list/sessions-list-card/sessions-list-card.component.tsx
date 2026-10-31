@@ -10,9 +10,10 @@ import {
   Schedule,
   CalendarToday,
   Timer,
+  AutoAwesomeRounded,
 } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {
   differenceInDays,
   differenceInHours,
@@ -329,6 +330,30 @@ const SessionListCard: React.FC<SessionListCardProps> = ({ session }) => {
       </div>
 
       <div className={`sessions-card__actions ${rtlClass}`}>
+        {/* The AI Teaching Assistant: the plan before, the note after */}
+        {isInstructor &&
+          (session.plan_status ||
+            session.note_status ||
+            session.recording_status) && (
+            <Button
+              className="sessions-card__actions-button"
+              component={Link}
+              to={`/assistant?student=${session.student.id}&course=${session.grade_subject.id}&tab=${
+                session.plan_status && !session.note_status
+                  ? 'plan'
+                  : 'insights'
+              }`}
+              variant="outlined"
+              color="secondary"
+              startIcon={<AutoAwesomeRounded />}
+            >
+              {session.note_status
+                ? t('ASSISTANT.SESSION.NOTE_READY')
+                : session.plan_status
+                  ? t('ASSISTANT.SESSION.PLAN_READY')
+                  : t('ASSISTANT.SESSION.RECORDING')}
+            </Button>
+          )}
         {canMessage && counterpart?.id && (
           <Button
             className="sessions-card__actions-button"

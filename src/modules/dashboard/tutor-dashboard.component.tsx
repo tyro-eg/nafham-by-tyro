@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { Avatar, Button, Skeleton } from '@mui/material';
 import {
   ArrowForwardRounded,
+  AutoAwesomeRounded,
   CalendarMonthRounded,
   EditCalendarRounded,
   EmojiEventsRounded,
@@ -363,6 +364,15 @@ const TutorDashboard: FC = () => {
                       )}
                       {startsIn(nextSession.start_time)}
                     </span>
+                    {nextSession.plan_status && (
+                      <Link
+                        className="sd-next__plan"
+                        to={`/assistant?student=${nextSession.student.id}&course=${nextSession.grade_subject.id}&tab=plan`}
+                      >
+                        <AutoAwesomeRounded fontSize="inherit" />
+                        {t('ASSISTANT.SESSION.PLAN_READY')}
+                      </Link>
+                    )}
                     <h3 className="sd-next__subject" dir="auto">
                       {subjectName(nextSession.grade_subject?.full_course_name)}
                     </h3>
