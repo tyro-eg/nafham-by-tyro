@@ -234,3 +234,59 @@
     color: $text-muted;
   }
 }
+
+// ---------- a parent's first step: which child ----------
+.trial__children {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 18rem), 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.trial__child {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.2rem;
+  border: 2px solid $border;
+  border-radius: 1.4rem;
+  background: $surface;
+  color: $text-strong;
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+  transition:
+    border-color 0.15s,
+    box-shadow 0.15s;
+
+  &:hover {
+    border-color: $brand-300;
+  }
+
+  &--on {
+    border-color: $brand-700;
+    box-shadow: 0 0 0 4px rgba($brand-500, 0.15);
+  }
+
+  &--add {
+    border-style: dashed;
+    color: $text-body;
+    text-decoration: none;
+
+    svg {
+      font-size: 2.4rem;
+      color: $brand-700;
+    }
+  }
+
+  &-avatar.MuiAvatar-root {
+    width: 4rem;
+    height: 4rem;
+    font-weight: 700;
+    background: $brand-700;
+  }
+
+  &-name {
+    font-weight: 700;
+  }
+}

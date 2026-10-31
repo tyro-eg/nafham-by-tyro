@@ -1619,7 +1619,8 @@
       "WHEN": "When",
       "TUTOR": "Tutor",
       "SLOT": "Time",
-      "CONFIRM": "Confirm"
+      "CONFIRM": "Confirm",
+      "CHILD": "Child"
     },
     "COURSE": {
       "TITLE": "What would you like to try?",
@@ -1681,7 +1682,13 @@
     },
     "TUTOR_ACCOUNT": "Free trials are for students. You are signed in as a tutor.",
     "ERROR": "We couldn't book your trial. Please pick another time.",
-    "ERROR_LOADING": "We couldn't load the tutors. Please try again."
+    "ERROR_LOADING": "We couldn't load the tutors. Please try again.",
+    "CHILD": {
+      "TITLE": "Who is the trial for?",
+      "TEXT": "Pick the child; the tutors and times are matched to them.",
+      "ADD": "Add a child",
+      "NONE": "No children yet. Add your first child, then come back to book the trial."
+    }
   },
   "AVAILABILITY": {
     "TITLE": "My availability",

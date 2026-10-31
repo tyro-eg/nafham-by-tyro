@@ -13,8 +13,8 @@ import {
 } from '../../hooks/useTrial';
 import TrialSessionSuccessModal from '../../modals/trial-session-success-modal/trial-session-success-modal.component';
 import {
-  STEPS,
   TIME_WINDOWS,
+  stepsFor,
   clearDraft,
   loadDraft,
   localTimeZone,
@@ -22,6 +22,7 @@ import {
   type Step as WizardStep,
   type TrialDraft,
 } from './trial.types';
+import ChildStep from './steps/child-step.component';
 import CourseStep from './steps/course-step.component';
 import WhenStep from './steps/when-step.component';
 import TutorsStep from './steps/tutors-step.component';
@@ -40,7 +41,17 @@ const TrialPage: FC = () => {
   const { t } = useTranslation();
   const rtlClass = useRtlClass();
   const currentUser = useAppSelector(selectCurrentUser);
-  const [draft, setDraft] = useState<TrialDraft>(loadDraft);
+  const isParent = currentUser?.type === 'Parent';
+  const steps = stepsFor(isParent);
+  const [draft, setDraft] = useState<TrialDraft>(() => {
+    const saved = loadDraft();
+    // A parent starts by saying which child; a student never sees that step
+    if (isParent && saved.childId === undefined)
+      return { ...saved, step: 'child' };
+    if (!isParent && saved.step === 'child')
+      return { ...saved, step: 'course' };
+    return saved;
+  });
   const [booked, setBooked] = useState(false);
 
   useEffect(() => {
@@ -67,7 +78,7 @@ const TrialPage: FC = () => {
     };
   }, [course, draft.from, draft.to, draft.window]);
 
-  const stepIndex = STEPS.indexOf(draft.step);
+  const stepIndex = steps.indexOf(draft.step);
   const tutorsQuery = useTrialTutors(stepIndex >= 2 ? search : null);
   const tutor = tutorsQuery.data?.find((item) => item.id === draft.tutorId);
 
@@ -95,6 +106,7 @@ const TrialPage: FC = () => {
   }
 
   const labels: Record<WizardStep, string> = {
+    child: t('TRIAL.STEPS.CHILD'),
     course: t('TRIAL.STEPS.COURSE'),
     when: t('TRIAL.STEPS.WHEN'),
     tutors: t('TRIAL.STEPS.TUTOR'),
@@ -114,7 +126,7 @@ const TrialPage: FC = () => {
         alternativeLabel
         className={`trial__stepper ${rtlClass}`}
       >
-        {STEPS.map((step, index) => (
+        {steps.map((step, index) => (
           <Step key={step} completed={index < stepIndex}>
             <StepButton
               onClick={() => index < stepIndex && goTo(step)}
@@ -127,6 +139,20 @@ const TrialPage: FC = () => {
       </Stepper>
 
       <div className="trial__card">
+        {draft.step === 'child' && (
+          <ChildStep
+            childId={draft.childId}
+            onNext={(childId) =>
+              update({
+                childId,
+                // Another child: the tutors and slot are looked up afresh
+                tutorId: childId === draft.childId ? draft.tutorId : undefined,
+                slot: childId === draft.childId ? draft.slot : undefined,
+                step: 'course',
+              })
+            }
+          />
+        )}
         {draft.step === 'course' && (
           <CourseStep
             courses={coursesQuery.data}
@@ -187,7 +213,10 @@ const TrialPage: FC = () => {
             tutor={tutor}
             slot={draft.slot}
             loading={tutorsQuery.isLoading || coursesQuery.isLoading}
-            guardianPhone={draft.guardianPhone}
+            guardianPhone={
+              draft.guardianPhone ||
+              (isParent ? (currentUser?.phone_number ?? '') : '')
+            }
             onGuardianPhone={(guardianPhone) => update({ guardianPhone })}
             signedIn={!!currentUser}
             onBack={() => goTo('slot')}

@@ -11,9 +11,18 @@ export const TIME_WINDOWS: Record<TimeWindow, { start: number; end: number }> =
     evening: { start: 17, end: 23 },
   };
 
-/** The wizard's steps, in order */
-export const STEPS = ['course', 'when', 'tutors', 'slot', 'confirm'] as const;
+/** The wizard's steps, in order; a parent first says which child it is for */
+export const STEPS = [
+  'child',
+  'course',
+  'when',
+  'tutors',
+  'slot',
+  'confirm',
+] as const;
 export type Step = (typeof STEPS)[number];
+export const stepsFor = (parent: boolean): readonly Step[] =>
+  parent ? STEPS : STEPS.filter((step) => step !== 'child');
 
 /** How far ahead the search looks by default and at most */
 export const DEFAULT_DAYS = 14;
@@ -22,6 +31,8 @@ export const MAX_DAYS = 30;
 /** Everything the student has picked so far */
 export interface TrialDraft {
   step: Step;
+  /** A parent's pick: which child the trial is for */
+  childId?: number;
   courseId?: number;
   /** yyyy-mm-dd, local */
   from: string;

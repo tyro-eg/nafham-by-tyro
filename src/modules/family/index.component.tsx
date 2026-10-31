@@ -19,6 +19,7 @@ import {
   ArrowForwardRounded,
   AssignmentRounded,
   CalendarMonthRounded,
+  CardGiftcardRounded,
   EventNoteRounded,
   MenuBookRounded,
   SettingsRounded,
@@ -289,6 +290,14 @@ const ChildCard: FC<{
           onClick={() => onOpen('/calendar')}
         >
           {t('NAVIGATION.CALENDAR')}
+        </Button>
+        <Button
+          variant="text"
+          size="small"
+          startIcon={<CardGiftcardRounded />}
+          onClick={() => onOpen('/trial')}
+        >
+          {t('NAVIGATION.FREE_TRIAL')}
         </Button>
         <Button
           variant="text"

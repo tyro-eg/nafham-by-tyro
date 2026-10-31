@@ -199,6 +199,11 @@ const SidebarLayout: FC<SidebarLayoutProps> = ({ children }) => {
       label: t('NAVIGATION.NOTES'),
     },
     {
+      to: '/trial',
+      icon: <CardGiftcardRounded />,
+      label: t('NAVIGATION.FREE_TRIAL'),
+    },
+    {
       to: '/my_sessions',
       icon: <EventNoteRounded />,
       label: t('NAVIGATION.SESSIONS'),
