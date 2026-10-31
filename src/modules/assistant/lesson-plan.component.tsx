@@ -333,6 +333,19 @@ const LessonPlanTab: FC<Props> = ({ row }) => {
     }
   };
 
+  // The slides are written on the first request, by the same export call
+  const writeSlides = async () => {
+    if (!latest) return;
+    try {
+      await exportPptx.mutateAsync(latest.id);
+      snackActions.success(t('ASSISTANT.PLAN.SLIDES_READY'));
+    } catch (err) {
+      snackActions.error(
+        coachErrorMessage(err, t('ASSISTANT.PLAN.EXPORT_FAILED')),
+      );
+    }
+  };
+
   if (query.isLoading) {
     return <Skeleton variant="rounded" height={360} />;
   }
@@ -426,16 +439,37 @@ const LessonPlanTab: FC<Props> = ({ row }) => {
           <PlanView plan={latest} />
         )}
 
+        {!editing && !latest.slides_ready && (
+          <p className="as-muted">{t('ASSISTANT.PLAN.SLIDES_HINT')}</p>
+        )}
         {!editing && (
           <div className="as-plan-actions">
-            <Button
-              variant="contained"
-              startIcon={<SlideshowRounded />}
-              onClick={() => setPresenting(true)}
-              disabled={latest.slides.length === 0}
-            >
-              {t('ASSISTANT.PLAN.PRESENT', { count: latest.slides.length })}
-            </Button>
+            {latest.slides_ready ? (
+              <Button
+                variant="contained"
+                startIcon={<SlideshowRounded />}
+                onClick={() => setPresenting(true)}
+              >
+                {t('ASSISTANT.PLAN.PRESENT', { count: latest.slides.length })}
+              </Button>
+            ) : (
+              <Button
+                variant="contained"
+                startIcon={
+                  exportPptx.isPending ? (
+                    <CircularProgress size={16} color="inherit" />
+                  ) : (
+                    <SlideshowRounded />
+                  )
+                }
+                onClick={writeSlides}
+                disabled={exportPptx.isPending}
+              >
+                {exportPptx.isPending
+                  ? t('ASSISTANT.PLAN.WRITING_SLIDES')
+                  : t('ASSISTANT.PLAN.WRITE_SLIDES')}
+              </Button>
+            )}
             <Button
               variant="outlined"
               startIcon={
@@ -446,7 +480,7 @@ const LessonPlanTab: FC<Props> = ({ row }) => {
                 )
               }
               onClick={download}
-              disabled={exportPptx.isPending || latest.slides.length === 0}
+              disabled={exportPptx.isPending || !latest.slides_ready}
             >
               {t('ASSISTANT.PLAN.DOWNLOAD')}
             </Button>

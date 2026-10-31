@@ -1943,7 +1943,7 @@
       "NEXT_LESSON": "For the next lesson",
       "GENERATE": "Generate a lesson plan",
       "REGENERATE": "New plan",
-      "GENERATING_TEXT": "Writing a new plan with slides. This takes about a minute.",
+      "GENERATING_TEXT": "Writing a new plan. This takes about half a minute.",
       "PRESENT_one": "Present {{count}} slide",
       "PRESENT_other": "Present {{count}} slides",
       "DOWNLOAD": "Download PowerPoint",
@@ -1967,7 +1967,11 @@
       "NEXT": "Next slide",
       "EMPTY_TITLE": "No lesson plan yet",
       "EMPTY_TEXT": "Generate a plan for the next lesson from this student's insights and recent lessons.",
-      "EMPTY_TEXT_SESSION": "Your next session with this student is on {{date}}. Generate its plan and slides now."
+      "EMPTY_TEXT_SESSION": "Your next session with this student is on {{date}}. Generate its plan and slides now.",
+      "WRITE_SLIDES": "Write the slides",
+      "WRITING_SLIDES": "Writing the slides…",
+      "SLIDES_HINT": "Slides are written when you first present or download the plan, so they match what you kept.",
+      "SLIDES_READY": "Slides ready"
     },
     "HOMEWORK": {
       "TITLE": "Homework ideas",
