@@ -266,6 +266,8 @@ export interface ChildStats {
   upcoming_sessions_count: number;
   unscheduled_hours: number;
   previous_sessions_count: number;
+  completed_sessions_count?: number;
+  cancelled_sessions_count?: number;
 }
 
 /**
