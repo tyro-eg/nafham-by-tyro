@@ -69,8 +69,10 @@ const TrialPage: FC = () => {
   const [draft, setDraft] = useState<TrialDraft>(() => {
     const saved = loadDraft();
     // A parent starts by saying which child; a student never sees that step
-    if (isParent && saved.childId === undefined) return { ...saved, step: 'child' };
-    if (!isParent && saved.step === 'child') return { ...saved, step: 'course' };
+    if (isParent && saved.childId === undefined)
+      return { ...saved, step: 'child' };
+    if (!isParent && saved.step === 'child')
+      return { ...saved, step: 'course' };
     return saved;
   });
   const [booked, setBooked] = useState(false);
@@ -234,7 +236,8 @@ const TrialPage: FC = () => {
                   update({
                     childId,
                     // Another child: the tutors and slot are looked up afresh
-                    tutorId: childId === draft.childId ? draft.tutorId : undefined,
+                    tutorId:
+                      childId === draft.childId ? draft.tutorId : undefined,
                     slot: childId === draft.childId ? draft.slot : undefined,
                   });
                   goTo('course');
