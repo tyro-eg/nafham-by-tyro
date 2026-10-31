@@ -67,7 +67,7 @@ export type GradeSubject = {
     name: string;
   };
   /** Optional course variants (e.g. IGCSE O Level / A Level, Cambridge / Edexcel) */
-  sub_curriculum?: { id: number; name: string } | null;
+  sub_curriculum?: { id: number; name: string; position?: number } | null;
   exam_board?: { id: number; name: string } | null;
 };
 

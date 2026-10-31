@@ -42,22 +42,27 @@ const distinct = (
   courses: GradeSubject[],
   read: (
     course: GradeSubject,
-  ) => { id: number; name: string } | null | undefined,
+  ) => { id: number; name: string; position?: number } | null | undefined,
   general: string,
 ): Choice[] => {
   const map = new Map<number, Choice>();
+  const positions = new Map<number, number>();
   courses.forEach((course) => {
     const part = read(course);
-    if (part) map.set(part.id, { id: part.id, label: part.name });
-    else map.set(0, { id: 0, label: general });
+    if (part) {
+      map.set(part.id, { id: part.id, label: part.name });
+      if (part.position !== undefined) positions.set(part.id, part.position);
+    } else map.set(0, { id: 0, label: general });
   });
-  return Array.from(map.values()).sort((a, b) =>
-    a.id === 0
-      ? -1
-      : b.id === 0
-        ? 1
-        : a.label.localeCompare(b.label, undefined, { numeric: true }),
-  );
+  // Levels come in their taught order (OL, AS, A2, AL); the rest alphabetically
+  return Array.from(map.values()).sort((a, b) => {
+    if (a.id === 0 || b.id === 0) return a.id === 0 ? -1 : 1;
+    const byPosition =
+      (positions.get(Number(a.id)) ?? 0) - (positions.get(Number(b.id)) ?? 0);
+    return (
+      byPosition || a.label.localeCompare(b.label, undefined, { numeric: true })
+    );
+  });
 };
 
 /** The picks that describe an already chosen course, so a reload shows them */
