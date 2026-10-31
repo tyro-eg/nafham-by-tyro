@@ -2054,7 +2054,15 @@
       "HOURS_other": "{{count}} hours",
       "HOMEWORK_DUE": "Homework due this week",
       "LESSONS": "Lessons completed",
-      "OPEN": "Open sessions"
+      "OPEN": "Open sessions",
+      "OPEN_AS": "Open as {{name}}",
+      "COMING_UP": "Coming up",
+      "PACKAGES": "Packages",
+      "NO_PACKAGES": "No package yet.",
+      "LIVE": "Live now",
+      "LATEST_NOTE": "Latest note",
+      "NO_NOTE": "None yet",
+      "HOURS_OF": "{{left}} of {{total}} hours left"
     },
     "TOP_UP": {
       "BUTTON": "Request more hours",
@@ -2113,6 +2121,20 @@
       "CONSENT_FOR": "Recording consent for {{course}}",
       "CONSENTED": "Consented {{date}}",
       "NOT_CONSENTED": "Not recorded"
+    },
+    "ALL_CHILDREN": "All children",
+    "FOR": "For {{name}}",
+    "HERO": {
+      "EYEBROW": "The {{name}} family",
+      "WELCOME": "Welcome back, {{name}} 👋",
+      "NEXT": "{{child}}'s next lesson is {{subject}} with {{tutor}}, {{when}}.",
+      "NO_NEXT": "Nothing is booked yet. Ask for hours on a child's card and our team will schedule the lessons."
+    },
+    "STATS": {
+      "HOURS": "Hours left",
+      "LESSONS_WEEK": "Lessons this week",
+      "HOMEWORK": "Homework due",
+      "NOTES": "New lesson notes"
     }
   }
 }

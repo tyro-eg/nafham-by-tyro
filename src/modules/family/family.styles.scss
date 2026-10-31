@@ -171,3 +171,122 @@ $hw-border: $border;
     color: #6a52d6;
   }
 }
+
+// ---------- the parent's home ----------
+.family-home {
+  .sd-card.fam-kid {
+    margin-bottom: 1.5rem;
+  }
+}
+
+.fam-kid {
+  &__head {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+  }
+
+  &__avatar.MuiAvatar-root {
+    width: 4.4rem;
+    height: 4.4rem;
+    font-size: 1.8rem;
+    font-weight: 700;
+    background: $brand-700;
+  }
+
+  &__who {
+    display: grid;
+    gap: 0.1rem;
+    margin-inline-end: auto;
+    min-width: 0;
+  }
+
+  &__name {
+    margin: 0;
+    font-size: 1.8rem;
+    font-weight: 800;
+  }
+
+  &__login {
+    color: $text-muted;
+    font-size: 1.2rem;
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+    gap: 1.5rem 2rem;
+
+    @media (max-width: 900px) {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  &__col {
+    min-width: 0;
+    display: grid;
+    gap: 0.75rem;
+    align-content: start;
+  }
+
+  &__packages {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  &__package {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  &__package-text {
+    display: grid;
+    gap: 0.1rem;
+    min-width: 0;
+  }
+
+  &__package-course {
+    font-weight: 700;
+  }
+
+  &__package-meta {
+    color: $text-muted;
+    font-size: 1.2rem;
+  }
+
+  &__facts {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.75rem;
+    margin: 0.25rem 0 0;
+    padding: 1rem;
+    border-radius: 1.2rem;
+    background: $surface-alt;
+
+    div {
+      display: grid;
+      gap: 0.1rem;
+    }
+
+    dt {
+      color: $text-muted;
+      font-size: 1.1rem;
+    }
+
+    dd {
+      margin: 0;
+      font-weight: 700;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+}

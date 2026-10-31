@@ -316,6 +316,11 @@ const SessionListCard: React.FC<SessionListCardProps> = ({ session }) => {
                   : ''}
               </p>
             )}
+            {currentUser?.type === 'Parent' && session.student?.first_name && (
+              <p className="sessions-card__for">
+                {t('FAMILY.FOR', { name: session.student.first_name })}
+              </p>
+            )}
             {/* The tutor's rating only makes sense when the counterpart is the tutor */}
             {!isInstructor &&
               session.session_type !== 'group' &&

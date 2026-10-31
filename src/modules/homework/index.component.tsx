@@ -55,6 +55,7 @@ const Homework: FC = () => {
   const rtlClass = useRtlClass();
   const currentUser = useAppSelector(selectCurrentUser);
   const isTutor = currentUser?.type === 'Tutor';
+  const isParent = currentUser?.type === 'Parent';
   const viewer = isTutor ? 'tutor' : 'student';
 
   const [status, setStatus] = useState<StatusFilter>(ALL);
@@ -111,8 +112,15 @@ const Homework: FC = () => {
             <h3 className="hw-card__title" dir="auto">
               {assignment.title}
             </h3>
-            <span className={`hw-chip hw-chip--${chip.tone}`}>
-              {t(`HOMEWORK.STATUS.${chip.key}`, chip.values)}
+            <span className="hw-card__chips">
+              {isParent && (
+                <span className="hw-chip hw-chip--sky">
+                  {assignment.student.first_name}
+                </span>
+              )}
+              <span className={`hw-chip hw-chip--${chip.tone}`}>
+                {t(`HOMEWORK.STATUS.${chip.key}`, chip.values)}
+              </span>
             </span>
           </div>
 

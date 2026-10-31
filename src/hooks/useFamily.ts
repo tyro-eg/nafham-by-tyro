@@ -2,9 +2,11 @@ import { useCallback, useEffect, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { get, patch, post, remove } from '../assets/utils/api';
 import {
+  ALL_CHILDREN,
   getActiveChildId,
   onActiveChildChange,
   setActiveChildId,
+  type ActiveChild,
 } from '../lib/family-child';
 
 /**
@@ -32,6 +34,10 @@ export interface FamilyPackage {
   recording_consented_at: string | null;
 }
 
+export interface FamilySessionSummary extends FamilySession {
+  status: string;
+}
+
 export interface FamilyChild {
   id: number;
   first_name: string;
@@ -41,6 +47,7 @@ export interface FamilyChild {
   login_invited_at: string | null;
   active: boolean;
   next_session: FamilySession | null;
+  upcoming: FamilySessionSummary[];
   hours_left: number;
   homework_due: number;
   latest_note_at: string | null;
@@ -216,7 +223,9 @@ export function useRequestTopUp() {
  */
 export function useActiveChild(children: FamilyChild[] | undefined) {
   const queryClient = useQueryClient();
-  const [childId, setChildId] = useState<number | null>(getActiveChildId());
+  const [childId, setChildId] = useState<ActiveChild | null>(
+    getActiveChildId(),
+  );
 
   useEffect(
     () => onActiveChildChange(() => setChildId(getActiveChildId())),
@@ -226,12 +235,14 @@ export function useActiveChild(children: FamilyChild[] | undefined) {
   // A single child is picked without asking; a stale pick is replaced
   useEffect(() => {
     if (!children?.length) return;
-    const valid = children.some((child) => child.id === childId);
+    const valid =
+      (childId === ALL_CHILDREN && children.length > 1) ||
+      children.some((child) => child.id === childId);
     if (!valid) setActiveChildId(children[0].id);
   }, [children, childId]);
 
   const choose = useCallback(
-    (id: number) => {
+    (id: ActiveChild) => {
       if (id === getActiveChildId()) return;
       setActiveChildId(id);
       queryClient.removeQueries({
@@ -242,7 +253,7 @@ export function useActiveChild(children: FamilyChild[] | undefined) {
   );
 
   const child = children?.find((c) => c.id === childId) ?? null;
-  return { childId, child, choose };
+  return { childId, child, all: childId === ALL_CHILDREN, choose };
 }
 
 /** `errors[]` from the API, else `error`, else the fallback */
@@ -275,7 +286,9 @@ export interface ChildStats {
  * changes. Disabled for students and tutors, whose counts come with /me.
  */
 export function useChildStats(enabled: boolean) {
-  const [childId, setChildId] = useState<number | null>(getActiveChildId());
+  const [childId, setChildId] = useState<ActiveChild | null>(
+    getActiveChildId(),
+  );
   useEffect(
     () => onActiveChildChange(() => setChildId(getActiveChildId())),
     [],

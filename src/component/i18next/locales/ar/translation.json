@@ -2161,7 +2161,15 @@
       "HOURS_other": "{{count}} ساعة",
       "HOMEWORK_DUE": "واجبات هذا الأسبوع",
       "LESSONS": "دروس مكتملة",
-      "OPEN": "فتح الجلسات"
+      "OPEN": "فتح الجلسات",
+      "OPEN_AS": "فتح كـ {{name}}",
+      "COMING_UP": "القادم",
+      "PACKAGES": "الباقات",
+      "NO_PACKAGES": "لا توجد باقة بعد.",
+      "LIVE": "مباشر الآن",
+      "LATEST_NOTE": "آخر ملاحظة",
+      "NO_NOTE": "لا شيء بعد",
+      "HOURS_OF": "{{left}} من {{total}} ساعة متبقية"
     },
     "TOP_UP": {
       "BUTTON": "طلب ساعات إضافية",
@@ -2220,6 +2228,20 @@
       "CONSENT_FOR": "الموافقة على تسجيل {{course}}",
       "CONSENTED": "تمت الموافقة {{date}}",
       "NOT_CONSENTED": "غير مسجّل"
+    },
+    "ALL_CHILDREN": "كل الأطفال",
+    "FOR": "لـ {{name}}",
+    "HERO": {
+      "EYEBROW": "عائلة {{name}}",
+      "WELCOME": "أهلًا بعودتك، {{name}} 👋",
+      "NEXT": "درس {{child}} القادم هو {{subject}} مع {{tutor}}، {{when}}.",
+      "NO_NEXT": "لا يوجد حجز بعد. اطلب ساعات من بطاقة الطفل وسيحدد فريقنا الدروس."
+    },
+    "STATS": {
+      "HOURS": "الساعات المتبقية",
+      "LESSONS_WEEK": "دروس هذا الأسبوع",
+      "HOMEWORK": "واجبات مستحقة",
+      "NOTES": "ملاحظات جديدة"
     }
   }
 }

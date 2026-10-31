@@ -383,3 +383,11 @@
     opacity: 0.45;
   }
 }
+
+// A parent's list: whose lesson this is
+.sessions-card__for {
+  margin: 0.2rem 0 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: $brand-700;
+}
