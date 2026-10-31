@@ -1315,6 +1315,17 @@
     "EMPTY": {
       "FIRST_P": "You haven't booked any sessions yet",
       "SECOND_P": "Start booking sessions to see your instructors here!"
+    },
+    "SUBTITLE": "The tutors you learn with, what they teach you and when you meet next.",
+    "CARD": {
+      "TEACHES_COUNT_one": "teaches {{count}} course",
+      "TEACHES_COUNT_other": "teaches {{count}} courses",
+      "INTRO": "Intro video",
+      "WITH_US": "With us",
+      "NO_PACKAGE": "No package yet",
+      "HOURS_LEFT": "Hours left",
+      "NEXT_LESSON": "Next lesson",
+      "NO_LESSON": "Nothing booked"
     }
   },
   "DASHBOARD": {

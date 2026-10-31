@@ -1341,6 +1341,21 @@
     "EMPTY": {
       "FIRST_P": "لم تحجز أي جلسات بعد",
       "SECOND_P": "ابدأ بحجز الجلسات لرؤية مدرسينك هنا!"
+    },
+    "SUBTITLE": "المعلّمون الذين تتعلّم معهم، وماذا يدرّسونك، ومتى الموعد القادم.",
+    "CARD": {
+      "TEACHES_COUNT_zero": "لا يدرّس مواد",
+      "TEACHES_COUNT_one": "يدرّس مادة واحدة",
+      "TEACHES_COUNT_two": "يدرّس مادتين",
+      "TEACHES_COUNT_few": "يدرّس {{count}} مواد",
+      "TEACHES_COUNT_many": "يدرّس {{count}} مادة",
+      "TEACHES_COUNT_other": "يدرّس {{count}} مادة",
+      "INTRO": "فيديو تعريفي",
+      "WITH_US": "معنا",
+      "NO_PACKAGE": "لا باقة بعد",
+      "HOURS_LEFT": "الساعات المتبقية",
+      "NEXT_LESSON": "الدرس القادم",
+      "NO_LESSON": "لا يوجد حجز"
     }
   },
   "DASHBOARD": {
