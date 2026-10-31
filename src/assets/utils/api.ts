@@ -221,6 +221,11 @@ axios.interceptors.request.use(
     if (childId && config.headers) {
       config.headers['X-Child-Id'] = String(childId);
     }
+    if (config.headers) {
+      Object.entries(TUNNEL_HEADERS).forEach(([key, value]) => {
+        config.headers[key] = value;
+      });
+    }
 
     return config;
   },
