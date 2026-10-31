@@ -12,6 +12,7 @@ import type { Channel } from 'stream-chat';
 
 import {
   getCounterpart,
+  getStudentMember,
   hasAdminMember,
   initialsOf,
   isSupportConversation,
@@ -40,12 +41,23 @@ const ThreadHeader: FC<ThreadHeaderProps> = ({
 
   const support = isSupportConversation(channel);
   const other = getCounterpart(channel, currentUserId);
+  // A parent in a child's conversation: say whose it is
+  const student = getStudentMember(channel, currentUserId);
+  const forChild =
+    student && student.user_id !== other?.user_id
+      ? student.user?.name
+      : undefined;
   const name = support
     ? t('MESSAGES.NAFHAM_SUPPORT')
     : other?.user?.name || t('MESSAGES.UNKNOWN_USER');
   const subject = support
     ? `${t('MESSAGES.SUPPORT.META')} · ${t('MESSAGES.SUPPORT.REPLY_TIME')}`
-    : (channel.data?.subject as string | undefined) || '';
+    : [
+        (channel.data?.subject as string | undefined) || '',
+        forChild ? t('FAMILY.FOR', { name: forChild }) : '',
+      ]
+        .filter(Boolean)
+        .join(' · ');
   const otherRole = support
     ? t('MESSAGES.ROLE.SUPPORT')
     : isTutor

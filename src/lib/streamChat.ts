@@ -118,11 +118,31 @@ export const getCounterpart = (
   if (isSupportConversation(channel)) {
     return members.find((m) => m.user_id === STREAM_ADMIN_USER_ID);
   }
+  // A lesson conversation names its tutor; a parent in the child's
+  // conversation then sees the tutor, not the child
+  const tutorId = channel.data?.tutor_id;
+  if (tutorId !== undefined && tutorId !== null) {
+    const tutor = members.find(
+      (m) => m.user_id === String(tutorId) && m.user_id !== currentUserId,
+    );
+    if (tutor) return tutor;
+  }
   return (
     members.find(
       (m) => m.user_id !== currentUserId && m.user_id !== STREAM_ADMIN_USER_ID,
     ) ?? members.find((m) => m.user_id !== currentUserId)
   );
+};
+
+/** The child a lesson conversation is about, for a parent's list */
+export const getStudentMember = (
+  channel: Channel,
+  currentUserId: string,
+): ChannelMemberResponse | undefined => {
+  const studentId = channel.data?.student_id;
+  if (studentId === undefined || studentId === null) return undefined;
+  const member = channel.state.members[String(studentId)];
+  return member && member.user_id !== currentUserId ? member : undefined;
 };
 
 export const hasAdminMember = (channel: Channel): boolean =>
