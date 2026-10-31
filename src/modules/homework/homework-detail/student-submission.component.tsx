@@ -9,8 +9,7 @@ import {
   type Assignment,
 } from '../../../hooks/useAssignments';
 import { snackActions } from '../../../assets/utils/toaster';
-import AttachmentList from './attachment-list.component';
-import { formatDateTime } from '../homework.utils';
+import SubmissionView from './submission-view.component';
 
 interface StudentSubmissionProps {
   assignment: Assignment;
@@ -22,7 +21,7 @@ interface StudentSubmissionProps {
  * the previous submission while the assignment is not yet reviewed.
  */
 const StudentSubmission: FC<StudentSubmissionProps> = ({ assignment }) => {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const submit = useSubmitAssignment();
   const existing = assignment.submission;
 
@@ -67,20 +66,10 @@ const StudentSubmission: FC<StudentSubmissionProps> = ({ assignment }) => {
       <h2 className="hw-section__title">{t('HOMEWORK.SUBMISSION.TITLE')}</h2>
 
       {existing && (
-        <div className="hw-submission">
-          <p className="hw-submission__meta">
-            {t('HOMEWORK.SUBMISSION.SUBMITTED_AT', {
-              date: formatDateTime(existing.submitted_at, i18n.language),
-            })}
-          </p>
-          {existing.body && (
-            <p className="hw-prose" dir="auto">
-              {existing.body}
-            </p>
-          )}
-          <AttachmentList files={existing.files} />
-          <p className="hw-muted">{t('HOMEWORK.SUBMISSION.REPLACE_HINT')}</p>
-        </div>
+        <SubmissionView
+          submission={existing}
+          footnote={t('HOMEWORK.SUBMISSION.REPLACE_HINT')}
+        />
       )}
 
       <form className="hw-form" onSubmit={onSubmit} noValidate>

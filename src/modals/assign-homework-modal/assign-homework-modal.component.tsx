@@ -23,7 +23,7 @@ import {
   DeleteOutlineRounded,
 } from '@mui/icons-material';
 
-import { usePackages } from '../../hooks/usePackages';
+import { useTutorStudents } from '../../hooks/useTutorStudents';
 import {
   assignmentErrorMessage,
   useCreateAssignment,
@@ -42,15 +42,10 @@ interface AssignHomeworkModalProps {
   handleClose: () => void;
 }
 
-// Enough packages to list every student without paging through the API
-const PACKAGES_SIZE = 100;
 const NONE = '';
 const NEW_RUBRIC = 'new';
 const DEFAULT_DUE_DAYS = 7;
 const DEFAULT_DUE_HOUR = 18;
-
-const fullName = (user: { first_name: string; last_name: string }) =>
-  `${user.first_name} ${user.last_name}`.trim();
 
 /** `datetime-local` value for 18:00 local time, a week from now */
 const defaultDueAt = () =>
@@ -73,10 +68,11 @@ const AssignHomeworkModal: FC<AssignHomeworkModalProps> = ({ handleClose }) => {
   const { t } = useTranslation();
   const createAssignment = useCreateAssignment();
   const createRubric = useCreateRubric();
-  const { data: packagesData, isLoading: packagesLoading } = usePackages(
-    1,
-    PACKAGES_SIZE,
-  );
+  const {
+    students,
+    coursesFor,
+    isLoading: packagesLoading,
+  } = useTutorStudents();
   const { data: rubricsData } = useRubrics();
 
   const [files, setFiles] = useState<File[]>([]);
@@ -109,30 +105,8 @@ const AssignHomeworkModal: FC<AssignHomeworkModalProps> = ({ handleClose }) => {
   const rubricId = watch('rubric_id');
   const creatingRubric = rubricId === NEW_RUBRIC;
 
-  const packages = useMemo(
-    () => packagesData?.data ?? [],
-    [packagesData?.data],
-  );
-
-  /** Unique students across the tutor's packages */
-  const students = useMemo(() => {
-    const map = new Map<number, string>();
-    packages.forEach((pkg) => map.set(pkg.student.id, fullName(pkg.student)));
-    return Array.from(map, ([id, name]) => ({ id, name })).sort((a, b) =>
-      a.name.localeCompare(b.name),
-    );
-  }, [packages]);
-
   /** Courses the chosen student has a package for */
-  const courses = useMemo(() => {
-    const map = new Map<number, string>();
-    packages
-      .filter((pkg) => String(pkg.student.id) === studentId)
-      .forEach((pkg) =>
-        map.set(pkg.grade_subject.id, pkg.grade_subject.full_course_name),
-      );
-    return Array.from(map, ([id, name]) => ({ id, name }));
-  }, [packages, studentId]);
+  const courses = useMemo(() => coursesFor(studentId), [coursesFor, studentId]);
 
   // Auto-fill the course when the student has only one; drop a stale pick
   useEffect(() => {

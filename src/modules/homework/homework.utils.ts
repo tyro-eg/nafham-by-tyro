@@ -10,8 +10,7 @@ const DATE_FNS_LOCALES = { ar: arSA, en: enUS } as const;
 export const dateFnsLocale = (language: string) =>
   DATE_FNS_LOCALES[language as keyof typeof DATE_FNS_LOCALES] ?? enUS;
 
-export const fullName = (user: { first_name: string; last_name: string }) =>
-  `${user.first_name} ${user.last_name}`.trim();
+export { fullName } from '../../lib/people';
 
 /** Absolute date + time, e.g. "Mon, 3 Nov, 6:00 PM", Latin digits in Arabic */
 export const formatDateTime = (iso: string, language: string) =>
