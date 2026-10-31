@@ -1028,6 +1028,13 @@
     "CHILD": {
       "FIRST_NAME": "Child's first name",
       "LAST_NAME": "Child's last name"
+    },
+    "PANEL": {
+      "EYEBROW": "Nafham Learning",
+      "TITLE": "Learning that fits around your family.",
+      "SUBTITLE": "Create the account, add your child, and book a free trial with a tutor who teaches their syllabus.",
+      "QUOTE": "We tried three platforms before Nafham. This is the first one where I actually know what my daughter did in each lesson.",
+      "QUOTE_BY": "Salma's parent"
     }
   },
   "REGISTERED": {

@@ -1,37 +1,27 @@
 @import '../../../assets/styles/variables.scss';
 @import '../../../assets/styles/mixins.scss';
 @import '../../../component/login/auth-form';
-@import '../auth-layout';
 
+// The sign-in page's split layout; the form is longer, so the brand panel
+// stays put while it scrolls
 .register {
-  @include auth-layout;
-
-  &__container {
-    align-items: start;
-  }
-
-  // Keep the illustration in view while the longer form scrolls
-  .first-section {
+  .signin__panel {
     position: sticky;
-    align-self: start;
-    top: calc(#{$header-height} + #{$space-5});
+    top: $header-height;
+    height: calc(100vh - #{$header-height});
 
     @include respond(tab-port) {
       position: relative;
       top: auto;
+      height: auto;
     }
   }
 
-  .second-section {
-    max-width: 60rem;
-
-    @include respond(tab-port) {
-      max-width: none;
-    }
+  .signin__form {
+    align-items: flex-start;
   }
 
-  &__card {
-    @include auth-card;
+  &__inner {
     @include auth-heading;
   }
 
@@ -42,10 +32,10 @@
   .second-section__form {
     @include auth-form;
   }
-}
 
-.register__hint {
-  margin: -0.5rem 0 1.2rem;
-  color: $text-muted;
-  font-size: 1.3rem;
+  &__hint {
+    margin: -0.5rem 0 1.2rem;
+    color: $text-muted;
+    font-size: 1.3rem;
+  }
 }
