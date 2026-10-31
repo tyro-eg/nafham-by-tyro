@@ -761,7 +761,8 @@
       "OPEN": "Open",
       "COMPLETED": "Completed",
       "CANCELLED": "Cancelled",
-      "MISSED": "Missed"
+      "MISSED": "Missed",
+      "LIVE": "Live"
     },
     "MAIN": {
       "LIST": "List",
@@ -868,6 +869,12 @@
         "THANKYOU": "Thank You",
         "THANKYOU2": "Your rating submitted successfully. Thank you for your cooperation with us"
       }
+    },
+    "SUBTITLE": "Every lesson, past and coming, with its tutor and course.",
+    "GROUP": {
+      "TODAY": "Today",
+      "TOMORROW": "Tomorrow",
+      "YESTERDAY": "Yesterday"
     }
   },
   "MYPACKAGES": {

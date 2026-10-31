@@ -30,3 +30,38 @@
     }
   }
 }
+
+// ---------- grouped by day ----------
+.sessions-list--grouped {
+  display: grid;
+  gap: 2rem;
+}
+
+.sessions-day {
+  &__title {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    margin: 0 0 0.8rem;
+    padding: 0.4rem 0;
+    font-size: 1.3rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: $text-muted;
+    background: linear-gradient($surface-alt 85%, transparent);
+
+    html[dir='rtl'] & {
+      letter-spacing: 0;
+    }
+  }
+
+  // The heading says the day; the card keeps only the time
+  .sessions-card__date {
+    display: none;
+  }
+
+  .sessions-card + .sessions-card {
+    margin-top: 1rem;
+  }
+}

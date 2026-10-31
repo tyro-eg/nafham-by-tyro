@@ -8,3 +8,173 @@
     min-width: 0;
   }
 }
+
+// ---------- the redesigned page: stats strip, toolbar, view toggle ----------
+.sessions .dashboard-header__subtitle {
+  margin: 0.4rem 0 0;
+  color: $text-body;
+}
+
+.ss-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+  gap: 1rem;
+  margin: 0 0 1.6rem;
+  padding: 0;
+  list-style: none;
+}
+
+.ss-stat {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-rows: auto auto;
+  column-gap: 1rem;
+  align-items: center;
+  padding: 1rem 1.2rem;
+  border: 1px solid $border;
+  border-radius: 1.6rem;
+  background: $surface;
+
+  &__icon {
+    grid-row: span 2;
+    display: grid;
+    place-items: center;
+    width: 4rem;
+    height: 4rem;
+    border-radius: 1.2rem;
+    background: $brand-50;
+    color: $brand-700;
+
+    svg {
+      font-size: 2.2rem;
+    }
+  }
+
+  &--accent &__icon {
+    background: #fff6e0;
+    color: #b07800;
+  }
+
+  &--mint &__icon {
+    background: #eafaf0;
+    color: #2f9a3a;
+  }
+
+  &--neutral &__icon {
+    background: $gray-100;
+    color: $gray-500;
+  }
+
+  &__value {
+    font-size: 2.2rem;
+    font-weight: 800;
+    line-height: 1.1;
+    color: $text-strong;
+  }
+
+  &__label {
+    font-size: 1.2rem;
+    color: $text-muted;
+  }
+}
+
+.ss-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem 1.6rem;
+  margin-bottom: 2rem;
+  padding: 1.2rem 1.4rem;
+  border: 1px solid $border;
+  border-radius: 1.8rem;
+  background: $surface;
+
+  &__fields {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    flex: 1 1 32rem;
+  }
+
+  &__field {
+    flex: 1 1 18rem;
+    min-width: 0;
+
+    .MuiOutlinedInput-root {
+      border-radius: 1.2rem;
+    }
+  }
+}
+
+.ss-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  padding: 0.3rem;
+  border-radius: $radius-pill;
+  background: $surface-alt;
+}
+
+.ss-pill {
+  padding: 0.5rem 1.2rem;
+  border: 0;
+  border-radius: $radius-pill;
+  background: transparent;
+  color: $text-body;
+  font: inherit;
+  font-size: 1.3rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background-color 0.15s,
+    color 0.15s;
+
+  &:hover {
+    color: $text-strong;
+  }
+
+  &--on {
+    background: $surface;
+    color: $brand-700;
+    box-shadow: 0 1px 3px rgba(15, 27, 45, 0.12);
+  }
+}
+
+.ss-view {
+  display: inline-flex;
+  margin-inline-start: auto;
+  padding: 0.3rem;
+  border-radius: $radius-pill;
+  background: $surface-alt;
+
+  &__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 1.2rem;
+    border: 0;
+    border-radius: $radius-pill;
+    background: transparent;
+    color: $text-body;
+    font: inherit;
+    font-size: 1.3rem;
+    font-weight: 600;
+    cursor: pointer;
+
+    svg {
+      font-size: 1.7rem;
+    }
+
+    &--on {
+      background: $brand-700;
+      color: $surface;
+    }
+  }
+}
+
+.ss-calendar {
+  padding: 1.6rem;
+  border: 1px solid $border;
+  border-radius: 2rem;
+  background: $surface;
+}
