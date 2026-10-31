@@ -1,13 +1,6 @@
 import { FC, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-  Button,
-  CircularProgress,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-} from '@mui/material';
+import { Button, CircularProgress } from '@mui/material';
 import { ArrowForward } from '@mui/icons-material';
 
 import type { GradeSubject } from '../../../assets/types';
@@ -136,28 +129,32 @@ const CourseStep: FC<CourseStepProps> = ({
     });
   };
 
-  const select = (
+  // One row of choices per level; a greyed row waits for the one above
+  const choices = (
     key: keyof Picks,
     label: string,
     options: Option[],
     value: number | undefined,
     disabled = false,
   ) => (
-    <FormControl size="small" fullWidth disabled={disabled}>
-      <InputLabel id={`trial-${key}-label`}>{label}</InputLabel>
-      <Select
-        labelId={`trial-${key}-label`}
-        label={label}
-        value={value === undefined ? NONE : String(value)}
-        onChange={(event) => pick(key, String(event.target.value))}
-      >
+    <div className={`trial__choice${disabled ? ' trial__choice--off' : ''}`}>
+      <span className="trial__label">{label}</span>
+      <div className="trial__choice-row" role="radiogroup" aria-label={label}>
         {options.map((option) => (
-          <MenuItem key={option.id} value={String(option.id)}>
+          <button
+            key={option.id}
+            type="button"
+            role="radio"
+            aria-checked={value === option.id}
+            disabled={disabled}
+            className={`trial__option${value === option.id ? ' trial__option--on' : ''}`}
+            onClick={() => pick(key, String(option.id))}
+          >
             {option.name}
-          </MenuItem>
+          </button>
         ))}
-      </Select>
-    </FormControl>
+      </div>
+    </div>
   );
 
   if (loading) {
@@ -177,22 +174,22 @@ const CourseStep: FC<CourseStepProps> = ({
     <div className="trial__step">
       <h2 className="trial__step-title">{t('TRIAL.COURSE.TITLE')}</h2>
       <div className="trial__fields">
-        {select(
+        {choices(
           'curriculum',
           t('TRIAL.COURSE.CURRICULUM'),
           curriculumOptions,
           curriculum,
         )}
         {hasSubs &&
-          select('sub', t('TRIAL.COURSE.SUB_CURRICULUM'), subOptions, sub)}
-        {select(
+          choices('sub', t('TRIAL.COURSE.SUB_CURRICULUM'), subOptions, sub)}
+        {choices(
           'grade',
           t('TRIAL.COURSE.GRADE'),
           gradeOptions,
           grade,
           sub === undefined,
         )}
-        {select(
+        {choices(
           'subject',
           t('TRIAL.COURSE.SUBJECT'),
           subjectOptions,
@@ -200,7 +197,7 @@ const CourseStep: FC<CourseStepProps> = ({
           grade === undefined,
         )}
         {hasBoards &&
-          select(
+          choices(
             'board',
             t('TRIAL.COURSE.EXAM_BOARD'),
             boardOptions,

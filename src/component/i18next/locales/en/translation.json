@@ -1613,7 +1613,7 @@
   },
   "TRIAL": {
     "TITLE": "Book your free trial",
-    "SUBTITLE": "A free session with one of our tutors, in five quick steps.",
+    "SUBTITLE": "A free session with one of our tutors, in {{count}} quick steps.",
     "STEPS": {
       "COURSE": "Course",
       "WHEN": "When",
@@ -1688,6 +1688,16 @@
       "TEXT": "Pick the child; the tutors and times are matched to them.",
       "ADD": "Add a child",
       "NONE": "No children yet. Add your first child, then come back to book the trial."
+    },
+    "SUMMARY": {
+      "TITLE": "Your trial",
+      "PENDING": "Not picked yet"
+    },
+    "EXPECT": {
+      "TITLE": "What to expect",
+      "LENGTH": "A 30-minute lesson, one to one, at the time you pick.",
+      "ONLINE": "Online on Zoom; the link appears in My Sessions before the lesson.",
+      "FREE": "Free, with nothing to pay and no card needed."
     }
   },
   "AVAILABILITY": {

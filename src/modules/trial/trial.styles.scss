@@ -3,7 +3,7 @@
 
 // The free-trial wizard: one card per step under a horizontal stepper
 .trial {
-  max-width: 88rem;
+  max-width: 112rem;
   padding-top: $space-6;
   padding-bottom: $space-7;
 
@@ -32,6 +32,177 @@
     .MuiStepLabel-label {
       font-size: $font-sm;
       font-weight: 600;
+    }
+  }
+
+  // The wizard beside a running summary; the summary drops below on phones
+  &__layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 30rem;
+    gap: $space-5;
+    align-items: start;
+
+    @include respond(tab-port) {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  &__aside {
+    display: grid;
+    gap: $space-4;
+    position: sticky;
+    top: calc(#{$header-height} + #{$space-4});
+
+    @include respond(tab-port) {
+      position: static;
+    }
+  }
+
+  &__panel {
+    @include card($space-4);
+
+    &--expect {
+      background: $brand-50;
+      border-color: transparent;
+    }
+  }
+
+  &__panel-title {
+    margin: 0 0 $space-3;
+    font-size: $font-sm;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: $text-muted;
+
+    html[dir='rtl'] & {
+      letter-spacing: 0;
+    }
+  }
+
+  &__picks {
+    display: grid;
+    gap: $space-3;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  &__pick {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    column-gap: $space-3;
+    align-items: start;
+    color: $text-muted;
+
+    &-icon.MuiSvgIcon-root {
+      grid-row: span 2;
+      margin-top: 0.2rem;
+      font-size: 2rem;
+      color: $gray-300;
+    }
+
+    &-label {
+      font-size: $font-xs;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+
+      html[dir='rtl'] & {
+        letter-spacing: 0;
+      }
+    }
+
+    &-value {
+      font-size: $font-sm;
+      font-weight: 600;
+      color: $text-body;
+      overflow-wrap: anywhere;
+    }
+
+    &--done {
+      color: $text-strong;
+
+      .trial__pick-icon.MuiSvgIcon-root {
+        color: $brand-700;
+      }
+
+      .trial__pick-value {
+        color: $text-strong;
+      }
+    }
+
+    &--now .trial__pick-label {
+      color: $brand-700;
+    }
+  }
+
+  &__expect {
+    display: grid;
+    gap: $space-3;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: $font-sm;
+    line-height: 1.5;
+    color: $text-strong;
+
+    li {
+      display: flex;
+      align-items: flex-start;
+      gap: $space-3;
+    }
+
+    svg {
+      flex: none;
+      font-size: 2rem;
+      color: $brand-700;
+    }
+  }
+
+  // ---------- the course step's rows of choices ----------
+  &__choice {
+    display: grid;
+    gap: $space-2;
+
+    &--off {
+      opacity: 0.45;
+    }
+  }
+
+  &__choice-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $space-2;
+  }
+
+  &__option {
+    padding: 0.7rem 1.4rem;
+    border: 1.5px solid $border;
+    border-radius: $radius-pill;
+    background: $surface;
+    color: $text-strong;
+    font: inherit;
+    font-size: $font-sm;
+    font-weight: 600;
+    cursor: pointer;
+    transition:
+      border-color 0.15s,
+      background-color 0.15s,
+      color 0.15s;
+
+    &:hover:not(:disabled) {
+      border-color: $brand-300;
+    }
+
+    &:disabled {
+      cursor: default;
+    }
+
+    &--on {
+      border-color: $brand-700;
+      background: $brand-700;
+      color: $surface;
     }
   }
 
