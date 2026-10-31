@@ -208,3 +208,21 @@
     text-decoration: none;
   }
 }
+
+// The AI Teaching Assistant's plan for the next session
+.sd-next__plan {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-inline-start: $space-2;
+  padding: 0.3rem 0.9rem;
+  border-radius: $radius-pill;
+  background-color: #f2efff;
+  color: #6a52d6;
+  font-size: $font-xs;
+  font-weight: 700;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}

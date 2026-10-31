@@ -1,0 +1,236 @@
+@import '../../assets/styles/variables.scss';
+@import '../../assets/styles/mixins.scss';
+
+// The free-trial wizard: one card per step under a horizontal stepper
+.trial {
+  max-width: 88rem;
+  padding-top: $space-6;
+  padding-bottom: $space-7;
+
+  &__header {
+    margin-bottom: $space-5;
+    text-align: center;
+  }
+
+  &__title {
+    margin: 0;
+    font-size: $font-h3;
+    font-weight: 700;
+    color: $text-strong;
+  }
+
+  &__subtitle {
+    margin: $space-2 0 0;
+    font-size: $font-base;
+    line-height: 1.6;
+    color: $text-body;
+  }
+
+  &__stepper.MuiStepper-root {
+    margin-bottom: $space-5;
+
+    .MuiStepLabel-label {
+      font-size: $font-sm;
+      font-weight: 600;
+    }
+  }
+
+  &__card {
+    @include card($space-5);
+
+    @include respond(phone) {
+      padding: $space-4;
+    }
+
+    &--center {
+      display: grid;
+      gap: $space-4;
+      justify-items: center;
+      text-align: center;
+    }
+  }
+
+  &__step {
+    display: grid;
+    gap: $space-4;
+  }
+
+  &__step-title {
+    margin: 0;
+    font-size: 2rem;
+    font-weight: 700;
+    color: $text-strong;
+  }
+
+  &__fields {
+    display: grid;
+    gap: $space-3;
+
+    &--row {
+      grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+    }
+  }
+
+  &__label {
+    margin: 0;
+    font-size: $font-sm;
+    font-weight: 600;
+    color: $text-strong;
+  }
+
+  &__hint {
+    margin: 0;
+    font-size: $font-sm;
+    line-height: 1.6;
+    color: $text-muted;
+  }
+
+  &__resolved {
+    margin: 0;
+    padding: $space-3 $space-4;
+    border-radius: $radius-sm;
+    background-color: $brand-50;
+    color: $brand-700;
+    font-weight: 600;
+  }
+
+  &__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $space-2;
+  }
+
+  &__empty {
+    margin: 0;
+    font-size: $font-base;
+    line-height: 1.6;
+    color: $text-body;
+  }
+
+  &__loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: $space-3;
+    min-height: 12rem;
+    color: $text-muted;
+  }
+
+  &__summary {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: $space-2 $space-4;
+    margin: 0;
+
+    dt {
+      font-size: $font-sm;
+      font-weight: 600;
+      color: $text-muted;
+    }
+
+    dd {
+      margin: 0;
+      font-size: $font-base;
+      color: $text-strong;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: $space-3;
+    padding-top: $space-3;
+    border-top: 1px solid $border;
+  }
+
+  &__tutors {
+    display: grid;
+    gap: $space-3;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+}
+
+// One tutor the wizard offers
+.trial-tutor {
+  display: grid;
+  grid-template-columns: 6.4rem minmax(0, 1fr) auto;
+  gap: $space-4;
+  align-items: start;
+  padding: $space-4;
+  border: 1px solid $border;
+  border-radius: $radius-md;
+  background-color: $surface;
+
+  &--top {
+    border-color: $brand-200;
+  }
+
+  @include respond(phone) {
+    grid-template-columns: 5.6rem minmax(0, 1fr);
+
+    &__action {
+      grid-column: 1 / -1;
+    }
+  }
+
+  &__avatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 6.4rem;
+    height: 6.4rem;
+    border-radius: 50%;
+    background-color: $brand-50;
+    background-size: cover;
+    background-position: center;
+    color: $brand-700;
+    font-size: 1.8rem;
+    font-weight: 700;
+
+    @include respond(phone) {
+      width: 5.6rem;
+      height: 5.6rem;
+    }
+  }
+
+  &__body {
+    display: grid;
+    gap: $space-2;
+    min-width: 0;
+  }
+
+  &__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: $space-2;
+  }
+
+  &__name {
+    margin: 0;
+    font-size: $font-base;
+    font-weight: 700;
+    color: $text-strong;
+  }
+
+  &__rating {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  &__bio {
+    margin: 0;
+    font-size: $font-sm;
+    line-height: 1.6;
+    color: $text-body;
+  }
+
+  &__used {
+    font-size: $font-sm;
+    font-weight: 600;
+    color: $text-muted;
+  }
+}

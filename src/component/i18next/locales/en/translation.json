@@ -52,7 +52,9 @@
     "MESSAGES": "Messages",
     "CALENDAR": "Calendar",
     "AVAILABILITY": "Availability",
-    "HOMEWORK": "Homework"
+    "HOMEWORK": "Homework",
+    "ASSISTANT": "AI Teaching Assistant",
+    "FREE_TRIAL": "Book a free trial"
   },
   "CARDS": {
     "FREE_ASSESMENT": {
@@ -1268,10 +1270,6 @@
     "SOMETHING_WENT_WRONG_MSG": "Your message has not been sent, Please try again!",
     "UNAUTHORIZED_MSG": "Sorry, You must login first!"
   },
-  "INSTRUCTOR_MODAL": {
-    "TITLE": "REQUEST A FREE TRIAL SESSION",
-    "SUBTITLE": "Select an instructor you'd like to take the free trial session with"
-  },
   "NO_INTERNET": {
     "TITLE": "You are offline. Check your internet connection."
   },
@@ -1594,6 +1592,78 @@
       "BUTTON": "Done"
     }
   },
+  "TRIAL": {
+    "TITLE": "Book your free trial",
+    "SUBTITLE": "A free session with one of our tutors, in five quick steps.",
+    "STEPS": {
+      "COURSE": "Course",
+      "WHEN": "When",
+      "TUTOR": "Tutor",
+      "SLOT": "Time",
+      "CONFIRM": "Confirm"
+    },
+    "COURSE": {
+      "TITLE": "What would you like to try?",
+      "CURRICULUM": "Curriculum",
+      "SUB_CURRICULUM": "Level",
+      "GRADE": "Stage",
+      "SUBJECT": "Subject",
+      "EXAM_BOARD": "Exam board",
+      "GENERAL": "General",
+      "LOADING": "Loading courses...",
+      "EMPTY": "No courses are open for free trials right now. Please check back soon."
+    },
+    "WHEN": {
+      "TITLE": "When suits you?",
+      "FROM": "From",
+      "TO": "To",
+      "WINDOW": "Time of day",
+      "ANY": "Any time",
+      "MORNING": "Morning (6–12)",
+      "AFTERNOON": "Afternoon (12–17)",
+      "EVENING": "Evening (17–23)",
+      "TIMEZONE": "Times are shown in your local timezone ({{tz}})."
+    },
+    "TUTORS": {
+      "TITLE": "Our top picks for you",
+      "SUBTITLE": "Ranked by our team for {{course}}, with the times they are free.",
+      "OPS_PICK": "Team pick",
+      "RATED": "Our team's rating for this course",
+      "NEXT_SLOTS": "Next free times",
+      "CHOOSE": "Choose {{name}}",
+      "MORE": "Show {{count}} more tutors",
+      "LESS": "Show fewer",
+      "EMPTY": "No tutor is free for {{course}} in that window. Try wider dates or another time of day.",
+      "USED": "Free trial already used with this tutor",
+      "LOADING": "Finding your tutors..."
+    },
+    "SLOT": {
+      "TITLE": "Pick a time with {{name}}",
+      "DAY": "Day",
+      "TIME": "Time"
+    },
+    "CONFIRM": {
+      "TITLE": "Confirm your free trial",
+      "COURSE": "Course",
+      "TUTOR": "Tutor",
+      "WHEN": "When",
+      "DURATION": "{{minutes}} minutes",
+      "GUARDIAN_PHONE": "Parent's phone number (optional)",
+      "GUARDIAN_HINT": "We'll keep your parent in the loop about your lessons.",
+      "VISITOR": "Create your account to confirm the booking. Your choices are saved.",
+      "REGISTER": "Create account",
+      "LOGIN": "I already have an account",
+      "BOOK": "Book my free trial",
+      "BOOKING": "Booking..."
+    },
+    "ACTIONS": {
+      "BACK": "Back",
+      "NEXT": "Continue"
+    },
+    "TUTOR_ACCOUNT": "Free trials are for students. You are signed in as a tutor.",
+    "ERROR": "We couldn't book your trial. Please pick another time.",
+    "ERROR_LOADING": "We couldn't load the tutors. Please try again."
+  },
   "AVAILABILITY": {
     "TITLE": "My availability",
     "SUBTITLE": "Mark the 30-minute slots you can teach. Click a slot or drag across several; use a day name for quick presets. Students and support can only book inside these slots.",
@@ -1790,6 +1860,155 @@
       "INSTRUCTIONS_MAX": "Keep the instructions under 5000 characters",
       "DUE_INVALID": "Enter a valid date and time",
       "DUE_PAST": "The due date must be in the future"
+    }
+  },
+  "ASSISTANT": {
+    "TITLE": "AI Teaching Assistant",
+    "SUBTITLE": "Built from your recorded lessons and homework: what each student needs, the next lesson's plan with slides, homework ideas, and how you teach.",
+    "STUDENTS": "Students",
+    "SEARCH": "Search students or courses",
+    "EMPTY": {
+      "TITLE": "No students yet",
+      "TEXT": "Once you have a student with a package or a session, they will show up here."
+    },
+    "LIST": {
+      "NEXT": "Next lesson {{date}}",
+      "LESSONS_one": "{{count}} recorded lesson",
+      "LESSONS_other": "{{count}} recorded lessons",
+      "NO_MATCH": "No student matches that search."
+    },
+    "TABS": {
+      "INSIGHTS": "Learner insights",
+      "PLAN": "Lesson plan",
+      "HOMEWORK": "Homework",
+      "COACH": "Be a better teacher"
+    },
+    "COMMON": {
+      "AI": "AI",
+      "AI_DRAFT": "AI draft",
+      "STALE": "New lessons since",
+      "REFRESH": "Refresh",
+      "GENERATE": "Generate",
+      "GENERATING": "Working…",
+      "EDIT": "Edit",
+      "SAVE": "Save",
+      "CANCEL": "Cancel",
+      "CLOSE": "Close",
+      "UPDATED": "Updated {{date}}",
+      "ONE_PER_LINE": "One item per line",
+      "MINUTES_one": "{{count}} minute",
+      "MINUTES_other": "{{count}} minutes",
+      "MINUTES_SHORT": "{{count}} min",
+      "ERROR": "Something went wrong. Please try again.",
+      "THROTTLED": "This was refreshed recently. Please try again in a little while.",
+      "TIMED_OUT": "This is taking longer than usual. It will appear here when it is ready; refresh the page in a few minutes."
+    },
+    "INSIGHTS": {
+      "TITLE": "Where this student is",
+      "STRENGTHS": "Strengths",
+      "WEAKNESSES": "Weaknesses",
+      "FOCUS": "Focus next lesson",
+      "EVIDENCE_one": "{{count}} piece of evidence",
+      "EVIDENCE_other": "{{count}} pieces of evidence",
+      "FROM_LESSON": "from a lesson",
+      "FROM_HOMEWORK": "from homework",
+      "BASED_ON": "Based on {{lessons}} recorded lessons and {{homework}} reviewed homework.",
+      "RECENT_LESSONS": "Recent lessons",
+      "NO_NOTES": "No lesson notes yet.",
+      "COVERED": "Covered",
+      "STRUGGLES": "Struggled with",
+      "NEXT_STEPS": "Next steps",
+      "SUMMARY": "Summary",
+      "TRY_NEXT": "Try next time:",
+      "EDITED_BY_YOU": "Edited by you",
+      "NOTE_SAVED": "Lesson note saved",
+      "EMPTY_TITLE": "No insights yet",
+      "EMPTY_TEXT": "Insights appear after your first recorded lesson with this student. Ask support to switch recording on for this package.",
+      "EMPTY_TEXT_PENDING": "A lesson was recorded. The insight is being written; generate it now or check back shortly."
+    },
+    "PLAN": {
+      "UNTITLED": "Lesson plan",
+      "OBJECTIVES": "Objectives",
+      "CHECKS": "Check understanding",
+      "MATERIALS": "Materials",
+      "AGENDA": "Agenda · {{minutes}} min",
+      "AGENDA_EDIT": "Agenda",
+      "MINUTES": "Min",
+      "BLOCK_TITLE": "Block",
+      "BLOCK_DETAIL": "What happens",
+      "HOMEWORK_IDEA": "Homework idea:",
+      "NOTES_FOR_YOU": "For you:",
+      "TITLE_FIELD": "Title",
+      "FOR_SESSION": "For your session on {{date}}",
+      "NEXT_LESSON": "For the next lesson",
+      "GENERATE": "Generate a lesson plan",
+      "REGENERATE": "New plan",
+      "GENERATING_TEXT": "Writing a new plan with slides. This takes about a minute.",
+      "PRESENT_one": "Present {{count}} slide",
+      "PRESENT_other": "Present {{count}} slides",
+      "DOWNLOAD": "Download PowerPoint",
+      "EXPORT_FAILED": "The PowerPoint could not be built. Please try again.",
+      "ACCEPT": "Accept plan",
+      "ACCEPTED": "Plan accepted",
+      "ACCEPTED_CHIP": "Accepted",
+      "SAVED": "Plan saved",
+      "CONFIRM_TITLE": "Accept this plan?",
+      "CONFIRM_TEXT": "You can still edit it afterwards. Accepting marks it as the plan you will teach.",
+      "CONFIRM": "Accept",
+      "HISTORY": "Previous plans",
+      "STATUS": {
+        "DRAFT": "Draft",
+        "ACCEPTED": "Accepted"
+      },
+      "PRESENT_HINT": "Arrow keys to move · N for notes · Esc to close",
+      "SPEAKER_NOTES": "Speaker notes",
+      "NO_NOTES": "No notes for this slide.",
+      "PREVIOUS": "Previous slide",
+      "NEXT": "Next slide",
+      "EMPTY_TITLE": "No lesson plan yet",
+      "EMPTY_TEXT": "Generate a plan for the next lesson from this student's insights and recent lessons.",
+      "EMPTY_TEXT_SESSION": "Your next session with this student is on {{date}}. Generate its plan and slides now."
+    },
+    "HOMEWORK": {
+      "TITLE": "Homework ideas",
+      "DUE_IN_one": "Due in {{count}} day",
+      "DUE_IN_other": "Due in {{count}} days",
+      "TOTAL": "Total",
+      "ASSIGN": "Assign",
+      "CONFIRM_ASSIGN": "Assign homework",
+      "DUE_AT": "Due",
+      "ASSIGNED": "Homework assigned",
+      "ASSIGNED_AS": "Assigned:",
+      "EMPTY_TITLE": "No homework ideas yet",
+      "EMPTY_TEXT": "Ideas appear after your first recorded lesson with this student.",
+      "EMPTY_TEXT_PENDING": "A lesson was recorded. Ideas are being written; generate them now or check back shortly."
+    },
+    "COACH": {
+      "TITLE": "How you teach",
+      "PERIOD": "{{from}} to {{to}}",
+      "LESSONS": "Lessons analysed",
+      "LESSONS_HINT": "Recorded lessons with a note in this period",
+      "TALK_RATIO": "You talking",
+      "TALK_RATIO_HINT": "Share of speaking time that was yours. Lower usually means the student is doing more.",
+      "CHECKS": "Checks per lesson",
+      "CHECKS_HINT": "Times you had the student answer, solve or explain back",
+      "MONOLOGUE": "Longest stretch",
+      "MONOLOGUE_HINT": "Longest time you spoke without the student taking part",
+      "STRENGTHS": "What you do well",
+      "IMPROVE": "What to work on",
+      "TRY": "Try:",
+      "TECHNIQUES": "Techniques to try this month",
+      "HISTORY": "Previous reports",
+      "EMPTY_TITLE": "No coaching report yet",
+      "EMPTY_TEXT": "Your report is written from your recorded lessons. It appears after your first few recorded lessons.",
+      "EMPTY_TEXT_PENDING_one": "You have {{count}} recorded lesson. Generate your first report now.",
+      "EMPTY_TEXT_PENDING_other": "You have {{count}} recorded lessons. Generate your first report now."
+    },
+    "SESSION": {
+      "PLAN_READY": "Lesson plan ready",
+      "NOTE_READY": "Lesson note",
+      "OPEN": "Open in Assistant",
+      "RECORDING": "Recording being processed"
     }
   }
 }

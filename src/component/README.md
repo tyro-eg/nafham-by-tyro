@@ -610,34 +610,6 @@ Generic tab panel wrapper for Material-UI Tabs.
 </TabPanel>
 ```
 
-### `/trail-modal-card/` - Trial Session Card
-
-#### `trail-modal-card.component.tsx`
-
-Instructor card for free trial modal selection.
-
-- **Purpose**: Display instructor option in trial booking modal
-- **Features**:
-  - Avatar with fallback to initials
-  - Name and subject fields
-  - Star rating
-  - Truncated bio preview
-  - Opens calendar stepper modal on click
-  - Clean Material-UI Dialog integration
-- **Props**:
-  - `instructor: Instructor` - Instructor object
-- **Dependencies**: `CalendarStepperModal`, `getNameInitials` utility
-
-**Usage**:
-
-```typescript
-{instructors.map(instructor => (
-  <TrailModalCard key={instructor.id} instructor={instructor} />
-))}
-```
-
----
-
 ## File Naming Conventions
 
 - Components: `PascalCase.tsx` or `kebab-case.component.tsx`

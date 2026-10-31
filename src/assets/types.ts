@@ -30,9 +30,12 @@ export type TutorReview = {
   created_at: string;
 };
 
+/** Whether the signed-in student may book a free trial with a tutor (GET /tutors) */
 export type FreeTrial = {
   enabled: boolean;
   claimed: boolean;
+  /** How long the trial lasts, in whole 30-minute slots */
+  minutes?: number;
 };
 
 export type TutorPackage = {
@@ -242,6 +245,8 @@ export type SessionType = {
   session_type: 'regular' | 'trial' | 'group';
   start_time: string;
   status: 'open' | 'scheduled' | 'completed' | 'missed' | 'canceled';
+  /** Who booked it: support from the admin panel, or the student (free trials) */
+  booked_by?: 'admin' | 'student';
   /** What this session pays the tutor per hour, decided by the backend; null while unpriced */
   tutor_rate?: number | null;
   tutor_rate_currency?: string;
@@ -275,4 +280,10 @@ export type SessionType = {
   meeting_provider?: 'zoom' | 'manual' | 'none';
   /** Over, but not yet closed from attendance or by support */
   awaiting_confirmation?: boolean;
+  /** AI Teaching Assistant: where the recording is in the pipeline */
+  recording_status?: 'pending' | 'processing' | 'ready' | 'failed' | null;
+  /** AI Teaching Assistant: a lesson note exists */
+  note_status?: 'ready' | null;
+  /** AI Teaching Assistant: the plan for this session */
+  plan_status?: 'draft' | 'accepted' | null;
 };

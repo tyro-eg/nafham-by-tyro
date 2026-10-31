@@ -35,6 +35,8 @@ interface LoginModalProps {
   modalData: {
     courseItem?: any;
     fromCheckout?: boolean;
+    /** Where to go once signed in (default: the person's home page) */
+    returnTo?: string;
   };
 }
 
@@ -83,7 +85,7 @@ const LoginModal: FC<LoginModalProps> = ({
     try {
       const userData = await signInMutation.mutateAsync(values);
       if (userData?.id) {
-        navigate(getHomePath(userData));
+        navigate(modalData.returnTo ?? getHomePath(userData));
       }
     } catch (error) {
       console.error('Login error:', error);
