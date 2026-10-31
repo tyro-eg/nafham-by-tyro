@@ -184,11 +184,22 @@ const SessionsCalendarContainer: React.FC<SessionsCalendarContainerProps> = ({
           headerToolbar={{
             left: 'prev,next today',
             center: 'title',
-            right: enableWeekView ? 'dayGridMonth,timeGridWeek' : '',
+            right: enableWeekView ? 'dayGridAhead,timeGridWeek' : '',
+          }}
+          // The grid starts at the week we are in and runs five weeks ahead,
+          // instead of a calendar month whose past weeks sit empty
+          views={{
+            dayGridAhead: {
+              type: 'dayGrid',
+              duration: { weeks: 5 },
+              dateAlignment: 'week',
+              dateIncrement: { weeks: 4 },
+              buttonText: t('CALENDAR.BUTTONS.MONTH'),
+            },
           }}
           scrollTime="08:00:00"
           allDaySlot={false}
-          initialView="dayGridMonth"
+          initialView="dayGridAhead"
           dayHeaderFormat={{
             weekday: 'short',
           }}
