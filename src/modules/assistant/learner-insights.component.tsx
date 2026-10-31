@@ -219,6 +219,13 @@ const LearnerInsights: FC<Props> = ({ row }) => {
     generating.settle(insight?.generated_at);
   }, [insight?.generated_at, generating]);
 
+  // Reading a stale insight makes the backend rebuild it; poll until it lands
+  useEffect(() => {
+    if (insight?.refreshing && !generating.active) {
+      generating.start(insight.generated_at);
+    }
+  }, [insight?.refreshing, insight?.generated_at, generating]);
+
   const requestRefresh = async () => {
     try {
       await refresh.mutateAsync(pair);

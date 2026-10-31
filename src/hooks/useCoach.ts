@@ -88,6 +88,8 @@ export interface LearnerInsight {
   lessons_count: number;
   assignments_count: number;
   stale: boolean;
+  /** A rebuild is on its way: the backend queued one when this stale insight was read */
+  refreshing: boolean;
   generated_at: string | null;
   status: ReadyStatus;
   recent_notes: SessionNote[];
@@ -127,6 +129,8 @@ export interface LessonPlan extends LessonPlanSummary {
   homework_suggestion: string | null;
   notes_for_tutor: string | null;
   slides: Slide[];
+  /** Slides are written on the first present or download, not with the plan */
+  slides_ready: boolean;
   total_minutes: number;
   pptx_stale: boolean;
   pptx_url: string | null;
