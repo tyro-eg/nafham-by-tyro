@@ -40,7 +40,11 @@ const distinct = (
     else map.set(0, { id: 0, name: general });
   });
   return Array.from(map.values()).sort((a, b) =>
-    a.id === 0 ? -1 : b.id === 0 ? 1 : a.name.localeCompare(b.name),
+    a.id === 0
+      ? -1
+      : b.id === 0
+        ? 1
+        : a.name.localeCompare(b.name, undefined, { numeric: true }),
   );
 };
 
