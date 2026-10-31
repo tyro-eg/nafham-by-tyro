@@ -848,6 +848,7 @@
       "UPCOMING": "جلسات قادمة",
       "UNSCHEDULED": "ساعة غير محجوزة",
       "PREVIOUS": "جلسات سابقة",
+      "COMPLETED": "جلسات مكتملة",
       "CANCELLED": "جلسات ملغاة"
     },
     "SCHEDULE": {
@@ -1328,6 +1329,7 @@
     "STATS": {
       "UPCOMING": "الجلسات القادمة",
       "HOURS_LEARNED": "ساعات التعلّم",
+      "COMPLETED": "جلسات مكتملة",
       "HOURS_REMAINING": "الساعات المتبقية",
       "ATTENDANCE": "نسبة الحضور"
     },
