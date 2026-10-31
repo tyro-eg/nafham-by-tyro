@@ -2235,13 +2235,35 @@
       "EYEBROW": "عائلة {{name}}",
       "WELCOME": "أهلًا بعودتك، {{name}} 👋",
       "NEXT": "درس {{child}} القادم هو {{subject}} مع {{tutor}}، {{when}}.",
-      "NO_NEXT": "لا يوجد حجز بعد. اطلب ساعات من بطاقة الطفل وسيحدد فريقنا الدروس."
+      "NO_NEXT": "لا يوجد حجز بعد. اطلب ساعات من بطاقة الطفل وسيحدد فريقنا الدروس.",
+      "HOURS_zero": "لا ساعات متبقية",
+      "HOURS_one": "ساعة واحدة متبقية",
+      "HOURS_two": "ساعتان متبقيتان",
+      "HOURS_few": "{{count}} ساعات متبقية",
+      "HOURS_many": "{{count}} ساعة متبقية",
+      "HOURS_other": "{{count}} ساعة متبقية",
+      "LESSONS_WEEK_zero": "لا دروس هذا الأسبوع",
+      "LESSONS_WEEK_one": "درس واحد هذا الأسبوع",
+      "LESSONS_WEEK_two": "درسان هذا الأسبوع",
+      "LESSONS_WEEK_few": "{{count}} دروس هذا الأسبوع",
+      "LESSONS_WEEK_many": "{{count}} درسًا هذا الأسبوع",
+      "LESSONS_WEEK_other": "{{count}} درس هذا الأسبوع",
+      "HOMEWORK_zero": "لا واجبات مستحقة",
+      "HOMEWORK_one": "واجب واحد مستحق",
+      "HOMEWORK_two": "واجبان مستحقان",
+      "HOMEWORK_few": "{{count}} واجبات مستحقة",
+      "HOMEWORK_many": "{{count}} واجبًا مستحقًا",
+      "HOMEWORK_other": "{{count}} واجب مستحق"
     },
     "STATS": {
       "HOURS": "الساعات المتبقية",
       "LESSONS_WEEK": "دروس هذا الأسبوع",
       "HOMEWORK": "واجبات مستحقة",
       "NOTES": "ملاحظات جديدة"
+    },
+    "UPCOMING": {
+      "TITLE": "الدروس القادمة",
+      "EMPTY": "لا يوجد حجز بعد."
     }
   }
 }

@@ -30,6 +30,8 @@ export interface FamilyPackage {
   tutor_name: string;
   original_hours: number;
   remaining_hours: number;
+  hours_used: number;
+  hours_left: number;
   recording_enabled: boolean;
   recording_consented_at: string | null;
 }

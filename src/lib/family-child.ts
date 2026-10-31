@@ -33,3 +33,14 @@ export const onActiveChildChange = (listener: () => void) => {
   window.addEventListener(EVENT, listener);
   return () => window.removeEventListener(EVENT, listener);
 };
+
+/** One colour per child, by their position in the family (sorted by name) */
+export const CHILD_COLORS = [
+  '#1792ba',
+  '#6a52d6',
+  '#0f9d8a',
+  '#d6457a',
+  '#b07800',
+];
+export const childColor = (index: number) =>
+  CHILD_COLORS[index % CHILD_COLORS.length];

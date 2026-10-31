@@ -18,7 +18,6 @@ import {
   AddRounded,
   ArrowForwardRounded,
   AssignmentRounded,
-  AutoStoriesRounded,
   CalendarMonthRounded,
   EventNoteRounded,
   MenuBookRounded,
@@ -33,17 +32,18 @@ import {
   useFamily,
   useRequestTopUp,
   type FamilyChild,
-  type FamilySessionSummary,
 } from '../../hooks/useFamily';
 import { useRtlClass } from '../../assets/utils/utils';
 import { snackActions } from '../../assets/utils/toaster';
 import { formatRelative } from '../homework/homework.utils';
 import { subjectName } from '../dashboard/dashboard.utils';
+import { childColor } from '../../lib/family-child';
 import '../dashboard/dashboard.styles.scss';
 import './family.styles.scss';
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 const TONES = ['sky', 'mint', 'sun', 'lilac', 'coral'] as const;
+const UPCOMING_SHOWN = 8;
 
 /** Ask ops for more hours on one of the child's packages */
 const TopUpDialog: FC<{ child: FamilyChild; onClose: () => void }> = ({
@@ -154,36 +154,33 @@ const Ring: FC<{ value: number; label: string; tone: string }> = ({
 };
 
 /**
- * One child's dashboard: the next lesson, what follows, hours left per
- * package, homework and notes, and the way into that child's pages.
+ * One child, at a glance: the numbers, the packages with hours left, the
+ * next lesson in one line, and the way into that child's pages.
  */
-const ChildDashboard: FC<{
+const ChildCard: FC<{
   child: FamilyChild;
+  color: string;
   onOpen: (path: string) => void;
   onTopUp: () => void;
-}> = ({ child, onOpen, onTopUp }) => {
+}> = ({ child, color, onOpen, onTopUp }) => {
   const { t, i18n } = useTranslation();
   const locale = `${i18n.language}-u-nu-latn`;
-  // A cached family from before the field existed has no upcoming list
-  const upcoming = child.upcoming ?? [];
-  const next = upcoming[0] ?? null;
-  const later = upcoming.slice(1);
+  const next = (child.upcoming ?? [])[0] ?? null;
   const live = next?.status === 'open';
-
-  const day = (iso: string, opts: Intl.DateTimeFormatOptions) =>
-    new Date(iso).toLocaleDateString(locale, opts);
-  const time = (iso: string) =>
-    new Date(iso).toLocaleTimeString(locale, {
+  const when = (iso: string) =>
+    new Date(iso).toLocaleString(locale, {
+      weekday: 'short',
+      day: 'numeric',
+      month: 'short',
       hour: 'numeric',
       minute: '2-digit',
     });
-  const startsIn = (session: FamilySessionSummary) =>
-    session.status === 'open'
-      ? t('FAMILY.CARD.LIVE')
-      : formatRelative(session.start_time, i18n.language);
 
   return (
-    <section className="sd-card fam-kid">
+    <section
+      className="sd-card fam-kid"
+      style={{ '--kid': color } as React.CSSProperties}
+    >
       <header className="fam-kid__head">
         <Avatar className="fam-kid__avatar">{child.first_name[0]}</Avatar>
         <div className="fam-kid__who">
@@ -197,6 +194,7 @@ const ChildDashboard: FC<{
         <Button
           variant="contained"
           size="small"
+          className="fam-kid__open"
           endIcon={<ArrowForwardRounded className="sd-flip" />}
           onClick={() => onOpen('/my_sessions')}
         >
@@ -204,156 +202,110 @@ const ChildDashboard: FC<{
         </Button>
       </header>
 
-      <div className="fam-kid__grid">
-        <div className="fam-kid__col">
-          <h3 className="sd-subheading">{t('FAMILY.CARD.NEXT_LESSON')}</h3>
-          {!next && <p className="sd-muted">{t('FAMILY.CARD.NO_LESSON')}</p>}
-          {next && (
-            <div className={`sd-next${live ? ' sd-next--live' : ''}`}>
-              <div className="sd-next__date" aria-hidden="true">
-                <span className="sd-next__month">
-                  {day(next.start_time, { month: 'short' })}
-                </span>
-                <span className="sd-next__daynum">
-                  {day(next.start_time, { day: 'numeric' })}
-                </span>
-              </div>
-              <div className="sd-next__body">
-                <span className="sd-next__chip">
-                  {live && <span className="sd-next__pulse" />}
-                  {startsIn(next)}
-                </span>
-                <h3 className="sd-next__subject" dir="auto">
-                  {subjectName(next.course_name)}
-                </h3>
-                <p className="sd-next__when">
-                  {day(next.start_time, {
-                    weekday: 'long',
-                    day: 'numeric',
-                    month: 'long',
-                  })}{' '}
-                  · {time(next.start_time)} – {time(next.end_time)}
-                </p>
-                <span className="sd-next__tutor">{next.tutor_name}</span>
-              </div>
-            </div>
-          )}
-          {later.length > 0 && (
-            <>
-              <h3 className="sd-subheading">{t('FAMILY.CARD.COMING_UP')}</h3>
-              <ol className="sd-timeline">
-                {later.map((s) => (
-                  <li key={s.id} className="sd-timeline__item">
-                    <span className="sd-timeline__dot" />
-                    <div className="sd-timeline__card">
-                      <div className="sd-timeline__main">
-                        <span className="sd-timeline__subject" dir="auto">
-                          {subjectName(s.course_name)}
-                        </span>
-                        <span className="sd-timeline__meta">
-                          {day(s.start_time, {
-                            weekday: 'short',
-                            day: 'numeric',
-                            month: 'short',
-                          })}{' '}
-                          · {time(s.start_time)} · {s.tutor_name}
-                        </span>
-                      </div>
-                    </div>
-                  </li>
-                ))}
-              </ol>
-            </>
-          )}
+      <dl className="fam-kid__facts">
+        <div>
+          <dt>{t('FAMILY.CARD.HOURS_LEFT')}</dt>
+          <dd>{child.hours_left}</dd>
         </div>
-
-        <div className="fam-kid__col">
-          <h3 className="sd-subheading">{t('FAMILY.CARD.PACKAGES')}</h3>
-          {child.packages.length === 0 && (
-            <p className="sd-muted">{t('FAMILY.CARD.NO_PACKAGES')}</p>
-          )}
-          <ul className="fam-kid__packages">
-            {child.packages.map((pkg, i) => (
-              <li key={pkg.id} className="fam-kid__package">
-                <Ring
-                  value={
-                    pkg.original_hours
-                      ? pkg.remaining_hours / pkg.original_hours
-                      : 0
-                  }
-                  label={`${pkg.remaining_hours}h`}
-                  tone={TONES[i % TONES.length]}
-                />
-                <div className="fam-kid__package-text">
-                  <span className="fam-kid__package-course" dir="auto">
-                    {subjectName(pkg.course_name)}
-                  </span>
-                  <span className="fam-kid__package-meta">
-                    {pkg.tutor_name} ·{' '}
-                    {t('FAMILY.CARD.HOURS_OF', {
-                      left: pkg.remaining_hours,
-                      total: pkg.original_hours,
-                    })}
-                  </span>
-                </div>
-              </li>
-            ))}
-          </ul>
-
-          <dl className="fam-kid__facts">
-            <div>
-              <dt>{t('FAMILY.CARD.HOMEWORK_DUE')}</dt>
-              <dd>{child.homework_due}</dd>
-            </div>
-            <div>
-              <dt>{t('FAMILY.CARD.LESSONS')}</dt>
-              <dd>{child.lessons_completed}</dd>
-            </div>
-            <div>
-              <dt>{t('FAMILY.CARD.LATEST_NOTE')}</dt>
-              <dd>
-                {child.latest_note_at
-                  ? formatRelative(child.latest_note_at, i18n.language)
-                  : t('FAMILY.CARD.NO_NOTE')}
-              </dd>
-            </div>
-          </dl>
-
-          <div className="fam-kid__actions">
-            <Button
-              variant="outlined"
-              size="small"
-              startIcon={<AssignmentRounded />}
-              onClick={() => onOpen('/homework')}
-            >
-              {t('NAVIGATION.HOMEWORK')}
-            </Button>
-            <Button
-              variant="outlined"
-              size="small"
-              startIcon={<CalendarMonthRounded />}
-              onClick={() => onOpen('/calendar')}
-            >
-              {t('NAVIGATION.CALENDAR')}
-            </Button>
-            <Button
-              variant="text"
-              size="small"
-              startIcon={<AddRounded />}
-              onClick={onTopUp}
-            >
-              {t('FAMILY.TOP_UP.BUTTON')}
-            </Button>
-          </div>
+        <div>
+          <dt>{t('FAMILY.CARD.LESSONS')}</dt>
+          <dd>{child.lessons_completed}</dd>
         </div>
+        <div>
+          <dt>{t('FAMILY.CARD.HOMEWORK_DUE')}</dt>
+          <dd>{child.homework_due}</dd>
+        </div>
+        <div>
+          <dt>{t('FAMILY.CARD.LATEST_NOTE')}</dt>
+          <dd>
+            {child.latest_note_at
+              ? formatRelative(child.latest_note_at, i18n.language)
+              : t('FAMILY.CARD.NO_NOTE')}
+          </dd>
+        </div>
+      </dl>
+
+      <div className={`fam-kid__next${live ? ' fam-kid__next--live' : ''}`}>
+        <EventNoteRounded aria-hidden="true" />
+        {next ? (
+          <span dir="auto">
+            <strong>
+              {live
+                ? t('FAMILY.CARD.LIVE')
+                : formatRelative(next.start_time, i18n.language)}
+            </strong>
+            {' · '}
+            {subjectName(next.course_name)} · {next.tutor_name} ·{' '}
+            {when(next.start_time)}
+          </span>
+        ) : (
+          <span>{t('FAMILY.CARD.NO_LESSON')}</span>
+        )}
+      </div>
+
+      <h3 className="sd-subheading">{t('FAMILY.CARD.PACKAGES')}</h3>
+      {child.packages.length === 0 && (
+        <p className="sd-muted">{t('FAMILY.CARD.NO_PACKAGES')}</p>
+      )}
+      <ul className="fam-kid__packages">
+        {child.packages.map((pkg, i) => (
+          <li key={pkg.id} className="fam-kid__package">
+            <Ring
+              value={
+                pkg.original_hours ? pkg.hours_left / pkg.original_hours : 0
+              }
+              label={`${pkg.hours_left}h`}
+              tone={TONES[i % TONES.length]}
+            />
+            <div className="fam-kid__package-text">
+              <span className="fam-kid__package-course" dir="auto">
+                {subjectName(pkg.course_name)}
+              </span>
+              <span className="fam-kid__package-meta">
+                {pkg.tutor_name} ·{' '}
+                {t('FAMILY.CARD.HOURS_OF', {
+                  left: pkg.hours_left,
+                  total: pkg.original_hours,
+                })}
+              </span>
+            </div>
+          </li>
+        ))}
+      </ul>
+
+      <div className="fam-kid__actions">
+        <Button
+          variant="outlined"
+          size="small"
+          startIcon={<AssignmentRounded />}
+          onClick={() => onOpen('/homework')}
+        >
+          {t('NAVIGATION.HOMEWORK')}
+        </Button>
+        <Button
+          variant="outlined"
+          size="small"
+          startIcon={<CalendarMonthRounded />}
+          onClick={() => onOpen('/calendar')}
+        >
+          {t('NAVIGATION.CALENDAR')}
+        </Button>
+        <Button
+          variant="text"
+          size="small"
+          startIcon={<AddRounded />}
+          onClick={onTopUp}
+        >
+          {t('FAMILY.TOP_UP.BUTTON')}
+        </Button>
       </div>
     </section>
   );
 };
 
 /**
- * The parent's home: a welcome with the family's next lesson, the numbers
- * across the children, then one dashboard per child.
+ * The parent's home: a short welcome, the children side by side with their
+ * numbers and packages, then the family's upcoming lessons in one list.
  */
 const FamilyHome: FC = () => {
   const { t, i18n } = useTranslation();
@@ -365,17 +317,31 @@ const FamilyHome: FC = () => {
   const { choose } = useActiveChild(children);
   const [topUpFor, setTopUpFor] = useState<FamilyChild | null>(null);
   const loading = family.isLoading;
+  const locale = `${i18n.language}-u-nu-latn`;
 
   const open = (child: FamilyChild, path: string) => {
     choose(child.id);
     navigate(path);
   };
 
-  // Across the family
+  // Every child's coming lessons, soonest first, with the child they belong to
+  const upcoming = useMemo(() => {
+    const rows = (children ?? []).flatMap((child, index) =>
+      (child.upcoming ?? []).map((session) => ({
+        child,
+        color: childColor(index),
+        session,
+      })),
+    );
+    rows.sort((a, b) =>
+      a.session.start_time.localeCompare(b.session.start_time),
+    );
+    return rows.slice(0, UPCOMING_SHOWN);
+  }, [children]);
+
   const totals = useMemo(() => {
     const kids = children ?? [];
-    const now = Date.now();
-    const weekAhead = now + 7 * DAY_MS;
+    const weekAhead = Date.now() + 7 * DAY_MS;
     return {
       hours: kids.reduce((sum, c) => sum + c.hours_left, 0),
       lessonsThisWeek: kids.reduce(
@@ -387,69 +353,22 @@ const FamilyHome: FC = () => {
         0,
       ),
       homework: kids.reduce((sum, c) => sum + c.homework_due, 0),
-      newNotes: kids.filter(
-        (c) =>
-          c.latest_note_at &&
-          now - new Date(c.latest_note_at).getTime() < 7 * DAY_MS,
-      ).length,
     };
   }, [children]);
 
-  // The family's very next lesson, for the welcome line
-  const nextAcross = useMemo(() => {
-    const all = (children ?? []).flatMap((c) =>
-      c.next_session ? [{ child: c, session: c.next_session }] : [],
-    );
-    all.sort((a, b) =>
-      a.session.start_time.localeCompare(b.session.start_time),
-    );
-    return all[0] ?? null;
-  }, [children]);
-
-  const stats = [
-    {
-      key: 'hours',
-      tone: 'sky',
-      icon: <AccessTimeRounded />,
-      value: String(totals.hours),
-      label: t('FAMILY.STATS.HOURS'),
-    },
-    {
-      key: 'week',
-      tone: 'mint',
-      icon: <EventNoteRounded />,
-      value: String(totals.lessonsThisWeek),
-      label: t('FAMILY.STATS.LESSONS_WEEK'),
-    },
-    {
-      key: 'homework',
-      tone: 'sun',
-      icon: <AssignmentRounded />,
-      value: String(totals.homework),
-      label: t('FAMILY.STATS.HOMEWORK'),
-    },
-    {
-      key: 'notes',
-      tone: 'lilac',
-      icon: <AutoStoriesRounded />,
-      value: String(totals.newNotes),
-      label: t('FAMILY.STATS.NOTES'),
-    },
-  ];
-
-  const heroMessage = nextAcross
+  const heroMessage = upcoming[0]
     ? t('FAMILY.HERO.NEXT', {
-        child: nextAcross.child.first_name,
-        subject: subjectName(nextAcross.session.course_name),
-        tutor: nextAcross.session.tutor_name,
-        when: formatRelative(nextAcross.session.start_time, i18n.language),
+        child: upcoming[0].child.first_name,
+        subject: subjectName(upcoming[0].session.course_name),
+        tutor: upcoming[0].session.tutor_name,
+        when: formatRelative(upcoming[0].session.start_time, i18n.language),
       })
     : t('FAMILY.HERO.NO_NEXT');
 
   return (
     <div className={`student-dashboard family-home ${rtlClass}`}>
       <div className="container sd-container">
-        <section className="sd-hero">
+        <section className="sd-hero fam-hero">
           <div className="sd-hero__content">
             <span className="sd-hero__eyebrow">
               {t('FAMILY.HERO.EYEBROW', { name: family.data?.name ?? '' })}
@@ -464,32 +383,50 @@ const FamilyHome: FC = () => {
             ) : (
               <p className="sd-hero__message">{heroMessage}</p>
             )}
-            <div className="sd-hero__actions">
-              <Button
-                component={Link}
-                to="/family/notes"
-                className="sd-hero__primary"
-                startIcon={<MenuBookRounded />}
-              >
-                {t('FAMILY.NOTES.TITLE')}
-              </Button>
-              <Button
-                component={Link}
-                to="/messages"
-                className="sd-hero__secondary"
-                startIcon={<SupportAgentRounded />}
-              >
-                {t('FAMILY.SUPPORT')}
-              </Button>
-              <Button
-                component={Link}
-                to="/family/settings"
-                className="sd-hero__secondary"
-                startIcon={<SettingsRounded />}
-              >
-                {t('FAMILY.SETTINGS.TITLE')}
-              </Button>
-            </div>
+            {!loading && (
+              <ul className="fam-hero__totals">
+                <li>
+                  <AccessTimeRounded aria-hidden="true" />
+                  {t('FAMILY.HERO.HOURS', { count: totals.hours })}
+                </li>
+                <li>
+                  <EventNoteRounded aria-hidden="true" />
+                  {t('FAMILY.HERO.LESSONS_WEEK', {
+                    count: totals.lessonsThisWeek,
+                  })}
+                </li>
+                <li>
+                  <AssignmentRounded aria-hidden="true" />
+                  {t('FAMILY.HERO.HOMEWORK', { count: totals.homework })}
+                </li>
+              </ul>
+            )}
+          </div>
+          <div className="fam-hero__actions">
+            <Button
+              component={Link}
+              to="/family/notes"
+              className="sd-hero__primary"
+              startIcon={<MenuBookRounded />}
+            >
+              {t('FAMILY.NOTES.TITLE')}
+            </Button>
+            <Button
+              component={Link}
+              to="/messages"
+              className="sd-hero__secondary"
+              startIcon={<SupportAgentRounded />}
+            >
+              {t('FAMILY.SUPPORT')}
+            </Button>
+            <Button
+              component={Link}
+              to="/family/settings"
+              className="sd-hero__secondary"
+              startIcon={<SettingsRounded />}
+            >
+              {t('FAMILY.SETTINGS.TITLE')}
+            </Button>
           </div>
         </section>
 
@@ -507,23 +444,12 @@ const FamilyHome: FC = () => {
           </Alert>
         )}
 
-        <div className="sd-stats">
-          {stats.map((stat) => (
-            <div key={stat.key} className={`sd-stat sd-stat--${stat.tone}`}>
-              <span className="sd-stat__icon" aria-hidden="true">
-                {stat.icon}
-              </span>
-              {loading ? (
-                <Skeleton width={56} height={44} />
-              ) : (
-                <span className="sd-stat__value">{stat.value}</span>
-              )}
-              <span className="sd-stat__label">{stat.label}</span>
-            </div>
-          ))}
-        </div>
-
-        {loading && <Skeleton variant="rounded" height={280} />}
+        {loading && (
+          <div className="fam-kids">
+            <Skeleton variant="rounded" height={320} />
+            <Skeleton variant="rounded" height={320} />
+          </div>
+        )}
 
         {children && children.length === 0 && (
           <div className="sd-card sd-empty">
@@ -539,14 +465,94 @@ const FamilyHome: FC = () => {
           </div>
         )}
 
-        {children?.map((child) => (
-          <ChildDashboard
-            key={child.id}
-            child={child}
-            onOpen={(path) => open(child, path)}
-            onTopUp={() => setTopUpFor(child)}
-          />
-        ))}
+        {children && children.length > 0 && (
+          <div className="fam-kids">
+            {children.map((child, index) => (
+              <ChildCard
+                key={child.id}
+                child={child}
+                color={childColor(index)}
+                onOpen={(path) => open(child, path)}
+                onTopUp={() => setTopUpFor(child)}
+              />
+            ))}
+          </div>
+        )}
+
+        {children && children.length > 0 && (
+          <section className="sd-card fam-upcoming">
+            <header className="sd-card__header">
+              <h2 className="sd-card__title">{t('FAMILY.UPCOMING.TITLE')}</h2>
+              <Link
+                className="sd-card__link"
+                to="/calendar"
+                onClick={() => choose('all')}
+              >
+                {t('NAVIGATION.CALENDAR')}
+                <ArrowForwardRounded className="sd-flip" />
+              </Link>
+            </header>
+            {upcoming.length === 0 && (
+              <p className="sd-muted">{t('FAMILY.UPCOMING.EMPTY')}</p>
+            )}
+            <ol className="fam-upcoming__list">
+              {upcoming.map(({ child, color, session }) => (
+                <li
+                  key={session.id}
+                  className="fam-upcoming__item"
+                  style={{ '--kid': color } as React.CSSProperties}
+                >
+                  <div className="fam-upcoming__date" aria-hidden="true">
+                    <span className="fam-upcoming__day">
+                      {new Date(session.start_time).toLocaleDateString(locale, {
+                        day: 'numeric',
+                      })}
+                    </span>
+                    <span className="fam-upcoming__month">
+                      {new Date(session.start_time).toLocaleDateString(locale, {
+                        month: 'short',
+                      })}
+                    </span>
+                  </div>
+                  <div className="fam-upcoming__main">
+                    <span className="fam-upcoming__who">
+                      <span className="fam-upcoming__dot" />
+                      {child.first_name}
+                      {session.status === 'open' && (
+                        <span className="fam-upcoming__live">
+                          {t('FAMILY.CARD.LIVE')}
+                        </span>
+                      )}
+                    </span>
+                    <span className="fam-upcoming__subject" dir="auto">
+                      {subjectName(session.course_name)}
+                    </span>
+                    <span className="fam-upcoming__meta">
+                      {new Date(session.start_time).toLocaleDateString(locale, {
+                        weekday: 'long',
+                      })}{' '}
+                      ·{' '}
+                      {new Date(session.start_time).toLocaleTimeString(locale, {
+                        hour: 'numeric',
+                        minute: '2-digit',
+                      })}
+                      {' – '}
+                      {new Date(session.end_time).toLocaleTimeString(locale, {
+                        hour: 'numeric',
+                        minute: '2-digit',
+                      })}
+                      {' · '}
+                      {session.tutor_name}
+                    </span>
+                  </div>
+                  <span className="fam-upcoming__in">
+                    {formatRelative(session.start_time, i18n.language)}
+                  </span>
+                </li>
+              ))}
+            </ol>
+          </section>
+        )}
       </div>
       {topUpFor && (
         <TopUpDialog child={topUpFor} onClose={() => setTopUpFor(null)} />

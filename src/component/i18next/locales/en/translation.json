@@ -2128,13 +2128,23 @@
       "EYEBROW": "The {{name}} family",
       "WELCOME": "Welcome back, {{name}} 👋",
       "NEXT": "{{child}}'s next lesson is {{subject}} with {{tutor}}, {{when}}.",
-      "NO_NEXT": "Nothing is booked yet. Ask for hours on a child's card and our team will schedule the lessons."
+      "NO_NEXT": "Nothing is booked yet. Ask for hours on a child's card and our team will schedule the lessons.",
+      "HOURS_one": "{{count}} hour left",
+      "HOURS_other": "{{count}} hours left",
+      "LESSONS_WEEK_one": "{{count}} lesson this week",
+      "LESSONS_WEEK_other": "{{count}} lessons this week",
+      "HOMEWORK_one": "{{count}} homework due",
+      "HOMEWORK_other": "{{count}} homework due"
     },
     "STATS": {
       "HOURS": "Hours left",
       "LESSONS_WEEK": "Lessons this week",
       "HOMEWORK": "Homework due",
       "NOTES": "New lesson notes"
+    },
+    "UPCOMING": {
+      "TITLE": "Upcoming lessons",
+      "EMPTY": "Nothing booked yet."
     }
   }
 }
