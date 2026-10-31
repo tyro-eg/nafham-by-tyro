@@ -7,6 +7,8 @@ import {
   AssignmentRounded,
   CalendarMonthRounded,
   CloseRounded,
+  ChevronLeftRounded,
+  ChevronRightRounded,
   CardGiftcardRounded,
   DashboardRounded,
   EditCalendarRounded,
@@ -36,6 +38,8 @@ import logo from '../../assets/images/logo.png';
 
 import './sidebar-layout.styles.scss';
 
+const SIDEBAR_KEY = 'nafham.sidebar';
+
 interface SidebarLayoutProps {
   children: ReactNode;
 }
@@ -55,6 +59,24 @@ const SidebarLayout: FC<SidebarLayoutProps> = ({ children }) => {
   const { client: chatClient, unreadCount } = useStreamChat();
   const location = useLocation();
   const [drawerOpen, setDrawerOpen] = useState(false);
+  // Desktop: the sidebar folds to a rail of icons, remembered per browser
+  const [collapsed, setCollapsed] = useState(() => {
+    try {
+      return localStorage.getItem(SIDEBAR_KEY) === 'collapsed';
+    } catch {
+      return false;
+    }
+  });
+  const toggleCollapsed = () => {
+    setCollapsed((value) => {
+      try {
+        localStorage.setItem(SIDEBAR_KEY, value ? 'open' : 'collapsed');
+      } catch {
+        // storage unavailable: the choice lasts for this page
+      }
+      return !value;
+    });
+  };
 
   // Close the phone drawer whenever the page changes
   useEffect(() => {
@@ -269,7 +291,7 @@ const SidebarLayout: FC<SidebarLayoutProps> = ({ children }) => {
     <div
       className={`side-layout ${rtlClass}${
         drawerOpen ? ' side-layout--open' : ''
-      }`}
+      }${collapsed ? ' side-layout--collapsed' : ''}`}
     >
       {/* Small screens: top bar that opens the sidebar as a drawer */}
       <header className="side-layout__topbar">
@@ -312,6 +334,26 @@ const SidebarLayout: FC<SidebarLayoutProps> = ({ children }) => {
           >
             <CloseRounded />
           </IconButton>
+          <Tooltip
+            title={
+              collapsed ? t('NAVIGATION.EXPAND') : t('NAVIGATION.COLLAPSE')
+            }
+          >
+            <IconButton
+              className="side-layout__collapse"
+              onClick={toggleCollapsed}
+              aria-label={
+                collapsed ? t('NAVIGATION.EXPAND') : t('NAVIGATION.COLLAPSE')
+              }
+              aria-expanded={!collapsed}
+            >
+              {collapsed ? (
+                <ChevronRightRounded className="side-layout__flip" />
+              ) : (
+                <ChevronLeftRounded className="side-layout__flip" />
+              )}
+            </IconButton>
+          </Tooltip>
         </div>
 
         {isParent && (
@@ -325,6 +367,7 @@ const SidebarLayout: FC<SidebarLayoutProps> = ({ children }) => {
             <NavLink
               key={item.to}
               to={item.to}
+              title={collapsed ? item.label : undefined}
               onClick={() => setDrawerOpen(false)}
               className={({ isActive }) =>
                 `side-layout__link${

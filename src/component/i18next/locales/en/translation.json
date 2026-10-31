@@ -56,7 +56,9 @@
     "ASSISTANT": "AI Teaching Assistant",
     "FREE_TRIAL": "Book a free trial",
     "FAMILY": "My family",
-    "NOTES": "Lesson notes"
+    "NOTES": "Lesson notes",
+    "COLLAPSE": "Hide menu",
+    "EXPAND": "Show menu"
   },
   "CARDS": {
     "FREE_ASSESMENT": {
