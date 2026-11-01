@@ -1,10 +1,11 @@
 import { FC, ReactNode, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Avatar, Button, Dialog, Skeleton } from '@mui/material';
+import { Alert, Avatar, Button, Dialog, Skeleton } from '@mui/material';
 import {
   AccessTimeRounded,
   ArrowForwardRounded,
+  AutorenewRounded,
   CheckCircleRounded,
   CalendarMonthRounded,
   EmojiEventsRounded,
@@ -552,6 +553,32 @@ const Dashboard: FC = () => {
           </div>
 
           <aside className="sd-col sd-col--side">
+            {/* ---------- Low on hours: renew on the website ---------- */}
+            {packages.some(
+              (pkg) =>
+                Number(pkg.remaining_hours) <= 2 &&
+                Number(pkg.original_hours) > 0,
+            ) && (
+              <Alert
+                severity="warning"
+                icon={<AutorenewRounded fontSize="inherit" />}
+                action={
+                  <Button
+                    component={Link}
+                    to="/my_packages"
+                    color="inherit"
+                    size="small"
+                  >
+                    {t('PAYMENTS.BANNER.RENEW')}
+                  </Button>
+                }
+                sx={{ mb: 2, borderRadius: '1.6rem' }}
+              >
+                {currentUser?.family_id
+                  ? t('PAYMENTS.BANNER.LOW_CHILD')
+                  : t('PAYMENTS.BANNER.LOW')}
+              </Alert>
+            )}
             {/* ---------- Packages ---------- */}
             <Section
               title={t('DASHBOARD.PACKAGES.TITLE')}

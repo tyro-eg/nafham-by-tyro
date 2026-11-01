@@ -58,7 +58,8 @@
     "FAMILY": "عائلتي",
     "NOTES": "ملاحظات الدروس",
     "COLLAPSE": "إخفاء القائمة",
-    "EXPAND": "إظهار القائمة"
+    "EXPAND": "إظهار القائمة",
+    "PAYMENTS": "المدفوعات"
   },
   "CARDS": {
     "FREE_ASSESMENT": {
@@ -2323,6 +2324,87 @@
     "UPCOMING": {
       "TITLE": "الدروس القادمة",
       "EMPTY": "لا يوجد حجز بعد."
+    }
+  },
+  "PAYMENTS": {
+    "TITLE": "المدفوعات",
+    "SUBTITLE": "إيصالات التجديدات المدفوعة عبر الإنترنت.",
+    "EMPTY": "لا توجد مدفوعات بعد.",
+    "RENEW": {
+      "BUTTON": "تجديد",
+      "TITLE": "تجديد {{course}}",
+      "FOR": "لـ {{name}}، مع {{tutor}}",
+      "CHOOSE": "اختر حجم الباقة",
+      "HOURS_one": "ساعة واحدة",
+      "HOURS_two": "ساعتان",
+      "HOURS_few": "{{count}} ساعات",
+      "HOURS_many": "{{count}} ساعة",
+      "HOURS_other": "{{count}} ساعة",
+      "LOW_one": "بقيت ساعة واحدة",
+      "LOW_two": "بقيت ساعتان",
+      "LOW_few": "بقيت {{count}} ساعات",
+      "LOW_many": "بقيت {{count}} ساعة",
+      "LOW_other": "بقيت {{count}} ساعة",
+      "OFFER_UNTIL": "العرض حتى {{date}}",
+      "SAVE": "وفّر {{amount}}",
+      "CURRENT": "مثل الحالية",
+      "VAT": "ضريبة القيمة المضافة {{rate}}%",
+      "TOTAL": "الإجمالي",
+      "PAY": "ادفع {{amount}}",
+      "REDIRECT": "تدفع بالبطاقة على صفحة نومود الآمنة ثم تعود إلى هنا مباشرة.",
+      "NOT_RENEWABLE": "لا يمكن تجديد هذه الباقة عبر الإنترنت بعد.",
+      "ASK_INSTEAD": "اطلب ساعات إضافية بدلاً من ذلك",
+      "ASK_PARENT_SHORT": "ولي الأمر هو من يجدد هذه الباقة.",
+      "UNAVAILABLE": "الدفع عبر الإنترنت غير متاح الآن. يرجى المحاولة بعد دقائق."
+    },
+    "RETURN": {
+      "CONFIRMING": "جارٍ تأكيد الدفع…",
+      "CONFIRMING_TEXT": "يستغرق هذا بضع ثوانٍ.",
+      "KEEP_OPEN": "يرجى إبقاء هذه الصفحة مفتوحة.",
+      "CHECKING": "نتحقق مع مزود الدفع.",
+      "FULFILLED": "تم استلام الدفع",
+      "FULFILLED_HINT": "شكراً لك، تم الدفع بنجاح.",
+      "FULFILLED_TEXT_one": "أُضيفت ساعة واحدة. دفعت {{amount}}.",
+      "FULFILLED_TEXT_two": "أُضيفت ساعتان. دفعت {{amount}}.",
+      "FULFILLED_TEXT_few": "أُضيفت {{count}} ساعات. دفعت {{amount}}.",
+      "FULFILLED_TEXT_many": "أُضيفت {{count}} ساعة. دفعت {{amount}}.",
+      "FULFILLED_TEXT_other": "أُضيفت {{count}} ساعة. دفعت {{amount}}.",
+      "FAILED": "لم يكتمل الدفع",
+      "FAILED_TEXT": "رُفضت البطاقة أو أُلغي الدفع. لم يُخصم أي مبلغ.",
+      "CANCELLED": "أُلغي الدفع",
+      "EXPIRED": "انتهت صلاحية صفحة الدفع",
+      "EXPIRED_TEXT": "ابدأ من جديد من صفحة الباقات. لا يستغرق الأمر سوى دقيقة.",
+      "REVIEW": "نتحقق من دفعتك",
+      "REVIEW_TEXT": "وصلت أموالك بأمان. سيضيف فريقنا الساعات قريباً ويرسل لك بريداً.",
+      "SIGN_IN": "سجّل الدخول لرؤية هذا الإيصال وباقاتك.",
+      "TRY_AGAIN": "حاول مرة أخرى",
+      "SEE_PACKAGES": "عرض باقاتي",
+      "RECEIPTS": "كل الإيصالات",
+      "NOT_FOUND": "لم نجد هذه الدفعة."
+    },
+    "STATUS": {
+      "created": "جارٍ البدء",
+      "pending": "بانتظار الدفع",
+      "paid": "مدفوع",
+      "fulfilled": "مكتمل",
+      "needs_review": "قيد التحقق",
+      "failed": "مرفوض",
+      "cancelled": "ملغى",
+      "expired": "منتهٍ",
+      "refunded": "مُسترَد",
+      "partially_refunded": "مُسترَد جزئياً",
+      "disputed": "متنازع عليه"
+    },
+    "HISTORY": {
+      "LINE": "{{hours}} س {{course}} · {{student}}",
+      "RESUME": "متابعة الدفع",
+      "CANCEL": "إلغاء",
+      "CANCELLED": "أُلغي الدفع."
+    },
+    "BANNER": {
+      "LOW": "إحدى باقاتك على وشك الانتهاء.",
+      "LOW_CHILD": "إحدى باقاتك على وشك الانتهاء. يمكن لولي الأمر تجديدها.",
+      "RENEW": "جدّد الآن"
     }
   }
 }
