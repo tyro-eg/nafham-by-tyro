@@ -112,6 +112,8 @@ export function useStartCheckout() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.payments.all });
     },
+    // The dialog shows the API's own message; keep the global toast quiet
+    onError: () => undefined,
   });
 }
 
@@ -151,6 +153,7 @@ export function useCancelPayment() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.payments.all });
     },
+    onError: () => undefined,
   });
 }
 
