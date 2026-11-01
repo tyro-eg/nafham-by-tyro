@@ -30,3 +30,166 @@
     }
   }
 }
+
+// ---------- grouped by day ----------
+.sessions-list--grouped {
+  display: grid;
+  gap: 2rem;
+}
+
+.sessions-day {
+  &__title {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    margin: 0 0 0.8rem;
+    padding: 0.4rem 0;
+    font-size: 1.3rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: $text-muted;
+    background: linear-gradient($surface-alt 85%, transparent);
+
+    html[dir='rtl'] & {
+      letter-spacing: 0;
+    }
+  }
+
+  // The heading says the day, so each card becomes one row: the time on
+  // the left, the course and the person in the middle, the chips and the
+  // actions on the right
+  .sessions-card {
+    display: grid;
+    grid-template-columns: 11rem minmax(0, 1fr) auto;
+    grid-template-areas:
+      'time subject side'
+      'time person side'
+      'time hint actions';
+    align-items: start;
+    column-gap: 1.6rem;
+    row-gap: 0.6rem;
+    padding: 1.4rem 1.6rem;
+
+    @include respond(phone) {
+      grid-template-columns: minmax(0, 1fr) auto;
+      grid-template-areas:
+        'time side'
+        'subject subject'
+        'person person'
+        'hint hint'
+        'actions actions';
+    }
+  }
+
+  .sessions-card + .sessions-card {
+    margin-top: 1rem;
+  }
+
+  .sessions-card__date {
+    display: none;
+  }
+
+  .sessions-card__main {
+    display: contents;
+  }
+
+  // The time row turns into a tile: the start time large, the length under it
+  .sessions-card__time {
+    grid-area: time;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.2rem;
+    align-self: stretch;
+    margin: 0;
+    padding: 1rem 0.8rem;
+    border-radius: 1.4rem;
+    background: $brand-50;
+    text-align: center;
+
+    .sessions-card__time-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-size: 1.2rem;
+      color: $brand-700;
+
+      &:first-child {
+        font-size: 1.8rem;
+        font-weight: 800;
+        color: $text-strong;
+
+        svg {
+          display: none;
+        }
+      }
+
+      // The date is the heading above
+      &:nth-child(3) {
+        display: none;
+      }
+    }
+
+    @include respond(phone) {
+      flex-direction: row;
+      justify-content: flex-start;
+      gap: 1rem;
+      padding: 0.6rem 1rem;
+    }
+  }
+
+  .sessions-card__subject {
+    grid-area: subject;
+    margin: 0;
+    font-size: 1.7rem;
+    font-weight: 800;
+  }
+
+  .sessions-card__person {
+    grid-area: person;
+  }
+
+  .sessions-card__hint {
+    grid-area: hint;
+    margin: 0;
+  }
+
+  .sessions-card__badges {
+    grid-area: side;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.5rem;
+    margin: 0;
+
+    html[dir='rtl'] & {
+      align-items: flex-start;
+    }
+
+    @include respond(phone) {
+      flex-direction: row;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+  }
+
+  .sessions-card__actions {
+    grid-area: actions;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 0.6rem;
+    align-self: end;
+    margin: 0;
+
+    &:empty {
+      display: none;
+    }
+
+    @include respond(phone) {
+      justify-content: flex-start;
+    }
+  }
+}

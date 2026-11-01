@@ -22,6 +22,11 @@ interface SessionsCalendarContainerProps {
   enableWeekView?: boolean;
   /** Only show sessions with these statuses (client-side) */
   onlyStatuses?: string[];
+  /**
+   * A parent's calendar: one colour per child (student id → colour) instead
+   * of the status colours; the status stays as the event's label
+   */
+  colorByStudent?: Record<number, string>;
 }
 
 /**
@@ -43,6 +48,7 @@ const getStatusColor = (status: string): string => {
 const SessionsCalendarContainer: React.FC<SessionsCalendarContainerProps> = ({
   filters,
   enableWeekView = false,
+  colorByStudent,
   onlyStatuses,
 }) => {
   const { t, i18n } = useTranslation();
@@ -93,9 +99,13 @@ const SessionsCalendarContainer: React.FC<SessionsCalendarContainerProps> = ({
       ? sessions.filter((s) => onlyStatuses.includes(s.status))
       : sessions;
     return visible.map((session) => {
-      // Determine session color based on status
+      // Colour: the child's on a parent's calendar, else the status
       const status = session.status as string;
-      const backgroundColor = getStatusColor(status);
+      const childColor =
+        colorByStudent && session.student
+          ? colorByStudent[session.student.id]
+          : undefined;
+      const backgroundColor = childColor ?? getStatusColor(status);
 
       // Get session title
       const tutorName = session.tutor
@@ -104,10 +114,13 @@ const SessionsCalendarContainer: React.FC<SessionsCalendarContainerProps> = ({
       const studentName = session.student
         ? `${session.student.first_name} ${session.student.last_name}`
         : 'N/A';
+      const title = childColor
+        ? `${session.student?.first_name} · ${tutorName}`
+        : `${tutorName} - ${studentName}`;
 
       return {
         id: session.id.toString(),
-        title: `${tutorName} - ${studentName}`,
+        title,
         start: session.start_time,
         end: session.end_time,
         backgroundColor,
@@ -130,7 +143,7 @@ const SessionsCalendarContainer: React.FC<SessionsCalendarContainerProps> = ({
         },
       };
     });
-  }, [sessions, t, onlyStatuses]);
+  }, [sessions, t, onlyStatuses, colorByStudent]);
 
   /**
    * Handle event click - open popover with session details
@@ -171,11 +184,22 @@ const SessionsCalendarContainer: React.FC<SessionsCalendarContainerProps> = ({
           headerToolbar={{
             left: 'prev,next today',
             center: 'title',
-            right: enableWeekView ? 'dayGridMonth,timeGridWeek' : '',
+            right: enableWeekView ? 'dayGridAhead,timeGridWeek' : '',
+          }}
+          // The grid starts at the week we are in and runs five weeks ahead,
+          // instead of a calendar month whose past weeks sit empty
+          views={{
+            dayGridAhead: {
+              type: 'dayGrid',
+              duration: { weeks: 5 },
+              dateAlignment: 'week',
+              dateIncrement: { weeks: 4 },
+              buttonText: t('CALENDAR.BUTTONS.MONTH'),
+            },
           }}
           scrollTime="08:00:00"
           allDaySlot={false}
-          initialView="dayGridMonth"
+          initialView="dayGridAhead"
           dayHeaderFormat={{
             weekday: 'short',
           }}

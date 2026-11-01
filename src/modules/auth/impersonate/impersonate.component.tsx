@@ -19,6 +19,11 @@ import './impersonate.styles.scss';
  * @example
  * /impersonate?token=JWT_TOKEN&impersonator_email=admin@example.com
  */
+// Tokens already being exchanged. Signing in swaps the current user, which
+// remounts this route, which ran the exchange again before the first one had
+// finished: hundreds of /me calls and never a redirect.
+const started = new Set<string>();
+
 const Impersonate = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -34,15 +39,16 @@ const Impersonate = () => {
       navigate('/login');
       return;
     }
+    if (started.has(token)) return;
+    started.add(token);
 
-    // Execute impersonation
+    // The hook itself moves to the dashboard on success (a remounted copy of
+    // this component never sees its own callbacks); failure comes back here.
     impersonateMutation.mutate(
       { token },
       {
-        onSuccess: () => {
-          navigate('/');
-        },
         onError: () => {
+          started.delete(token);
           navigate('/login');
         },
       },

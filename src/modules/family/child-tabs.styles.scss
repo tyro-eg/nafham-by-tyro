@@ -1,0 +1,60 @@
+@import '../../assets/styles/variables.scss';
+
+.child-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-bottom: 2rem;
+
+  &__tab {
+    --kid: #{$brand-700};
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.5rem 1.2rem 0.5rem 0.6rem;
+    border: 1.5px solid $border;
+    border-radius: $radius-pill;
+    background: $surface;
+    color: $text-strong;
+    font: inherit;
+    font-size: 1.3rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition:
+      border-color 0.15s,
+      background-color 0.15s,
+      color 0.15s;
+
+    html[dir='rtl'] & {
+      padding: 0.5rem 0.6rem 0.5rem 1.2rem;
+    }
+
+    &:hover {
+      border-color: var(--kid);
+    }
+
+    &--on {
+      border-color: var(--kid);
+      background: var(--kid);
+      color: $surface;
+
+      .child-tabs__avatar.MuiAvatar-root {
+        background: rgba(255, 255, 255, 0.25);
+        color: $surface;
+      }
+    }
+
+    // The "All" tab has no avatar: even padding
+    &:first-child {
+      padding-inline: 1.4rem;
+    }
+  }
+
+  &__avatar.MuiAvatar-root {
+    width: 2.6rem;
+    height: 2.6rem;
+    font-size: 1.2rem;
+    font-weight: 700;
+    background: var(--kid);
+  }
+}

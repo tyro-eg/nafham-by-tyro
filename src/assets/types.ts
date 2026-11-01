@@ -67,7 +67,7 @@ export type GradeSubject = {
     name: string;
   };
   /** Optional course variants (e.g. IGCSE O Level / A Level, Cambridge / Edexcel) */
-  sub_curriculum?: { id: number; name: string } | null;
+  sub_curriculum?: { id: number; name: string; position?: number } | null;
   exam_board?: { id: number; name: string } | null;
 };
 
@@ -216,9 +216,18 @@ export type CurrentUser = {
   first_name: string;
   last_name: string;
   phone_number: string;
-  type: 'Tutor' | 'Student';
+  type: 'Tutor' | 'Student' | 'Parent';
   updated_at: string;
   email_confirmed?: boolean;
+  /** Parents: the family and the children they can pick */
+  family_id?: number;
+  children?: Array<{
+    id: number;
+    first_name: string;
+    last_name: string;
+    login_enabled: boolean;
+    email: string | null;
+  }>;
   grade_subjects?: Array<{
     id: number;
     created_at: string;
@@ -226,6 +235,9 @@ export type CurrentUser = {
     updated_at: string;
   }>;
   previous_sessions_count?: number;
+  /** Sessions that drew on a package: taught, or missed and charged */
+  completed_sessions_count?: number;
+  cancelled_sessions_count?: number;
   recommended?: boolean;
   unscheduled_hours?: number;
   upcoming_sessions_count?: number;
