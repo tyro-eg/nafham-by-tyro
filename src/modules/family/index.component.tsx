@@ -18,6 +18,7 @@ import {
   AddRounded,
   ArrowForwardRounded,
   AssignmentRounded,
+  AutorenewRounded,
   CalendarMonthRounded,
   CardGiftcardRounded,
   EventNoteRounded,
@@ -39,8 +40,11 @@ import { snackActions } from '../../assets/utils/toaster';
 import { formatRelative } from '../homework/homework.utils';
 import { subjectName } from '../dashboard/dashboard.utils';
 import { childColor } from '../../lib/family-child';
+import RenewDialog from '../payments/renew-dialog.component';
 import '../dashboard/dashboard.styles.scss';
 import './family.styles.scss';
+
+const LOW_HOURS = 2;
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 const TONES = ['sky', 'mint', 'sun', 'lilac', 'coral'] as const;
@@ -163,7 +167,8 @@ const ChildCard: FC<{
   color: string;
   onOpen: (path: string) => void;
   onTopUp: () => void;
-}> = ({ child, color, onOpen, onTopUp }) => {
+  onRenew: (packageId: number) => void;
+}> = ({ child, color, onOpen, onTopUp, onRenew }) => {
   const { t, i18n } = useTranslation();
   const locale = `${i18n.language}-u-nu-latn`;
   const next = (child.upcoming ?? [])[0] ?? null;
@@ -270,6 +275,15 @@ const ChildCard: FC<{
                 })}
               </span>
             </div>
+            <Button
+              size="small"
+              variant={pkg.hours_left <= LOW_HOURS ? 'contained' : 'text'}
+              className="fam-kid__renew"
+              startIcon={<AutorenewRounded />}
+              onClick={() => onRenew(pkg.id)}
+            >
+              {t('PAYMENTS.RENEW.BUTTON')}
+            </Button>
           </li>
         ))}
       </ul>
@@ -325,6 +339,10 @@ const FamilyHome: FC = () => {
   const children = family.data?.children;
   const { choose } = useActiveChild(children);
   const [topUpFor, setTopUpFor] = useState<FamilyChild | null>(null);
+  const [renewing, setRenewing] = useState<{
+    packageId: number;
+    child: FamilyChild;
+  } | null>(null);
   const loading = family.isLoading;
   const locale = `${i18n.language}-u-nu-latn`;
 
@@ -483,9 +501,22 @@ const FamilyHome: FC = () => {
                 color={childColor(index)}
                 onOpen={(path) => open(child, path)}
                 onTopUp={() => setTopUpFor(child)}
+                onRenew={(packageId) => setRenewing({ packageId, child })}
               />
             ))}
           </div>
+        )}
+
+        {renewing && (
+          <RenewDialog
+            packageId={renewing.packageId}
+            onClose={() => setRenewing(null)}
+            onRequestInstead={() => {
+              const { child } = renewing;
+              setRenewing(null);
+              setTopUpFor(child);
+            }}
+          />
         )}
 
         {children && children.length > 0 && (

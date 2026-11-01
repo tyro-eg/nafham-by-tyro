@@ -25,6 +25,7 @@ import {
   AutoAwesomeRounded,
   FamilyRestroomRounded,
   MenuBookRounded,
+  ReceiptLongRounded,
 } from '@mui/icons-material';
 
 import { useAppSelector } from '../../redux/store';
@@ -206,6 +207,11 @@ const SidebarLayout: FC<SidebarLayoutProps> = ({ children }) => {
       icon: <Inventory2Rounded />,
       label: t('NAVIGATION.PACKAGES'),
     },
+    {
+      to: '/payments',
+      icon: <ReceiptLongRounded />,
+      label: t('NAVIGATION.PAYMENTS'),
+    },
   ];
 
   // Parents: the family home first, then the picked child's pages
@@ -250,6 +256,11 @@ const SidebarLayout: FC<SidebarLayoutProps> = ({ children }) => {
       to: '/my_packages',
       icon: <Inventory2Rounded />,
       label: t('NAVIGATION.PACKAGES'),
+    },
+    {
+      to: '/payments',
+      icon: <ReceiptLongRounded />,
+      label: t('NAVIGATION.PAYMENTS'),
     },
     {
       to: '/family/settings',
