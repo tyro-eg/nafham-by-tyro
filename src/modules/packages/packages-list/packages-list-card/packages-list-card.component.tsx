@@ -280,22 +280,22 @@ const PackageListCard: FC<PackageListCardProps> = ({
 
       {!isTutor && renewal && (
         <footer className="pk-card__actions">
-          {hoursLeft <= LOW_HOURS ? (
+          {hoursLeft <= LOW_HOURS && (
             <span className="pk-card__low">
               <WarningAmberRounded fontSize="inherit" />
               {t('PAYMENTS.RENEW.LOW', { count: hoursLeft })}
             </span>
-          ) : (
-            <span />
           )}
           {renewal === 'renew' ? (
             <Button
-              size="small"
-              variant={hoursLeft <= LOW_HOURS ? 'contained' : 'outlined'}
+              fullWidth
+              size="large"
+              variant="contained"
+              className="pk-card__renew"
               startIcon={<AutorenewRounded />}
               onClick={() => onRenew?.(packageData)}
             >
-              {t('PAYMENTS.RENEW.BUTTON')}
+              {t('PAYMENTS.RENEW.BUTTON_LONG')}
             </Button>
           ) : (
             <p className="pk-card__ask">
