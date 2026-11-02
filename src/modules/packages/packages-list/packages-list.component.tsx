@@ -1,5 +1,6 @@
-import { FC, useEffect, useMemo } from 'react';
+import { FC, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useSearchParams } from 'react-router-dom';
 import { Avatar, Skeleton } from '@mui/material';
 import { Inventory } from '@mui/icons-material';
 
@@ -11,6 +12,10 @@ import { childColor } from '../../../lib/family-child';
 import type { Package } from '../../../assets/types';
 
 import PackageListCard from './packages-list-card/packages-list-card.component';
+import RenewDialog from '../../payments/renew-dialog.component';
+import RenewAllSheet from '../../payments/renew-all-sheet.component';
+import RenewAllBanner from '../../payments/renew-all-banner.component';
+import RequestSessionsModal from '../../../modals/request-sessions-modal/request-sessions-modal.component';
 
 import './packages-list.styles.scss';
 
@@ -32,6 +37,58 @@ const PackagesList: FC = () => {
   const currentUser = useAppSelector(selectCurrentUser);
   const isParent = currentUser?.type === 'Parent';
   const family = useFamily(isParent);
+
+  // Who renews: a parent or an adult student pays; a child with a login asks the parent
+  const renewal: 'renew' | 'ask_parent' | undefined = isParent
+    ? 'renew'
+    : currentUser?.type === 'Student'
+      ? currentUser.family_id
+        ? 'ask_parent'
+        : 'renew'
+      : undefined;
+  // `?renew=<package id>` (the return page's "Try again") opens the dialog at
+  // once; `?renew=all` opens the renew-all sheet
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [renewing, setRenewing] = useState<number | null>(() => {
+    const id = Number(searchParams.get('renew'));
+    return id > 0 ? id : null;
+  });
+  const [renewingAll, setRenewingAll] = useState(
+    () => searchParams.get('renew') === 'all' && renewal === 'renew',
+  );
+  const [requesting, setRequesting] = useState(false);
+  const dropParam = () => {
+    if (searchParams.has('renew')) {
+      searchParams.delete('renew');
+      setSearchParams(searchParams, { replace: true });
+    }
+  };
+  const closeRenew = () => {
+    setRenewing(null);
+    dropParam();
+  };
+  const closeRenewAll = () => {
+    setRenewingAll(false);
+    dropParam();
+  };
+  const sheet = renewal === 'renew' && (
+    <>
+      <RenewAllBanner onOpen={() => setRenewingAll(true)} />
+      {renewingAll && (
+        <RenewAllSheet
+          onClose={closeRenewAll}
+          onRequestInstead={() => {
+            closeRenewAll();
+            setRequesting(true);
+          }}
+        />
+      )}
+    </>
+  );
+  const cardProps = {
+    renewal,
+    onRenew: (pkg: Package) => setRenewing(pkg.id),
+  };
 
   const {
     data,
@@ -122,6 +179,7 @@ const PackagesList: FC = () => {
   if (groups && groups.length > 1) {
     return (
       <div className="pk-groups">
+        {sheet}
         {groups.map((group) => (
           <section
             key={group.id}
@@ -147,22 +205,63 @@ const PackagesList: FC = () => {
                   key={pkg.id}
                   packageData={pkg}
                   color={group.color}
+                  {...cardProps}
                 />
               ))}
             </div>
           </section>
         ))}
+        {renewing !== null && (
+          <RenewDialog
+            packageId={renewing}
+            onClose={closeRenew}
+            onRequestInstead={() => {
+              closeRenew();
+              setRequesting(true);
+            }}
+          />
+        )}
+        {requesting && (
+          <RequestSessionsModal
+            handleClose={() => setRequesting(false)}
+            defaultKind="more_hours"
+          />
+        )}
       </div>
     );
   }
 
   const color = groups?.[0]?.color;
   return (
-    <div className="pk-grid">
-      {packages.map((pkg) => (
-        <PackageListCard key={pkg.id} packageData={pkg} color={color} />
-      ))}
-    </div>
+    <>
+      {sheet}
+      <div className="pk-grid">
+        {packages.map((pkg) => (
+          <PackageListCard
+            key={pkg.id}
+            packageData={pkg}
+            color={color}
+            {...cardProps}
+          />
+        ))}
+      </div>
+      {renewing !== null && (
+        <RenewDialog
+          packageId={renewing}
+          onClose={closeRenew}
+          onRequestInstead={() => {
+            closeRenew();
+            setRequesting(true);
+          }}
+        />
+      )}
+      {requesting && (
+        <RequestSessionsModal
+          handleClose={() => setRequesting(false)}
+          defaultKind="more_hours"
+        />
+      )}
+    </>
   );
 };
 

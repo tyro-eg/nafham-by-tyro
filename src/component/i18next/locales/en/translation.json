@@ -58,7 +58,8 @@
     "FAMILY": "My family",
     "NOTES": "Lesson notes",
     "COLLAPSE": "Hide menu",
-    "EXPAND": "Show menu"
+    "EXPAND": "Show menu",
+    "PAYMENTS": "Payments"
   },
   "CARDS": {
     "FREE_ASSESMENT": {
@@ -2196,6 +2197,108 @@
     "UPCOMING": {
       "TITLE": "Upcoming lessons",
       "EMPTY": "Nothing booked yet."
+    }
+  },
+  "PAYMENTS": {
+    "TITLE": "Payments",
+    "SUBTITLE": "Your receipts for renewals paid online.",
+    "EMPTY": "No payments yet.",
+    "RENEW": {
+      "BUTTON": "Renew",
+      "TITLE": "Renew {{course}}",
+      "FOR": "For {{name}}, with {{tutor}}",
+      "CHOOSE": "Choose a package size",
+      "HOURS_one": "{{count}} hour",
+      "HOURS_other": "{{count}} hours",
+      "LOW_one": "{{count}} hour left",
+      "LOW_other": "{{count}} hours left",
+      "OFFER_UNTIL": "Offer until {{date}}",
+      "SAVE": "Save {{amount}}",
+      "CURRENT": "Same as now",
+      "VAT": "VAT {{rate}}%",
+      "TOTAL": "Total",
+      "PAY": "Pay {{amount}}",
+      "REDIRECT": "You pay by card on Nomod's secure page and come straight back here.",
+      "NOT_RENEWABLE": "This package can't be renewed online yet.",
+      "ASK_INSTEAD": "Request more hours instead",
+      "ASK_PARENT_SHORT": "Your parent renews this package.",
+      "UNAVAILABLE": "Online payments are unavailable right now. Please try again in a few minutes.",
+      "BUTTON_LONG": "Renew this package",
+      "SAME_AGAIN": "Same as last time",
+      "SAME_AGAIN_HINT": "The same package again, at the price you paid before.",
+      "OTHER_OPTIONS": "See other sizes and prices",
+      "BACK_TO_SAME": "Back to the same package"
+    },
+    "RETURN": {
+      "CONFIRMING": "Confirming your payment…",
+      "CONFIRMING_TEXT": "This takes a few seconds.",
+      "KEEP_OPEN": "Please keep this page open.",
+      "CHECKING": "Checking with the payment provider.",
+      "FULFILLED": "Payment received",
+      "FULFILLED_HINT": "Thank you, your payment went through.",
+      "FULFILLED_TEXT_one": "{{count}} hour was added. You paid {{amount}}.",
+      "FULFILLED_TEXT_other": "{{count}} hours were added. You paid {{amount}}.",
+      "FAILED": "Payment not completed",
+      "FAILED_TEXT": "The card was declined or the payment was cancelled. Nothing was charged.",
+      "CANCELLED": "Payment cancelled",
+      "EXPIRED": "This checkout has expired",
+      "EXPIRED_TEXT": "Start again from your packages. It only takes a minute.",
+      "REVIEW": "We're checking your payment",
+      "REVIEW_TEXT": "Your money arrived safely. Our team will add the hours shortly and email you.",
+      "SIGN_IN": "Sign in to see this receipt and your packages.",
+      "TRY_AGAIN": "Try again",
+      "SEE_PACKAGES": "See my packages",
+      "RECEIPTS": "All receipts",
+      "NOT_FOUND": "We couldn't find this payment."
+    },
+    "STATUS": {
+      "created": "Starting",
+      "pending": "Awaiting payment",
+      "paid": "Paid",
+      "fulfilled": "Completed",
+      "needs_review": "Being checked",
+      "failed": "Declined",
+      "cancelled": "Cancelled",
+      "expired": "Expired",
+      "refunded": "Refunded",
+      "partially_refunded": "Partly refunded",
+      "disputed": "Disputed"
+    },
+    "HISTORY": {
+      "LINE": "{{hours}}h {{course}} · {{student}}",
+      "RESUME": "Continue payment",
+      "CANCEL": "Cancel",
+      "CANCELLED": "Payment cancelled."
+    },
+    "BANNER": {
+      "LOW": "One of your packages is down to its last hours.",
+      "LOW_CHILD": "One of your packages is down to its last hours. Your parent can renew it.",
+      "RENEW": "Renew now"
+    },
+    "RENEW_ALL": {
+      "TITLE": "Renew all",
+      "BANNER_one": "{{count}} package is low on hours.",
+      "BANNER_other": "{{count}} packages are low on hours.",
+      "BANNER_ACTION": "Renew all",
+      "INTRO": "Tick what to renew. Each row keeps its size and price from last time unless you choose more hours.",
+      "SUBJECTS_one": "{{count}} subject",
+      "SUBJECTS_other": "{{count}} subjects",
+      "DUE": "Low on hours",
+      "BOOKED": "{{count}}h booked ahead",
+      "LAST_LESSON": "Last lesson {{date}}",
+      "TODAYS_PRICE": "Today's price",
+      "MORE_HOURS": "More hours",
+      "KEEP": "Keep {{hours}}",
+      "NOT_ONLINE": "Can't be renewed online",
+      "REQUEST": "Request",
+      "SUBTOTAL": "Subtotal",
+      "DISCOUNT": "Family discount, {{count}} subjects",
+      "DISCOUNT_HINT": "Tick one more subject for {{percent}}% off everything.",
+      "AT_FLOOR": "already our lowest price",
+      "EMPTY": "Nothing to renew right now.",
+      "TOO_MANY": "Up to {{count}} packages in one payment.",
+      "OVER_LIMIT": "This total is above the online limit. Please contact us to pay.",
+      "PAY": "Pay {{amount}}"
     }
   }
 }

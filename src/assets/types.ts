@@ -114,9 +114,12 @@ export type Package = {
   source: string;
   student: PackageStudent;
   tutor: PackageTutor;
-  tutor_rate: number;
+  /** The tutor's hourly rate: only on the tutor's own list */
+  tutor_rate?: number;
   /** ISO code of the tutor rate, always EGP today */
   tutor_rate_currency?: string;
+  /** When the family was last told the package is low on hours */
+  renewal_nudged_at?: string | null;
   updated_at: string;
   /** This purchase plus its top-ups */
   amount_paid_total?: number;

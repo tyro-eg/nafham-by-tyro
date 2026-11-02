@@ -1,8 +1,14 @@
 import { FC, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import { Avatar } from '@mui/material';
-import { Group, Person, Star } from '@mui/icons-material';
+import { Avatar, Button } from '@mui/material';
+import {
+  AutorenewRounded,
+  Group,
+  Person,
+  Star,
+  WarningAmberRounded,
+} from '@mui/icons-material';
 import { parseISO, format } from 'date-fns';
 import { arSA } from 'date-fns/locale/ar-SA';
 import { enUS } from 'date-fns/locale/en-US';
@@ -17,9 +23,16 @@ interface PackageListCardProps {
   packageData: Package;
   /** A parent's list: the child's colour, as on the calendar */
   color?: string;
+  /**
+   * Who renews this package: the viewer ('renew' opens the checkout), or
+   * the family's parent ('ask_parent', for a child with their own login)
+   */
+  renewal?: 'renew' | 'ask_parent';
+  onRenew?: (pkg: Package) => void;
 }
 
 const LOCALES = { ar: arSA, en: enUS };
+const LOW_HOURS = 2;
 
 /** Hours left as a ring, with the figure in the middle */
 const Ring: FC<{ value: number; label: string }> = ({ value, label }) => {
@@ -48,7 +61,12 @@ const Ring: FC<{ value: number; label: string }> = ({ value, label }) => {
  * One package: the course and the hours left up top, the person it is with,
  * the hours as a bar (used, booked, free), then what was paid and when.
  */
-const PackageListCard: FC<PackageListCardProps> = ({ packageData, color }) => {
+const PackageListCard: FC<PackageListCardProps> = ({
+  packageData,
+  color,
+  renewal,
+  onRenew,
+}) => {
   const { t, i18n } = useTranslation();
   const currentUser = useAppSelector(selectCurrentUser);
   const locale = LOCALES[i18n.language as 'en' | 'ar'] ?? enUS;
@@ -258,6 +276,33 @@ const PackageListCard: FC<PackageListCardProps> = ({ packageData, color }) => {
             </li>
           ))}
         </ul>
+      )}
+
+      {!isTutor && renewal && (
+        <footer className="pk-card__actions">
+          {hoursLeft <= LOW_HOURS && (
+            <span className="pk-card__low">
+              <WarningAmberRounded fontSize="inherit" />
+              {t('PAYMENTS.RENEW.LOW', { count: hoursLeft })}
+            </span>
+          )}
+          {renewal === 'renew' ? (
+            <Button
+              fullWidth
+              size="large"
+              variant="contained"
+              className="pk-card__renew"
+              startIcon={<AutorenewRounded />}
+              onClick={() => onRenew?.(packageData)}
+            >
+              {t('PAYMENTS.RENEW.BUTTON_LONG')}
+            </Button>
+          ) : (
+            <p className="pk-card__ask">
+              {t('PAYMENTS.RENEW.ASK_PARENT_SHORT')}
+            </p>
+          )}
+        </footer>
       )}
     </article>
   );

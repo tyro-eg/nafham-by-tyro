@@ -108,6 +108,17 @@ export const queryKeys = {
     all: ['grade_subjects'] as const,
   },
 
+  // Online payments (renewals through the hosted checkout)
+  payments: {
+    all: ['payments'] as const,
+    list: () => [...queryKeys.payments.all, 'list'] as const,
+    details: () => [...queryKeys.payments.all, 'detail'] as const,
+    detail: (slug: string) => [...queryKeys.payments.details(), slug] as const,
+    options: (packageId: number) =>
+      [...queryKeys.payments.all, 'options', packageId] as const,
+    familyOptions: () => [...queryKeys.payments.all, 'family-options'] as const,
+  },
+
   // Session request keys (students asking support to schedule sessions)
   sessionRequests: {
     all: ['session_requests'] as const,
