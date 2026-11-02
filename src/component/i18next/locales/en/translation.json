@@ -2222,7 +2222,8 @@
       "NOT_RENEWABLE": "This package can't be renewed online yet.",
       "ASK_INSTEAD": "Request more hours instead",
       "ASK_PARENT_SHORT": "Your parent renews this package.",
-      "UNAVAILABLE": "Online payments are unavailable right now. Please try again in a few minutes."
+      "UNAVAILABLE": "Online payments are unavailable right now. Please try again in a few minutes.",
+      "BUTTON_LONG": "Renew this package"
     },
     "RETURN": {
       "CONFIRMING": "Confirming your payment…",
