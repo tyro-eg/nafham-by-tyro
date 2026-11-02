@@ -18,6 +18,8 @@ export interface RenewalOption {
   offer_until: string | null;
   saving: number;
   same_as_current: boolean;
+  /** The lowest this size may go with a bundle discount (the margin floor) */
+  floor_price: number;
 }
 
 /** The same package again at the price paid before, when the margin still allows it */
@@ -27,6 +29,7 @@ export interface SameAgainOffer {
   vat: number;
   total: number;
   basis: 'original';
+  floor_price: number;
 }
 
 /** A line of a checkout: a size at today's list price, or the same deal again */
@@ -59,6 +62,25 @@ export interface RenewalQuote {
   same_again: SameAgainOffer | null;
   same_again_reason: string | null;
   options: RenewalOption[];
+}
+
+/** One row of the renew-all sheet: a running package with its quote */
+export interface RenewalRow extends RenewalQuote {
+  due: boolean;
+  scheduled_hours: number;
+  last_session_on: string | null;
+}
+
+export interface FamilyRenewalQuote {
+  currency: string;
+  payer_country: string | null;
+  vat_applies: boolean;
+  vat_rate_percent: number;
+  bundle: { min_subjects: number; discount_percent: number };
+  max_lines: number;
+  children: { id: number; first_name: string; rows: RenewalRow[] }[];
+  running_count: number;
+  due_count: number;
 }
 
 export interface PaymentLine {
@@ -121,12 +143,30 @@ export function useRenewalOptions(packageId: number | null, enabled = true) {
   });
 }
 
+/** The renew-all sheet: every running package of the family, with quotes */
+export function useFamilyRenewalOptions(enabled = true) {
+  return useQuery({
+    queryKey: queryKeys.payments.familyOptions(),
+    queryFn: async () =>
+      (await get('/payments/renewal_options')).data.data as FamilyRenewalQuote,
+    enabled,
+    staleTime: 60 * 1000,
+  });
+}
+
 /** Starts a checkout: the answer carries the Nomod URL to send the payer to */
 export function useStartCheckout() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async (lines: CheckoutLine[]) =>
-      (await post('/payments', { lines, client: 'web' })).data.data as Payment,
+    mutationFn: async ({
+      lines,
+      bundle = false,
+    }: {
+      lines: CheckoutLine[];
+      bundle?: boolean;
+    }) =>
+      (await post('/payments', { lines, client: 'web', bundle })).data
+        .data as Payment,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.payments.all });
     },

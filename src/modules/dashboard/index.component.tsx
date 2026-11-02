@@ -127,6 +127,10 @@ const Dashboard: FC = () => {
 
   const sessionsQuery = useSessions(1, HISTORY_SIZE);
   const packagesQuery = usePackages(1, 50);
+  // More than one low package sends the payer to the renew-all sheet
+  const lowPackages = (packagesQuery.data?.data ?? []).filter(
+    (pkg) => Number(pkg.remaining_hours) <= 2 && Number(pkg.original_hours) > 0,
+  ).length;
   const instructorsQuery = useMyInstructors();
 
   // Keep "now" stable for the lifetime of the page
@@ -554,18 +558,18 @@ const Dashboard: FC = () => {
 
           <aside className="sd-col sd-col--side">
             {/* ---------- Low on hours: renew on the website ---------- */}
-            {packages.some(
-              (pkg) =>
-                Number(pkg.remaining_hours) <= 2 &&
-                Number(pkg.original_hours) > 0,
-            ) && (
+            {lowPackages > 0 && (
               <Alert
                 severity="warning"
                 icon={<AutorenewRounded fontSize="inherit" />}
                 action={
                   <Button
                     component={Link}
-                    to="/my_packages"
+                    to={
+                      lowPackages > 1 && !currentUser?.family_id
+                        ? '/my_packages?renew=all'
+                        : '/my_packages'
+                    }
                     color="inherit"
                     size="small"
                   >

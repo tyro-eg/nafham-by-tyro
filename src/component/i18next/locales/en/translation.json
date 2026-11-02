@@ -2274,6 +2274,31 @@
       "LOW": "One of your packages is down to its last hours.",
       "LOW_CHILD": "One of your packages is down to its last hours. Your parent can renew it.",
       "RENEW": "Renew now"
+    },
+    "RENEW_ALL": {
+      "TITLE": "Renew all",
+      "BANNER_one": "{{count}} package is low on hours.",
+      "BANNER_other": "{{count}} packages are low on hours.",
+      "BANNER_ACTION": "Renew all",
+      "INTRO": "Tick what to renew. Each row keeps its size and price from last time unless you choose more hours.",
+      "SUBJECTS_one": "{{count}} subject",
+      "SUBJECTS_other": "{{count}} subjects",
+      "DUE": "Low on hours",
+      "BOOKED": "{{count}}h booked ahead",
+      "LAST_LESSON": "Last lesson {{date}}",
+      "TODAYS_PRICE": "Today's price",
+      "MORE_HOURS": "More hours",
+      "KEEP": "Keep {{hours}}",
+      "NOT_ONLINE": "Can't be renewed online",
+      "REQUEST": "Request",
+      "SUBTOTAL": "Subtotal",
+      "DISCOUNT": "Family discount, {{count}} subjects",
+      "DISCOUNT_HINT": "Tick one more subject for {{percent}}% off everything.",
+      "AT_FLOOR": "already our lowest price",
+      "EMPTY": "Nothing to renew right now.",
+      "TOO_MANY": "Up to {{count}} packages in one payment.",
+      "OVER_LIMIT": "This total is above the online limit. Please contact us to pay.",
+      "PAY": "Pay {{amount}}"
     }
   }
 }

@@ -1,5 +1,5 @@
 import { FC, useMemo, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import {
   Alert,
@@ -41,6 +41,8 @@ import { formatRelative } from '../homework/homework.utils';
 import { subjectName } from '../dashboard/dashboard.utils';
 import { childColor } from '../../lib/family-child';
 import RenewDialog from '../payments/renew-dialog.component';
+import RenewAllSheet from '../payments/renew-all-sheet.component';
+import RenewAllBanner from '../payments/renew-all-banner.component';
 import '../dashboard/dashboard.styles.scss';
 import './family.styles.scss';
 
@@ -343,6 +345,18 @@ const FamilyHome: FC = () => {
     packageId: number;
     child: FamilyChild;
   } | null>(null);
+  // `?renew=all` (the nudge's link) opens the renew-all sheet at once
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [renewingAll, setRenewingAll] = useState(
+    () => searchParams.get('renew') === 'all',
+  );
+  const closeRenewAll = () => {
+    setRenewingAll(false);
+    if (searchParams.has('renew')) {
+      searchParams.delete('renew');
+      setSearchParams(searchParams, { replace: true });
+    }
+  };
   const loading = family.isLoading;
   const locale = `${i18n.language}-u-nu-latn`;
 
@@ -457,6 +471,19 @@ const FamilyHome: FC = () => {
           </div>
         </section>
 
+        <RenewAllBanner onOpen={() => setRenewingAll(true)} />
+        {renewingAll && (
+          <RenewAllSheet
+            onClose={closeRenewAll}
+            onRequestInstead={(packageId) => {
+              closeRenewAll();
+              const child = children?.find((c) =>
+                c.packages.some((pkg) => pkg.id === packageId),
+              );
+              if (child) setTopUpFor(child);
+            }}
+          />
+        )}
         {family.data && !family.data.terms.accepted && (
           <Alert
             severity="info"
