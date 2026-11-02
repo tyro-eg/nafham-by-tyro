@@ -20,6 +20,22 @@ export interface RenewalOption {
   same_as_current: boolean;
 }
 
+/** The same package again at the price paid before, when the margin still allows it */
+export interface SameAgainOffer {
+  hours: number;
+  price: number;
+  vat: number;
+  total: number;
+  basis: 'original';
+}
+
+/** A line of a checkout: a size at today's list price, or the same deal again */
+export interface CheckoutLine {
+  package_id: number;
+  hours?: number;
+  basis?: 'original' | 'list';
+}
+
 export interface RenewalQuote {
   package: {
     id: number;
@@ -40,6 +56,8 @@ export interface RenewalQuote {
   payer_country: string | null;
   vat_applies: boolean;
   vat_rate_percent: number;
+  same_again: SameAgainOffer | null;
+  same_again_reason: string | null;
   options: RenewalOption[];
 }
 
@@ -107,7 +125,7 @@ export function useRenewalOptions(packageId: number | null, enabled = true) {
 export function useStartCheckout() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async (lines: { package_id: number; hours: number }[]) =>
+    mutationFn: async (lines: CheckoutLine[]) =>
       (await post('/payments', { lines, client: 'web' })).data.data as Payment,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.payments.all });

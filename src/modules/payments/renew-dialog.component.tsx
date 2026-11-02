@@ -18,6 +18,7 @@ import {
   paymentErrorMessage,
   useRenewalOptions,
   useStartCheckout,
+  type CheckoutLine,
   type RenewalOption,
 } from '../../hooks/usePayments';
 import { formatMoney } from '../../lib/money';
@@ -34,10 +35,20 @@ interface RenewDialogProps {
   onRequestInstead?: () => void;
 }
 
+/** What the payer is about to pay for: the price, its VAT and the total */
+interface Charge {
+  hours: number;
+  price: number;
+  vat: number;
+  total: number;
+}
+
 /**
- * Renew one package: every size on the price list, priced today, VAT when it
- * applies, and a Pay button that sends the payer to Nomod's hosted page.
- * The webhook adds the hours; the return page shows the outcome.
+ * Renew one package. By default the same package again at the price paid
+ * before (while the margin still allows it); a second button opens every
+ * size on the price list, priced today. The Pay button sends the payer to
+ * Nomod's hosted page; the webhook adds the hours and the return page shows
+ * the outcome.
  */
 const RenewDialog: FC<RenewDialogProps> = ({
   packageId,
@@ -49,10 +60,15 @@ const RenewDialog: FC<RenewDialogProps> = ({
   const quote = useRenewalOptions(packageId);
   const start = useStartCheckout();
   const [hours, setHours] = useState<number | null>(null);
+  const [showOptions, setShowOptions] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const sameAgain = quote.data?.same_again ?? null;
   const options = quote.data?.options ?? [];
-  // The size the package was bought at is picked first
+  // Without a same-again offer the list is the only view
+  const listing = showOptions || sameAgain === null;
+
+  // The size the package was bought at is picked first in the list
   useEffect(() => {
     if (hours !== null || options.length === 0) return;
     const current = options.find((option) => option.same_as_current);
@@ -60,19 +76,23 @@ const RenewDialog: FC<RenewDialogProps> = ({
   }, [options, hours]);
 
   const chosen = options.find((option) => option.hours === hours) ?? null;
+  const charge: Charge | null = listing ? chosen : sameAgain;
+  const line: CheckoutLine | null = listing
+    ? chosen && { package_id: packageId, hours: chosen.hours, basis: 'list' }
+    : { package_id: packageId, basis: 'original' };
+
   const currency = quote.data?.currency ?? 'AED';
   const money = (value: number) => formatMoney(value, currency, i18n.language);
 
   const pay = async () => {
-    if (!chosen || !quote.data) return;
+    if (!line || !charge) return;
     setError(null);
     try {
-      const payment = await start.mutateAsync([
-        { package_id: packageId, hours: chosen.hours },
-      ]);
+      const payment = await start.mutateAsync([line]);
       trackEvent('Payment', 'begin_checkout', payment.slug, payment.amount, {
         currency: payment.currency,
-        hours: chosen.hours,
+        hours: charge.hours,
+        basis: line.basis,
       });
       if (payment.checkout_url) {
         window.location.assign(payment.checkout_url);
@@ -131,6 +151,47 @@ const RenewDialog: FC<RenewDialogProps> = ({
     );
   };
 
+  const renderSameAgain = () =>
+    sameAgain && (
+      <>
+        <div className="renew-same">
+          <span className="renew-same__label">
+            {t('PAYMENTS.RENEW.SAME_AGAIN')}
+          </span>
+          <div className="renew-same__deal">
+            <span>{t('PAYMENTS.RENEW.HOURS', { count: sameAgain.hours })}</span>
+            <span>{money(sameAgain.price)}</span>
+          </div>
+          <p className="renew-same__hint">
+            {t('PAYMENTS.RENEW.SAME_AGAIN_HINT')}
+          </p>
+        </div>
+        <Button
+          className="renew-switch"
+          variant="text"
+          onClick={() => setShowOptions(true)}
+        >
+          {t('PAYMENTS.RENEW.OTHER_OPTIONS')}
+        </Button>
+      </>
+    );
+
+  const renderListing = () => (
+    <>
+      <p className="renew-choose">{t('PAYMENTS.RENEW.CHOOSE')}</p>
+      <ul className="renew-options">{options.map(renderOption)}</ul>
+      {sameAgain && (
+        <Button
+          className="renew-switch"
+          variant="text"
+          onClick={() => setShowOptions(false)}
+        >
+          {t('PAYMENTS.RENEW.BACK_TO_SAME')}
+        </Button>
+      )}
+    </>
+  );
+
   const pkg = quote.data?.package;
 
   return (
@@ -178,13 +239,12 @@ const RenewDialog: FC<RenewDialogProps> = ({
 
         {quote.data?.renewable && (
           <>
-            <p className="renew-choose">{t('PAYMENTS.RENEW.CHOOSE')}</p>
-            <ul className="renew-options">{options.map(renderOption)}</ul>
-            {chosen && (
+            {listing ? renderListing() : renderSameAgain()}
+            {charge && (
               <dl className="renew-summary">
                 <div>
-                  <dt>{t('PAYMENTS.RENEW.HOURS', { count: chosen.hours })}</dt>
-                  <dd>{money(chosen.price)}</dd>
+                  <dt>{t('PAYMENTS.RENEW.HOURS', { count: charge.hours })}</dt>
+                  <dd>{money(charge.price)}</dd>
                 </div>
                 {quote.data.vat_applies && (
                   <div>
@@ -193,12 +253,12 @@ const RenewDialog: FC<RenewDialogProps> = ({
                         rate: quote.data.vat_rate_percent,
                       })}
                     </dt>
-                    <dd>{money(chosen.vat)}</dd>
+                    <dd>{money(charge.vat)}</dd>
                   </div>
                 )}
                 <div className="renew-summary__total">
                   <dt>{t('PAYMENTS.RENEW.TOTAL')}</dt>
-                  <dd>{money(chosen.total)}</dd>
+                  <dd>{money(charge.total)}</dd>
                 </div>
               </dl>
             )}
@@ -221,10 +281,10 @@ const RenewDialog: FC<RenewDialogProps> = ({
           <Button
             variant="contained"
             onClick={pay}
-            disabled={!chosen || start.isPending}
+            disabled={!charge || start.isPending}
           >
-            {chosen
-              ? t('PAYMENTS.RENEW.PAY', { amount: money(chosen.total) })
+            {charge
+              ? t('PAYMENTS.RENEW.PAY', { amount: money(charge.total) })
               : t('PAYMENTS.RENEW.BUTTON')}
           </Button>
         )}

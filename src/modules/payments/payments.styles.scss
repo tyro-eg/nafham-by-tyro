@@ -85,6 +85,45 @@
   }
 }
 
+// The default: the same package again, one card and one button
+.renew-same {
+  display: grid;
+  gap: 0.4rem;
+  padding: 1.6rem;
+  border: 2px solid $brand-700;
+  border-radius: 1.6rem;
+  background: $surface;
+  box-shadow: 0 0 0 3px rgba(23, 146, 186, 0.15);
+
+  &__label {
+    font-size: 1.2rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: $brand-700;
+  }
+
+  &__deal {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1.2rem;
+    font-size: 2rem;
+    font-weight: 800;
+    color: $text-strong;
+  }
+
+  &__hint {
+    margin: 0;
+    font-size: 1.3rem;
+    color: $text-muted;
+  }
+}
+
+.renew-switch {
+  justify-self: start;
+}
+
 .renew-tag {
   display: inline-flex;
   padding: 0.1rem 0.8rem;

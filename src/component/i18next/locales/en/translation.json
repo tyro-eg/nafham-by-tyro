@@ -2223,7 +2223,11 @@
       "ASK_INSTEAD": "Request more hours instead",
       "ASK_PARENT_SHORT": "Your parent renews this package.",
       "UNAVAILABLE": "Online payments are unavailable right now. Please try again in a few minutes.",
-      "BUTTON_LONG": "Renew this package"
+      "BUTTON_LONG": "Renew this package",
+      "SAME_AGAIN": "Same as last time",
+      "SAME_AGAIN_HINT": "The same package again, at the price you paid before.",
+      "OTHER_OPTIONS": "See other sizes and prices",
+      "BACK_TO_SAME": "Back to the same package"
     },
     "RETURN": {
       "CONFIRMING": "Confirming your payment…",
