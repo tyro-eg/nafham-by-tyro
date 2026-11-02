@@ -88,7 +88,7 @@ const RenewDialog: FC<RenewDialogProps> = ({
     if (!line || !charge) return;
     setError(null);
     try {
-      const payment = await start.mutateAsync([line]);
+      const payment = await start.mutateAsync({ lines: [line] });
       trackEvent('Payment', 'begin_checkout', payment.slug, payment.amount, {
         currency: payment.currency,
         hours: charge.hours,
