@@ -9,7 +9,6 @@ export const parseTimeSlotsIntoCalendarEvents = (timeSlots: any[]) => {
       start: event.start_time ? event.start_time : undefined,
       end: event.end_time ? event.end_time : undefined,
       status: event.status ? event.status : undefined,
-      held: !!event.held,
       color: eventColor(event.held ? 'held' : event.status),
     };
     return eventObj;
