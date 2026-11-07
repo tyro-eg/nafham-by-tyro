@@ -30,6 +30,7 @@ import ProfileFields from './profile-fields/profile-fields.component';
 import RequestSessionsModal from '../../../modals/request-sessions-modal/request-sessions-modal.component';
 import type { SessionRequestKind } from '../../../hooks/useSessionRequests';
 import { getYoutubeId } from './edit-profile.utils';
+import WantsStudents from './wants-students/wants-students.component';
 
 import './index.scss';
 
@@ -343,6 +344,12 @@ const EditProfile: FC = () => {
                   : t('PROFILE.EDITPROFILE.EDITACTION.EDITYOURPROFILE')}
               </Button>
             </div>
+          )}
+          {showEditMode && currentUser?.type === 'Tutor' && !!instructor && (
+            <WantsStudents
+              tutorId={instructor.id}
+              value={!!instructor.wants_students}
+            />
           )}
           <div className="profile__fieldsTrail">
             {!!instructor?.grade_subjects?.length && (

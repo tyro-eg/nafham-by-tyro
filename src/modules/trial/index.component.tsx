@@ -19,10 +19,11 @@ import { useFamily } from '../../hooks/useFamily';
 import {
   useTrialCourses,
   useTrialTutors,
+  type TrialRequest,
   type TrialSearch,
 } from '../../hooks/useTrial';
-import TrialSessionSuccessModal from '../../modals/trial-session-success-modal/trial-session-success-modal.component';
 import {
+  NO_CHOICE,
   TIME_WINDOWS,
   stepsFor,
   clearDraft,
@@ -41,6 +42,7 @@ import WhenStep from './steps/when-step.component';
 import TutorsStep from './steps/tutors-step.component';
 import SlotStep from './steps/slot-step.component';
 import ConfirmStep from './steps/confirm-step.component';
+import RequestSent from './request-sent.component';
 
 import './trial.styles.scss';
 
@@ -55,9 +57,11 @@ const ICONS: Record<WizardStep, JSX.Element> = {
 
 /**
  * The free-trial wizard, for visitors and signed-in students alike: course,
- * dates and time of day, the tutors our team ranks best for it, a slot,
- * then confirmation. A visitor creates their account at the last step; the
- * draft lives in sessionStorage so it survives the sign-up round trip.
+ * dates and time of day, then either one time for us to find the
+ * instructor (quickest to confirm, or best match) or a tutor and their
+ * slot, then confirmation. What is sent is a request the instructor
+ * confirms. A visitor creates their account at the last step; the draft
+ * lives in sessionStorage so it survives the sign-up round trip.
  */
 const TrialPage: FC = () => {
   const { t, i18n } = useTranslation();
@@ -75,7 +79,7 @@ const TrialPage: FC = () => {
       return { ...saved, step: 'course' };
     return saved;
   });
-  const [booked, setBooked] = useState(false);
+  const [sent, setSent] = useState<TrialRequest | null>(null);
   const family = useFamily(isParent);
   const child = family.data?.children.find((c) => c.id === draft.childId);
 
@@ -93,10 +97,14 @@ const TrialPage: FC = () => {
   const coursesQuery = useTrialCourses();
   const course = coursesQuery.data?.find((item) => item.id === draft.courseId);
 
+  const range = useMemo(
+    () => rangeFor(draft.day, draft.date),
+    [draft.day, draft.date],
+  );
+  const hours = TIME_WINDOWS[draft.window];
   const search = useMemo<TrialSearch | null>(() => {
     if (!course) return null;
     const window = TIME_WINDOWS[draft.window];
-    const range = rangeFor(draft.day, draft.date);
     return {
       grade_subject_id: course.id,
       exam_board_id: draft.examBoardId,
@@ -106,7 +114,7 @@ const TrialPage: FC = () => {
       end_hour: window.end,
       time_zone: localTimeZone(),
     };
-  }, [course, draft.examBoardId, draft.day, draft.date, draft.window]);
+  }, [course, draft.examBoardId, range, draft.window]);
 
   const stepIndex = steps.indexOf(draft.step);
   const tutorsQuery = useTrialTutors(
@@ -134,12 +142,18 @@ const TrialPage: FC = () => {
     );
   }
 
-  if (booked) {
+  if (sent) {
     return (
       <div className={`trial ${rtlClass}`}>
         <div className="trial__container container">
           <div className="trial__card trial__card--success">
-            <TrialSessionSuccessModal onClose={() => undefined} />
+            <RequestSent
+              request={sent}
+              onRetry={() => {
+                setSent(null);
+                update({ ...NO_CHOICE, step: 'tutors' });
+              }}
+            />
           </div>
         </div>
       </div>
@@ -166,8 +180,15 @@ const TrialPage: FC = () => {
         ? formatDate(draft.date, locale)
         : t(`TRIAL.WHEN.${draft.day.toUpperCase()}`)
     } · ${t(`TRIAL.WHEN.${draft.window.toUpperCase()}`)}`,
-    tutors: tutor ? `${tutor.first_name} ${tutor.last_name}`.trim() : undefined,
-    slot: draft.slot ? formatSlot(draft.slot.start_time, locale) : undefined,
+    tutors:
+      draft.dispatch === 'fastest'
+        ? t('TRIAL.MATCH.FASTEST')
+        : draft.dispatch === 'best_match'
+          ? t('TRIAL.MATCH.BEST')
+          : tutor
+            ? `${tutor.first_name} ${tutor.last_name}`.trim()
+            : undefined,
+    slot: draft.startTime ? formatSlot(draft.startTime, locale) : undefined,
     confirm: undefined,
   };
 
@@ -235,10 +256,8 @@ const TrialPage: FC = () => {
                 onNext={(childId) => {
                   update({
                     childId,
-                    // Another child: the tutors and slot are looked up afresh
-                    tutorId:
-                      childId === draft.childId ? draft.tutorId : undefined,
-                    slot: childId === draft.childId ? draft.slot : undefined,
+                    // Another child: the tutors and time are looked up afresh
+                    ...(childId === draft.childId ? {} : NO_CHOICE),
                   });
                   goTo('course');
                 }}
@@ -259,8 +278,7 @@ const TrialPage: FC = () => {
                   update({
                     courseId,
                     examBoardId,
-                    tutorId: same ? draft.tutorId : undefined,
-                    slot: same ? draft.slot : undefined,
+                    ...(same ? {} : NO_CHOICE),
                   });
                   goTo('when');
                 }}
@@ -271,9 +289,7 @@ const TrialPage: FC = () => {
                 day={draft.day}
                 date={draft.date}
                 window={draft.window}
-                onChange={(patch) =>
-                  update({ ...patch, tutorId: undefined, slot: undefined })
-                }
+                onChange={(patch) => update({ ...patch, ...NO_CHOICE })}
                 onBack={() => goTo('course')}
                 onNext={() => goTo('tutors')}
               />
@@ -285,12 +301,34 @@ const TrialPage: FC = () => {
                 loading={tutorsQuery.isLoading}
                 failed={tutorsQuery.isError}
                 signedIn={!!currentUser}
+                range={range}
+                window={hours}
+                examBoardId={draft.examBoardId}
+                startTime={draft.startTime}
                 onPickTutor={(tutorId) => {
-                  update({ tutorId, slot: undefined });
+                  update({ ...NO_CHOICE, tutorId, dispatch: 'direct' });
                   goTo('slot');
                 }}
                 onPickSlot={(tutorId, slot) => {
-                  update({ tutorId, slot });
+                  update({
+                    tutorId,
+                    slot,
+                    dispatch: 'direct',
+                    startTime: slot.start_time,
+                  });
+                  goTo('confirm');
+                }}
+                onPickMatch={(dispatch, startTime) => {
+                  update({ ...NO_CHOICE, dispatch, startTime });
+                  goTo('confirm');
+                }}
+                onAskTime={(tutorId, startTime) => {
+                  update({
+                    ...NO_CHOICE,
+                    tutorId,
+                    dispatch: 'direct',
+                    startTime,
+                  });
                   goTo('confirm');
                 }}
                 onBack={() => goTo('when')}
@@ -301,7 +339,13 @@ const TrialPage: FC = () => {
                 tutor={tutor}
                 loading={tutorsQuery.isLoading}
                 slot={draft.slot}
-                onPick={(slot) => update({ slot })}
+                onPick={(slot) =>
+                  update({
+                    slot,
+                    dispatch: 'direct',
+                    startTime: slot.start_time,
+                  })
+                }
                 onBack={() => goTo('tutors')}
                 onNext={() => goTo('confirm')}
               />
@@ -310,19 +354,28 @@ const TrialPage: FC = () => {
               <ConfirmStep
                 course={course}
                 examBoard={board}
+                dispatch={draft.dispatch}
                 tutor={tutor}
-                slot={draft.slot}
-                loading={tutorsQuery.isLoading || coursesQuery.isLoading}
+                startTime={draft.startTime}
+                onCalendar={!!draft.slot}
+                loading={
+                  coursesQuery.isLoading ||
+                  (draft.dispatch === 'direct' && tutorsQuery.isLoading)
+                }
+                note={draft.note}
+                onNote={(note) => update({ note })}
                 guardianPhone={
                   draft.guardianPhone ||
                   (isParent ? (currentUser?.phone_number ?? '') : '')
                 }
                 onGuardianPhone={(guardianPhone) => update({ guardianPhone })}
                 signedIn={!!currentUser}
-                onBack={() => goTo('slot')}
-                onBooked={() => {
+                childId={isParent ? draft.childId : undefined}
+                // A slot was picked on the slot step; a time asked for, on the tutors step
+                onBack={() => goTo(draft.slot ? 'slot' : 'tutors')}
+                onSent={(request) => {
                   clearDraft();
-                  setBooked(true);
+                  setSent(request);
                 }}
               />
             )}

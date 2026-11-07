@@ -216,9 +216,10 @@ axios.interceptors.request.use(
       config.headers['Authorization'] = accessToken;
     }
 
-    // A parent's requests are about the child they picked
+    // A parent's requests are about the child they picked, unless the call
+    // names a child itself (cancelling one child's trial from the family home)
     const childId = getActiveChildId();
-    if (childId && config.headers) {
+    if (childId && config.headers && !config.headers['X-Child-Id']) {
       config.headers['X-Child-Id'] = String(childId);
     }
     if (config.headers) {

@@ -273,3 +273,33 @@ export function useUpdateUserInfo() {
     },
   });
 }
+
+/**
+ * A tutor's "I want more students, even outside my published times"
+ * switch: families can then ask them for a free trial at any time.
+ */
+export function useSetWantsStudents() {
+  const queryClient = useQueryClient();
+  const dispatch = useAppDispatch();
+
+  return useMutation({
+    mutationFn: async ({
+      id,
+      wantsStudents,
+    }: {
+      id: number;
+      wantsStudents: boolean;
+    }) => {
+      const response = await patch(`/tutors/${id}`, {
+        tutor: { wants_students: wantsStudents },
+      });
+      return response?.data?.data;
+    },
+    onSuccess: (data, variables) => {
+      if (data) dispatch(setCurrentUser(data));
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.instructors.detail(variables.id),
+      });
+    },
+  });
+}
