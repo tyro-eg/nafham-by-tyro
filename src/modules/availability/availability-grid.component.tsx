@@ -9,7 +9,11 @@ import {
 } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Menu, MenuItem, Divider, ListSubheader } from '@mui/material';
-import { ExpandMoreRounded, LockRounded } from '@mui/icons-material';
+import {
+  ExpandMoreRounded,
+  LockClockRounded,
+  LockRounded,
+} from '@mui/icons-material';
 
 import {
   formatSlotTime,
@@ -26,6 +30,9 @@ export interface CellInfo {
   state: CellState;
   /** A saved slot exists here (used to tint past cells that were open) */
   hadSlot: boolean;
+  /** Held cells: the student it is kept for and until when (ISO) */
+  heldFor?: string | null;
+  heldUntil?: string | null;
 }
 
 interface AvailabilityGridProps {
@@ -233,12 +240,23 @@ const AvailabilityGrid: FC<AvailabilityGridProps> = ({
             ...days.map((_, dayIndex) => {
               const cell = cells[dayIndex][rowIndex];
               const info = cellInfo(cell.key);
+              const heldNote =
+                info.state === 'held'
+                  ? t('AVAILABILITY.HELD_NOTE', {
+                      student: info.heldFor || t('AVAILABILITY.HELD_STUDENT'),
+                      date: info.heldUntil
+                        ? longFormat.format(new Date(info.heldUntil))
+                        : '',
+                    })
+                  : null;
               const label = `${longFormat.format(cell.date)} ${formatSlotTime(
                 cell.date,
                 language,
-              )}: ${t(`AVAILABILITY.STATE.${info.state.toUpperCase()}`)}`;
+              )}: ${heldNote ?? t(`AVAILABILITY.STATE.${info.state.toUpperCase()}`)}`;
               const disabled =
-                info.state === 'past' || info.state === 'reserved';
+                info.state === 'past' ||
+                info.state === 'reserved' ||
+                info.state === 'held';
               return (
                 <button
                   key={cell.key}
@@ -248,6 +266,7 @@ const AvailabilityGrid: FC<AvailabilityGridProps> = ({
                     onHour ? ' av-cell--hour' : ''
                   }${info.state === 'past' && info.hadSlot ? ' av-cell--past-open' : ''}`}
                   aria-label={label}
+                  title={heldNote ?? undefined}
                   aria-pressed={
                     info.state === 'available' || info.state === 'adding'
                   }
@@ -258,6 +277,9 @@ const AvailabilityGrid: FC<AvailabilityGridProps> = ({
                 >
                   {info.state === 'reserved' && (
                     <LockRounded className="av-cell__lock" aria-hidden />
+                  )}
+                  {info.state === 'held' && (
+                    <LockClockRounded className="av-cell__lock" aria-hidden />
                   )}
                 </button>
               );

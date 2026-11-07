@@ -1737,6 +1737,8 @@
   },
   "AVAILABILITY": {
     "TITLE": "My availability",
+    "HELD_NOTE": "Held for {{student}} until {{date}} while they renew. Contact support to free this time.",
+    "HELD_STUDENT": "a student",
     "SUBTITLE": "Mark the 30-minute slots you can teach. Click a slot or drag across several; use a day name for quick presets. Students and support can only book inside these slots.",
     "TIMEZONE": "Times are in your local time zone ({{tz}})",
     "PREV_WEEK": "Previous week",
@@ -1746,7 +1748,8 @@
     "HINT": "Tip: drag with the mouse to fill or clear many slots at once. Booked slots are locked.",
     "STATS": {
       "OPEN": "{{hours}} open hours this week",
-      "BOOKED": "{{hours}} booked"
+      "BOOKED": "{{hours}} booked",
+      "HELD": "{{hours}} held"
     },
     "LEGEND": {
       "TITLE": "Legend"
@@ -1757,7 +1760,8 @@
       "RESERVED": "Booked",
       "ADDING": "Opening (unsaved)",
       "REMOVING": "Closing (unsaved)",
-      "PAST": "Past"
+      "PAST": "Past",
+      "HELD": "Held for a student"
     },
     "DAY_MENU": {
       "TITLE": "Quick fill",
