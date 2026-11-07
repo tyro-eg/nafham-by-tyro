@@ -9,7 +9,8 @@ export const parseTimeSlotsIntoCalendarEvents = (timeSlots: any[]) => {
       start: event.start_time ? event.start_time : undefined,
       end: event.end_time ? event.end_time : undefined,
       status: event.status ? event.status : undefined,
-      color: eventColor(event.status),
+      held: !!event.held,
+      color: eventColor(event.held ? 'held' : event.status),
     };
     return eventObj;
   });
@@ -22,6 +23,9 @@ const eventColor = (status: string) => {
       return '#3ac5f1';
     case 'reserved':
       return '#9ca5af';
+    // Kept for a student who is renewing
+    case 'held':
+      return '#d97706';
     default:
       return '#3ac5f1';
   }

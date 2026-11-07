@@ -5,6 +5,7 @@
 $av-open: $brand-500;
 $av-open-text: $color-white;
 $av-booked: $gray-300;
+$av-held: $warning-500;
 $av-adding: $success-500;
 $av-removing: $danger-500;
 $av-cell-height: 2.6rem;
@@ -118,6 +119,11 @@ html[dir='rtl'] .av-flip svg {
     &--booked {
       background-color: $gray-100;
       color: $text-body;
+    }
+
+    &--held {
+      background-color: rgba($av-held, 0.14);
+      color: darken($av-held, 14%);
     }
   }
 }
@@ -341,6 +347,23 @@ html[dir='rtl'] .av-flip svg {
     }
   }
 
+  // Kept for a student who is renewing: locked like a booking, amber
+  &--held {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba($av-held, 0.22);
+    cursor: help;
+
+    &:hover {
+      box-shadow: none;
+    }
+
+    .av-cell__lock {
+      color: darken($av-held, 12%);
+    }
+  }
+
   &__lock {
     width: 1.4rem;
     height: 1.4rem;
@@ -369,6 +392,10 @@ html[dir='rtl'] .av-flip svg {
 // Legend swatches reuse the cell colours
 .av-legend__swatch.av-cell--reserved {
   background-color: $av-booked;
+}
+
+.av-legend__swatch.av-cell--held {
+  background-color: rgba($av-held, 0.22);
 }
 
 // ---------- Day menu ----------
