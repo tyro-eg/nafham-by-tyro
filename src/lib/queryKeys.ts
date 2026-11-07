@@ -117,6 +117,16 @@ export const queryKeys = {
     options: (packageId: number) =>
       [...queryKeys.payments.all, 'options', packageId] as const,
     familyOptions: () => [...queryKeys.payments.all, 'family-options'] as const,
+    open: () => [...queryKeys.payments.all, 'open'] as const,
+  },
+
+  // The buy wizard: tutors for a course with prices, and the sizes for one
+  purchases: {
+    all: ['purchases'] as const,
+    tutors: (search: unknown) =>
+      [...queryKeys.purchases.all, 'tutors', search] as const,
+    options: (params: unknown) =>
+      [...queryKeys.purchases.all, 'options', params] as const,
   },
 
   // Session request keys (students asking support to schedule sessions)

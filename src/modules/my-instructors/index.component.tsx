@@ -373,6 +373,11 @@ const MyInstructors: FC = () => {
                 ? t('NAVIGATION.FREE_TRIAL')
                 : t('DASHBOARD.INSTRUCTORS.FIND')}
             </Button>
+            {(isParent || !currentUser?.family_id) && (
+              <Button component={Link} to="/buy" variant="outlined">
+                {t('BUY.ENTRY')}
+              </Button>
+            )}
           </div>
         )}
 
