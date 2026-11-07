@@ -289,6 +289,17 @@ export function useCreateTrialRequest() {
   });
 }
 
+/**
+ * Lists that change while the user waits: fresh for half a minute, polled
+ * only while something is still pending (an answer, an offer)
+ */
+const liveList = <T>(pending: (rows: T[]) => boolean) => ({
+  staleTime: 30 * 1000,
+  refetchInterval: (query: { state: { data?: T[] } }) =>
+    query.state.data && pending(query.state.data) ? 60 * 1000 : false,
+  refetchIntervalInBackground: false,
+});
+
 /** A parent's whole family at once, whatever child is picked */
 const allChildrenConfig = (allChildren: boolean) =>
   allChildren ? { headers: { 'X-Child-Id': ALL_CHILDREN } } : {};
@@ -313,9 +324,9 @@ export function useTrialRequests(
       return (response.data.data || []) as TrialRequest[];
     },
     enabled,
-    staleTime: 30 * 1000,
-    refetchInterval: 60 * 1000,
-    refetchIntervalInBackground: false,
+    ...liveList<TrialRequest>((rows) =>
+      rows.some((r) => r.status === 'pending'),
+    ),
   });
 }
 
@@ -356,9 +367,9 @@ export function useTrialOffers(tab: TrialOfferTab, enabled = true) {
       return (response.data.data || []) as TrialOffer[];
     },
     enabled,
-    staleTime: 30 * 1000,
-    refetchInterval: 60 * 1000,
-    refetchIntervalInBackground: false,
+    // A new offer also arrives as a support chat message, so polling only
+    // keeps an open inbox current
+    ...liveList<TrialOffer>((rows) => tab === 'pending' && rows.length > 0),
   });
 }
 

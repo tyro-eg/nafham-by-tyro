@@ -11,6 +11,7 @@ import {
 
 import type { TrialRequest } from '../../hooks/useTrial';
 import { formatSlot } from './trial.types';
+import { DISPATCH_UI } from './dispatch-ui';
 
 interface RequestSentProps {
   request: TrialRequest;
@@ -73,13 +74,7 @@ const RequestSent: FC<RequestSentProps> = ({ request, onRetry }) => {
         </li>
         <li>
           <EventNoteRounded />
-          {t(
-            request.dispatch === 'direct'
-              ? 'TRIAL.SENT.NEXT_DIRECT'
-              : request.dispatch === 'fastest'
-                ? 'TRIAL.SENT.NEXT_FASTEST'
-                : 'TRIAL.SENT.NEXT_BEST',
-          )}
+          {t(DISPATCH_UI[request.dispatch].next)}
         </li>
       </ul>
       <div className="trial-sent__actions">

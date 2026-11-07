@@ -36,6 +36,7 @@ import {
   type Step as WizardStep,
   type TrialDraft,
 } from './trial.types';
+import { DISPATCH_UI } from './dispatch-ui';
 import ChildStep from './steps/child-step.component';
 import CourseStep from './steps/course-step.component';
 import WhenStep from './steps/when-step.component';
@@ -180,14 +181,13 @@ const TrialPage: FC = () => {
         ? formatDate(draft.date, locale)
         : t(`TRIAL.WHEN.${draft.day.toUpperCase()}`)
     } · ${t(`TRIAL.WHEN.${draft.window.toUpperCase()}`)}`,
-    tutors:
-      draft.dispatch === 'fastest'
-        ? t('TRIAL.MATCH.FASTEST')
-        : draft.dispatch === 'best_match'
-          ? t('TRIAL.MATCH.BEST')
-          : tutor
-            ? `${tutor.first_name} ${tutor.last_name}`.trim()
-            : undefined,
+    tutors: (() => {
+      const label = draft.dispatch && DISPATCH_UI[draft.dispatch].label;
+      if (label) return t(label);
+      return tutor
+        ? `${tutor.first_name} ${tutor.last_name}`.trim()
+        : undefined;
+    })(),
     slot: draft.startTime ? formatSlot(draft.startTime, locale) : undefined,
     confirm: undefined,
   };

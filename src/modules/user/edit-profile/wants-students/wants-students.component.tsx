@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Alert, FormControlLabel, Switch } from '@mui/material';
 
@@ -19,18 +19,16 @@ interface WantsStudentsProps {
 const WantsStudents: FC<WantsStudentsProps> = ({ tutorId, value }) => {
   const { t } = useTranslation();
   const save = useSetWantsStudents();
-  const [checked, setChecked] = useState(value);
   const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => setChecked(value), [value]);
+  // While a save is in flight the switch shows the value being saved; the
+  // saved user then lands in the store and `value` follows
+  const checked = save.isPending ? save.variables.wantsStudents : value;
 
   const toggle = async (next: boolean) => {
     setError(null);
-    setChecked(next);
     try {
       await save.mutateAsync({ id: tutorId, wantsStudents: next });
     } catch (err) {
-      setChecked(!next);
       setError(bookingErrorMessage(err, t('PROFILE.WANTS_STUDENTS.ERROR')));
     }
   };

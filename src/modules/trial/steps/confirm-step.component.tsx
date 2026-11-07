@@ -9,13 +9,10 @@ import {
 } from '@mui/material';
 import {
   ArrowBackRounded,
-  BoltRounded,
   CardGiftcardRounded,
   EventRounded,
   LockOutlined,
   MenuBookRounded,
-  PersonRounded,
-  WorkspacePremiumRounded,
 } from '@mui/icons-material';
 
 import type { GradeSubject } from '../../../assets/types';
@@ -30,6 +27,7 @@ import { bookingErrorMessage } from '../../../hooks/useSessions';
 import RegisterModal from '../../../modals/register-modal/register-modal.component';
 import LoginModal from '../../../modals/login-modal/login-modal.component';
 import { formatSlot, localTimeZone } from '../trial.types';
+import { DISPATCH_UI } from '../dispatch-ui';
 
 interface ConfirmStepProps {
   course?: GradeSubject;
@@ -133,6 +131,8 @@ const ConfirmStep: FC<ConfirmStepProps> = ({
   const tutorName = tutor
     ? `${tutor.first_name} ${tutor.last_name}`.trim()
     : '';
+  const dispatchUi = DISPATCH_UI[dispatch];
+  const DispatchIcon = dispatchUi.Icon;
   const how =
     dispatch === 'fastest'
       ? t('TRIAL.CONFIRM.HOW_FASTEST')
@@ -151,21 +151,9 @@ const ConfirmStep: FC<ConfirmStepProps> = ({
         : course.full_course_name,
     },
     {
-      icon:
-        dispatch === 'fastest' ? (
-          <BoltRounded />
-        ) : dispatch === 'best_match' ? (
-          <WorkspacePremiumRounded />
-        ) : (
-          <PersonRounded />
-        ),
+      icon: <DispatchIcon />,
       label: t('TRIAL.CONFIRM.TUTOR'),
-      value:
-        dispatch === 'fastest'
-          ? t('TRIAL.MATCH.FASTEST')
-          : dispatch === 'best_match'
-            ? t('TRIAL.MATCH.BEST')
-            : tutorName,
+      value: dispatchUi.label ? t(dispatchUi.label) : tutorName,
     },
     {
       icon: <EventRounded />,
