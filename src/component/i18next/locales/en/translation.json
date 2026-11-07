@@ -41,6 +41,7 @@
     "SESSIONS": "My Sessions",
     "PACKAGES": "My Packages",
     "TERMS": "Terms & Conditions",
+    "DELETE_ACCOUNT": "Delete account",
     "FUNDS": "Add Funds",
     "DASHBOARD": "Dashboard",
     "MY_STUDENTS": "My Students",
@@ -2450,5 +2451,26 @@
       "CANCEL_OPEN": "My receipts",
       "REDIRECT": "You pay by card on Nomod's secure page and come straight back. Hours land the moment the card clears; our team then books the first lessons from your times."
     }
+  },
+  "DELETE_ACCOUNT": {
+    "TITLE": "Delete your Nafham account",
+    "INTRO": "You can delete your Nafham by Tyro account at any time. Deleting it is permanent and cannot be undone.",
+    "IN_APP_TITLE": "Delete your account in the app",
+    "IN_APP_STEP_1": "Open the Nafham app and sign in.",
+    "IN_APP_STEP_2": "Go to More → Account → Delete account.",
+    "IN_APP_STEP_3": "Enter your password and confirm. Your account is deleted straight away.",
+    "WHAT_TITLE": "What happens when you delete your account",
+    "WHAT_PROFILE": "Your profile is removed: your name, email, phone number, photo and bio.",
+    "WHAT_MESSAGES": "Your chat messages are deleted and you leave every conversation.",
+    "WHAT_SESSIONS": "Sessions you have booked from now on are cancelled.",
+    "WHAT_RECORDS": "Records of purchases, packages and past sessions are kept without your name, because the law requires us to keep accounting records.",
+    "FORM_TITLE": "No longer have the app?",
+    "FORM_TEXT": "Send us the email address you signed up with and we will delete your account. We reply from learn@nafhambytyro.com to confirm the request before deleting anything.",
+    "EMAIL": "Email you signed up with",
+    "MESSAGE": "Anything you want to tell us (optional)",
+    "SUBMIT": "Request account deletion",
+    "SENT": "Thank you. We have your request and will email you to confirm it.",
+    "FAILED": "We couldn't send your request. Check the email address and try again, or email us.",
+    "CONTACT": "Questions about your data? Email"
   }
 }
