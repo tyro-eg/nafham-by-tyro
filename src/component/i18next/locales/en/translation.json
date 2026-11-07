@@ -1800,8 +1800,7 @@
       "REASON": {
         "NO_CANDIDATES": "No instructor was free or taking requests at that time.",
         "ALL_DECLINED": "The instructors we asked couldn't make it.",
-        "TIMED_OUT": "No instructor confirmed in time.",
-        "DECLINED": "The instructor couldn't make it."
+        "TIMED_OUT": "No instructor confirmed in time."
       },
       "PICK_AGAIN": "Pick another time",
       "CANCEL": "Cancel request",

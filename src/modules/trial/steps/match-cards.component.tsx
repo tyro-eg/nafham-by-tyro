@@ -57,7 +57,7 @@ const MatchCards: FC<MatchCardsProps> = ({
   const free = candidates.data?.on_calendar.length ?? 0;
   const more = candidates.data?.off_calendar.length ?? 0;
   const total = free + more;
-  const broadcast = Math.min(total, candidates.data?.max_broadcast ?? 6);
+  const broadcast = Math.min(total, candidates.data?.max_broadcast ?? total);
   const ready = !!start && !!candidates.data && total > 0;
 
   const options: {
@@ -70,7 +70,7 @@ const MatchCards: FC<MatchCardsProps> = ({
       dispatch: 'fastest',
       icon: <BoltRounded />,
       title: t('TRIAL.MATCH.FASTEST'),
-      text: t('TRIAL.MATCH.FASTEST_TEXT', { count: broadcast || 6 }),
+      text: t('TRIAL.MATCH.FASTEST_TEXT', { count: broadcast }),
     },
     {
       dispatch: 'best_match',
