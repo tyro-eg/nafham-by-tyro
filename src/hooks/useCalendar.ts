@@ -12,9 +12,6 @@ export interface AvailabilitySlot {
   start_time: string;
   end_time: string;
   status?: 'available' | 'reserved';
-  /** Kept for a student who is renewing; status stays 'reserved' */
-  held?: boolean;
-  held_until?: string | null;
 }
 
 /**

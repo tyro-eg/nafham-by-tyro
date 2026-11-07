@@ -17,6 +17,7 @@ import {
 
 import {
   formatSlotTime,
+  isLocked,
   slotDate,
   slotKey,
   type CellState,
@@ -253,10 +254,7 @@ const AvailabilityGrid: FC<AvailabilityGridProps> = ({
                 cell.date,
                 language,
               )}: ${heldNote ?? t(`AVAILABILITY.STATE.${info.state.toUpperCase()}`)}`;
-              const disabled =
-                info.state === 'past' ||
-                info.state === 'reserved' ||
-                info.state === 'held';
+              const disabled = isLocked(info.state);
               return (
                 <button
                   key={cell.key}
