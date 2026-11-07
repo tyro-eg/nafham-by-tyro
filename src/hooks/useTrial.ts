@@ -284,6 +284,8 @@ export function useCreateTrialRequest() {
         queryKey: [...trialKeys.all, 'requests'],
       });
     },
+    // The caller shows the backend's reason inline
+    onError: () => undefined,
   });
 }
 
@@ -338,6 +340,8 @@ export function useCancelTrialRequest() {
         queryKey: [...trialKeys.all, 'requests'],
       });
     },
+    // The caller shows the backend's reason inline
+    onError: () => undefined,
   });
 }
 
@@ -371,6 +375,8 @@ const useOfferAnswer = (
       queryClient.invalidateQueries({ queryKey: queryKeys.sessions.all });
       queryClient.invalidateQueries({ queryKey: queryKeys.calendar.all });
     },
+    // The card shows the backend's reason inline
+    onError: () => undefined,
   });
 };
 

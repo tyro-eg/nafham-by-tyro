@@ -301,5 +301,7 @@ export function useSetWantsStudents() {
         queryKey: queryKeys.instructors.detail(variables.id),
       });
     },
+    // The switch shows the error beside itself
+    onError: () => undefined,
   });
 }

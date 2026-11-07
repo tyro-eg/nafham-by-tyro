@@ -226,7 +226,7 @@ const TutorsStep: FC<TutorsStepProps> = ({
 
               {askOnly ? (
                 <div className="trial-tutor__slots">
-                  <span className="trial-choice__label">
+                  <span className="trial-tutor__ask-hint">
                     {t('TRIAL.TUTORS.ASK_HINT', { name: tutor.first_name })}
                   </span>
                   {open && !used && (

@@ -1309,3 +1309,9 @@ $gold-fg: #b07800;
     margin-top: $space-3;
   }
 }
+
+// A tutor who takes requests but has no published time in the window
+.trial-tutor__ask-hint {
+  font-size: $font-sm;
+  color: $text-body;
+}
