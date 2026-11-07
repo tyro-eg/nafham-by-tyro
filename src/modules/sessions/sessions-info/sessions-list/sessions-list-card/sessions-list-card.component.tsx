@@ -27,6 +27,12 @@ import { useRtlClass } from '../../../../../assets/utils/utils';
 
 import { useAppSelector } from '../../../../../redux/store';
 import { SessionType } from '../../../../../assets/types';
+import {
+  canJoin,
+  minutesSinceStart,
+  sessionPhase,
+  useNow,
+} from '../../../session-state';
 
 import Profile from '../../../../../assets/images/videoSession/people/profile.png';
 
@@ -131,9 +137,13 @@ const SessionListCard: React.FC<SessionListCardProps> = ({ session }) => {
 
   const locale = locales[i18n.language as 'en' | 'ar'];
   const startDate = parseISO(session.start_time!);
-  const isFuture = startDate > new Date();
-  const isLive = session.status === 'open';
-  const isUpcoming = isLive || (session.status === 'scheduled' && isFuture);
+  // Ticks every 30 s so countdowns and the Join button move on their own
+  const now = useNow();
+  const phase = sessionPhase(session, now);
+  const isLive = phase === 'live';
+  const isUpcoming =
+    isLive || phase === 'upcoming' || phase === 'starting_soon';
+  const joinable = canJoin(session, now, isInstructor);
   const typeVariant =
     session.session_type === 'group'
       ? 'group'
@@ -159,42 +169,82 @@ const SessionListCard: React.FC<SessionListCardProps> = ({ session }) => {
 
       <div className="sessions-card__main">
         <div className="sessions-card__badges">
+          {phase === 'upcoming' && (
+            <span className="sessions-card__status sessions-card__status--upcoming">
+              <Timer aria-hidden="true" />
+              {t('MYSESSIONS.MAIN.CARD.WILLGOLIVE')} {getRelativeSessionDate()}
+            </span>
+          )}
+
+          {phase === 'starting_soon' && (
+            <span className="sessions-card__status sessions-card__status--soon">
+              <Timer aria-hidden="true" />
+              {t('MYSESSIONS.MAIN.CARD.STARTING_SOON')}{' '}
+              {getRelativeSessionDate()}
+            </span>
+          )}
+
+          {isLive && (
+            <span className="sessions-card__status sessions-card__status--live">
+              <span className="sessions-card__pulse" aria-hidden="true" />
+              {t('MYSESSIONS.MAIN.CARD.LIVE_NOW')}
+              {minutesSinceStart(session, now) > 0 &&
+                ` · ${t('MYSESSIONS.MAIN.CARD.STARTED_AGO', {
+                  count: minutesSinceStart(session, now),
+                })}`}
+            </span>
+          )}
+
+          {phase === 'awaiting' && (
+            <span className="sessions-card__status sessions-card__status--awaiting">
+              <Timer aria-hidden="true" />
+              {t('MYSESSIONS.MAIN.CARD.AWAITING')}
+            </span>
+          )}
+
+          {session.status === 'completed' && (
+            <span className="sessions-card__status sessions-card__status--completed">
+              <CheckCircle aria-hidden="true" />
+              {t('MYSESSIONS.MAIN.CARD.COMPLETED')}
+            </span>
+          )}
+
+          {phase === 'missed' && (
+            <span className="sessions-card__status sessions-card__status--missed">
+              <Cancel aria-hidden="true" />
+              {t('MYSESSIONS.MAIN.CARD.MISSED')}
+            </span>
+          )}
+
+          {phase === 'cancelled' && (
+            <span className="sessions-card__status sessions-card__status--canceled">
+              <Cancel aria-hidden="true" />
+              {t('MYSESSIONS.MAIN.CARD.CANCELLED')}
+            </span>
+          )}
+
           <span
             className={`sessions-card__badge sessions-card__badge--${typeVariant}`}
           >
             {session.session_type === 'group' ? <Group /> : <Person />}
             {sessionName}
           </span>
-
-          {session.status === 'scheduled' && isFuture && (
-            <span className="sessions-card__badge sessions-card__badge--upcoming">
-              <Timer aria-hidden="true" />
-              {t('MYSESSIONS.MAIN.CARD.WILLGOLIVE')} {getRelativeSessionDate()}
-            </span>
-          )}
-
-          {session.status === 'completed' && (
-            <span className="sessions-card__badge sessions-card__badge--completed">
-              <CheckCircle aria-hidden="true" />
-              {t('MYSESSIONS.MAIN.CARD.COMPLETED')}
-            </span>
-          )}
-
-          {(session.status === 'missed' ||
-            (session.status === 'scheduled' && !isFuture)) && (
-            <span className="sessions-card__badge sessions-card__badge--missed">
-              <Cancel aria-hidden="true" />
-              {t('MYSESSIONS.MAIN.CARD.MISSED')}
-            </span>
-          )}
-
-          {session.status === 'canceled' && (
-            <span className="sessions-card__badge sessions-card__badge--canceled">
-              <Cancel aria-hidden="true" />
-              {t('MYSESSIONS.MAIN.CARD.CANCELLED')}
-            </span>
-          )}
         </div>
+
+        {phase === 'awaiting' && (
+          <p className="sessions-card__hint">
+            {t(
+              session.meeting_provider === 'zoom'
+                ? 'MYSESSIONS.MAIN.CARD.AWAITING_HINT_ZOOM'
+                : 'MYSESSIONS.MAIN.CARD.AWAITING_HINT',
+            )}
+          </p>
+        )}
+        {phase === 'starting_soon' && !isInstructor && (
+          <p className="sessions-card__hint">
+            {t('MYSESSIONS.MAIN.CARD.JOIN_HINT')}
+          </p>
+        )}
 
         <p className="sessions-card__time">
           <span className="sessions-card__time-item">
@@ -316,7 +366,7 @@ const SessionListCard: React.FC<SessionListCardProps> = ({ session }) => {
               )}
             </div>
           )} */}
-        {isLive && (
+        {(isLive || phase === 'starting_soon') && (
           <div className="sessions-card__status-wrapper">
             {/* {isInstructor && (
               <Button
@@ -333,7 +383,7 @@ const SessionListCard: React.FC<SessionListCardProps> = ({ session }) => {
               color="primary"
               variant="contained"
               onClick={goToSession}
-              disabled={!session.session_link}
+              disabled={!joinable}
             >
               {t('MYSESSIONS.MAIN.CARD.GOTO')}
             </Button>
