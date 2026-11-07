@@ -59,7 +59,8 @@
     "NOTES": "Lesson notes",
     "COLLAPSE": "Hide menu",
     "EXPAND": "Show menu",
-    "PAYMENTS": "Payments"
+    "PAYMENTS": "Payments",
+    "TRIAL_REQUESTS": "Trial requests"
   },
   "CARDS": {
     "FREE_ASSESMENT": {
@@ -591,6 +592,11 @@
         "SUBJECTS": "Subjects",
         "CATEGORY": "Category"
       }
+    },
+    "WANTS_STUDENTS": {
+      "LABEL": "I want more students, even outside my published times",
+      "HINT": "Families can ask you for a free trial at any time; you accept or decline each request.",
+      "ERROR": "We couldn't save that. Please try again."
     }
   },
   "CALENDAR": {
@@ -1698,7 +1704,10 @@
       "EMPTY": "No tutor is free for {{course}} in that window. Try wider dates or another time of day.",
       "USED": "Free trial already used with this tutor",
       "LOADING": "Finding your tutors...",
-      "TOP": "Top pick"
+      "TOP": "Top pick",
+      "OR_PICK": "Or pick an instructor",
+      "ASK": "Ask for a time",
+      "ASK_HINT": "{{name}} has no free time in that window but takes requests."
     },
     "SLOT": {
       "TITLE": "Pick a time with {{name}}",
@@ -1708,29 +1717,36 @@
       "TIMES_other": "{{count}} times"
     },
     "CONFIRM": {
-      "TITLE": "Confirm your free trial",
+      "TITLE": "Confirm your free trial request",
       "COURSE": "Course",
       "TUTOR": "Tutor",
       "WHEN": "When",
       "DURATION": "{{minutes}} minutes",
       "GUARDIAN_PHONE": "Parent's phone number (optional)",
       "GUARDIAN_HINT": "We'll keep your parent in the loop about your lessons.",
-      "VISITOR": "Create your account to confirm the booking. Your choices are saved.",
+      "VISITOR": "Create your account to send the request. Your choices are saved.",
       "REGISTER": "Create account",
       "LOGIN": "I already have an account",
-      "BOOK": "Book my free trial",
-      "BOOKING": "Booking...",
-      "FREE": "Free · no payment needed"
+      "BOOK": "Send my request",
+      "BOOKING": "Sending...",
+      "FREE": "Free · no payment needed",
+      "MISSING": "That instructor or time is no longer available. Go back and pick again.",
+      "HOW_DIRECT": "{{name}} confirms the time. If they can't, we ask our next best instructor for you.",
+      "HOW_ASK": "This time is outside {{name}}'s published times; they confirm if it suits them. If not, we ask our next best instructor.",
+      "HOW_FASTEST": "We ask several instructors at once; the first to confirm teaches your trial.",
+      "HOW_BEST": "We ask our best-ranked instructor first, then the next, until one confirms.",
+      "NOTE": "A note for the instructor (optional)",
+      "NOTE_HINT": "What would you like to work on? Anything they should know?"
     },
     "ACTIONS": {
       "BACK": "Back",
       "NEXT": "Continue"
     },
     "TUTOR_ACCOUNT": "Free trials are for students. You are signed in as a tutor.",
-    "ERROR": "We couldn't book your trial. Please pick another time.",
+    "ERROR": "We couldn't send your request. Please pick another time.",
     "ERROR_LOADING": "We couldn't load the tutors. Please try again.",
     "EYEBROW": "Free trial",
-    "SUMMARY": "Your booking",
+    "SUMMARY": "Your request",
     "PENDING": "Not chosen yet",
     "STEP_COUNT": "Step {{step}} of {{count}}",
     "CHILD": {
@@ -1738,6 +1754,60 @@
       "TEXT": "Pick the child; the tutors and times are matched to them.",
       "ADD": "Add a child",
       "NONE": "No children yet. Add your first child, then come back to book the trial."
+    },
+    "MATCH": {
+      "TITLE": "Let us find your instructor",
+      "SUBTITLE": "Pick one start time and we ask the instructors for you.",
+      "DAY": "Day",
+      "TIME": "Start time",
+      "NO_TIMES": "No start time in that window is far enough ahead. Try a later day or a wider time of day.",
+      "FASTEST": "Quickest to confirm",
+      "FASTEST_TEXT_one": "We ask {{count}} instructor at once; the first to confirm teaches your trial.",
+      "FASTEST_TEXT_other": "We ask up to {{count}} instructors at once; the first to confirm teaches your trial.",
+      "BEST": "Best match",
+      "BEST_TEXT": "We ask our best-ranked instructor first, then the next, until one confirms.",
+      "FREE_one": "{{count}} instructor is free then.",
+      "FREE_other": "{{count}} instructors are free then.",
+      "MORE_one": "{{count}} more takes requests.",
+      "MORE_other": "{{count}} more take requests.",
+      "NOBODY": "No instructor is free or taking requests at that time. Try another time.",
+      "COUNT_ERROR": "We couldn't check who is free then. You can still send the request.",
+      "CHOOSE": "Choose"
+    },
+    "SENT": {
+      "WAITING_FOR": "Waiting for {{name}} to confirm",
+      "ASKING_one": "We're asking {{count}} instructor",
+      "ASKING_other": "We're asking {{count}} instructors",
+      "BY": "You'll hear back by {{time}} at the latest.",
+      "NEXT_EMAIL": "We email you as soon as an instructor confirms.",
+      "NEXT_DIRECT": "If they can't make it, we ask our next best instructor for you.",
+      "NEXT_FASTEST": "The first instructor to confirm teaches your trial; it then appears in My sessions.",
+      "NEXT_BEST": "If our best match can't make it, we ask the next one for you.",
+      "UNMATCHED": "No instructor is available at that time",
+      "UNMATCHED_TEXT": "Nobody we could ask is free then. Pick another time and we'll try again."
+    },
+    "REQUESTS": {
+      "TITLE": "Free trial requests",
+      "STATUS": {
+        "PENDING": "Waiting for confirmation",
+        "UNMATCHED": "No instructor found",
+        "BOOKED": "Confirmed",
+        "CANCELLED": "Cancelled"
+      },
+      "ASKED_TUTOR": "asked {{name}}",
+      "ASKED_one": "{{count}} instructor asked",
+      "ASKED_other": "{{count}} instructors asked",
+      "REASON": {
+        "NO_CANDIDATES": "No instructor was free or taking requests at that time.",
+        "ALL_DECLINED": "The instructors we asked couldn't make it.",
+        "TIMED_OUT": "No instructor confirmed in time.",
+        "DECLINED": "The instructor couldn't make it."
+      },
+      "PICK_AGAIN": "Pick another time",
+      "CANCEL": "Cancel request",
+      "CANCEL_CONFIRM": "Yes, cancel it",
+      "KEEP": "Keep it",
+      "CANCEL_ERROR": "We couldn't cancel the request. Please try again."
     }
   },
   "AVAILABILITY": {
@@ -2450,5 +2520,44 @@
       "CANCEL_OPEN": "My receipts",
       "REDIRECT": "You pay by card on Nomod's secure page and come straight back. Hours land the moment the card clears; our team then books the first lessons from your times."
     }
+  },
+  "TRIAL_OFFERS": {
+    "TITLE": "Trial requests",
+    "SUBTITLE": "Families asking you for a free trial. Times are in your timezone ({{tz}}).",
+    "TABS": {
+      "PENDING": "Waiting for you",
+      "ANSWERED": "Answered"
+    },
+    "ERROR_LOADING": "We couldn't load your trial requests. Please try again.",
+    "EMPTY": "No trial requests right now. We email you and message you in the support chat when a family asks for you.",
+    "EMPTY_ANSWERED": "Requests you answered will show here.",
+    "MORE_STUDENTS": "Want more students? Open your profile",
+    "ON_CALENDAR": "On your calendar",
+    "OFF_CALENDAR": "Outside your calendar",
+    "OFF_HINT": "Accepting adds this half hour to your calendar.",
+    "STATUS": {
+      "PENDING": "Waiting",
+      "ACCEPTED": "Accepted",
+      "DECLINED": "Declined",
+      "EXPIRED": "Expired",
+      "TAKEN": "Taken by another instructor",
+      "WITHDRAWN": "Cancelled by the family"
+    },
+    "DISPATCH": {
+      "DIRECT": "The family picked you.",
+      "BEST_MATCH": "You're our best match for this request.",
+      "FASTEST": "Sent to several instructors: the first to accept teaches it."
+    },
+    "ANSWER_BY": "Answer by {{time}}",
+    "YOUR_REASON": "Your reason: {{reason}}",
+    "REASON": "Why not? (optional, the family doesn't see it)",
+    "ACCEPT": "Accept",
+    "DECLINE": "Decline",
+    "DECLINE_CONFIRM": "Decline request",
+    "BACK": "Back",
+    "OPEN_SESSIONS": "Open my sessions",
+    "ERROR": "We couldn't save your answer. Please try again.",
+    "WAITING_COUNT_one": "{{count}} trial request waiting",
+    "WAITING_COUNT_other": "{{count}} trial requests waiting"
   }
 }

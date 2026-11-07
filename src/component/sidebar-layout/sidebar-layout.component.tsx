@@ -27,12 +27,14 @@ import {
   FamilyRestroomRounded,
   MenuBookRounded,
   ReceiptLongRounded,
+  ScheduleSendRounded,
 } from '@mui/icons-material';
 
 import { useAppSelector } from '../../redux/store';
 import { selectCurrentUser } from '../../redux/user/user.selectors';
 import { useSignOut } from '../../hooks/useAuth';
 import { useStreamChat } from '../../hooks/useStreamChat';
+import { useTrialOffers } from '../../hooks/useTrial';
 import { useRtlClass } from '../../assets/utils/utils';
 import LanguageSelector from '../i18next/LanguageSelector';
 import ChildSwitcher from '../../modules/family/child-switcher.component';
@@ -41,6 +43,16 @@ import logo from '../../assets/images/logo.png';
 import './sidebar-layout.styles.scss';
 
 const SIDEBAR_KEY = 'nafham.sidebar';
+
+/** One link of the sidebar, with an optional count beside it */
+interface NavItem {
+  to: string;
+  icon: JSX.Element;
+  label: string;
+  badge?: number;
+  /** What the count means, for screen readers; unread messages otherwise */
+  badgeLabel?: string;
+}
 
 interface SidebarLayoutProps {
   children: ReactNode;
@@ -60,6 +72,8 @@ const SidebarLayout: FC<SidebarLayoutProps> = ({ children }) => {
   const signOutMutation = useSignOut();
   const { client: chatClient, unreadCount } = useStreamChat();
   const location = useLocation();
+  // A tutor's trial requests still waiting for their answer
+  const trialOffers = useTrialOffers('pending', currentUser?.type === 'Tutor');
   const [drawerOpen, setDrawerOpen] = useState(false);
   // Desktop: the sidebar folds to a rail of icons, remembered per browser
   const [collapsed, setCollapsed] = useState(() => {
@@ -129,11 +143,20 @@ const SidebarLayout: FC<SidebarLayoutProps> = ({ children }) => {
       ]
     : [];
 
-  const tutorItems = [
+  const tutorItems: NavItem[] = [
     {
       to: '/dashboard',
       icon: <DashboardRounded />,
       label: t('NAVIGATION.DASHBOARD'),
+    },
+    {
+      to: '/trial_requests',
+      icon: <ScheduleSendRounded />,
+      label: t('NAVIGATION.TRIAL_REQUESTS'),
+      badge: trialOffers.data?.length ?? 0,
+      badgeLabel: t('TRIAL_OFFERS.WAITING_COUNT', {
+        count: trialOffers.data?.length ?? 0,
+      }),
     },
     {
       to: '/availability',
@@ -188,7 +211,7 @@ const SidebarLayout: FC<SidebarLayoutProps> = ({ children }) => {
     },
   ];
 
-  const studentItems = [
+  const studentItems: NavItem[] = [
     {
       to: '/dashboard',
       icon: <DashboardRounded />,
@@ -234,7 +257,7 @@ const SidebarLayout: FC<SidebarLayoutProps> = ({ children }) => {
   ];
 
   // Parents: the family home first, then the picked child's pages
-  const parentItems = [
+  const parentItems: NavItem[] = [
     {
       to: '/family',
       icon: <FamilyRestroomRounded />,
@@ -410,12 +433,13 @@ const SidebarLayout: FC<SidebarLayoutProps> = ({ children }) => {
                 {item.icon}
               </span>
               <span className="side-layout__label">{item.label}</span>
-              {'badge' in item && item.badge > 0 && (
+              {!!item.badge && item.badge > 0 && (
                 <span
                   className="side-layout__badge"
-                  aria-label={t('MESSAGES.UNREAD_COUNT', {
-                    count: item.badge,
-                  })}
+                  aria-label={
+                    item.badgeLabel ??
+                    t('MESSAGES.UNREAD_COUNT', { count: item.badge })
+                  }
                 >
                   {item.badge > 99 ? '99+' : item.badge}
                 </span>

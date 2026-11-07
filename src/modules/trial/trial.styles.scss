@@ -1104,3 +1104,208 @@ $gold-fg: #b07800;
     font-weight: 700;
   }
 }
+
+// ---------- "Let us find your instructor": one time, two ways ----------
+.trial-match {
+  display: grid;
+  gap: $space-4;
+  padding: $space-5;
+  border: 1.5px solid rgba($brand-400, 0.45);
+  border-radius: $radius-lg;
+  background:
+    radial-gradient(
+      30rem 16rem at 100% 0%,
+      rgba($accent-400, 0.14),
+      transparent 70%
+    ),
+    $brand-50;
+  animation: trial-rise 200ms ease-out;
+
+  @include respond(phone) {
+    padding: $space-4;
+  }
+
+  &__head {
+    display: grid;
+    gap: $space-1;
+  }
+
+  &__title {
+    margin: 0;
+    font-size: $font-lg;
+    font-weight: 700;
+    color: $navy-950;
+  }
+
+  &__count {
+    display: flex;
+    align-items: center;
+    min-height: 2.4rem;
+    margin: 0;
+    font-size: $font-sm;
+    font-weight: 600;
+    color: $brand-800;
+  }
+
+  &__options {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: $space-3;
+
+    @include respond(tab-port) {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  &__option {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-areas:
+      'icon text'
+      'action action';
+    gap: $space-3;
+    align-items: start;
+    padding: $space-4;
+    border-radius: $radius-md;
+    background-color: $surface;
+    box-shadow: $shadow-xs;
+
+    .MuiButton-root {
+      grid-area: action;
+      justify-self: start;
+    }
+  }
+
+  &__icon {
+    grid-area: icon;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 4rem;
+    height: 4rem;
+    border-radius: $radius-sm;
+    background-color: $gold-bg;
+    color: $gold-fg;
+
+    svg {
+      font-size: 2.2rem;
+    }
+  }
+
+  &__text {
+    grid-area: text;
+    display: grid;
+    gap: 0.2rem;
+  }
+
+  &__name {
+    font-weight: 700;
+    color: $navy-950;
+  }
+
+  &__desc {
+    font-size: $font-sm;
+    color: $text-body;
+  }
+}
+
+// ---------- One start time: a day, then a time ----------
+.trial-ask {
+  display: grid;
+  gap: $space-2;
+
+  &__fields {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $space-3;
+
+    .MuiTextField-root {
+      min-width: 16rem;
+      background-color: $surface;
+    }
+  }
+
+  &__zone {
+    margin: 0;
+    font-size: $font-xs;
+    color: $text-muted;
+  }
+}
+
+.trial-receipt__how {
+  margin: $space-4 0 0;
+  font-size: $font-sm;
+  color: $text-body;
+}
+
+// ---------- After the request is sent ----------
+.trial-sent {
+  display: grid;
+  justify-items: center;
+  gap: $space-3;
+  text-align: center;
+
+  &__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 6.4rem;
+    height: 6.4rem;
+    border-radius: 50%;
+    background-color: $gold-bg;
+    color: $gold-fg;
+
+    svg {
+      font-size: 3.2rem;
+    }
+
+    &--muted {
+      background-color: $gray-100;
+      color: $text-muted;
+    }
+  }
+
+  &__title {
+    margin: 0;
+    font-size: $font-h4;
+    color: $navy-950;
+  }
+
+  &__text,
+  &__deadline {
+    margin: 0;
+    color: $text-body;
+  }
+
+  &__deadline {
+    font-weight: 600;
+    color: $brand-800;
+  }
+
+  &__next {
+    display: grid;
+    gap: $space-2;
+    margin: $space-2 0 0;
+    padding: 0;
+    list-style: none;
+    text-align: start;
+
+    li {
+      display: flex;
+      align-items: flex-start;
+      gap: $space-2;
+      color: $text-body;
+      font-size: $font-sm;
+    }
+
+    svg {
+      flex-shrink: 0;
+      font-size: 2rem;
+      color: $brand-700;
+    }
+  }
+
+  &__actions {
+    margin-top: $space-3;
+  }
+}

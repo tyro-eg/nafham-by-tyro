@@ -1095,8 +1095,27 @@ export function resolveDemoRequest(
 
   if (method === 'POST') {
     if (cleanPath === '/users/tokens') return ok({});
-    if (cleanPath === '/sessions/trial' || cleanPath === '/sessions/private') {
+    if (cleanPath === '/sessions/private') {
       return { status: 201, data: { data: { id: 9999 } } };
+    }
+    if (cleanPath === '/trial_requests') {
+      return {
+        status: 201,
+        data: {
+          data: {
+            id: 9999,
+            slug: 'TR-demo',
+            dispatch: 'fastest',
+            status: 'pending',
+            start_time: new Date(Date.now() + 86400000).toISOString(),
+            end_time: new Date(Date.now() + 88200000).toISOString(),
+            offers_count: 3,
+            pending_until: new Date(Date.now() + 21600000).toISOString(),
+            actionable: true,
+            created_at: new Date().toISOString(),
+          },
+        },
+      };
     }
     if (cleanPath === '/availabilities') return { status: 201, data: {} };
     if (cleanPath === '/assignments') {
