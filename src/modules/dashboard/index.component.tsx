@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { Alert, Avatar, Button, Dialog, Skeleton } from '@mui/material';
 import {
   AccessTimeRounded,
+  AddShoppingCartRounded,
   ArrowForwardRounded,
   AutorenewRounded,
   CheckCircleRounded,
@@ -305,6 +306,16 @@ const Dashboard: FC = () => {
               >
                 {t('DASHBOARD.HERO.MY_SESSIONS')}
               </Button>
+              {!currentUser?.family_id && (
+                <Button
+                  component={Link}
+                  to="/buy"
+                  className="sd-hero__secondary"
+                  startIcon={<AddShoppingCartRounded />}
+                >
+                  {t('BUY.ENTRY')}
+                </Button>
+              )}
             </div>
           </div>
           <img src={heroArt} alt="" className="sd-hero__art" />
