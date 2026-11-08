@@ -1,14 +1,20 @@
-import { FC, useMemo } from 'react';
+import { FC, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import { Avatar, Button } from '@mui/material';
+import { Avatar, Button, Dialog } from '@mui/material';
 import {
   AutorenewRounded,
+  EventRepeatRounded,
   Group,
+  PauseCircleOutlineRounded,
   Person,
   Star,
   WarningAmberRounded,
 } from '@mui/icons-material';
+import FreezePackageModal from '../../../../modals/freeze-package-modal/freeze-package-modal.component';
+import ScheduleChangeModal from '../../../../modals/schedule-change-modal/schedule-change-modal.component';
+import { useCancelFreeze, useEndFreeze } from '../../../../hooks/useFreezes';
+import { weeklyPatternLabel } from '../../../../hooks/useScheduleChanges';
 import { parseISO, format } from 'date-fns';
 import { arSA } from 'date-fns/locale/ar-SA';
 import { enUS } from 'date-fns/locale/en-US';
@@ -304,7 +310,161 @@ const PackageListCard: FC<PackageListCardProps> = ({
           )}
         </footer>
       )}
+
+      {/* Pausing the lessons and changing the weekly times, while the course runs */}
+      {!exhausted && packageData.package_type === 'private_session' && (
+        <PackageChanges packageData={packageData} isTutor={isTutor} />
+      )}
     </article>
+  );
+};
+
+/**
+ * The family pauses the package (or ends a pause early, or calls one off
+ * before it starts); either side proposes new weekly times. A pause or an
+ * open proposal shows as a strip with where it stands.
+ */
+const PackageChanges: FC<{ packageData: Package; isTutor: boolean }> = ({
+  packageData,
+  isTutor,
+}) => {
+  const { t, i18n } = useTranslation();
+  const currentUser = useAppSelector(selectCurrentUser);
+  const locale = `${i18n.language}-u-nu-latn`;
+  const [modal, setModal] = useState<'freeze' | 'weekly' | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const endFreeze = useEndFreeze();
+  const cancelFreeze = useCancelFreeze();
+  const freeze = packageData.freeze;
+  const change = packageData.pending_schedule_change;
+  // A child with their own login does not pause; the parent does
+  const family =
+    currentUser?.type === 'Parent' || currentUser?.type === 'Student';
+  const minutes = (count: number) =>
+    t('MYSESSIONS.MAIN.CARD.MINUTES_COUNT', { count });
+
+  const run = async (action: () => Promise<unknown>) => {
+    setError(null);
+    try {
+      await action();
+    } catch {
+      setError(t('SESSION_CHANGES.FREEZE.ERROR'));
+    }
+  };
+
+  return (
+    <div className="pk-card__changes">
+      {freeze && (
+        <div className={`pk-card__strip pk-card__strip--${freeze.status}`}>
+          <PauseCircleOutlineRounded aria-hidden="true" />
+          <div className="pk-card__strip-text">
+            <strong>
+              {t(
+                `SESSION_CHANGES.FREEZE.STRIP.${freeze.status.toUpperCase()}`,
+                {
+                  from: freeze.starts_on,
+                  to: freeze.ends_on,
+                  resume: freeze.resumes_on,
+                },
+              )}
+            </strong>
+            {!isTutor && family && (
+              <span className="pk-card__strip-actions">
+                {freeze.status === 'active' && (
+                  <Button
+                    size="small"
+                    variant="text"
+                    disabled={endFreeze.isPending}
+                    onClick={() => run(() => endFreeze.mutateAsync(freeze.id))}
+                  >
+                    {t('SESSION_CHANGES.FREEZE.END_EARLY')}
+                  </Button>
+                )}
+                {freeze.status === 'scheduled' && (
+                  <Button
+                    size="small"
+                    variant="text"
+                    disabled={cancelFreeze.isPending}
+                    onClick={() =>
+                      run(() => cancelFreeze.mutateAsync(freeze.id))
+                    }
+                  >
+                    {t('SESSION_CHANGES.FREEZE.CALL_OFF')}
+                  </Button>
+                )}
+              </span>
+            )}
+          </div>
+        </div>
+      )}
+
+      {change && (
+        <div className="pk-card__strip pk-card__strip--change">
+          <EventRepeatRounded aria-hidden="true" />
+          <div className="pk-card__strip-text">
+            <strong>
+              {t('SESSION_CHANGES.WEEKLY.STRIP', {
+                times: weeklyPatternLabel(change.pattern, locale, minutes),
+                date: change.effective_from,
+              })}
+            </strong>
+            <Link to="/requests" className="pk-card__strip-link">
+              {t('SESSION_CHANGES.PROPOSAL.OPEN_REQUESTS')}
+            </Link>
+          </div>
+        </div>
+      )}
+
+      {error && <p className="pk-card__strip-error">{error}</p>}
+
+      <div className="pk-card__change-buttons">
+        {!isTutor && family && !freeze && (
+          <Button
+            size="small"
+            variant="outlined"
+            color="inherit"
+            startIcon={<PauseCircleOutlineRounded />}
+            onClick={() => setModal('freeze')}
+          >
+            {t('SESSION_CHANGES.FREEZE.BUTTON')}
+          </Button>
+        )}
+        {!change && !freeze && (
+          <Button
+            size="small"
+            variant="outlined"
+            color="inherit"
+            startIcon={<EventRepeatRounded />}
+            onClick={() => setModal('weekly')}
+          >
+            {t('SESSION_CHANGES.WEEKLY.BUTTON')}
+          </Button>
+        )}
+      </div>
+
+      <Dialog
+        open={modal === 'freeze'}
+        onClose={() => setModal(null)}
+        maxWidth="sm"
+        fullWidth
+      >
+        <FreezePackageModal
+          packageData={packageData}
+          handleClose={() => setModal(null)}
+        />
+      </Dialog>
+      <Dialog
+        open={modal === 'weekly'}
+        onClose={() => setModal(null)}
+        maxWidth="sm"
+        fullWidth
+      >
+        <ScheduleChangeModal
+          packageData={packageData}
+          handleClose={() => setModal(null)}
+        />
+      </Dialog>
+    </div>
   );
 };
 

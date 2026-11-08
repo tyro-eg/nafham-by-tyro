@@ -1,0 +1,154 @@
+@import '../../assets/styles/variables.scss';
+@import '../../assets/styles/mixins.scss';
+@import '../modal-kit';
+
+// Propose new weekly times: the lesson length, the tutor's recurring open
+// times by weekday, the first day, a note
+.weekly-modal {
+  @include modal-shell;
+  max-width: 60rem;
+
+  &__header {
+    @include modal-header;
+  }
+
+  &__icon {
+    @include modal-icon-chip;
+  }
+
+  &__heading {
+    @include modal-heading-text;
+  }
+
+  &__title {
+    @include modal-title;
+    font-size: $font-h4;
+  }
+
+  &__subtitle {
+    @include modal-subtitle;
+  }
+
+  &__close {
+    @include modal-close;
+  }
+
+  &__loading {
+    display: flex;
+    justify-content: center;
+    padding: $space-6;
+  }
+
+  &__label {
+    margin: $space-4 0 $space-2;
+    font-size: $font-sm;
+    font-weight: 600;
+    color: $text-strong;
+    text-align: start;
+  }
+
+  &__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $space-2;
+  }
+
+  &__chip,
+  &__time {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1.4rem;
+    border: 1.5px solid $border;
+    border-radius: $radius-pill;
+    background: $surface;
+    color: $text-body;
+    font: inherit;
+    font-size: $font-sm;
+    font-weight: 600;
+    cursor: pointer;
+    transition:
+      border-color 0.15s,
+      background-color 0.15s,
+      color 0.15s;
+
+    &:hover:not(:disabled) {
+      border-color: $gray-400;
+    }
+
+    &:focus-visible {
+      @include focus-ring;
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    &.is-selected {
+      border-color: $brand-600;
+      background: $brand-50;
+      color: $brand-700;
+    }
+  }
+
+  &__time {
+    direction: ltr;
+  }
+
+  &__weeks {
+    padding: 0.1rem 0.6rem;
+    border-radius: $radius-pill;
+    background: $warning-50;
+    color: #8a5d00;
+    font-size: $font-xs;
+  }
+
+  &__days {
+    display: grid;
+    gap: $space-3;
+  }
+
+  &__day {
+    display: grid;
+    grid-template-columns: 8rem minmax(0, 1fr);
+    gap: $space-3;
+    align-items: start;
+
+    @include respond(phone) {
+      grid-template-columns: minmax(0, 1fr);
+      gap: $space-1;
+    }
+
+    &-name {
+      padding-top: 0.6rem;
+      font-size: $font-sm;
+      font-weight: 700;
+      color: $text-strong;
+    }
+
+    &-times {
+      display: flex;
+      flex-wrap: wrap;
+      gap: $space-2;
+    }
+  }
+
+  &__hours {
+    margin: $space-3 0 0;
+    font-size: $font-sm;
+    color: $text-body;
+  }
+
+  &__from {
+    margin: $space-4 0 !important;
+  }
+
+  &__error {
+    margin-top: $space-4;
+  }
+
+  &__footer {
+    @include modal-footer;
+  }
+}

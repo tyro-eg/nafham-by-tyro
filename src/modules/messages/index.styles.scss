@@ -556,6 +556,37 @@ $own-bubble: $brand-100;
   &--system .nf-msg__admin-label {
     color: $text-muted;
   }
+
+  // An announcement's button to where it points (the requests, a package)
+  &__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin: 0.2rem 0 0.6rem 5.2rem;
+    padding: 0.4rem 1.2rem;
+    border-radius: $radius-pill;
+    background-color: $brand-50;
+    color: $brand-700;
+    font-size: $font-xs;
+    font-weight: 700;
+    text-decoration: none;
+
+    svg {
+      font-size: 1.4rem;
+    }
+
+    &:hover {
+      background-color: $brand-100;
+    }
+
+    [dir='rtl'] & {
+      margin: 0.2rem 5.2rem 0.6rem 0;
+
+      svg {
+        transform: scaleX(-1);
+      }
+    }
+  }
 }
 
 // Empty thread: who you are talking to and what the chat is for

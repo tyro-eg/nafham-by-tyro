@@ -23,8 +23,15 @@ declare module 'stream-chat' {
   }
 
   interface CustomMessageData {
-    /** An announcement from Nafham Support (the welcome message) */
+    /** An announcement from Nafham Support (the welcome message, a lesson change) */
     system?: boolean;
     template?: string;
+    /** Where in the app the announcement points (e.g. "/requests") */
+    path?: string;
+    session_id?: number;
+    reschedule_request_id?: number;
+    package_id?: number;
+    package_freeze_id?: number;
+    schedule_change_request_id?: number;
   }
 }

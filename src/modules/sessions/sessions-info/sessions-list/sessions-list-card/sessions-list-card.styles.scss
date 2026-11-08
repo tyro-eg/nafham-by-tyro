@@ -110,6 +110,50 @@
     gap: $space-2;
   }
 
+  // An open proposal to move this lesson: who asked, the times, where to answer
+  &__proposal {
+    display: flex;
+    gap: $space-3;
+    padding: $space-3 $space-4;
+    border-radius: $radius-md;
+    border: 1px dashed $brand-300;
+    background-color: $brand-50;
+    color: $text-body;
+    font-size: $font-sm;
+
+    > svg {
+      flex-shrink: 0;
+      margin-top: 0.2rem;
+      color: $brand-700;
+    }
+
+    p {
+      margin: 0;
+    }
+
+    &-title {
+      font-weight: 600;
+      color: $text-strong;
+    }
+
+    &-times {
+      direction: ltr;
+      text-align: start;
+      color: $text-body;
+
+      html[dir='rtl'] & {
+        text-align: end;
+      }
+    }
+
+    &-link {
+      display: inline-block;
+      margin-top: 0.4rem;
+      font-weight: 600;
+      color: $brand-700;
+    }
+  }
+
   &__badge {
     @include badge($gray-100, $gray-600);
     @include session-badge-icon;

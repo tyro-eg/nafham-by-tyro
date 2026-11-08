@@ -111,60 +111,8 @@ export function useInfiniteSessions(
   });
 }
 
-/**
- * Cancel a session
- */
-export function useCancelSession() {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async (sessionId: number) => {
-      await get(`/sessions/${sessionId}/cancel`);
-    },
-    onSuccess: () => {
-      // Invalidate all session queries
-      queryClient.invalidateQueries({
-        queryKey: queryKeys.sessions.all,
-      });
-      // Also invalidate calendar since sessions affect availability
-      queryClient.invalidateQueries({
-        queryKey: queryKeys.calendar.all,
-      });
-      snackActions.success('Session cancelled successfully');
-    },
-    onError: (error: ApiError) => {
-      const errorMessage =
-        error.response?.data?.error ||
-        error.message ||
-        'Failed to cancel session';
-      snackActions.error(errorMessage);
-    },
-  });
-}
-
-/**
- * End a session
- */
-export function useEndSession() {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async (sessionId: number) => {
-      await get(`/sessions/${sessionId}/end`);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: queryKeys.sessions.all,
-      });
-      snackActions.success('Session ended successfully');
-    },
-    onError: (error: ApiError) => {
-      const errorMessage =
-        error.response?.data?.error || error.message || 'Failed to end session';
-      snackActions.error(errorMessage);
-    },
-  });
-}
+// Cancelling and moving a lesson live in useSessionChanges (PATCH
+// /sessions/:id/cancel and the move proposals)
 
 /**
  * The reasons a booking was refused, as the backend states them
