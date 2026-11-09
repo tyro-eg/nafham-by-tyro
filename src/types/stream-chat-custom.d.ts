@@ -26,5 +26,11 @@ declare module 'stream-chat' {
     /** An announcement from Nafham Support (the welcome message) */
     system?: boolean;
     template?: string;
+    /** Posted by the Nafham Assistant (the bot in the support chat) */
+    assistant?: boolean;
+    /** The choices the assistant offers; tapping one answers it */
+    options?: Array<{ id: string; label: string }>;
+    /** Pages the assistant points at (a payment page, a page of the app) */
+    links?: Array<{ label: string; url: string }>;
   }
 }

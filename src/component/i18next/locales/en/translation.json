@@ -1570,7 +1570,8 @@
       "STUDENT": "Student",
       "INSTRUCTOR": "Instructor",
       "ADMIN": "Admin",
-      "SUPPORT": "Support"
+      "SUPPORT": "Support",
+      "ASSISTANT": "Assistant"
     },
     "UNKNOWN_USER": "Unknown user",
     "BACK": "Back to messages",
@@ -1616,6 +1617,11 @@
       "LESSON_TEXT": "Agree on what to cover, share material, and book sessions through the app. Nafham Support is here in the conversation if you need us.",
       "SUPPORT_TITLE": "How can we help?",
       "SUPPORT_TEXT": "Tell us about bookings, packages, payments or anything else. Nafham Support replies as soon as we can."
+    },
+    "ASSISTANT": {
+      "NAME": "Nafham Assistant",
+      "OPTIONS": "Assistant options",
+      "UNAVAILABLE": "The assistant is unavailable right now. Nafham Support will reply here."
     }
   },
   "SESSION_REQUEST": {
