@@ -50,6 +50,9 @@ const Packages = lazy(() => import('../../modules/packages/index.component'));
 const Assistant = lazy(() => import('../../modules/assistant/index.component'));
 const Terms = lazy(() => import('../../modules/terms/index.component'));
 const TrialPage = lazy(() => import('../../modules/trial/index.component'));
+const TrialRequests = lazy(
+  () => import('../../modules/trial-requests/index.component'),
+);
 const BuyPage = lazy(() => import('../../modules/buy/index.component'));
 const FamilyHome = lazy(() => import('../../modules/family/index.component'));
 const FamilySettings = lazy(
@@ -220,6 +223,16 @@ const RoutesComponent: React.FC<RoutesProps> = ({ currentUser }) => {
           element={
             <GuardedRoute
               element={<Assistant />}
+              auth={!!currentUser && currentUser.type === 'Tutor'}
+            />
+          }
+        />
+        {/* A tutor's free-trial requests; their emails and chat notices link here */}
+        <Route
+          path="/trial_requests"
+          element={
+            <GuardedRoute
+              element={<TrialRequests />}
               auth={!!currentUser && currentUser.type === 'Tutor'}
             />
           }

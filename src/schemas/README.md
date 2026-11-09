@@ -342,7 +342,7 @@ const ProfileUpdateForm = () => {
 
 ### Trial Session Schema
 
-**Purpose**: Validates trial session booking data.
+**Purpose**: Validates a direct free-trial request (`POST /trial_requests`).
 
 **Fields**:
 - `tutor_id`: Required, number or string, tutor ID
@@ -359,10 +359,10 @@ const ProfileUpdateForm = () => {
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { trialSessionSchema, TrialSessionFormData } from '@/schemas/sessionSchemas';
-import { useBookTrialSession } from '@/hooks/useSessions';
+import { useCreateTrialRequest } from '@/hooks/useTrial';
 
 const TrialBookingForm = ({ tutorId, subjectId }: Props) => {
-  const bookTrial = useBookTrialSession();
+  const createRequest = useCreateTrialRequest();
   
   const { register, handleSubmit, formState: { errors } } = useForm<TrialSessionFormData>({
     resolver: zodResolver(trialSessionSchema),
@@ -373,7 +373,14 @@ const TrialBookingForm = ({ tutorId, subjectId }: Props) => {
   });
 
   const onSubmit = async (data: TrialSessionFormData) => {
-    await bookTrial.mutateAsync(data);
+    // A trial is a request the tutor confirms
+    await createRequest.mutateAsync({
+      tutor_id: Number(data.tutor_id),
+      grade_subject_id: Number(data.grade_subject_id),
+      start_time: data.start_time,
+      time_zone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+      dispatch: 'direct',
+    });
   };
 
   return (

@@ -46,6 +46,7 @@ import RenewAllSheet from '../payments/renew-all-sheet.component';
 import RenewAllBanner from '../payments/renew-all-banner.component';
 import OpenPaymentBanner from '../payments/open-payment-banner.component';
 import TrialFollowUps from '../buy/trial-follow-ups.component';
+import TrialRequestsCard from '../trial/trial-requests-card.component';
 import '../dashboard/dashboard.styles.scss';
 import './family.styles.scss';
 
@@ -510,6 +511,11 @@ const FamilyHome: FC = () => {
           >
             {t('FAMILY.TERMS.PENDING')}
           </Alert>
+        )}
+
+        {/* Free trials waiting for an instructor, for every child */}
+        {children && children.length > 0 && (
+          <TrialRequestsCard allChildren showStudent={children.length > 1} />
         )}
 
         {loading && (

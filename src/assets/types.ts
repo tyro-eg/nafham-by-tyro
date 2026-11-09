@@ -168,6 +168,8 @@ export type Field = {
 
 export type Instructor = {
   id: number;
+  /** Takes free-trial requests outside their published times */
+  wants_students?: boolean;
   available?: boolean;
   online?: boolean;
   rate_to_display?: number;
@@ -242,6 +244,8 @@ export type CurrentUser = {
   completed_sessions_count?: number;
   cancelled_sessions_count?: number;
   recommended?: boolean;
+  /** Tutors: takes free-trial requests outside their published times */
+  wants_students?: boolean;
   unscheduled_hours?: number;
   upcoming_sessions_count?: number;
   video_url?: string;
