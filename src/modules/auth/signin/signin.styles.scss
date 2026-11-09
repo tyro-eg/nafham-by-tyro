@@ -1,7 +1,237 @@
 @import '../../../assets/styles/variables.scss';
 @import '../../../assets/styles/mixins.scss';
-@import '../auth-layout';
 
-.login {
-  @include auth-layout;
+.signin {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  min-height: calc(100vh - #{$header-height});
+  background-color: $surface;
+
+  @include respond(tab-port) {
+    grid-template-columns: minmax(0, 1fr);
+    min-height: 0;
+  }
+
+  // ---------- brand panel ----------
+  &__panel {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: $space-6;
+    padding: $space-7 $space-8;
+    overflow: hidden;
+    color: $text-on-dark;
+    background-color: $navy-950;
+    background-image:
+      radial-gradient(
+        50rem 30rem at 0% 0%,
+        rgba($brand-500, 0.45),
+        transparent 70%
+      ),
+      radial-gradient(
+        40rem 26rem at 100% 100%,
+        rgba($accent-400, 0.2),
+        transparent 70%
+      );
+
+    @include respond(tab-land) {
+      padding: $space-6;
+    }
+
+    @include respond(tab-port) {
+      gap: $space-4;
+      padding: $space-5 $space-5 0;
+    }
+  }
+
+  &__logo {
+    display: inline-flex;
+    width: fit-content;
+    padding: 0.6rem 1rem;
+    border-radius: $radius-sm;
+    background-color: rgba(255, 255, 255, 0.92);
+
+    img {
+      display: block;
+      height: 3.2rem;
+      width: auto;
+    }
+  }
+
+  &__panel-copy {
+    max-width: 44rem;
+    text-align: start;
+  }
+
+  &__eyebrow {
+    @include eyebrow;
+    margin-bottom: $space-3;
+    color: $brand-300;
+
+    html[dir='rtl'] & {
+      letter-spacing: 0;
+    }
+  }
+
+  &__headline {
+    margin-bottom: $space-3;
+    font-size: 4.4rem;
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.035em;
+    color: $surface;
+
+    html[dir='rtl'] & {
+      line-height: 1.3;
+      letter-spacing: 0;
+    }
+
+    @include respond(tab-land) {
+      font-size: 3.6rem;
+    }
+
+    @include respond(tab-port) {
+      font-size: 3rem;
+    }
+  }
+
+  &__sub {
+    font-size: $font-base;
+    line-height: 1.6;
+    color: $text-on-dark-muted;
+  }
+
+  // ---------- quote ----------
+  &__quote {
+    position: relative;
+    z-index: 1;
+    max-width: 40rem;
+    margin: 0;
+    padding: $space-5;
+    border-radius: $radius-lg;
+    background-color: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    backdrop-filter: blur(8px);
+    text-align: start;
+
+    blockquote {
+      margin: 0 0 $space-3;
+      font-size: $font-base;
+      line-height: 1.65;
+      color: rgba(255, 255, 255, 0.92);
+    }
+
+    figcaption {
+      display: flex;
+      align-items: center;
+      gap: $space-3;
+      font-size: $font-sm;
+      color: $text-on-dark-muted;
+    }
+
+    @include respond(tab-port) {
+      display: none;
+    }
+  }
+
+  &__quote-mark.MuiSvgIcon-root {
+    position: absolute;
+    top: $space-2;
+    inset-inline-end: $space-3;
+    font-size: 5.6rem;
+    color: rgba(255, 255, 255, 0.12);
+
+    html[dir='rtl'] & {
+      transform: scaleX(-1);
+    }
+  }
+
+  &__stars {
+    display: inline-flex;
+    color: $accent-400;
+
+    .MuiSvgIcon-root {
+      font-size: 1.5rem;
+    }
+  }
+
+  // ---------- tutor ----------
+  &__tutor {
+    position: absolute;
+    bottom: 0;
+    inset-inline-end: -4%;
+    width: 46%;
+    max-width: 36rem;
+    aspect-ratio: 1 / 1.06;
+    pointer-events: none;
+
+    img {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      width: 100%;
+      height: 92%;
+      transform: translateX(-50%);
+      object-fit: contain;
+      object-position: bottom center;
+      filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.4));
+    }
+
+    @include respond(tab-land) {
+      width: 42%;
+    }
+
+    @include respond(tab-port) {
+      position: relative;
+      inset-inline-end: auto;
+      width: 60%;
+      max-width: 24rem;
+      margin: 0 auto;
+    }
+  }
+
+  &__ring {
+    position: absolute;
+    bottom: -20%;
+    left: 50%;
+    width: 120%;
+    aspect-ratio: 1;
+    transform: translateX(-50%);
+    border-radius: 50%;
+    border: 1.5px solid rgba(255, 255, 255, 0.16);
+    background: radial-gradient(
+      circle,
+      rgba($brand-500, 0.35),
+      transparent 65%
+    );
+  }
+
+  // ---------- form column ----------
+  &__form {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: $space-8 $space-6;
+
+    @include respond(tab-port) {
+      padding: $space-6 $space-5;
+    }
+
+    @include respond(phone) {
+      padding: $space-5 $space-4;
+    }
+  }
+
+  &__form-inner {
+    width: 100%;
+    max-width: 44rem;
+
+    // The shared form surface is already the page here: no card around it
+    .login-container {
+      padding: 0;
+      border: 0;
+      box-shadow: none;
+      background: transparent;
+    }
+  }
 }

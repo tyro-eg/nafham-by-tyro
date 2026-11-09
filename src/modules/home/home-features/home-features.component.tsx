@@ -43,10 +43,7 @@ const HomeFeatures: FC = () => {
   return (
     <section className="landing__features">
       <div className="ds-container">
-        <p className="features-title">
-          {t('LANDING.BLOCK1.FEATURED.PART1')}{' '}
-          <span>{t('LANDING.BLOCK1.FEATURED.PART2')}</span>
-        </p>
+        <p className="features-title">{t('LANDING.PRESS')}</p>
         <div className="features-images">
           {features.map(({ image, alt, url }, index) => (
             <a

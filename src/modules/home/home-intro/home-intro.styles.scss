@@ -1,120 +1,119 @@
 @import '../../../assets/styles/variables.scss';
 @import '../../../assets/styles/mixins.scss';
 
-.home-hero {
+// Centred hero over a dotted grid; the session window below it tilts back
+// and fades out, so the next section starts on clean white.
+.hero {
   position: relative;
   overflow: hidden;
-  color: $text-on-dark;
-  // Original brand hero: sky-blue gradient artwork. Its bottom strip is
-  // transparent, so a matching gradient sits underneath to fill any gap.
-  background-color: $brand-400;
-  background-image:
-    url('../../../assets/images/newLanding/group1.webp'),
-    linear-gradient(
-      90deg,
-      #01caff 0%,
-      #00a5ff 25%,
-      #0081fe 50%,
-      #015dff 75%,
-      #0036ff 100%
-    );
-  background-size:
-    cover,
-    100% 100%;
-  background-position: top center;
-  background-repeat: no-repeat;
+  background-color: $surface;
+  background-image: radial-gradient(
+    50% 40% at 50% 0%,
+    $brand-100,
+    transparent 70%
+  );
 
-  // On tall, narrow heroes scale by height so the transparent strip
-  // falls below the section instead of showing the fill gradient.
-  @include respond(tab-port) {
-    background-size:
-      auto 125%,
-      100% 100%;
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(
+      rgba($navy-950, 0.12) 1px,
+      transparent 1px
+    );
+    background-size: 2.2rem 2.2rem;
+    mask-image: linear-gradient(#000, transparent 70%);
+    pointer-events: none;
   }
 
   &__inner {
-    display: grid;
-    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
-    align-items: end;
-    column-gap: $space-7;
-
-    @include respond(tab-port) {
-      grid-template-columns: minmax(0, 1fr);
-    }
-  }
-
-  &__content {
-    padding: $space-9 0;
-    text-align: start;
-
-    @include respond(tab-port) {
-      padding: $space-8 0 $space-6;
-    }
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: $space-8;
+    text-align: center;
 
     @include respond(phone) {
-      padding: $space-7 0 $space-5;
+      padding-top: $space-6;
     }
   }
 
-  &__eyebrow {
+  // ---------- pill ----------
+  &__pill {
     display: inline-flex;
     align-items: center;
     gap: $space-2;
-    margin-bottom: $space-4;
+    margin-bottom: $space-5;
+    padding: 0.5rem 1.4rem 0.5rem 0.6rem;
+    border: 1px solid $border;
+    border-radius: $radius-pill;
+    background-color: $surface;
+    box-shadow: $shadow-xs;
     font-size: $font-sm;
-    font-weight: 600;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: $accent-400;
-
-    &::before {
-      content: '';
-      width: 2.4rem;
-      height: 2px;
-      border-radius: 2px;
-      background-color: currentColor;
-    }
+    font-weight: 500;
+    color: $text-body;
 
     .rtl & {
-      letter-spacing: 0;
-    }
-
-    @include respond(phone) {
-      font-size: $font-xs;
+      padding: 0.5rem 0.6rem 0.5rem 1.4rem;
     }
   }
 
+  &__faces {
+    display: inline-flex;
+
+    img {
+      width: 2.8rem;
+      height: 2.8rem;
+      border-radius: 50%;
+      border: 2px solid $surface;
+      object-fit: cover;
+
+      & + img {
+        margin-inline-start: -0.9rem;
+      }
+    }
+  }
+
+  // ---------- headline ----------
   &__title {
-    max-width: 16ch;
-    margin-bottom: $space-5;
-    font-size: $font-display;
-    font-weight: 700;
-    line-height: 1.1;
-    letter-spacing: -0.03em;
-    color: $text-on-dark;
+    max-width: 15ch;
+    margin-bottom: $space-4;
+    font-size: 7.2rem;
+    font-weight: 800;
+    line-height: 0.98;
+    letter-spacing: -0.04em;
+    color: $navy-950;
+    text-wrap: balance;
 
     .rtl & {
       max-width: 20ch;
-      line-height: 1.3;
+      line-height: 1.25;
       letter-spacing: 0;
     }
 
     @include respond(tab-land) {
-      font-size: $font-h1 + 0.4rem;
+      font-size: 5.8rem;
     }
 
     @include respond(phone) {
-      font-size: 3.4rem;
-      margin-bottom: $space-4;
+      font-size: 4.2rem;
     }
   }
 
-  &__description {
-    max-width: 54rem;
+  &__title-accent {
+    background: linear-gradient(90deg, $brand-700, $brand-400);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  &__lead {
+    max-width: 56rem;
     margin-bottom: $space-6;
     font-size: $font-lg;
     line-height: 1.65;
-    color: rgba(255, 255, 255, 0.8);
+    color: $text-body;
 
     @include respond(phone) {
       font-size: $font-base;
@@ -125,133 +124,243 @@
   &__actions {
     display: flex;
     flex-wrap: wrap;
-    align-items: center;
-    gap: $space-3;
+    justify-content: center;
+    gap: $space-3 $space-4;
+    margin-bottom: $space-7;
 
     @include respond(phone) {
       flex-direction: column;
       align-items: stretch;
-    }
-
-    .MuiButton-root {
-      min-height: 5.2rem;
-      padding: 1.2rem 2.8rem;
-      font-size: $font-base;
+      width: 100%;
+      margin-bottom: $space-6;
     }
   }
 
   &__secondary.MuiButton-root {
-    @include button-ghost-on-dark;
     min-height: 5.2rem;
-  }
-
-  &.rtl &__cta-icon {
-    transform: scaleX(-1);
-  }
-
-  // ---------- Trust row ----------
-  &__trust {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: $space-4 $space-5;
-    margin-top: $space-7;
-    padding-top: $space-5;
-    border-top: 1px solid rgba(255, 255, 255, 0.12);
-
-    @include respond(phone) {
-      margin-top: $space-6;
-      gap: $space-4;
-    }
-  }
-
-  &__rating {
-    display: inline-flex;
-    align-items: center;
-    gap: $space-2;
-  }
-
-  &__stars {
-    display: inline-flex;
-    color: $accent-400;
-
-    .MuiSvgIcon-root {
-      font-size: 1.8rem;
-    }
-  }
-
-  &__rating-value {
-    font-size: $font-sm;
+    padding: 1.2rem 2.4rem;
+    border-radius: $radius-pill;
+    border: 1px solid $border-strong;
+    background-color: $surface;
+    font-size: $font-base;
     font-weight: 600;
-    color: $text-on-dark;
-    direction: ltr;
-    unicode-bidi: isolate;
+    text-transform: none;
+    color: $navy-900;
+
+    &:hover {
+      background-color: $gray-50;
+    }
+
+    .MuiButton-startIcon {
+      margin-inline-end: $space-2;
+      margin-inline-start: 0;
+      color: $brand-700;
+    }
   }
 
-  &__trust-divider {
-    width: 1px;
-    height: 2.4rem;
-    background-color: rgba(255, 255, 255, 0.16);
+  // ---------- the session window ----------
+  &__stage {
+    position: relative;
+    width: 100%;
+    max-width: 96rem;
+    perspective: 160rem;
+  }
+
+  &__fade {
+    position: absolute;
+    inset: auto 0 0;
+    height: 14rem;
+    background: linear-gradient(transparent, $surface);
+    pointer-events: none;
+  }
+
+  .window {
+    border-radius: $radius-lg $radius-lg 0 0;
+    overflow: hidden;
+    background-color: #0f1424;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 -10px 60px rgba($navy-950, 0.25);
+    transform: rotateX(6deg);
+    transform-origin: top center;
 
     @include respond(phone) {
-      display: none;
+      transform: none;
+      border-radius: $radius-md $radius-md 0 0;
     }
-  }
 
-  &__press {
-    display: inline-flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: $space-3 $space-4;
-  }
-
-  &__press-label {
-    font-size: $font-xs;
-    font-weight: 500;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: rgba(255, 255, 255, 0.6);
-
-    .rtl & {
-      letter-spacing: 0;
+    &__bar {
+      display: flex;
+      align-items: center;
+      gap: $space-3;
+      padding: 1.2rem 1.6rem;
+      background-color: #182038;
+      color: #c5d0e0;
+      font-size: $font-xs;
+      font-weight: 600;
+      text-align: start;
     }
-  }
 
-  &__press-logos {
-    display: inline-flex;
-    align-items: center;
-    gap: $space-5;
+    &__dots {
+      display: inline-flex;
+      gap: 0.5rem;
 
-    img {
+      span {
+        width: 0.9rem;
+        height: 0.9rem;
+        border-radius: 50%;
+        background-color: #334155;
+      }
+    }
+
+    &__title {
+      flex: 1;
+    }
+
+    &__timer {
+      color: #ff6b6b;
+      font-variant-numeric: tabular-nums;
+      direction: ltr;
+
+      &::before {
+        content: '';
+        display: inline-block;
+        width: 0.7rem;
+        height: 0.7rem;
+        margin-inline-end: 0.5rem;
+        border-radius: 50%;
+        background-color: currentColor;
+        vertical-align: middle;
+      }
+    }
+
+    // One-to-one: the tutor's stage takes the width, the chat sits beside it
+    &__body {
+      display: grid;
+      grid-template-columns: minmax(0, 2.6fr) minmax(0, 1fr);
+      gap: $space-2;
+      padding: $space-2;
+
+      @include respond(phone) {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    &__tile {
+      position: relative;
+      border-radius: $radius-sm;
+      overflow: hidden;
+      background-color: #222a44;
+
+      &--main {
+        aspect-ratio: 16 / 9;
+      }
+    }
+
+    &__video {
       display: block;
-      height: 1.8rem;
-      width: auto;
-      // Render the press logos as quiet light marks on navy. Invert +
-      // screen also drops logos' solid white backgrounds (e.g. CNBC).
-      filter: grayscale(1) invert(1);
-      mix-blend-mode: screen;
-      opacity: 0.75;
-    }
-  }
-
-  // ---------- Media ----------
-  &__media {
-    display: flex;
-    justify-content: center;
-    align-self: end;
-
-    @include respond(tab-port) {
-      max-width: 52rem;
       width: 100%;
-      margin: 0 auto;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 30%;
     }
 
-    .macbook-image {
-      display: block;
-      width: 100%;
-      max-width: 56rem;
-      height: auto;
-      filter: drop-shadow(0 24px 48px rgba(0, 0, 0, 0.35));
+    // The student, picture-in-picture
+    &__pip {
+      position: absolute;
+      bottom: 0.8rem;
+      inset-inline-end: 0.8rem;
+      width: 24%;
+      min-width: 9rem;
+      aspect-ratio: 4 / 3;
+      border-radius: $radius-sm;
+      overflow: hidden;
+      border: 2px solid rgba(255, 255, 255, 0.5);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+
+      img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      span {
+        position: absolute;
+        bottom: 0.4rem;
+        inset-inline-start: 0.5rem;
+        padding: 0.1rem 0.6rem;
+        border-radius: $radius-pill;
+        background-color: rgba($navy-950, 0.65);
+        color: $surface;
+        font-size: 1rem;
+        font-weight: 600;
+      }
+    }
+
+    &__name {
+      position: absolute;
+      bottom: 0.8rem;
+      inset-inline-start: 0.8rem;
+      padding: 0.3rem 0.9rem;
+      border-radius: $radius-pill;
+      background-color: rgba($navy-950, 0.65);
+      color: $surface;
+      font-size: $font-xs;
+      font-weight: 600;
+      backdrop-filter: blur(4px);
+    }
+
+    &__side {
+      display: flex;
+      flex-direction: column;
+      gap: $space-2;
+      padding: $space-3;
+      border-radius: $radius-sm;
+      background-color: #182038;
+      color: #c5d0e0;
+      font-size: $font-xs;
+      text-align: start;
+
+      strong {
+        color: $surface;
+        font-size: $font-sm;
+      }
+    }
+
+    &__msg {
+      max-width: 90%;
+      padding: 0.7rem 1rem;
+      border-radius: $radius-sm;
+      background-color: rgba(255, 255, 255, 0.08);
+      line-height: 1.4;
+
+      &--me {
+        align-self: flex-end;
+        background-color: $brand-500;
+        color: #0b1020;
+      }
+    }
+
+    &__package {
+      margin-top: auto;
+    }
+
+    &__bar-track {
+      display: flex;
+      height: 0.8rem;
+      border-radius: $radius-pill;
+      background-color: #2a3350;
+      overflow: hidden;
+    }
+
+    &__bar-used {
+      width: 46%;
+      background-color: $brand-500;
+    }
+
+    &__bar-booked {
+      width: 20%;
+      background-color: rgba($brand-500, 0.45);
     }
   }
 }

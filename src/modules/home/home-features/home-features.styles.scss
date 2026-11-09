@@ -1,31 +1,40 @@
 @import '../../../assets/styles/variables.scss';
 @import '../../../assets/styles/mixins.scss';
 
+// A quiet "featured in" strip right under the hero
 .landing__features {
-  @include section($surface-alt);
+  padding: $space-5 0;
+  background-color: $surface;
   border-top: 1px solid $border;
-
-  @include respond(phone) {
-    padding: $space-6 0;
-  }
+  border-bottom: 1px solid $border;
 
   .ds-container {
     display: flex;
-    flex-direction: column;
+    flex-wrap: wrap;
     align-items: center;
-    gap: $space-5;
+    justify-content: center;
+    gap: $space-4 $space-7;
+
+    @include respond(phone) {
+      flex-direction: column;
+      gap: $space-4;
+    }
   }
 
   .features-title {
-    font-size: $font-sm;
+    font-size: $font-xs;
     font-weight: 600;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
-    text-align: center;
     color: $text-muted;
+    white-space: nowrap;
 
     html[dir='rtl'] & {
       letter-spacing: 0;
+    }
+
+    span {
+      color: inherit;
     }
   }
 
@@ -34,40 +43,33 @@
     align-items: center;
     justify-content: center;
     flex-wrap: wrap;
-    gap: $space-5 $space-8;
+    gap: $space-4 $space-7;
 
     @include respond(phone) {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      justify-items: center;
-      gap: $space-5 $space-4;
+      gap: $space-4 $space-5;
     }
 
     .feature-logo {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-height: 4.4rem;
-      padding: $space-1 $space-2;
       border-radius: $radius-sm;
 
       .image {
         display: block;
         width: auto;
-        max-width: 16rem;
-        height: 3.6rem;
+        max-width: 14rem;
+        height: 2.8rem;
         object-fit: contain;
         filter: grayscale(1);
-        // Hide solid white image backgrounds (e.g. CNBC) on the tinted section
         mix-blend-mode: multiply;
-        opacity: 0.55;
+        opacity: 0.5;
         transition:
           filter $transition,
           opacity $transition;
 
         @include respond(phone) {
-          max-width: 100%;
-          height: 2.8rem;
+          height: 2.4rem;
         }
       }
 

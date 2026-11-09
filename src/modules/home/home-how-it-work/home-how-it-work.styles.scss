@@ -1,92 +1,84 @@
 @import '../../../assets/styles/variables.scss';
 @import '../../../assets/styles/mixins.scss';
 
+// Three numbered cards inside one tinted container
 .landing__how-it-works {
-  @include section;
-  // Clear the fixed header when jumped to from the hero link
-  scroll-margin-top: 3.6rem + $header-height;
+  @include section($surface);
 
-  @include respond(phone) {
-    scroll-margin-top: 6.4rem;
-  }
-
-  .how-it-works {
-    position: relative;
+  .steps {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: $space-5;
-    max-width: 104rem;
+    gap: $space-4;
+    max-width: 110rem;
     margin: 0 auto;
-    padding: 0;
+    padding: $space-4;
+    border-radius: $radius-xl;
+    background-color: $gray-50;
+    border: 1px solid $border;
     list-style: none;
 
     @include respond(tab-port) {
       grid-template-columns: minmax(0, 1fr);
       max-width: 56rem;
-      gap: $space-4;
     }
 
-    &__card {
-      @include card($space-6 $space-5);
+    @include respond(phone) {
+      padding: $space-3;
+      border-radius: $radius-lg;
+    }
+
+    &__item {
+      position: relative;
       display: flex;
       flex-direction: column;
-      align-items: flex-start;
+      gap: $space-3;
+      padding: $space-5;
+      border-radius: $radius-lg;
+      background-color: $surface;
+      border: 1px solid $border;
       text-align: start;
-
-      @include respond(phone) {
-        padding: $space-5 $space-4;
-      }
-
-      .title {
-        margin-bottom: $space-2;
-        font-size: $font-h4;
-        font-weight: 600;
-        line-height: 1.3;
-        color: $text-strong;
-      }
-
-      .description {
-        font-size: $font-base;
-        line-height: 1.6;
-        color: $text-body;
-      }
+      overflow: hidden;
     }
 
-    &__card-head {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      width: 100%;
-      margin-bottom: $space-5;
+    // A big faint ordinal in the corner
+    &__number {
+      position: absolute;
+      top: $space-3;
+      inset-inline-end: $space-4;
+      font-size: 4.8rem;
+      font-weight: 800;
+      line-height: 1;
+      letter-spacing: -0.04em;
+      color: $gray-100;
+      direction: ltr;
     }
 
-    &__icon {
+    &__marker {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 6.4rem;
-      height: 6.4rem;
+      width: 5.2rem;
+      height: 5.2rem;
       border-radius: $radius-md;
       background-color: $brand-50;
-
-      .icon {
-        display: block;
-        width: 4.4rem;
-        height: 4.4rem;
-      }
+      color: $brand-700;
     }
 
-    &__step {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 3.2rem;
-      height: 3.2rem;
-      border-radius: 50%;
-      border: 1px solid $border-strong;
-      font-size: $font-sm;
-      font-weight: 700;
-      color: $text-muted;
+    &__icon.MuiSvgIcon-root {
+      font-size: 2.6rem;
+    }
+
+    &__title {
+      font-size: $font-h4;
+      font-weight: 600;
+      line-height: 1.3;
+      color: $text-strong;
+    }
+
+    &__description {
+      font-size: $font-base;
+      line-height: 1.6;
+      color: $text-body;
     }
   }
 }

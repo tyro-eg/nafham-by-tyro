@@ -7,20 +7,25 @@ import { selectCurrentUser } from '../../redux/user/user.selectors';
 import { useRtlClass } from '../../assets/utils/utils';
 
 import HomeIntro from './home-intro/home-intro.component';
-import HomeFields from './home-fields/home-fields.component';
-import HomeInstructors from './home-instructors/home-instructors.component';
+import HomeFeatures from './home-features/home-features.component';
 import HomeStatistics from './home-statistics/home-statistics.component';
-import HomeTestimonial from './home-testimonial/home-testimonial.component';
+import HomeFields from './home-fields/home-fields.component';
 import HomeHowItWork from './home-how-it-work/home-how-it-work.component';
 import HomeWhyUs from './why-us/why-us.component';
+import HomeInstructors from './home-instructors/home-instructors.component';
+import HomeTestimonial from './home-testimonial/home-testimonial.component';
 import HomeReadyForLearning from './home-ready-for-learning/home-ready-for-learning.component';
-import HomeFeatures from './home-features/home-features.component';
 import FreeTrailModal from '../../modals/free-trail-modal/free-trail-modal.component';
 import RegisterModal from '../../modals/register-modal/register-modal.component';
 import LoginModal from '../../modals/login-modal/login-modal.component';
 
 import './index.scss';
 
+/**
+ * The marketing landing page: a light, editorial layout. Every section
+ * reads top-down (hero, proof, curricula, how it works, why us, tutors,
+ * testimonials, call to action) and shares the heading styles in index.scss.
+ */
 const Home: FC = () => {
   const rtlClass = useRtlClass();
   const [openFreeTrailModal, setOpenFreeTrailModal] = useState(false);
@@ -44,14 +49,14 @@ const Home: FC = () => {
   return (
     <div className={`home ${rtlClass}`}>
       <HomeIntro openFreeTrail={triggerOpenFreeTrailModal} />
-      <HomeFields />
-      <HomeInstructors />
+      <HomeFeatures />
       <HomeStatistics />
-      <HomeTestimonial />
+      <HomeFields />
       <HomeHowItWork />
       <HomeWhyUs />
+      <HomeInstructors />
+      <HomeTestimonial />
       <HomeReadyForLearning openFreeTrail={triggerOpenFreeTrailModal} />
-      <HomeFeatures />
       {openFreeTrailModal && (
         <Dialog
           maxWidth="md"

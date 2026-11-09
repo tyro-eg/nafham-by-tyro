@@ -51,7 +51,8 @@
     "BROWSE_INSTRUCTORS": "Browse instructors",
     "MESSAGES": "Messages",
     "CALENDAR": "Calendar",
-    "AVAILABILITY": "Availability"
+    "AVAILABILITY": "Availability",
+    "HOMEWORK": "Homework"
   },
   "CARDS": {
     "FREE_ASSESMENT": {
@@ -184,7 +185,83 @@
         "DESCRIPTION": "Enjoy communicating online through interactive sessions."
       }
     },
-    "TESTIMONIAL": "Some special words from our students about us"
+    "TESTIMONIAL": "Some special words from our students about us",
+    "HERO": {
+      "PILL": "Trusted by 5,000+ students and parents",
+      "TITLE_1": "Tutoring that fits",
+      "TITLE_2": "your child's week.",
+      "PROOF_RATING": "average rating",
+      "PROOF_TUTORS": "Hand-picked, verified tutors",
+      "PROOF_FLEX": "Book, move or cancel in a tap",
+      "CHIP_LIVE": "Live session",
+      "CHIP_COURSE_LABEL": "Today, 5:00 PM",
+      "CHIP_COURSE": "IGCSE Maths · Year 10",
+      "CHIP_PROGRESS": "Package: 24 hours",
+      "MOCK_TITLE": "IGCSE Maths · Live session",
+      "MOCK_TUTOR": "Ms. Ghada · Tutor",
+      "NEXT_LABEL": "Next session",
+      "HOURS_META": "11 taught · 6 booked · 7 free",
+      "CHAT_TITLE": "Session chat",
+      "CHAT_1": "Can you show that step again?",
+      "CHAT_2": "Sure, watch the board.",
+      "CHAT_3": "Got it, thanks!",
+      "MOCK_STUDENT": "Adam · Student"
+    },
+    "PRESS": "As featured in",
+    "STATS": {
+      "ITEM1": "Sessions delivered",
+      "ITEM2": "Students taught",
+      "ITEM3": "Average rating"
+    },
+    "CURRICULA": {
+      "TITLE": "Every curriculum, one place",
+      "SUBTITLE": "From IGCSE to the UAE national system, with tutors who teach that exact syllabus."
+    },
+    "STEPS": {
+      "TITLE": "From first message to first lesson in a day"
+    },
+    "WHY": {
+      "ITEM4": {
+        "TITLE": "Progress you can see",
+        "DESCRIPTION": "Every package shows the hours taught, the hours booked and what is still free, so nothing is a surprise."
+      },
+      "TUTOR_CARD": {
+        "INITIALS": "GA",
+        "NAME": "Ghada A.",
+        "SUBJECT": "IGCSE Mathematics · 8 years",
+        "SESSIONS": "1,200 sessions",
+        "VERIFIED": "Verified"
+      },
+      "SCHEDULE": {
+        "DAYS": "Sat,Sun,Mon,Tue,Wed"
+      },
+      "SUPPORT": {
+        "QUESTION": "Can we move Tuesday's session to 6pm?",
+        "ANSWER": "Done. Your tutor has confirmed 6pm."
+      },
+      "PROGRESS": {
+        "USED": "Taught",
+        "SCHEDULED": "Booked",
+        "FREE": "Free to book"
+      }
+    },
+    "CLOSING": {
+      "EYEBROW": "Start with a free session",
+      "NOTE": "No card needed. Pick a tutor, pick a time, and see the difference."
+    },
+    "TUTORS": {
+      "ENGLISH": "English",
+      "MATHS": "Maths",
+      "FRENCH": "French",
+      "ARABIC": "Arabic",
+      "TITLE": "Tutors families ask for by name",
+      "SUBTITLE": "Hand-picked for the subject and the syllabus, and rated by the students they teach."
+    },
+    "TESTIMONIALS": {
+      "TITLE": "What parents and students say",
+      "SUBTITLE": "Unedited, from families who learn with us.",
+      "ROLE": "Parent"
+    }
   },
   "ENGLISH_COURSE": {
     "BLOCK1": {
@@ -752,6 +829,7 @@
       "UPCOMING": "Upcoming Sessions",
       "UNSCHEDULED": "Unscheduled Hours",
       "PREVIOUS": "Previous Sessions",
+      "COMPLETED": "Completed Sessions",
       "CANCELLED": "Cancelled Sessions"
     },
     "SCHEDULE": {
@@ -887,6 +965,13 @@
     "TAB": {
       "STUDENT": "Student",
       "INSTRUCTOR": "Instructor"
+    },
+    "PANEL": {
+      "EYEBROW": "Nafham Learning",
+      "TITLE": "Pick up right where you left off.",
+      "SUBTITLE": "Your sessions, packages and tutors are waiting.",
+      "QUOTE": "She is the best teacher we've dealt with. Ahmed got better at school and she follows up with him every week.",
+      "QUOTE_BY": "Ahmed's parent"
     }
   },
   "IMPERSONATE": {
@@ -1224,6 +1309,7 @@
     "STATS": {
       "UPCOMING": "Upcoming sessions",
       "HOURS_LEARNED": "Hours learned",
+      "COMPLETED": "Completed sessions",
       "HOURS_REMAINING": "Hours remaining",
       "ATTENDANCE": "Attendance"
     },
@@ -1553,5 +1639,146 @@
     "SAVED": "Availability saved",
     "SAVE_FAILED": "Could not save your availability.",
     "LOAD_FAILED": "Could not load availability."
+  },
+  "HOMEWORK": {
+    "TITLE": "Homework",
+    "SUBTITLE_TUTOR": "Set homework for your students, review their work and send feedback.",
+    "SUBTITLE_STUDENT": "Your assignments, their due dates and your tutors' feedback.",
+    "ASSIGN": "Assign homework",
+    "FILTER_STUDENT": "Student",
+    "ALL_STUDENTS": "All students",
+    "FILTER": {
+      "ALL": "All",
+      "TUTOR_ASSIGNED": "Waiting for submission",
+      "TUTOR_SUBMITTED": "To review",
+      "TUTOR_REVIEWED": "Reviewed",
+      "STUDENT_ASSIGNED": "To do",
+      "STUDENT_SUBMITTED": "Submitted",
+      "STUDENT_REVIEWED": "Reviewed"
+    },
+    "STATUS": {
+      "DUE_IN_DAYS_one": "Due in {{count}} day",
+      "DUE_IN_DAYS_other": "Due in {{count}} days",
+      "DUE_TODAY": "Due today",
+      "OVERDUE": "Overdue",
+      "SUBMITTED": "Submitted",
+      "TO_REVIEW": "To review",
+      "REVIEWED": "Reviewed",
+      "FEEDBACK_READY": "Feedback ready"
+    },
+    "CARD": {
+      "STUDENT": "Student",
+      "TUTOR": "Tutor",
+      "COURSE": "Course",
+      "DUE": "Due",
+      "REVIEW": "Review"
+    },
+    "EMPTY_TITLE_TUTOR": "No homework yet",
+    "EMPTY_TEXT_TUTOR": "Assign your first piece of homework and it will show up here.",
+    "EMPTY_TITLE_STUDENT": "Nothing to do right now",
+    "EMPTY_TEXT_STUDENT": "When a tutor assigns you homework it will show up here.",
+    "NO_MATCH_TITLE": "Nothing matches these filters",
+    "NO_MATCH_TEXT": "Try another student or status.",
+    "LOAD_FAILED": "Could not load homework.",
+    "NOT_FOUND": "This assignment could not be found.",
+    "BACK": "Back to homework",
+    "POINTS_OF": "{{points}} / {{max}}",
+    "DETAIL": {
+      "COURSE": "Course",
+      "STUDENT": "Student",
+      "TUTOR": "Tutor",
+      "DUE_AT": "Due",
+      "OPENED": "Opened by the student",
+      "NOT_OPENED": "Not opened yet",
+      "INSTRUCTIONS": "Instructions",
+      "NO_INSTRUCTIONS": "No instructions were added.",
+      "ATTACHMENTS": "Attachments",
+      "OPEN_FILE": "Open {{name}} in a new tab"
+    },
+    "SUBMISSION": {
+      "TITLE": "Your answer",
+      "TITLE_TUTOR": "Submission",
+      "BODY": "Answer",
+      "BODY_PLACEHOLDER": "Write your answer here…",
+      "FILES": "Attach files",
+      "SUBMIT": "Submit",
+      "UPDATE": "Update submission",
+      "SUBMITTED_AT": "Submitted {{date}}",
+      "REPLACE_HINT": "Submitting again replaces your previous answer.",
+      "NONE": "Not submitted yet",
+      "NONE_HINT": "The student's work will show up here once they hand it in.",
+      "EMPTY": "Write an answer or attach at least one file.",
+      "SUCCESS": "Your work was submitted.",
+      "ERROR": "Could not submit your work."
+    },
+    "REVIEW": {
+      "TITLE": "Review",
+      "FEEDBACK_TITLE": "Your feedback",
+      "CRITERION": "Criterion",
+      "POINTS": "Points",
+      "TOTAL": "Total",
+      "FEEDBACK": "Feedback",
+      "FEEDBACK_PLACEHOLDER": "What went well, what to work on next…",
+      "NO_FEEDBACK": "No written feedback.",
+      "NO_RUBRIC": "This assignment has no rubric, so the review is written feedback only.",
+      "SAVE_DRAFT": "Save draft",
+      "RELEASE": "Release to student",
+      "CONFIRM_RELEASE_TITLE": "Release this review?",
+      "CONFIRM_RELEASE_TEXT": "The student will see the marks and feedback right away.",
+      "CONFIRM": "Yes, release",
+      "CANCEL": "Cancel",
+      "DRAFT_SAVED": "Draft saved.",
+      "RELEASED": "Review released to the student.",
+      "ERROR": "Could not save the review.",
+      "DRAFT_CHIP": "Draft",
+      "EDIT": "Edit",
+      "RELEASED_AT": "Released {{date}}"
+    },
+    "DELETE": {
+      "BUTTON": "Delete assignment",
+      "CONFIRM_TITLE": "Delete this assignment?",
+      "CONFIRM_TEXT": "The student will no longer see it. This cannot be undone.",
+      "CONFIRM": "Yes, delete",
+      "SUCCESS": "Assignment deleted.",
+      "ERROR": "Could not delete the assignment."
+    },
+    "FORM": {
+      "TITLE": "Assign homework",
+      "SUBTITLE": "Pick a student, describe the work and set a due date.",
+      "STUDENT": "Student",
+      "COURSE": "Course",
+      "TITLE_FIELD": "Title",
+      "TITLE_PLACEHOLDER": "e.g. Chapter 4 exercises",
+      "INSTRUCTIONS": "Instructions",
+      "INSTRUCTIONS_PLACEHOLDER": "What should the student do, and how will it be marked?",
+      "DUE_AT": "Due date and time",
+      "RUBRIC": "Rubric",
+      "NO_RUBRIC": "No rubric",
+      "NEW_RUBRIC": "New rubric",
+      "CREATE_RUBRIC": "Create rubric",
+      "CANCEL_RUBRIC": "Use an existing rubric instead",
+      "SHARED_RUBRIC": "Shared",
+      "RUBRIC_TITLE": "Rubric title",
+      "CRITERION_NAME": "Criterion",
+      "CRITERION_POINTS": "Max points",
+      "CRITERION_DESCRIPTION": "Description (optional)",
+      "ADD_CRITERION": "Add criterion",
+      "REMOVE_CRITERION": "Remove criterion",
+      "ATTACHMENTS": "Attachments",
+      "ADD_FILES": "Add files",
+      "REMOVE_FILE": "Remove file",
+      "NO_STUDENTS": "You have no students with a package yet, so there is nobody to assign homework to.",
+      "SUBMIT": "Assign",
+      "CANCEL": "Cancel",
+      "SUCCESS": "Homework assigned.",
+      "ERROR": "Could not assign the homework.",
+      "RUBRIC_ERROR": "Could not create the rubric.",
+      "POINTS_RANGE": "Enter a whole number from 1 to 1000",
+      "CRITERIA_MIN": "Add at least one criterion",
+      "TITLE_MAX": "Keep the title under 200 characters",
+      "INSTRUCTIONS_MAX": "Keep the instructions under 5000 characters",
+      "DUE_INVALID": "Enter a valid date and time",
+      "DUE_PAST": "The due date must be in the future"
+    }
   }
 }

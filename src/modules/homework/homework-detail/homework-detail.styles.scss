@@ -1,0 +1,438 @@
+@import '../../../assets/styles/variables.scss';
+@import '../../../assets/styles/mixins.scss';
+@import '../hw-tokens';
+
+.homework-detail {
+  background:
+    radial-gradient(
+      60rem 30rem at 100% 0%,
+      rgba($brand-400, 0.08),
+      transparent 70%
+    ),
+    $surface-alt;
+  padding: $space-6 0 $space-8;
+  min-height: 60vh;
+
+  .container.hwd-container {
+    display: flex;
+    flex-direction: column;
+    gap: $space-5;
+    margin-bottom: 0;
+  }
+}
+
+.hw-chip {
+  @include hw-chip;
+}
+
+.hw-muted {
+  color: $text-muted;
+}
+
+// Preserves the author's line breaks; direction follows the text
+.hw-prose {
+  margin: 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  line-height: 1.7;
+  color: $text-strong;
+  text-align: start;
+}
+
+.hw-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  align-self: flex-start;
+  font-size: $font-sm;
+  font-weight: 600;
+  color: $text-body;
+
+  svg {
+    font-size: 1.8rem;
+  }
+
+  .rtl & svg {
+    transform: scaleX(-1);
+  }
+
+  &:hover {
+    color: $brand-700;
+  }
+}
+
+// ---------- Panels ----------
+.hw-section {
+  @include hw-panel;
+  display: flex;
+  flex-direction: column;
+  gap: $space-4;
+
+  &--empty {
+    align-items: center;
+    text-align: center;
+    padding: $space-7 $space-4;
+
+    .MuiButton-root {
+      border-radius: $radius-pill;
+    }
+  }
+
+  &__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: $space-3;
+
+    .MuiButton-root {
+      margin-inline-start: auto;
+      border-radius: $radius-pill;
+    }
+  }
+
+  &__title {
+    margin: 0;
+    font-size: $font-h4;
+    font-weight: 700;
+    color: $text-strong;
+  }
+
+  &__subtitle {
+    margin: 0 0 $space-2;
+    font-size: $font-sm;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: $text-muted;
+
+    html[dir='rtl'] & {
+      letter-spacing: 0;
+    }
+  }
+
+  &__meta {
+    font-size: $font-sm;
+    color: $text-muted;
+  }
+}
+
+// ---------- Header card ----------
+.hwd-head {
+  &__top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: $space-3;
+  }
+
+  &__heading {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__slug {
+    font-size: $font-xs;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: $brand-700;
+  }
+
+  &__title {
+    margin: $space-1 0 0;
+    font-size: $font-h3;
+    font-weight: 800;
+    line-height: 1.25;
+    color: $text-strong;
+    overflow-wrap: anywhere;
+
+    @include respond(phone) {
+      font-size: 2.2rem;
+    }
+  }
+
+  &__facts {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(22rem, 1fr));
+    gap: $space-3 $space-5;
+    margin: 0;
+    padding: $space-4;
+    border-radius: 1.4rem;
+    background-color: $gray-50;
+
+    > div {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+      font-size: $font-sm;
+      min-width: 0;
+    }
+
+    dt {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      color: $text-muted;
+
+      svg {
+        font-size: 1.6rem;
+        color: $brand-400;
+      }
+    }
+
+    dd {
+      margin: 0;
+      font-weight: 600;
+      color: $text-strong;
+      overflow-wrap: anywhere;
+    }
+  }
+
+  &__block {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__danger {
+    display: flex;
+    justify-content: flex-end;
+    padding-top: $space-2;
+    border-top: 1px solid $border;
+  }
+}
+
+// ---------- Files ----------
+.hw-files {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: $space-2;
+
+  &__link {
+    display: flex;
+    align-items: center;
+    gap: $space-2;
+    padding: $space-2 $space-3;
+    border: 1px solid $border;
+    border-radius: $radius-md;
+    color: $text-strong;
+    text-decoration: none;
+    transition:
+      border-color $transition,
+      background-color $transition;
+
+    &:hover {
+      border-color: $brand-300;
+      background-color: $brand-50;
+      text-decoration: none;
+    }
+
+    > svg {
+      flex: none;
+      font-size: 2rem;
+      color: $brand-500;
+    }
+  }
+
+  &__name {
+    flex: 1;
+    min-width: 0;
+    font-size: $font-sm;
+    font-weight: 600;
+    @include ellipsis;
+  }
+
+  &__size {
+    flex: none;
+    font-size: $font-xs;
+    color: $text-muted;
+  }
+
+  &__open.MuiSvgIcon-root {
+    font-size: 1.6rem;
+    color: $text-muted;
+  }
+}
+
+// ---------- Submission ----------
+.hw-submission {
+  display: flex;
+  flex-direction: column;
+  gap: $space-3;
+  padding: $space-4;
+  border-radius: 1.4rem;
+  background-color: $gray-50;
+
+  &__meta {
+    margin: 0;
+    font-size: $font-xs;
+    font-weight: 600;
+    color: $text-muted;
+  }
+
+  &--empty {
+    gap: $space-1;
+    align-items: flex-start;
+
+    p {
+      margin: 0;
+      font-size: $font-sm;
+    }
+  }
+}
+
+// ---------- Forms (submission + review) ----------
+.hw-form {
+  display: flex;
+  flex-direction: column;
+  gap: $space-4;
+
+  &__files {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: $space-2;
+
+    .MuiButton-root {
+      border-radius: $radius-pill;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: $space-2;
+
+    .MuiButton-root {
+      border-radius: $radius-pill;
+    }
+
+    @include respond(phone) {
+      flex-direction: column-reverse;
+      align-items: stretch;
+    }
+  }
+}
+
+// ---------- Marks table ----------
+.hw-marks {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: $font-sm;
+
+  th,
+  td {
+    padding: $space-2 $space-3;
+    border-bottom: 1px solid $border;
+    text-align: start;
+    vertical-align: middle;
+  }
+
+  thead th {
+    font-size: $font-xs;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: $text-muted;
+
+    html[dir='rtl'] & {
+      letter-spacing: 0;
+    }
+  }
+
+  tbody td {
+    color: $text-strong;
+  }
+
+  tfoot th,
+  tfoot td {
+    border-bottom: 0;
+    font-weight: 800;
+    color: $text-strong;
+  }
+
+  &__points {
+    width: 14rem;
+    text-align: end;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+
+  &__name {
+    display: block;
+    font-weight: 600;
+  }
+
+  &__description {
+    display: block;
+    margin-top: 0.2rem;
+    font-size: $font-xs;
+    color: $text-muted;
+  }
+
+  &__input {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: $space-2;
+
+    .MuiTextField-root {
+      width: 8rem;
+    }
+  }
+
+  &__max {
+    color: $text-muted;
+  }
+}
+
+.hw-review-view {
+  display: flex;
+  flex-direction: column;
+  gap: $space-4;
+
+  &__feedback {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+// ---------- Inline confirm ----------
+.hw-confirm {
+  display: flex;
+  flex-direction: column;
+  gap: $space-1;
+  padding: $space-4;
+  border: 1px solid rgba($warning-500, 0.3);
+  border-inline-start: 4px solid $warning-500;
+  border-radius: $radius-sm;
+  background-color: $warning-50;
+  color: $text-strong;
+
+  p {
+    margin: 0;
+    font-size: $font-sm;
+    color: $text-body;
+  }
+
+  &--danger {
+    width: 100%;
+    border-color: rgba($danger-500, 0.3);
+    border-inline-start-color: $danger-500;
+    background-color: $danger-50;
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: $space-2;
+    margin-top: $space-2;
+
+    .MuiButton-root {
+      border-radius: $radius-pill;
+    }
+  }
+}
