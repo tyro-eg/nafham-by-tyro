@@ -52,7 +52,14 @@
     "MESSAGES": "Messages",
     "CALENDAR": "Calendar",
     "AVAILABILITY": "Availability",
-    "HOMEWORK": "Homework"
+    "HOMEWORK": "Homework",
+    "ASSISTANT": "AI Teaching Assistant",
+    "FREE_TRIAL": "Book a free trial",
+    "FAMILY": "My family",
+    "NOTES": "Lesson notes",
+    "COLLAPSE": "Hide menu",
+    "EXPAND": "Show menu",
+    "PAYMENTS": "Payments"
   },
   "CARDS": {
     "FREE_ASSESMENT": {
@@ -757,7 +764,8 @@
       "OPEN": "Open",
       "COMPLETED": "Completed",
       "CANCELLED": "Cancelled",
-      "MISSED": "Missed"
+      "MISSED": "Missed",
+      "LIVE": "Live"
     },
     "MAIN": {
       "LIST": "List",
@@ -829,6 +837,7 @@
       "UPCOMING": "Upcoming Sessions",
       "UNSCHEDULED": "Unscheduled Hours",
       "PREVIOUS": "Previous Sessions",
+      "COMPLETED": "Completed Sessions",
       "CANCELLED": "Cancelled Sessions"
     },
     "SCHEDULE": {
@@ -863,6 +872,12 @@
         "THANKYOU": "Thank You",
         "THANKYOU2": "Your rating submitted successfully. Thank you for your cooperation with us"
       }
+    },
+    "SUBTITLE": "Every lesson, past and coming, with its tutor and course.",
+    "GROUP": {
+      "TODAY": "Today",
+      "TOMORROW": "Tomorrow",
+      "YESTERDAY": "Yesterday"
     }
   },
   "MYPACKAGES": {
@@ -910,6 +925,11 @@
         "FREE": "free to book",
         "MOVED_OUT": "moved to another tutor"
       }
+    },
+    "SUBTITLE": "Hours bought, used and still free to book, per tutor.",
+    "GROUP": {
+      "SUMMARY_one": "{{count}} package · {{hours}} hours left",
+      "SUMMARY_other": "{{count}} packages · {{hours}} hours left"
     }
   },
   "DIRECTORY": {
@@ -1014,6 +1034,23 @@
     "MAIN": {
       "TITLE": "Welcome  👋",
       "SUBTITLE": "Enter your details below."
+    },
+    "ROLE": {
+      "LABEL": "I am a",
+      "STUDENT": "Student",
+      "PARENT": "Parent",
+      "PARENT_HINT": "You hold the account for your children. Add your first child below; you can add more later."
+    },
+    "CHILD": {
+      "FIRST_NAME": "Child's first name",
+      "LAST_NAME": "Child's last name"
+    },
+    "PANEL": {
+      "EYEBROW": "Nafham Learning",
+      "TITLE": "Learning that fits around your family.",
+      "SUBTITLE": "Create the account, add your child, and book a free trial with a tutor who teaches their syllabus.",
+      "QUOTE": "We tried three platforms before Nafham. This is the first one where I actually know what my daughter did in each lesson.",
+      "QUOTE_BY": "Salma's parent"
     }
   },
   "REGISTERED": {
@@ -1268,10 +1305,6 @@
     "SOMETHING_WENT_WRONG_MSG": "Your message has not been sent, Please try again!",
     "UNAUTHORIZED_MSG": "Sorry, You must login first!"
   },
-  "INSTRUCTOR_MODAL": {
-    "TITLE": "REQUEST A FREE TRIAL SESSION",
-    "SUBTITLE": "Select an instructor you'd like to take the free trial session with"
-  },
   "NO_INTERNET": {
     "TITLE": "You are offline. Check your internet connection."
   },
@@ -1292,6 +1325,17 @@
     "EMPTY": {
       "FIRST_P": "You haven't booked any sessions yet",
       "SECOND_P": "Start booking sessions to see your instructors here!"
+    },
+    "SUBTITLE": "The tutors you learn with, what they teach you and when you meet next.",
+    "CARD": {
+      "TEACHES_COUNT_one": "teaches {{count}} course",
+      "TEACHES_COUNT_other": "teaches {{count}} courses",
+      "INTRO": "Intro video",
+      "WITH_US": "With us",
+      "NO_PACKAGE": "No package yet",
+      "HOURS_LEFT": "Hours left",
+      "NEXT_LESSON": "Next lesson",
+      "NO_LESSON": "Nothing booked"
     }
   },
   "DASHBOARD": {
@@ -1308,6 +1352,7 @@
     "STATS": {
       "UPCOMING": "Upcoming sessions",
       "HOURS_LEARNED": "Hours learned",
+      "COMPLETED": "Completed sessions",
       "HOURS_REMAINING": "Hours remaining",
       "ATTENDANCE": "Attendance"
     },
@@ -1594,8 +1639,106 @@
       "BUTTON": "Done"
     }
   },
+  "TRIAL": {
+    "TITLE": "Book your free trial",
+    "SUBTITLE": "A free session with one of our tutors, in five quick steps.",
+    "STEPS": {
+      "COURSE": "Course",
+      "WHEN": "When",
+      "TUTOR": "Tutor",
+      "SLOT": "Time",
+      "CONFIRM": "Confirm",
+      "CHILD": "Child"
+    },
+    "COURSE": {
+      "TITLE": "What would you like to try?",
+      "CURRICULUM": "Curriculum",
+      "SUB_CURRICULUM": "Level",
+      "GRADE": "Stage",
+      "SUBJECT": "Subject",
+      "EXAM_BOARD": "Exam board",
+      "GENERAL": "General",
+      "LOADING": "Loading courses...",
+      "EMPTY": "No courses are open for free trials right now. Please check back soon.",
+      "PLACEHOLDER": "Choose…"
+    },
+    "WHEN": {
+      "TITLE": "When suits you?",
+      "WINDOW": "Time of day",
+      "ANY": "Any time",
+      "MORNING": "Morning (6–12)",
+      "AFTERNOON": "Afternoon (12–17)",
+      "EVENING": "Evening (17–23)",
+      "TIMEZONE": "Times are shown in your local timezone ({{tz}}).",
+      "ANY_HINT": "Whenever a tutor is free",
+      "DAY": "Day",
+      "TODAY": "Today",
+      "TOMORROW": "Tomorrow",
+      "DATE": "Pick a date",
+      "DATE_HINT": "Any day in the next month",
+      "FLEXIBLE": "I'm flexible",
+      "FLEXIBLE_HINT": "Any day in the next {{days}} days",
+      "FROM": "From",
+      "TO": "To"
+    },
+    "TUTORS": {
+      "TITLE": "Our top picks for you",
+      "SUBTITLE": "Ranked by our team for {{course}}, with the times they are free.",
+      "OPS_PICK": "Team pick",
+      "RATED": "Our team's rating for this course",
+      "NEXT_SLOTS": "Next free times",
+      "CHOOSE": "Choose {{name}}",
+      "MORE": "Show {{count}} more tutors",
+      "LESS": "Show fewer",
+      "EMPTY": "No tutor is free for {{course}} in that window. Try wider dates or another time of day.",
+      "USED": "Free trial already used with this tutor",
+      "LOADING": "Finding your tutors...",
+      "TOP": "Top pick"
+    },
+    "SLOT": {
+      "TITLE": "Pick a time with {{name}}",
+      "DAY": "Day",
+      "TIME": "Time",
+      "TIMES_one": "{{count}} time",
+      "TIMES_other": "{{count}} times"
+    },
+    "CONFIRM": {
+      "TITLE": "Confirm your free trial",
+      "COURSE": "Course",
+      "TUTOR": "Tutor",
+      "WHEN": "When",
+      "DURATION": "{{minutes}} minutes",
+      "GUARDIAN_PHONE": "Parent's phone number (optional)",
+      "GUARDIAN_HINT": "We'll keep your parent in the loop about your lessons.",
+      "VISITOR": "Create your account to confirm the booking. Your choices are saved.",
+      "REGISTER": "Create account",
+      "LOGIN": "I already have an account",
+      "BOOK": "Book my free trial",
+      "BOOKING": "Booking...",
+      "FREE": "Free · no payment needed"
+    },
+    "ACTIONS": {
+      "BACK": "Back",
+      "NEXT": "Continue"
+    },
+    "TUTOR_ACCOUNT": "Free trials are for students. You are signed in as a tutor.",
+    "ERROR": "We couldn't book your trial. Please pick another time.",
+    "ERROR_LOADING": "We couldn't load the tutors. Please try again.",
+    "EYEBROW": "Free trial",
+    "SUMMARY": "Your booking",
+    "PENDING": "Not chosen yet",
+    "STEP_COUNT": "Step {{step}} of {{count}}",
+    "CHILD": {
+      "TITLE": "Who is the trial for?",
+      "TEXT": "Pick the child; the tutors and times are matched to them.",
+      "ADD": "Add a child",
+      "NONE": "No children yet. Add your first child, then come back to book the trial."
+    }
+  },
   "AVAILABILITY": {
     "TITLE": "My availability",
+    "HELD_NOTE": "Held for {{student}} until {{date}} while they renew. Contact support to free this time.",
+    "HELD_STUDENT": "a student",
     "SUBTITLE": "Mark the 30-minute slots you can teach. Click a slot or drag across several; use a day name for quick presets. Students and support can only book inside these slots.",
     "TIMEZONE": "Times are in your local time zone ({{tz}})",
     "PREV_WEEK": "Previous week",
@@ -1605,7 +1748,8 @@
     "HINT": "Tip: drag with the mouse to fill or clear many slots at once. Booked slots are locked.",
     "STATS": {
       "OPEN": "{{hours}} open hours this week",
-      "BOOKED": "{{hours}} booked"
+      "BOOKED": "{{hours}} booked",
+      "HELD": "{{hours}} held"
     },
     "LEGEND": {
       "TITLE": "Legend"
@@ -1616,7 +1760,8 @@
       "RESERVED": "Booked",
       "ADDING": "Opening (unsaved)",
       "REMOVING": "Closing (unsaved)",
-      "PAST": "Past"
+      "PAST": "Past",
+      "HELD": "Held for a student"
     },
     "DAY_MENU": {
       "TITLE": "Quick fill",
@@ -1790,6 +1935,374 @@
       "INSTRUCTIONS_MAX": "Keep the instructions under 5000 characters",
       "DUE_INVALID": "Enter a valid date and time",
       "DUE_PAST": "The due date must be in the future"
+    }
+  },
+  "ASSISTANT": {
+    "TITLE": "AI Teaching Assistant",
+    "SUBTITLE": "Built from your recorded lessons and homework: what each student needs, the next lesson's plan with slides, homework ideas, and how you teach.",
+    "STUDENTS": "Students",
+    "SEARCH": "Search students or courses",
+    "EMPTY": {
+      "TITLE": "No students yet",
+      "TEXT": "Once you have a student with a package or a session, they will show up here."
+    },
+    "LIST": {
+      "NEXT": "Next lesson {{date}}",
+      "LESSONS_one": "{{count}} recorded lesson",
+      "LESSONS_other": "{{count}} recorded lessons",
+      "NO_MATCH": "No student matches that search."
+    },
+    "TABS": {
+      "INSIGHTS": "Learner insights",
+      "PLAN": "Lesson plan",
+      "HOMEWORK": "Homework",
+      "COACH": "Be a better teacher"
+    },
+    "COMMON": {
+      "AI": "AI",
+      "AI_DRAFT": "AI draft",
+      "STALE": "New lessons since",
+      "REFRESH": "Refresh",
+      "GENERATE": "Generate",
+      "GENERATING": "Working…",
+      "EDIT": "Edit",
+      "SAVE": "Save",
+      "CANCEL": "Cancel",
+      "CLOSE": "Close",
+      "UPDATED": "Updated {{date}}",
+      "ONE_PER_LINE": "One item per line",
+      "MINUTES_one": "{{count}} minute",
+      "MINUTES_other": "{{count}} minutes",
+      "MINUTES_SHORT": "{{count}} min",
+      "ERROR": "Something went wrong. Please try again.",
+      "THROTTLED": "This was refreshed recently. Please try again in a little while.",
+      "TIMED_OUT": "This is taking longer than usual. It will appear here when it is ready; refresh the page in a few minutes."
+    },
+    "INSIGHTS": {
+      "TITLE": "Where this student is",
+      "STRENGTHS": "Strengths",
+      "WEAKNESSES": "Weaknesses",
+      "FOCUS": "Focus next lesson",
+      "EVIDENCE_one": "{{count}} piece of evidence",
+      "EVIDENCE_other": "{{count}} pieces of evidence",
+      "FROM_LESSON": "from a lesson",
+      "FROM_HOMEWORK": "from homework",
+      "BASED_ON": "Based on {{lessons}} recorded lessons and {{homework}} reviewed homework.",
+      "RECENT_LESSONS": "Recent lessons",
+      "NO_NOTES": "No lesson notes yet.",
+      "COVERED": "Covered",
+      "STRUGGLES": "Struggled with",
+      "NEXT_STEPS": "Next steps",
+      "SUMMARY": "Summary",
+      "TRY_NEXT": "Try next time:",
+      "EDITED_BY_YOU": "Edited by you",
+      "NOTE_SAVED": "Lesson note saved",
+      "EMPTY_TITLE": "No insights yet",
+      "EMPTY_TEXT": "Insights appear after your first recorded lesson with this student. Ask support to switch recording on for this package.",
+      "EMPTY_TEXT_PENDING": "A lesson was recorded. The insight is being written; generate it now or check back shortly."
+    },
+    "PLAN": {
+      "UNTITLED": "Lesson plan",
+      "OBJECTIVES": "Objectives",
+      "CHECKS": "Check understanding",
+      "MATERIALS": "Materials",
+      "AGENDA": "Agenda · {{minutes}} min",
+      "AGENDA_EDIT": "Agenda",
+      "MINUTES": "Min",
+      "BLOCK_TITLE": "Block",
+      "BLOCK_DETAIL": "What happens",
+      "HOMEWORK_IDEA": "Homework idea:",
+      "NOTES_FOR_YOU": "For you:",
+      "TITLE_FIELD": "Title",
+      "FOR_SESSION": "For your session on {{date}}",
+      "NEXT_LESSON": "For the next lesson",
+      "GENERATE": "Generate a lesson plan",
+      "REGENERATE": "New plan",
+      "GENERATING_TEXT": "Writing a new plan. This takes about half a minute.",
+      "PRESENT_one": "Present {{count}} slide",
+      "PRESENT_other": "Present {{count}} slides",
+      "DOWNLOAD": "Download PowerPoint",
+      "EXPORT_FAILED": "The PowerPoint could not be built. Please try again.",
+      "ACCEPT": "Accept plan",
+      "ACCEPTED": "Plan accepted",
+      "ACCEPTED_CHIP": "Accepted",
+      "SAVED": "Plan saved",
+      "CONFIRM_TITLE": "Accept this plan?",
+      "CONFIRM_TEXT": "You can still edit it afterwards. Accepting marks it as the plan you will teach.",
+      "CONFIRM": "Accept",
+      "HISTORY": "Previous plans",
+      "STATUS": {
+        "DRAFT": "Draft",
+        "ACCEPTED": "Accepted"
+      },
+      "PRESENT_HINT": "Arrow keys to move · N for notes · Esc to close",
+      "SPEAKER_NOTES": "Speaker notes",
+      "NO_NOTES": "No notes for this slide.",
+      "PREVIOUS": "Previous slide",
+      "NEXT": "Next slide",
+      "EMPTY_TITLE": "No lesson plan yet",
+      "EMPTY_TEXT": "Generate a plan for the next lesson from this student's insights and recent lessons.",
+      "EMPTY_TEXT_SESSION": "Your next session with this student is on {{date}}. Generate its plan and slides now.",
+      "WRITE_SLIDES": "Write the slides",
+      "WRITING_SLIDES": "Writing the slides…",
+      "SLIDES_HINT": "Slides are written when you first present or download the plan, so they match what you kept.",
+      "SLIDES_READY": "Slides ready"
+    },
+    "HOMEWORK": {
+      "TITLE": "Homework ideas",
+      "DUE_IN_one": "Due in {{count}} day",
+      "DUE_IN_other": "Due in {{count}} days",
+      "TOTAL": "Total",
+      "ASSIGN": "Assign",
+      "CONFIRM_ASSIGN": "Assign homework",
+      "DUE_AT": "Due",
+      "ASSIGNED": "Homework assigned",
+      "ASSIGNED_AS": "Assigned:",
+      "EMPTY_TITLE": "No homework ideas yet",
+      "EMPTY_TEXT": "Ideas appear after your first recorded lesson with this student.",
+      "EMPTY_TEXT_PENDING": "A lesson was recorded. Ideas are being written; generate them now or check back shortly."
+    },
+    "COACH": {
+      "TITLE": "How you teach",
+      "PERIOD": "{{from}} to {{to}}",
+      "LESSONS": "Lessons analysed",
+      "LESSONS_HINT": "Recorded lessons with a note in this period",
+      "TALK_RATIO": "You talking",
+      "TALK_RATIO_HINT": "Share of speaking time that was yours. Lower usually means the student is doing more.",
+      "CHECKS": "Checks per lesson",
+      "CHECKS_HINT": "Times you had the student answer, solve or explain back",
+      "MONOLOGUE": "Longest stretch",
+      "MONOLOGUE_HINT": "Longest time you spoke without the student taking part",
+      "STRENGTHS": "What you do well",
+      "IMPROVE": "What to work on",
+      "TRY": "Try:",
+      "TECHNIQUES": "Techniques to try this month",
+      "HISTORY": "Previous reports",
+      "EMPTY_TITLE": "No coaching report yet",
+      "EMPTY_TEXT": "Your report is written from your recorded lessons. It appears after your first few recorded lessons.",
+      "EMPTY_TEXT_PENDING_one": "You have {{count}} recorded lesson. Generate your first report now.",
+      "EMPTY_TEXT_PENDING_other": "You have {{count}} recorded lessons. Generate your first report now."
+    },
+    "SESSION": {
+      "PLAN_READY": "Lesson plan ready",
+      "NOTE_READY": "Lesson note",
+      "OPEN": "Open in Assistant",
+      "RECORDING": "Recording being processed"
+    }
+  },
+  "FAMILY": {
+    "ROLE": "Parent",
+    "TITLE": "The {{name}} family",
+    "SUBTITLE": "Where each child stands, and what to do next.",
+    "SUPPORT": "Message support",
+    "EMPTY": "No children yet. Add your first child to get started.",
+    "ERROR": "Something went wrong. Please try again.",
+    "CANCEL": "Cancel",
+    "BACK": "Back to the family",
+    "SWITCHER": "Which child",
+    "HOMEWORK_PARENT_HINT": "Only the student can hand in the homework. You can follow it here.",
+    "CARD": {
+      "NEW_NOTE": "New lesson note",
+      "NEXT_LESSON": "Next lesson",
+      "NO_LESSON": "Nothing booked",
+      "HOURS_LEFT": "Hours left",
+      "HOURS_one": "{{count}} hour",
+      "HOURS_other": "{{count}} hours",
+      "HOMEWORK_DUE": "Homework due this week",
+      "LESSONS": "Lessons completed",
+      "OPEN": "Open sessions",
+      "OPEN_AS": "Open as {{name}}",
+      "COMING_UP": "Coming up",
+      "PACKAGES": "Packages",
+      "NO_PACKAGES": "No package yet.",
+      "LIVE": "Live now",
+      "LATEST_NOTE": "Latest note",
+      "NO_NOTE": "None yet",
+      "HOURS_OF": "{{left}} of {{total}} hours left"
+    },
+    "TOP_UP": {
+      "BUTTON": "Request more hours",
+      "TITLE": "More hours for {{name}}",
+      "TEXT": "Tell us how many hours you would like. Our team confirms the price with you before anything is charged.",
+      "PACKAGE": "Package",
+      "HOURS": "Hours",
+      "NOTE": "Anything we should know?",
+      "SEND": "Send request",
+      "SENT": "Request sent. We will get back to you shortly."
+    },
+    "NOTES": {
+      "TITLE": "Lesson notes",
+      "SUBTITLE": "What each lesson covered, where your child struggled and what comes next.",
+      "ALL_CHILDREN": "All children",
+      "EMPTY": "No lesson notes yet. They appear after the first recorded lesson.",
+      "COVERED": "Covered",
+      "STRUGGLED": "Needs work",
+      "NEXT": "Next"
+    },
+    "TERMS": {
+      "TITLE": "Terms and consent",
+      "PENDING": "Please review and accept the terms for your family.",
+      "REVIEW": "Review",
+      "TEXT": "You accept the terms on behalf of your children.",
+      "READ": "Read the terms",
+      "ACCEPT": "Accept",
+      "ACCEPTED": "Terms accepted. Thank you.",
+      "ACCEPTED_ON": "Accepted on {{date}}."
+    },
+    "SETTINGS": {
+      "TITLE": "Family settings",
+      "SUBTITLE": "Your contact details, the children, their logins and recording consent.",
+      "CONTACTS": "Contact details",
+      "FAMILY_NAME": "Family name",
+      "PHONE": "Phone",
+      "EMAIL": "Email",
+      "SAVE": "Save",
+      "SAVED": "Saved.",
+      "CHILDREN": "Children",
+      "ADD_CHILD": "Add a child",
+      "ADD": "Add",
+      "ADD_HINT": "A child is a learner profile under your account. You can give them their own login later.",
+      "FIRST_NAME": "First name",
+      "LAST_NAME": "Last name",
+      "CHILD_ADDED": "{{name}} added.",
+      "OWN_LOGIN": "Has their own login",
+      "THROUGH_YOU": "Through your account",
+      "CHILD_EMAIL": "Child's email",
+      "GIVE_LOGIN": "Give a login",
+      "LOGIN_HINT": "They get an email to set a password. You keep full access.",
+      "LOGIN_SENT": "Login invitation sent to {{name}}.",
+      "REMOVE_LOGIN": "Remove login",
+      "LOGIN_REMOVED": "{{name}} now signs in through your account.",
+      "CONSENT_TEXT": "Lesson recording lets the tutor review the lesson and powers the lesson notes. Switch it on per course.",
+      "CONSENT_FOR": "Recording consent for {{course}}",
+      "CONSENTED": "Consented {{date}}",
+      "NOT_CONSENTED": "Not recorded"
+    },
+    "ALL_CHILDREN": "All children",
+    "FOR": "For {{name}}",
+    "HERO": {
+      "EYEBROW": "The {{name}} family",
+      "WELCOME": "Welcome back, {{name}} 👋",
+      "NEXT": "{{child}}'s next lesson is {{subject}} with {{tutor}}, {{when}}.",
+      "NO_NEXT": "Nothing is booked yet. Ask for hours on a child's card and our team will schedule the lessons.",
+      "HOURS_one": "{{count}} hour left",
+      "HOURS_other": "{{count}} hours left",
+      "LESSONS_WEEK_one": "{{count}} lesson this week",
+      "LESSONS_WEEK_other": "{{count}} lessons this week",
+      "HOMEWORK_one": "{{count}} homework due",
+      "HOMEWORK_other": "{{count}} homework due"
+    },
+    "STATS": {
+      "HOURS": "Hours left",
+      "LESSONS_WEEK": "Lessons this week",
+      "HOMEWORK": "Homework due",
+      "NOTES": "New lesson notes"
+    },
+    "UPCOMING": {
+      "TITLE": "Upcoming lessons",
+      "EMPTY": "Nothing booked yet."
+    }
+  },
+  "PAYMENTS": {
+    "TITLE": "Payments",
+    "SUBTITLE": "Your receipts for renewals paid online.",
+    "EMPTY": "No payments yet.",
+    "RENEW": {
+      "BUTTON": "Renew",
+      "TITLE": "Renew {{course}}",
+      "FOR": "For {{name}}, with {{tutor}}",
+      "CHOOSE": "Choose a package size",
+      "HOURS_one": "{{count}} hour",
+      "HOURS_other": "{{count}} hours",
+      "LOW_one": "{{count}} hour left",
+      "LOW_other": "{{count}} hours left",
+      "OFFER_UNTIL": "Offer until {{date}}",
+      "SAVE": "Save {{amount}}",
+      "CURRENT": "Same as now",
+      "VAT": "VAT {{rate}}%",
+      "TOTAL": "Total",
+      "PAY": "Pay {{amount}}",
+      "REDIRECT": "You pay by card on Nomod's secure page and come straight back here.",
+      "NOT_RENEWABLE": "This package can't be renewed online yet.",
+      "ASK_INSTEAD": "Request more hours instead",
+      "ASK_PARENT_SHORT": "Your parent renews this package.",
+      "UNAVAILABLE": "Online payments are unavailable right now. Please try again in a few minutes.",
+      "BUTTON_LONG": "Renew this package",
+      "SAME_AGAIN": "Same as last time",
+      "SAME_AGAIN_HINT": "The same package again, at the price you paid before.",
+      "OTHER_OPTIONS": "See other sizes and prices",
+      "BACK_TO_SAME": "Back to the same package"
+    },
+    "RETURN": {
+      "CONFIRMING": "Confirming your payment…",
+      "CONFIRMING_TEXT": "This takes a few seconds.",
+      "KEEP_OPEN": "Please keep this page open.",
+      "CHECKING": "Checking with the payment provider.",
+      "FULFILLED": "Payment received",
+      "FULFILLED_HINT": "Thank you, your payment went through.",
+      "FULFILLED_TEXT_one": "{{count}} hour was added. You paid {{amount}}.",
+      "FULFILLED_TEXT_other": "{{count}} hours were added. You paid {{amount}}.",
+      "FAILED": "Payment not completed",
+      "FAILED_TEXT": "The card was declined or the payment was cancelled. Nothing was charged.",
+      "CANCELLED": "Payment cancelled",
+      "EXPIRED": "This checkout has expired",
+      "EXPIRED_TEXT": "Start again from your packages. It only takes a minute.",
+      "REVIEW": "We're checking your payment",
+      "REVIEW_TEXT": "Your money arrived safely. Our team will add the hours shortly and email you.",
+      "SIGN_IN": "Sign in to see this receipt and your packages.",
+      "TRY_AGAIN": "Try again",
+      "SEE_PACKAGES": "See my packages",
+      "RECEIPTS": "All receipts",
+      "NOT_FOUND": "We couldn't find this payment."
+    },
+    "STATUS": {
+      "created": "Starting",
+      "pending": "Awaiting payment",
+      "paid": "Paid",
+      "fulfilled": "Completed",
+      "needs_review": "Being checked",
+      "failed": "Declined",
+      "cancelled": "Cancelled",
+      "expired": "Expired",
+      "refunded": "Refunded",
+      "partially_refunded": "Partly refunded",
+      "disputed": "Disputed"
+    },
+    "HISTORY": {
+      "LINE": "{{hours}}h {{course}} · {{student}}",
+      "RESUME": "Continue payment",
+      "CANCEL": "Cancel",
+      "CANCELLED": "Payment cancelled."
+    },
+    "BANNER": {
+      "LOW": "One of your packages is down to its last hours.",
+      "LOW_CHILD": "One of your packages is down to its last hours. Your parent can renew it.",
+      "RENEW": "Renew now"
+    },
+    "RENEW_ALL": {
+      "TITLE": "Renew all",
+      "BANNER_one": "{{count}} package is low on hours.",
+      "BANNER_other": "{{count}} packages are low on hours.",
+      "BANNER_ACTION": "Renew all",
+      "INTRO": "Tick what to renew. Each row keeps its size and price from last time unless you choose more hours.",
+      "SUBJECTS_one": "{{count}} subject",
+      "SUBJECTS_other": "{{count}} subjects",
+      "DUE": "Low on hours",
+      "BOOKED": "{{count}}h booked ahead",
+      "LAST_LESSON": "Last lesson {{date}}",
+      "TODAYS_PRICE": "Today's price",
+      "MORE_HOURS": "More hours",
+      "KEEP": "Keep {{hours}}",
+      "NOT_ONLINE": "Can't be renewed online",
+      "REQUEST": "Request",
+      "SUBTOTAL": "Subtotal",
+      "DISCOUNT": "Family discount, {{count}} subjects",
+      "DISCOUNT_HINT": "Tick one more subject for {{percent}}% off everything.",
+      "AT_FLOOR": "already our lowest price",
+      "EMPTY": "Nothing to renew right now.",
+      "TOO_MANY": "Up to {{count}} packages in one payment.",
+      "OVER_LIMIT": "This total is above the online limit. Please contact us to pay.",
+      "PAY": "Pay {{amount}}"
     }
   }
 }
