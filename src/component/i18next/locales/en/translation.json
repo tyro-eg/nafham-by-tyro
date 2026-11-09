@@ -1565,6 +1565,7 @@
     },
     "YOU": "You",
     "NAFHAM_SUPPORT": "Nafham Support",
+    "ASSISTANT": "Nafham Assistant",
     "ADMIN_IN_CHAT": "Nafham Support is in this conversation",
     "MEMBERS": "Members",
     "ROLE": {
@@ -2714,7 +2715,25 @@
     "CHAT": {
       "ANSWER": "Answer in Requests",
       "SESSIONS": "Open My sessions",
-      "PACKAGES": "Open My packages"
+      "PACKAGES": "Open My packages",
+      "CONFIRM": "Confirm: {{action}}",
+      "ERROR": "That didn't go through. Please try again.",
+      "OPTION_TAKEN": "That time was just taken. The times still open are below.",
+      "ANSWERED": "Answered",
+      "YOU_ANSWERED": "You answered",
+      "EXPIRED": "This request expired",
+      "SUPERSEDED": "Replaced by a newer message",
+      "OPEN_CHAT": "Open the chat",
+      "REASON_OPTIONAL": "Reason (optional)",
+      "QUICK": {
+        "CANT_MAKE": "Can't make a lesson",
+        "CANCEL": "Cancel the lesson",
+        "MOVE": "Propose another time",
+        "PAUSE": "Pause lessons",
+        "WEEKLY": "Change weekly times",
+        "HANDOFF": "Talk to a person",
+        "PICK_LESSON": "Which lesson?"
+      }
     }
   }
 }

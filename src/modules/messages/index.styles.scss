@@ -589,6 +589,103 @@ $own-bubble: $brand-100;
   }
 }
 
+// Nafham Assistant: the bot's label, its buttons and the outcome line
+.nf-msg__admin-label--bot {
+  color: $brand-700;
+}
+
+.bot-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  max-width: 48rem;
+  margin-block: 0.2rem 0.8rem;
+  margin-inline: 5.2rem 1.6rem;
+
+  &__buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+  }
+
+  &__confirm {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  &__reason .MuiInputBase-root {
+    background-color: $surface;
+  }
+
+  &__button.MuiButton-root {
+    text-transform: none;
+    font-weight: 700;
+  }
+
+  &__button--link.MuiButton-root {
+    padding-inline: 0.4rem;
+  }
+
+  // The theme greys out outlined buttons; a decline still reads as one
+  &__button--danger.MuiButton-root {
+    color: $danger-500;
+    border-color: rgba($danger-500, 0.5);
+
+    &:hover {
+      background-color: $danger-50;
+      border-color: $danger-500;
+    }
+  }
+
+  &__error.MuiAlert-root {
+    font-size: $font-xs;
+  }
+
+  &__outcome {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-block: 0.2rem 0.8rem;
+    margin-inline: 5.2rem 0;
+    font-size: $font-xs;
+    font-weight: 700;
+    color: $text-muted;
+
+    svg {
+      font-size: 1.4rem;
+    }
+  }
+}
+
+// Quick actions under a lesson conversation's header
+.quick-actions {
+  display: flex;
+  flex: 1 1 100%;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+
+  &__chip.MuiChip-root {
+    font-weight: 700;
+    font-size: $font-xs;
+  }
+
+  &__chip--handoff.MuiChip-root {
+    margin-inline-start: auto;
+  }
+
+  &__menu-icon {
+    margin-inline-end: 0.8rem;
+    color: $text-muted;
+  }
+
+  &__error.MuiAlert-root {
+    flex-basis: 100%;
+    font-size: $font-xs;
+  }
+}
+
 // Empty thread: who you are talking to and what the chat is for
 .thread-empty {
   display: flex;

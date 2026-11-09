@@ -102,6 +102,13 @@ export const queryKeys = {
       [...queryKeys.scheduleChanges.all, 'list', box, tab] as const,
   },
 
+  // Lesson conversations: what the viewer can do from the chat
+  chat: {
+    all: ['chat'] as const,
+    actions: (channelId: string) =>
+      [...queryKeys.chat.all, 'actions', channelId] as const,
+  },
+
   // A tutor's recurring open times, for a lesson length
   tutors: {
     all: ['tutors'] as const,

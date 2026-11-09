@@ -40,6 +40,7 @@ import ConversationItem from './conversation-item.component';
 import ThreadHeader from './thread-header.component';
 import NafhamMessageUI from './nafham-message-ui.component';
 import ThreadEmptyState from './thread-empty-state.component';
+import ChatScreensProvider from './chat-screens.component';
 import { getStreamI18n } from './stream-i18n';
 
 import 'stream-chat-react/dist/css/index.css';
@@ -334,25 +335,30 @@ const ActiveThread: FC<ActiveThreadProps> = ({
 
   return (
     <Channel channel={channel} key={channel.cid}>
-      <Window>
-        <ThreadHeader
-          channel={channel}
-          currentUserId={currentUserId}
-          isTutor={isTutor}
-          onBack={onBack}
-        />
-        <MessageList />
-        <MessageComposer
-          focus
-          maxRows={6}
-          audioRecordingEnabled
-          asyncMessagesMultiSendEnabled
-          additionalTextareaProps={{
-            placeholder: t('MESSAGES.COMPOSER.PLACEHOLDER'),
-          }}
-        />
-        <p className="messages__hint">{t('MESSAGES.COMPOSER.HINT')}</p>
-      </Window>
+      <ChatScreensProvider
+        channelId={channel.id ?? channelId}
+        isTutor={isTutor}
+      >
+        <Window>
+          <ThreadHeader
+            channel={channel}
+            currentUserId={currentUserId}
+            isTutor={isTutor}
+            onBack={onBack}
+          />
+          <MessageList />
+          <MessageComposer
+            focus
+            maxRows={6}
+            audioRecordingEnabled
+            asyncMessagesMultiSendEnabled
+            additionalTextareaProps={{
+              placeholder: t('MESSAGES.COMPOSER.PLACEHOLDER'),
+            }}
+          />
+          <p className="messages__hint">{t('MESSAGES.COMPOSER.HINT')}</p>
+        </Window>
+      </ChatScreensProvider>
     </Channel>
   );
 };
