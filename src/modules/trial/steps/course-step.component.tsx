@@ -4,25 +4,21 @@ import {
   Button,
   CircularProgress,
   FormControl,
-  InputLabel,
   MenuItem,
   Select,
 } from '@mui/material';
-import { ArrowForward } from '@mui/icons-material';
+import { ArrowForwardRounded, CheckCircleRounded } from '@mui/icons-material';
 
 import type { GradeSubject } from '../../../assets/types';
+import type { TrialCourse } from '../../../hooks/useTrial';
+import type { Choice } from './choice-chips.component';
 
 interface CourseStepProps {
-  courses?: GradeSubject[];
+  courses?: TrialCourse[];
   loading: boolean;
   courseId?: number;
-  onNext: (courseId: number) => void;
-}
-
-/** A curriculum, stage, subject or variant to choose from; 0 stands for "general" */
-interface Option {
-  id: number;
-  name: string;
+  examBoardId?: number;
+  onNext: (courseId: number, examBoardId?: number) => void;
 }
 
 interface Picks {
@@ -33,63 +29,88 @@ interface Picks {
   board?: number;
 }
 
-const NONE = '';
+const ORDER: (keyof Picks)[] = [
+  'curriculum',
+  'sub',
+  'grade',
+  'subject',
+  'board',
+];
 
+/** The distinct values of one part of a course, "general" (0) first */
 const distinct = (
   courses: GradeSubject[],
-  read: (course: GradeSubject) => Option | null | undefined,
+  read: (
+    course: GradeSubject,
+  ) => { id: number; name: string; position?: number } | null | undefined,
   general: string,
-): Option[] => {
-  const map = new Map<number, Option>();
+): Choice[] => {
+  const map = new Map<number, Choice>();
+  const positions = new Map<number, number>();
   courses.forEach((course) => {
-    const option = read(course);
-    if (option) map.set(option.id, option);
-    else map.set(0, { id: 0, name: general });
+    const part = read(course);
+    if (part) {
+      map.set(part.id, { id: part.id, label: part.name });
+      if (part.position !== undefined) positions.set(part.id, part.position);
+    } else map.set(0, { id: 0, label: general });
   });
-  return Array.from(map.values()).sort((a, b) =>
-    a.id === 0 ? -1 : b.id === 0 ? 1 : a.name.localeCompare(b.name),
-  );
+  // Levels come in their taught order (OL, AS, A2, AL); the rest alphabetically
+  return Array.from(map.values()).sort((a, b) => {
+    if (a.id === 0 || b.id === 0) return a.id === 0 ? -1 : 1;
+    const byPosition =
+      (positions.get(Number(a.id)) ?? 0) - (positions.get(Number(b.id)) ?? 0);
+    return (
+      byPosition || a.label.localeCompare(b.label, undefined, { numeric: true })
+    );
+  });
 };
 
 /** The picks that describe an already chosen course, so a reload shows them */
-const picksFor = (course?: GradeSubject): Picks =>
+const picksFor = (course?: GradeSubject, examBoardId?: number): Picks =>
   course
     ? {
         curriculum: course.curriculum.id,
         sub: course.sub_curriculum?.id ?? 0,
         grade: course.grade.id,
         subject: course.subject.id,
-        board: course.exam_board?.id ?? 0,
+        board: examBoardId,
       }
     : {};
 
 /**
  * Curriculum, then level and exam board only when the curriculum has them,
- * stage and subject. Each list only offers what still leads to a course a
- * tutor teaches, and a list with a single entry is picked for you.
+ * stage and subject. Each group only offers what still leads to a course a
+ * tutor teaches; a group with a single entry is picked for you.
  */
 const CourseStep: FC<CourseStepProps> = ({
   courses = [],
   loading,
   courseId,
+  examBoardId,
   onNext,
 }) => {
   const { t } = useTranslation();
   const general = t('TRIAL.COURSE.GENERAL');
   const [picks, setPicks] = useState<Picks>(() =>
-    picksFor(courses.find((course) => course.id === courseId)),
+    picksFor(
+      courses.find((course) => course.id === courseId),
+      examBoardId,
+    ),
   );
 
   const curriculumOptions = distinct(courses, (c) => c.curriculum, general);
   const curriculum =
     picks.curriculum ??
-    (curriculumOptions.length === 1 ? curriculumOptions[0].id : undefined);
+    (curriculumOptions.length === 1
+      ? Number(curriculumOptions[0].id)
+      : undefined);
   const inCurriculum = courses.filter((c) => c.curriculum.id === curriculum);
 
   const subOptions = distinct(inCurriculum, (c) => c.sub_curriculum, general);
   const hasSubs = subOptions.some((option) => option.id !== 0);
   const sub = hasSubs
-    ? (picks.sub ?? (subOptions.length === 1 ? subOptions[0].id : undefined))
+    ? (picks.sub ??
+      (subOptions.length === 1 ? Number(subOptions[0].id) : undefined))
     : 0;
   const afterSub = inCurriculum.filter(
     (c) => sub === undefined || (c.sub_curriculum?.id ?? 0) === sub,
@@ -97,67 +118,81 @@ const CourseStep: FC<CourseStepProps> = ({
 
   const gradeOptions = distinct(afterSub, (c) => c.grade, general);
   const grade =
-    picks.grade ?? (gradeOptions.length === 1 ? gradeOptions[0].id : undefined);
+    picks.grade ??
+    (gradeOptions.length === 1 ? Number(gradeOptions[0].id) : undefined);
   const afterGrade = afterSub.filter((c) => c.grade.id === grade);
 
   const subjectOptions = distinct(afterGrade, (c) => c.subject, general);
   const subject =
     picks.subject ??
-    (subjectOptions.length === 1 ? subjectOptions[0].id : undefined);
+    (subjectOptions.length === 1 ? Number(subjectOptions[0].id) : undefined);
   const afterSubject = afterGrade.filter((c) => c.subject.id === subject);
 
-  const boardOptions = distinct(afterSubject, (c) => c.exam_board, general);
-  const hasBoards = boardOptions.some((option) => option.id !== 0);
+  // The course itself; a course split by board (legacy variants) resolves to its general entry
+  const resolved =
+    subject !== undefined
+      ? (afterSubject.find((c) => !c.exam_board) ?? afterSubject[0])
+      : undefined;
+
+  // The board the student sits: required once the course's tutors declare any
+  const boardOptions: Choice[] = (resolved?.exam_boards ?? []).map((b) => ({
+    id: b.id,
+    label: b.name,
+  }));
+  const hasBoards = boardOptions.length > 0;
   const board = hasBoards
     ? (picks.board ??
-      (boardOptions.length === 1 ? boardOptions[0].id : undefined))
-    : 0;
-  const matches = afterSubject.filter(
-    (c) => board === undefined || (c.exam_board?.id ?? 0) === board,
-  );
-  const resolved =
-    subject !== undefined && board !== undefined ? matches[0] : undefined;
+      (boardOptions.length === 1 ? Number(boardOptions[0].id) : undefined))
+    : undefined;
+  const complete = !!resolved && (!hasBoards || board !== undefined);
 
-  const pick = (key: keyof Picks, value: string) => {
-    const id = value === NONE ? undefined : Number(value);
+  const pick = (key: keyof Picks) => (id: Choice['id']) => {
     // Every pick below the changed one starts over
-    const order: (keyof Picks)[] = [
-      'curriculum',
-      'sub',
-      'grade',
-      'subject',
-      'board',
-    ];
-    const reset = order.slice(order.indexOf(key) + 1);
+    const reset = ORDER.slice(ORDER.indexOf(key) + 1);
     setPicks((prev) => {
-      const next: Picks = { ...prev, [key]: id };
+      const next: Picks = { ...prev, [key]: Number(id) };
       reset.forEach((later) => delete next[later]);
       return next;
     });
   };
 
-  const select = (
+  const NONE = '';
+  const field = (
     key: keyof Picks,
     label: string,
-    options: Option[],
+    options: Choice[],
     value: number | undefined,
-    disabled = false,
   ) => (
-    <FormControl size="small" fullWidth disabled={disabled}>
-      <InputLabel id={`trial-${key}-label`}>{label}</InputLabel>
-      <Select
-        labelId={`trial-${key}-label`}
-        label={label}
-        value={value === undefined ? NONE : String(value)}
-        onChange={(event) => pick(key, String(event.target.value))}
-      >
-        {options.map((option) => (
-          <MenuItem key={option.id} value={String(option.id)}>
-            {option.name}
-          </MenuItem>
-        ))}
-      </Select>
-    </FormControl>
+    <div className="trial-field">
+      <span className="trial-field__label" id={`trial-${key}-label`}>
+        {label}
+      </span>
+      <FormControl fullWidth>
+        <Select
+          className="trial-select"
+          labelId={`trial-${key}-label`}
+          displayEmpty
+          value={value === undefined ? NONE : String(value)}
+          onChange={(event) => pick(key)(String(event.target.value))}
+          renderValue={(selected) =>
+            selected === NONE ? (
+              <span className="trial-select__placeholder">
+                {t('TRIAL.COURSE.PLACEHOLDER')}
+              </span>
+            ) : (
+              options.find((option) => String(option.id) === selected)?.label
+            )
+          }
+          MenuProps={{ className: 'trial-select__menu' }}
+        >
+          {options.map((option) => (
+            <MenuItem key={option.id} value={String(option.id)}>
+              {option.label}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+    </div>
   );
 
   if (loading) {
@@ -176,48 +211,45 @@ const CourseStep: FC<CourseStepProps> = ({
   return (
     <div className="trial__step">
       <h2 className="trial__step-title">{t('TRIAL.COURSE.TITLE')}</h2>
+
       <div className="trial__fields">
-        {select(
+        {field(
           'curriculum',
           t('TRIAL.COURSE.CURRICULUM'),
           curriculumOptions,
           curriculum,
         )}
         {hasSubs &&
-          select('sub', t('TRIAL.COURSE.SUB_CURRICULUM'), subOptions, sub)}
-        {select(
-          'grade',
-          t('TRIAL.COURSE.GRADE'),
-          gradeOptions,
-          grade,
-          sub === undefined,
-        )}
-        {select(
-          'subject',
-          t('TRIAL.COURSE.SUBJECT'),
-          subjectOptions,
-          subject,
-          grade === undefined,
-        )}
+          curriculum !== undefined &&
+          field('sub', t('TRIAL.COURSE.SUB_CURRICULUM'), subOptions, sub)}
+        {curriculum !== undefined &&
+          sub !== undefined &&
+          field('grade', t('TRIAL.COURSE.GRADE'), gradeOptions, grade)}
+        {grade !== undefined &&
+          field('subject', t('TRIAL.COURSE.SUBJECT'), subjectOptions, subject)}
         {hasBoards &&
-          select(
-            'board',
-            t('TRIAL.COURSE.EXAM_BOARD'),
-            boardOptions,
-            board,
-            subject === undefined,
-          )}
+          field('board', t('TRIAL.COURSE.EXAM_BOARD'), boardOptions, board)}
       </div>
-      {resolved && (
-        <p className="trial__resolved">{resolved.full_course_name}</p>
+
+      {complete && resolved && (
+        <p className="trial__resolved">
+          <CheckCircleRounded />
+          {resolved.full_course_name}
+          {board !== undefined && (
+            <span className="trial__resolved-board">
+              {boardOptions.find((option) => option.id === board)?.label}
+            </span>
+          )}
+        </p>
       )}
+
       <div className="trial__actions">
         <Button
+          className="trial__cta"
           variant="contained"
-          color="primary"
-          endIcon={<ArrowForward />}
-          disabled={!resolved}
-          onClick={() => resolved && onNext(resolved.id)}
+          endIcon={<ArrowForwardRounded />}
+          disabled={!complete}
+          onClick={() => resolved && onNext(resolved.id, board)}
         >
           {t('TRIAL.ACTIONS.NEXT')}
         </Button>

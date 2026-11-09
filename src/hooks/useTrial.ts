@@ -14,6 +14,14 @@ export interface TrialSlot {
   end_time: string;
 }
 
+export interface ExamBoardOption {
+  id: number;
+  name: string;
+}
+
+/** A course open for trials, with the exam boards its tutors teach it for */
+export type TrialCourse = GradeSubject & { exam_boards: ExamBoardOption[] };
+
 export interface TrialTutor {
   id: number;
   first_name: string;
@@ -22,6 +30,8 @@ export interface TrialTutor {
   bio?: string | null;
   video_url?: string | null;
   recommended: boolean;
+  /** The exam boards this tutor teaches the course for */
+  exam_boards: ExamBoardOption[];
   /** Ops' rating of the tutor for this course, 1 to 5, null when unrated */
   ops_rating: number | null;
   /** Open slots a whole trial can start on, soonest first */
@@ -35,6 +45,8 @@ export interface TrialSearch {
   start_hour: number;
   end_hour: number;
   time_zone: string;
+  /** Required by the backend once the course's tutors declare boards */
+  exam_board_id?: number;
 }
 
 export const trialKeys = {
@@ -52,7 +64,7 @@ export function useTrialCourses() {
     queryKey: trialKeys.courses(),
     queryFn: async () => {
       const response = await get('/public/courses');
-      return (response.data.data || []) as GradeSubject[];
+      return (response.data.data || []) as TrialCourse[];
     },
     staleTime: 30 * 60 * 1000,
   });

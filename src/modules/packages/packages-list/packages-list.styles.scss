@@ -1,78 +1,70 @@
 @import '../../../assets/styles/variables.scss';
 @import '../../../assets/styles/mixins.scss';
 
-.packages-list-container {
-  width: 100%;
+.pk-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 34rem), 1fr));
+  gap: 1.6rem;
+}
 
-  .packages-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(36rem, 1fr));
-    gap: $space-5;
+.pk-groups {
+  display: grid;
+  gap: 2.4rem;
+}
 
-    @include respond(phone) {
-      grid-template-columns: minmax(0, 1fr);
-      gap: $space-4;
-    }
-  }
+.pk-group {
+  --kid: #{$brand-700};
 
-  // Infinite-scroll wrapper should not clip card shadows
-  .infinite-scroll-component {
-    overflow: visible !important;
-  }
-
-  .no-packages {
-    @include card($space-8 $space-5);
+  &__head {
     display: flex;
-    flex-direction: column;
+    flex-wrap: wrap;
     align-items: center;
-    justify-content: center;
-    text-align: center;
+    gap: 1rem;
+    margin-bottom: 1.2rem;
+  }
 
-    svg {
-      font-size: 3.2rem;
-      color: $brand-600;
-      width: 6.4rem;
-      height: 6.4rem;
-      padding: 1.6rem;
-      background-color: $brand-50;
-      border-radius: $radius-md;
-      margin-bottom: $space-4;
-      box-sizing: border-box;
-    }
+  &__avatar.MuiAvatar-root {
+    width: 3.6rem;
+    height: 3.6rem;
+    font-size: 1.5rem;
+    font-weight: 700;
+    background: var(--kid);
+  }
 
-    .title {
-      font-size: $font-h4;
-      font-weight: 700;
-      color: $text-strong;
-      margin-bottom: $space-2;
+  &__name {
+    margin: 0;
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: $text-strong;
+  }
 
-      @include respond(phone) {
-        font-size: $font-h5;
-      }
-    }
-
-    .subtitle {
-      font-size: $font-base;
-      color: $text-muted;
-      max-width: 48rem;
-    }
+  &__sum {
+    font-size: 1.3rem;
+    color: $text-muted;
   }
 }
 
-.packages-list__status {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: $space-7 $space-4;
-  color: $text-muted;
-  font-size: $font-sm;
+.no-packages {
+  display: grid;
+  justify-items: center;
+  gap: 0.6rem;
+  padding: 4rem 1rem;
+  text-align: center;
+  color: $text-body;
 
-  p {
-    color: $text-muted;
-    font-size: $font-base;
+  svg {
+    font-size: 4rem;
+    color: $gray-300;
   }
 
-  &--more {
-    padding: $space-5 $space-4;
+  .title {
+    margin: 0;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: $text-strong;
+  }
+
+  .subtitle {
+    margin: 0;
   }
 }

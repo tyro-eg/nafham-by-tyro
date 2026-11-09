@@ -316,3 +316,11 @@
     border-radius: $radius-pill;
   }
 }
+
+// Status beside the child's name on a parent's list
+.hw-card__chips {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  justify-content: flex-end;
+}

@@ -1,0 +1,489 @@
+@import '../../assets/styles/variables.scss';
+
+$hw-muted: $text-muted;
+$hw-surface: $surface;
+$hw-border: $border;
+
+.family {
+  padding-block: 1.5rem 3rem;
+
+  &__header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+  }
+
+  &__title {
+    margin: 0;
+    font-size: 1.75rem;
+    font-weight: 700;
+  }
+
+  &__subtitle {
+    margin: 0.25rem 0 0;
+    color: $hw-muted;
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
+    gap: 1rem;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  &__card {
+    background: $hw-surface;
+    border: 1px solid $hw-border;
+    border-radius: 16px;
+    padding: 1.25rem;
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  &__card-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+
+  &__name {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 700;
+  }
+
+  &__facts {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem 1rem;
+    margin: 0;
+
+    div {
+      display: grid;
+      gap: 0.1rem;
+    }
+
+    dt {
+      color: $hw-muted;
+      font-size: 0.8rem;
+    }
+
+    dd {
+      margin: 0;
+      font-weight: 600;
+    }
+  }
+
+  &__card-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.25rem;
+  }
+
+  &__section {
+    background: $hw-surface;
+    border: 1px solid $hw-border;
+    border-radius: 16px;
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  &__section-title {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 700;
+  }
+
+  &__row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  &__muted {
+    color: $hw-muted;
+    margin: 0;
+  }
+
+  &__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  &__empty {
+    text-align: center;
+    padding: 2rem 1rem;
+    color: $hw-muted;
+  }
+
+  &__back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
+    color: $text-body;
+
+    .rtl & svg {
+      transform: scaleX(-1);
+    }
+
+    &:hover {
+      color: $brand-700;
+    }
+  }
+
+  &__prose {
+    margin: 0;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    line-height: 1.7;
+    text-align: start;
+  }
+
+  &__chip {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.3rem 0.9rem;
+    border-radius: $radius-pill;
+    font-size: $font-xs;
+    font-weight: 700;
+    background: #f2efff;
+    color: #6a52d6;
+  }
+}
+
+// ---------- the parent's home ----------
+.family-home {
+  .sd-hero.fam-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) max-content;
+    align-items: center;
+    gap: 1.5rem;
+    min-height: 0;
+    padding: 2.4rem 2.8rem;
+
+    @media (max-width: 900px) {
+      grid-template-columns: minmax(0, 1fr);
+      align-items: start;
+    }
+
+    .sd-hero__title {
+      font-size: 3rem;
+    }
+  }
+}
+
+.fam-hero {
+  &__totals {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem 1.6rem;
+    margin: 1rem 0 0;
+    padding: 0;
+    list-style: none;
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.9);
+
+    li {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    svg {
+      font-size: 1.7rem;
+      opacity: 0.85;
+    }
+  }
+
+  // One narrow column of buttons beside the words; a row under them on phones
+  &__actions {
+    display: grid;
+    gap: 0.6rem;
+    justify-items: stretch;
+    min-width: 20rem;
+
+    .MuiButton-root {
+      justify-content: flex-start;
+    }
+
+    @media (max-width: 900px) {
+      display: flex;
+      flex-wrap: wrap;
+      min-width: 0;
+    }
+  }
+}
+
+.fam-kids {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 34rem), 1fr));
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.fam-kid {
+  --kid: #{$brand-700};
+  border-top: 4px solid var(--kid);
+
+  &__head {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+  }
+
+  &__avatar.MuiAvatar-root {
+    width: 4.4rem;
+    height: 4.4rem;
+    font-size: 1.8rem;
+    font-weight: 700;
+    background: var(--kid);
+  }
+
+  &__who {
+    display: grid;
+    gap: 0.1rem;
+    margin-inline-end: auto;
+    min-width: 0;
+  }
+
+  &__name {
+    margin: 0;
+    font-size: 1.8rem;
+    font-weight: 800;
+  }
+
+  &__login {
+    color: $text-muted;
+    font-size: 1.2rem;
+  }
+
+  &__open.MuiButton-root {
+    background: var(--kid);
+    white-space: nowrap;
+
+    &:hover {
+      background: var(--kid);
+      filter: brightness(0.92);
+    }
+  }
+
+  &__facts {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.75rem;
+    margin: 0 0 1rem;
+    padding: 1rem;
+    border-radius: 1.2rem;
+    background: $surface-alt;
+
+    @media (max-width: 480px) {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    div {
+      display: grid;
+      gap: 0.1rem;
+    }
+
+    dt {
+      color: $text-muted;
+      font-size: 1.1rem;
+    }
+
+    dd {
+      margin: 0;
+      font-size: 1.8rem;
+      font-weight: 800;
+      line-height: 1.1;
+    }
+  }
+
+  &__next {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    margin-bottom: 1.25rem;
+    padding: 0.9rem 1rem;
+    border-radius: 1rem;
+    background: color-mix(in srgb, var(--kid) 10%, white);
+    color: $text-strong;
+    font-size: 1.3rem;
+    line-height: 1.5;
+
+    svg {
+      flex: none;
+      font-size: 1.8rem;
+      color: var(--kid);
+    }
+
+    strong {
+      color: var(--kid);
+    }
+
+    &--live {
+      background: #eafaf0;
+
+      strong,
+      svg {
+        color: #2f9a3a;
+      }
+    }
+  }
+
+  &__packages {
+    list-style: none;
+    margin: 0 0 1rem;
+    padding: 0;
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  &__package {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  &__package-text {
+    display: grid;
+    gap: 0.1rem;
+    min-width: 0;
+  }
+
+  &__package-course {
+    font-weight: 700;
+  }
+
+  &__package-meta {
+    color: $text-muted;
+    font-size: 1.2rem;
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+}
+
+.fam-upcoming {
+  &__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.6rem;
+  }
+
+  &__item {
+    --kid: #{$brand-700};
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.8rem 1rem;
+    border-radius: 1.2rem;
+    border: 1px solid $border;
+    border-inline-start: 4px solid var(--kid);
+    background: $surface;
+
+    @media (max-width: 600px) {
+      grid-template-columns: auto minmax(0, 1fr);
+    }
+  }
+
+  &__date {
+    display: grid;
+    place-items: center;
+    width: 5.2rem;
+    padding: 0.5rem 0;
+    border-radius: 1rem;
+    background: $surface-alt;
+    line-height: 1.1;
+  }
+
+  &__day {
+    font-size: 2rem;
+    font-weight: 800;
+  }
+
+  &__month {
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    color: $text-muted;
+  }
+
+  &__main {
+    display: grid;
+    gap: 0.15rem;
+    min-width: 0;
+  }
+
+  &__who {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--kid);
+  }
+
+  &__dot {
+    width: 0.8rem;
+    height: 0.8rem;
+    border-radius: 50%;
+    background: var(--kid);
+  }
+
+  &__live {
+    padding: 0.1rem 0.6rem;
+    border-radius: 999px;
+    background: #eafaf0;
+    color: #2f9a3a;
+    font-size: 1.1rem;
+  }
+
+  &__subject {
+    font-weight: 700;
+    color: $text-strong;
+  }
+
+  &__meta {
+    font-size: 1.2rem;
+    color: $text-muted;
+  }
+
+  &__in {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: $text-body;
+    white-space: nowrap;
+
+    @media (max-width: 600px) {
+      grid-column: 2;
+    }
+  }
+}

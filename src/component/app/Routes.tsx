@@ -57,153 +57,204 @@ const Assistant = lazy(() => import('../../modules/assistant/index.component'));
 const Checkout = lazy(() => import('../../modules/checkout/index.component'));
 const Terms = lazy(() => import('../../modules/terms/index.component'));
 const TrialPage = lazy(() => import('../../modules/trial/index.component'));
+const FamilyHome = lazy(() => import('../../modules/family/index.component'));
+const FamilySettings = lazy(
+  () => import('../../modules/family/family-settings.component'),
+);
+const FamilyNotes = lazy(
+  () => import('../../modules/family/family-notes.component'),
+);
 const NotFound404 = lazy(() => import('../../modules/404/index.component'));
 
 interface RoutesProps {
   currentUser: CurrentUser | null;
 }
 
-const RoutesComponent: React.FC<RoutesProps> = ({ currentUser }) => (
-  <Suspense fallback={<Loader />}>
-    <Routes>
-      <Route
-        path="/"
-        element={currentUser ? <Navigate to="/dashboard" replace /> : <Home />}
-      />
-      <Route
-        path="/dashboard"
-        element={
-          <GuardedRoute
-            element={
-              currentUser?.type === 'Tutor' ? <TutorDashboard /> : <Dashboard />
-            }
-            auth={!!currentUser}
-          />
-        }
-      />
-      <Route
-        path="/login"
-        element={
-          currentUser ? <Navigate to={getHomePath(currentUser)} /> : <SignIn />
-        }
-      />
-      <Route
-        path="/register"
-        element={currentUser ? <Navigate to="/registered" /> : <Register />}
-      />
-      <Route
-        path="/registered"
-        element={<GuardedRoute element={<Registered />} auth={!!currentUser} />}
-      />
-      <Route path="/impersonate" element={<Impersonate />} />
-      <Route
-        path="/account_settings"
-        element={
-          <GuardedRoute
-            element={<AccountSettings />}
-            auth={!!currentUser && currentUser.type === 'Tutor'}
-          />
-        }
-      />
-      <Route
-        path="/home"
-        element={
-          <GuardedRoute element={<PrivateSessions />} auth={!!currentUser} />
-        }
-      />
-      <Route
-        path="/my_instructors"
-        element={
-          currentUser?.type === 'Tutor' ? (
-            <Navigate to="/my_students" replace />
-          ) : (
-            <GuardedRoute element={<MyInstructors />} auth={!!currentUser} />
-          )
-        }
-      />
-      <Route
-        path="/calendar"
-        element={
-          <GuardedRoute element={<CalendarPage />} auth={!!currentUser} />
-        }
-      />
-      <Route
-        path="/availability"
-        element={
-          <GuardedRoute
-            element={<AvailabilityPage />}
-            auth={!!currentUser && currentUser.type === 'Tutor'}
-          />
-        }
-      />
-      <Route
-        path="/my_salary"
-        element={
-          <GuardedRoute
-            element={<MySalary />}
-            auth={!!currentUser && currentUser.type === 'Tutor'}
-          />
-        }
-      />
-      <Route
-        path="/my_students"
-        element={
-          <GuardedRoute
-            element={<MyStudents />}
-            auth={!!currentUser && currentUser.type === 'Tutor'}
-          />
-        }
-      />
-      <Route
-        path="/assistant"
-        element={
-          <GuardedRoute
-            element={<Assistant />}
-            auth={!!currentUser && currentUser.type === 'Tutor'}
-          />
-        }
-      />
-      {/* <Route path="/courses" element={<CoursesList />} />
+const RoutesComponent: React.FC<RoutesProps> = ({ currentUser }) => {
+  const isParent = currentUser?.type === 'Parent';
+  return (
+    <Suspense fallback={<Loader />}>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            currentUser ? (
+              <Navigate to={getHomePath(currentUser)} replace />
+            ) : (
+              <Home />
+            )
+          }
+        />
+        <Route
+          path="/dashboard"
+          element={
+            isParent ? (
+              <Navigate to="/family" replace />
+            ) : (
+              <GuardedRoute
+                element={
+                  currentUser?.type === 'Tutor' ? (
+                    <TutorDashboard />
+                  ) : (
+                    <Dashboard />
+                  )
+                }
+                auth={!!currentUser}
+              />
+            )
+          }
+        />
+        {/* The parent's pages */}
+        <Route
+          path="/family"
+          element={<GuardedRoute element={<FamilyHome />} auth={isParent} />}
+        />
+        <Route
+          path="/family/settings"
+          element={
+            <GuardedRoute element={<FamilySettings />} auth={isParent} />
+          }
+        />
+        <Route
+          path="/family/notes"
+          element={<GuardedRoute element={<FamilyNotes />} auth={isParent} />}
+        />
+        <Route
+          path="/login"
+          element={
+            currentUser ? (
+              <Navigate to={getHomePath(currentUser)} />
+            ) : (
+              <SignIn />
+            )
+          }
+        />
+        <Route
+          path="/register"
+          element={
+            currentUser ? (
+              <Navigate to={getHomePath(currentUser)} />
+            ) : (
+              <Register />
+            )
+          }
+        />
+        <Route
+          path="/registered"
+          element={
+            <GuardedRoute element={<Registered />} auth={!!currentUser} />
+          }
+        />
+        <Route path="/impersonate" element={<Impersonate />} />
+        <Route
+          path="/account_settings"
+          element={
+            <GuardedRoute
+              element={<AccountSettings />}
+              auth={!!currentUser && currentUser.type === 'Tutor'}
+            />
+          }
+        />
+        <Route
+          path="/home"
+          element={
+            <GuardedRoute element={<PrivateSessions />} auth={!!currentUser} />
+          }
+        />
+        <Route
+          path="/my_instructors"
+          element={
+            currentUser?.type === 'Tutor' ? (
+              <Navigate to="/my_students" replace />
+            ) : (
+              <GuardedRoute element={<MyInstructors />} auth={!!currentUser} />
+            )
+          }
+        />
+        <Route
+          path="/calendar"
+          element={
+            <GuardedRoute element={<CalendarPage />} auth={!!currentUser} />
+          }
+        />
+        <Route
+          path="/availability"
+          element={
+            <GuardedRoute
+              element={<AvailabilityPage />}
+              auth={!!currentUser && currentUser.type === 'Tutor'}
+            />
+          }
+        />
+        <Route
+          path="/my_salary"
+          element={
+            <GuardedRoute
+              element={<MySalary />}
+              auth={!!currentUser && currentUser.type === 'Tutor'}
+            />
+          }
+        />
+        <Route
+          path="/my_students"
+          element={
+            <GuardedRoute
+              element={<MyStudents />}
+              auth={!!currentUser && currentUser.type === 'Tutor'}
+            />
+          }
+        />
+        <Route
+          path="/assistant"
+          element={
+            <GuardedRoute
+              element={<Assistant />}
+              auth={!!currentUser && currentUser.type === 'Tutor'}
+            />
+          }
+        />
+        {/* <Route path="/courses" element={<CoursesList />} />
       <Route path="/course/:courseId" element={<CourseDetails />} /> */}
-      <Route
-        path="/my_sessions"
-        element={<GuardedRoute element={<Sessions />} auth={!!currentUser} />}
-      />
-      <Route
-        path="/my_packages"
-        element={<GuardedRoute element={<Packages />} auth={!!currentUser} />}
-      />
-      <Route
-        path="/messages"
-        element={<GuardedRoute element={<Messages />} auth={!!currentUser} />}
-      />
-      <Route
-        path="/messages/:channelId"
-        element={<GuardedRoute element={<Messages />} auth={!!currentUser} />}
-      />
-      <Route
-        path="/homework"
-        element={<GuardedRoute element={<Homework />} auth={!!currentUser} />}
-      />
-      <Route
-        path="/homework/:slug"
-        element={
-          <GuardedRoute element={<HomeworkDetail />} auth={!!currentUser} />
-        }
-      />
-      <Route
-        path="/profile/:id"
-        element={
-          <GuardedRoute element={<EditProfile />} auth={!!currentUser} />
-        }
-      />
-      {/* The free-trial wizard: visitors register at the last step */}
-      <Route path="/trial" element={<TrialPage />} />
-      <Route path="/checkout" element={<Checkout />} />
-      <Route path="/terms" element={<Terms />} />
-      <Route path="*" element={<NotFound404 />} />
-    </Routes>
-  </Suspense>
-);
+        <Route
+          path="/my_sessions"
+          element={<GuardedRoute element={<Sessions />} auth={!!currentUser} />}
+        />
+        <Route
+          path="/my_packages"
+          element={<GuardedRoute element={<Packages />} auth={!!currentUser} />}
+        />
+        <Route
+          path="/messages"
+          element={<GuardedRoute element={<Messages />} auth={!!currentUser} />}
+        />
+        <Route
+          path="/messages/:channelId"
+          element={<GuardedRoute element={<Messages />} auth={!!currentUser} />}
+        />
+        <Route
+          path="/homework"
+          element={<GuardedRoute element={<Homework />} auth={!!currentUser} />}
+        />
+        <Route
+          path="/homework/:slug"
+          element={
+            <GuardedRoute element={<HomeworkDetail />} auth={!!currentUser} />
+          }
+        />
+        <Route
+          path="/profile/:id"
+          element={
+            <GuardedRoute element={<EditProfile />} auth={!!currentUser} />
+          }
+        />
+        {/* The free-trial wizard: visitors register at the last step */}
+        <Route path="/trial" element={<TrialPage />} />
+        <Route path="/checkout" element={<Checkout />} />
+        <Route path="/terms" element={<Terms />} />
+        <Route path="*" element={<NotFound404 />} />
+      </Routes>
+    </Suspense>
+  );
+};
 
 export default RoutesComponent;
