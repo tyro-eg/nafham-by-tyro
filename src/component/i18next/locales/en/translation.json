@@ -789,6 +789,7 @@
         "WILLGOLIVE": "Session will go live in",
         "END": "End the Session",
         "STARTING_SOON": "Starts in",
+        "STARTING_NOW": "Starting now",
         "LIVE_NOW": "Live now",
         "STARTED_AGO_one": "started {{count}} minute ago",
         "STARTED_AGO_other": "started {{count}} minutes ago",
@@ -878,6 +879,10 @@
       "TODAY": "Today",
       "TOMORROW": "Tomorrow",
       "YESTERDAY": "Yesterday"
+    },
+    "NEXT_UP": {
+      "LABEL": "Next lesson",
+      "STARTS_IN": "starts in {{time}}"
     }
   },
   "MYPACKAGES": {
@@ -2249,7 +2254,12 @@
       "TRY_AGAIN": "Try again",
       "SEE_PACKAGES": "See my packages",
       "RECEIPTS": "All receipts",
-      "NOT_FOUND": "We couldn't find this payment."
+      "NOT_FOUND": "We couldn't find this payment.",
+      "FULFILLED_MIXED": "You paid {{amount}}. Here is what happens with each course.",
+      "LINE_NEW": "{{hours}}h {{course}} for {{student}}: new package with {{tutor}}, hours added.",
+      "LINE_TOP_UP": "{{hours}}h {{course}} for {{student}}: added to the package with {{tutor}}.",
+      "LINE_MATCH": "{{hours}}h {{course}} for {{student}}: we're finding a tutor who fits your times, within two working days.",
+      "NEXT_STEPS": "Our team books the first lessons from your preferred times, and the chat with the tutor opens in Messages."
     },
     "STATUS": {
       "created": "Starting",
@@ -2268,7 +2278,14 @@
       "LINE": "{{hours}}h {{course}} · {{student}}",
       "RESUME": "Continue payment",
       "CANCEL": "Cancel",
-      "CANCELLED": "Payment cancelled."
+      "CANCELLED": "Payment cancelled.",
+      "KIND": {
+        "new_package": "New package",
+        "top_up": "Top-up",
+        "match_pending": "Tutor being matched",
+        "match_done": "Tutor matched",
+        "refunded": "Refunded"
+      }
     },
     "BANNER": {
       "LOW": "One of your packages is down to its last hours.",
@@ -2299,6 +2316,139 @@
       "TOO_MANY": "Up to {{count}} packages in one payment.",
       "OVER_LIMIT": "This total is above the online limit. Please contact us to pay.",
       "PAY": "Pay {{amount}}"
+    },
+    "OPEN": {
+      "TEXT": "You have a payment of {{amount}} still open.",
+      "RESUME": "Continue payment",
+      "CANCEL": "Cancel it"
+    }
+  },
+  "BUY": {
+    "EYEBROW": "New course",
+    "TITLE": "Buy a course",
+    "SUBTITLE": "Pick the course, tell us when lessons suit you, choose who teaches, and pay in one go.",
+    "ENTRY": "Buy a course",
+    "ADD_COURSE": "Add a course",
+    "FIRST_COURSE": "Buy the first course",
+    "SUMMARY": "Your choices",
+    "PENDING": "Not chosen yet",
+    "STEP_COUNT": "Step {{step}} of {{count}}",
+    "STEPS": {
+      "WHO": "Child",
+      "WHAT": "Course",
+      "WHEN": "Weekly times",
+      "TUTORS": "Tutor",
+      "HOURS": "Hours",
+      "BASKET": "Basket"
+    },
+    "ACTIONS": {
+      "BACK": "Back",
+      "NEXT": "Continue",
+      "SKIP": "Skip for now",
+      "ADD": "Add to basket",
+      "ANOTHER": "Add another course",
+      "PAY": "Pay {{amount}}"
+    },
+    "GUARD": {
+      "TUTOR": "Buying courses is for families and students. You are signed in as a tutor.",
+      "CHILD": "Your parent buys courses for you. Ask them to open the website."
+    },
+    "WHO": {
+      "TITLE": "Who is the course for?",
+      "TEXT": "Pick the child, or add a new one; the tutors and prices follow their curriculum.",
+      "ADD": "Add a child",
+      "NONE": "Add your first child to get started.",
+      "FIRST_NAME": "First name",
+      "LAST_NAME": "Last name",
+      "SAVE": "Save child"
+    },
+    "WHAT": {
+      "TITLE": "What will {{name}} learn?",
+      "ALREADY": "{{name}} already learns this with {{tutor}} ({{hours}}h left). Renew that package instead, or continue to buy with another tutor.",
+      "RENEW": "Renew with {{tutor}}"
+    },
+    "CONTINUE": {
+      "TITLE": "Continue with {{tutor}}",
+      "META": "{{student}}'s free trial in {{course}}, {{date}}",
+      "BUTTON": "Buy a package with {{tutor}}"
+    },
+    "WHEN": {
+      "TITLE": "When do lessons suit you?",
+      "TEXT": "We rank tutors by their free times in your week, and our team books the first lessons from these. Leave it empty if you don't mind.",
+      "DAYS": "Days",
+      "WINDOWS": "Time of day",
+      "MORNING": "Morning",
+      "AFTERNOON": "Afternoon",
+      "EVENING": "Evening",
+      "LESSONS": "Lessons a week",
+      "LESSONS_COUNT_one": "{{count}} lesson a week",
+      "LESSONS_COUNT_other": "{{count}} lessons a week",
+      "NOTE": "Anything else?",
+      "NOTE_HINT": "Exams coming up, days to avoid, a tutor you liked…",
+      "TIMEZONE": "Times are in your local timezone ({{tz}}).",
+      "MATCH_HINT": "If you'd rather we choose the tutor, we need your times."
+    },
+    "TUTORS": {
+      "TITLE": "Who will teach?",
+      "SUBTITLE": "Ranked by our team for {{course}}. You choose the hours next.",
+      "TAB_RECOMMENDED": "Recommended",
+      "TAB_TRIALED": "Trialed with",
+      "TAB_MATCH": "Let Nafham choose",
+      "OVERLAP_one": "{{count}} free time in your week",
+      "OVERLAP_other": "{{count}} free times in your week",
+      "NO_OVERLAP": "No free times in your week yet; we'll ask them",
+      "TRIALED_ON": "Trial on {{date}}",
+      "TRIAL_SCHEDULED": "Trial booked for {{date}}",
+      "CHOOSE": "Choose {{name}}",
+      "RENEW": "Renew with {{name}}",
+      "NOT_ONLINE": "Not available online for this course",
+      "PRICE_FOR": "{{amount}} for {{count}} hours",
+      "EMPTY": "No tutor teaches {{course}} online yet. Our team can help: message us.",
+      "NO_TRIALS": "No free trial with a tutor of this course yet.",
+      "ALREADY_LEARNING": "{{name}} already learns this course with another tutor. Renew that package, or ask us to change tutor.",
+      "RENEW_THAT": "Renew that package",
+      "CHANGE_TUTOR": "Ask us to change tutor",
+      "MATCH_TITLE": "Let Nafham choose",
+      "MATCH_TEXT": "Pay now at our standard price. We match {{name}} with a tutor who fits your weekly times, then book the first lessons.",
+      "MATCH_SLA": "You hear from us within two working days. If you'd rather pick yourself later, you can.",
+      "MATCH_NEEDS_TIMES": "Tell us your weekly times first, so we can match a tutor who is free then.",
+      "MATCH_ADD_TIMES": "Add my times",
+      "MATCH_CHOOSE": "Match me a tutor",
+      "LOADING": "Finding tutors…",
+      "ERROR": "We couldn't load the tutors. Please try again."
+    },
+    "HOURS": {
+      "TITLE": "How many hours?",
+      "TITLE_MATCH": "How many hours with the matched tutor?",
+      "WITH": "With {{name}}. Every size is priced today; the price is locked when you pay.",
+      "CHOOSE": "Choose a package size",
+      "WEEKS_one": "About {{count}} week at {{lessons}} lessons a week.",
+      "WEEKS_other": "About {{count}} weeks at {{lessons}} lessons a week."
+    },
+    "BASKET": {
+      "TITLE": "Your basket",
+      "EMPTY": "Nothing in the basket yet.",
+      "COUNT_one": "{{count}} course",
+      "COUNT_other": "{{count}} courses",
+      "OPEN": "Basket: {{count}} · {{amount}}",
+      "LINE_TUTOR": "with {{name}}",
+      "LINE_MATCH": "tutor matched by Nafham after payment",
+      "LINE_RENEWAL": "added to the package with {{name}}",
+      "REMOVE": "Remove",
+      "SUBTOTAL": "Subtotal",
+      "DISCOUNT": "Family discount, {{count}} subjects",
+      "DISCOUNT_HINT": "Add one more subject for {{percent}}% off everything.",
+      "TOO_MANY": "Up to {{count}} courses in one payment.",
+      "COUNTRY": "Your country",
+      "COUNTRY_HINT": "Two-letter code, e.g. AE or EG. It decides VAT and is kept for next time.",
+      "TERMS": "I accept the",
+      "TERMS_LINK": "terms of service",
+      "PRICE_CHANGED": "Prices were updated while you were choosing. The new total is {{amount}}.",
+      "PAY_NEW": "Pay {{amount}}",
+      "PENDING_OPEN": "A payment for one of these courses is already open. Continue it, or cancel it from your receipts and try again.",
+      "RESUME": "Continue that payment",
+      "CANCEL_OPEN": "My receipts",
+      "REDIRECT": "You pay by card on Nomod's secure page and come straight back. Hours land the moment the card clears; our team then books the first lessons from your times."
     }
   }
 }

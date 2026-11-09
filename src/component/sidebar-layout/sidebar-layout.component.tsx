@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { Avatar, IconButton, Tooltip } from '@mui/material';
 import {
   AccountCircleRounded,
+  AddShoppingCartRounded,
   AssignmentRounded,
   CalendarMonthRounded,
   CloseRounded,
@@ -100,6 +101,23 @@ const SidebarLayout: FC<SidebarLayoutProps> = ({ children }) => {
   const isParent = currentUser.type === 'Parent';
 
   // Shown to both roles once Stream Chat is configured
+  // A parent, or an adult student, buys courses; a child asks the parent
+  const buyItem: {
+    to: string;
+    icon: JSX.Element;
+    label: string;
+    badge?: number;
+  }[] =
+    isParent || (!isTutor && !currentUser.family_id)
+      ? [
+          {
+            to: '/buy',
+            icon: <AddShoppingCartRounded />,
+            label: t('BUY.ENTRY'),
+          },
+        ]
+      : [];
+
   const messagesItem = chatClient
     ? [
         {
@@ -186,6 +204,7 @@ const SidebarLayout: FC<SidebarLayoutProps> = ({ children }) => {
       icon: <CardGiftcardRounded />,
       label: t('NAVIGATION.FREE_TRIAL'),
     },
+    ...buyItem,
     {
       to: '/my_sessions',
       icon: <EventNoteRounded />,
@@ -231,6 +250,7 @@ const SidebarLayout: FC<SidebarLayoutProps> = ({ children }) => {
       icon: <CardGiftcardRounded />,
       label: t('NAVIGATION.FREE_TRIAL'),
     },
+    ...buyItem,
     {
       to: '/my_instructors',
       icon: <PeopleAltRounded />,
