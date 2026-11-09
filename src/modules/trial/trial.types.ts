@@ -64,6 +64,44 @@ export const addDays = (yyyymmdd: string, days: number) => {
 export const today = () => isoDate(new Date());
 export const tomorrow = () => addDays(today(), 1);
 
+/** Whether the search covers today only, so time that has passed is out */
+const todayOnly = (day: DayChoice, date: string) =>
+  day === 'today' || (day === 'date' && date === today());
+
+/** A time window that has already ended today */
+const windowOver = (key: TimeWindow, now = new Date()) =>
+  key !== 'any' &&
+  now.getHours() + now.getMinutes() / 60 >= TIME_WINDOWS[key].end;
+
+/** No time window is left today: the last one has ended */
+export const todayOver = (now = new Date()) =>
+  (Object.keys(TIME_WINDOWS) as TimeWindow[])
+    .filter((key) => key !== 'any')
+    .every((key) => windowOver(key, now));
+
+/** The time windows still worth offering for the chosen day */
+export const openWindows = (day: DayChoice, date: string): TimeWindow[] =>
+  (Object.keys(TIME_WINDOWS) as TimeWindow[]).filter(
+    (key) => !todayOnly(day, date) || !windowOver(key),
+  );
+
+/** The first day a student may pick: tomorrow once today is over */
+export const firstDay = () => (todayOver() ? tomorrow() : today());
+
+/** The draft with any pick that time has overtaken moved to the next valid one */
+export const freshWhen = <
+  T extends Pick<TrialDraft, 'day' | 'date' | 'window'>,
+>(
+  draft: T,
+): T => {
+  const next = { ...draft };
+  if (next.day === 'today' && todayOver()) next.day = 'tomorrow';
+  if (!next.date || next.date < firstDay()) next.date = tomorrow();
+  if (!openWindows(next.day, next.date).includes(next.window))
+    next.window = 'any';
+  return next;
+};
+
 /** The search's first and last day for a day choice */
 export const rangeFor = (day: DayChoice, date: string) => {
   switch (day) {
@@ -96,12 +134,11 @@ export const loadDraft = (): TrialDraft => {
     if (!raw) return emptyDraft();
     const saved = JSON.parse(raw) as Partial<TrialDraft>;
     const draft = { ...emptyDraft(), ...saved };
-    // A picked date in the past is no use any more
-    if (!draft.date || draft.date < today()) draft.date = tomorrow();
     if (!['today', 'tomorrow', 'date', 'flexible'].includes(draft.day)) {
       draft.day = 'tomorrow';
     }
-    return draft;
+    // A date or time of day already in the past is no use any more
+    return freshWhen(draft);
   } catch {
     return emptyDraft();
   }

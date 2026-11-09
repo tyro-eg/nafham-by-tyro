@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, TextField } from '@mui/material';
 import {
@@ -19,9 +19,13 @@ import {
   MAX_DAYS,
   TIME_WINDOWS,
   addDays,
+  firstDay,
   formatDate,
+  freshWhen,
   localTimeZone,
+  openWindows,
   today,
+  todayOver,
   tomorrow,
   type DayChoice,
   type TimeWindow,
@@ -63,15 +67,41 @@ const WhenStep: FC<WhenStepProps> = ({
   const { t, i18n } = useTranslation();
   const locale = `${i18n.language}-u-nu-latn`;
   const latest = addDays(today(), MAX_DAYS);
-  const dateValid = day !== 'date' || (date >= today() && date <= latest);
+  const earliest = firstDay();
+  const dateValid = day !== 'date' || (date >= earliest && date <= latest);
+
+  // Re-check every minute, so a window that ends while the page is open goes
+  const [, setTick] = useState(0);
+  useEffect(() => {
+    const timer = setInterval(() => setTick((n) => n + 1), 60_000);
+    return () => clearInterval(timer);
+  }, []);
+
+  // Every change keeps the picks valid: no ended day or time of day stays picked
+  const change = (patch: {
+    day?: DayChoice;
+    date?: string;
+    window?: TimeWindow;
+  }) => onChange(freshWhen({ day, date, window, ...patch }));
+  const fresh = freshWhen({ day, date, window });
+  const stale =
+    fresh.day !== day || fresh.date !== date || fresh.window !== window;
+  useEffect(() => {
+    if (stale) onChange(fresh);
+  });
 
   const days = [
-    {
-      id: 'today' as DayChoice,
-      label: t('TRIAL.WHEN.TODAY'),
-      icon: <TodayRounded />,
-      hint: formatDate(today(), locale),
-    },
+    // Today goes once its last time window has ended
+    ...(todayOver()
+      ? []
+      : [
+          {
+            id: 'today' as DayChoice,
+            label: t('TRIAL.WHEN.TODAY'),
+            icon: <TodayRounded />,
+            hint: formatDate(today(), locale),
+          },
+        ]),
     {
       id: 'tomorrow' as DayChoice,
       label: t('TRIAL.WHEN.TOMORROW'),
@@ -94,7 +124,8 @@ const WhenStep: FC<WhenStepProps> = ({
   ];
 
   // The rail keeps "Morning (6–12)"; the tile shows the hours as its hint
-  const windows = (Object.keys(TIME_WINDOWS) as TimeWindow[]).map((key) => ({
+  // Only the windows not yet over: today in the evening offers no morning
+  const windows = openWindows(day, date).map((key) => ({
     id: key,
     label: t(`TRIAL.WHEN.${key.toUpperCase()}`).replace(/\s*\(.*\)\s*$/, ''),
     icon: WINDOW_ICONS[key],
@@ -113,7 +144,7 @@ const WhenStep: FC<WhenStepProps> = ({
         choices={days}
         value={day}
         variant="tiles"
-        onPick={(id) => onChange({ day: id as DayChoice })}
+        onPick={(id) => change({ day: id as DayChoice })}
       />
       {day === 'date' && (
         <div className="trial__dates">
@@ -121,8 +152,8 @@ const WhenStep: FC<WhenStepProps> = ({
             type="date"
             label={t('TRIAL.WHEN.DATE')}
             value={date}
-            onChange={(event) => onChange({ date: event.target.value })}
-            inputProps={{ min: today(), max: latest }}
+            onChange={(event) => change({ date: event.target.value })}
+            inputProps={{ min: earliest, max: latest }}
             InputLabelProps={{ shrink: true }}
             autoFocus
             fullWidth
@@ -135,7 +166,7 @@ const WhenStep: FC<WhenStepProps> = ({
         choices={windows}
         value={window}
         variant="tiles"
-        onPick={(id) => onChange({ window: id as TimeWindow })}
+        onPick={(id) => change({ window: id as TimeWindow })}
       />
 
       <p className="trial__hint">
