@@ -28,6 +28,7 @@ import {
   MenuBookRounded,
   ReceiptLongRounded,
   ScheduleSendRounded,
+  EventRepeatRounded,
 } from '@mui/icons-material';
 
 import { useAppSelector } from '../../redux/store';
@@ -35,6 +36,8 @@ import { selectCurrentUser } from '../../redux/user/user.selectors';
 import { useSignOut } from '../../hooks/useAuth';
 import { useStreamChat } from '../../hooks/useStreamChat';
 import { useTrialOffers } from '../../hooks/useTrial';
+import { useRescheduleRequests } from '../../hooks/useSessionChanges';
+import { useScheduleChangeRequests } from '../../hooks/useScheduleChanges';
 import { useRtlClass } from '../../assets/utils/utils';
 import LanguageSelector from '../i18next/LanguageSelector';
 import ChildSwitcher from '../../modules/family/child-switcher.component';
@@ -74,6 +77,24 @@ const SidebarLayout: FC<SidebarLayoutProps> = ({ children }) => {
   const location = useLocation();
   // A tutor's trial requests still waiting for their answer
   const trialOffers = useTrialOffers('pending', currentUser?.type === 'Tutor');
+  // Proposals to move a lesson or change weekly times waiting for this side
+  const inboxMoves = useRescheduleRequests('inbox', 'pending', !!currentUser);
+  const inboxWeekly = useScheduleChangeRequests(
+    'inbox',
+    'pending',
+    !!currentUser,
+  );
+  const requestsWaiting =
+    (inboxMoves.data?.length ?? 0) + (inboxWeekly.data?.length ?? 0);
+  const requestsItem: NavItem = {
+    to: '/requests',
+    icon: <EventRepeatRounded />,
+    label: t('NAVIGATION.REQUESTS'),
+    badge: requestsWaiting,
+    badgeLabel: t('SESSION_CHANGES.REQUESTS.WAITING_COUNT', {
+      count: requestsWaiting,
+    }),
+  };
   const [drawerOpen, setDrawerOpen] = useState(false);
   // Desktop: the sidebar folds to a rail of icons, remembered per browser
   const [collapsed, setCollapsed] = useState(() => {
@@ -158,6 +179,7 @@ const SidebarLayout: FC<SidebarLayoutProps> = ({ children }) => {
         count: trialOffers.data?.length ?? 0,
       }),
     },
+    requestsItem,
     {
       to: '/availability',
       icon: <EditCalendarRounded />,
@@ -233,6 +255,7 @@ const SidebarLayout: FC<SidebarLayoutProps> = ({ children }) => {
       icon: <EventNoteRounded />,
       label: t('NAVIGATION.SESSIONS'),
     },
+    requestsItem,
     {
       to: '/homework',
       icon: <AssignmentRounded />,
@@ -284,6 +307,7 @@ const SidebarLayout: FC<SidebarLayoutProps> = ({ children }) => {
       icon: <EventNoteRounded />,
       label: t('NAVIGATION.SESSIONS'),
     },
+    requestsItem,
     {
       to: '/homework',
       icon: <AssignmentRounded />,

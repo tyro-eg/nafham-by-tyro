@@ -556,6 +556,134 @@ $own-bubble: $brand-100;
   &--system .nf-msg__admin-label {
     color: $text-muted;
   }
+
+  // An announcement's button to where it points (the requests, a package)
+  &__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin: 0.2rem 0 0.6rem 5.2rem;
+    padding: 0.4rem 1.2rem;
+    border-radius: $radius-pill;
+    background-color: $brand-50;
+    color: $brand-700;
+    font-size: $font-xs;
+    font-weight: 700;
+    text-decoration: none;
+
+    svg {
+      font-size: 1.4rem;
+    }
+
+    &:hover {
+      background-color: $brand-100;
+    }
+
+    [dir='rtl'] & {
+      margin: 0.2rem 5.2rem 0.6rem 0;
+
+      svg {
+        transform: scaleX(-1);
+      }
+    }
+  }
+}
+
+// Nafham Assistant: the bot's label, its buttons and the outcome line
+.nf-msg__admin-label--bot {
+  color: $brand-700;
+}
+
+.bot-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  max-width: 48rem;
+  margin-block: 0.2rem 0.8rem;
+  margin-inline: 5.2rem 1.6rem;
+
+  &__buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+  }
+
+  &__confirm {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  &__reason .MuiInputBase-root {
+    background-color: $surface;
+  }
+
+  &__button.MuiButton-root {
+    text-transform: none;
+    font-weight: 700;
+  }
+
+  &__button--link.MuiButton-root {
+    padding-inline: 0.4rem;
+  }
+
+  // The theme greys out outlined buttons; a decline still reads as one
+  &__button--danger.MuiButton-root {
+    color: $danger-500;
+    border-color: rgba($danger-500, 0.5);
+
+    &:hover {
+      background-color: $danger-50;
+      border-color: $danger-500;
+    }
+  }
+
+  &__error.MuiAlert-root {
+    font-size: $font-xs;
+  }
+
+  &__outcome {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-block: 0.2rem 0.8rem;
+    margin-inline: 5.2rem 0;
+    font-size: $font-xs;
+    font-weight: 700;
+    color: $text-muted;
+
+    svg {
+      font-size: 1.4rem;
+    }
+  }
+}
+
+// Quick actions under a lesson conversation's header
+.quick-actions {
+  display: flex;
+  flex: 1 1 100%;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+
+  &__chip.MuiChip-root {
+    font-weight: 700;
+    font-size: $font-xs;
+  }
+
+  &__chip--handoff.MuiChip-root {
+    margin-inline-start: auto;
+  }
+
+  &__menu-icon {
+    margin-inline-end: 0.8rem;
+    color: $text-muted;
+  }
+
+  &__error.MuiAlert-root {
+    flex-basis: 100%;
+    font-size: $font-xs;
+  }
 }
 
 // Empty thread: who you are talking to and what the chat is for
@@ -707,4 +835,233 @@ $own-bubble: $brand-100;
   color: $danger-500;
   font-weight: 700;
   font-variant-numeric: tabular-nums;
+}
+
+// The assistant's step-by-step bubble above the composer (local to the viewer)
+.assistant-prompt {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  max-height: 45vh;
+  margin: 0 1.6rem 0.8rem;
+  padding: 1rem 1.4rem 1.2rem;
+  overflow-y: auto;
+  border: 1px solid $brand-100;
+  border-inline-start: 3px solid $brand-700;
+  border-radius: $radius-lg;
+  background-color: $brand-50;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: $font-xs;
+    font-weight: 700;
+    color: $brand-700;
+
+    svg {
+      font-size: 1.4rem;
+    }
+  }
+
+  &__close.MuiIconButton-root {
+    margin-inline-start: auto;
+    color: $text-muted;
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+  }
+
+  &__question {
+    margin: 0;
+    font-size: $font-sm;
+    font-weight: 700;
+    color: $text-strong;
+  }
+
+  &__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+  }
+
+  &__chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 1.2rem;
+    border: 1px solid $border-strong;
+    border-radius: $radius-pill;
+    background-color: $surface;
+    color: $text-strong;
+    font-size: $font-xs;
+    font-weight: 600;
+    cursor: pointer;
+    transition:
+      background-color $transition,
+      border-color $transition;
+
+    &:hover:not(:disabled) {
+      border-color: $brand-700;
+    }
+
+    &.is-selected {
+      border-color: $brand-700;
+      background-color: $brand-100;
+      color: $brand-800;
+    }
+
+    &.is-danger {
+      color: $danger-500;
+    }
+
+    &:disabled {
+      opacity: 0.45;
+      cursor: default;
+    }
+
+    svg {
+      font-size: 1.3rem;
+    }
+  }
+
+  &__count {
+    display: inline-grid;
+    place-items: center;
+    min-width: 1.6rem;
+    height: 1.6rem;
+    border-radius: $radius-pill;
+    background-color: $brand-700;
+    color: $text-on-dark;
+    font-size: 1rem;
+  }
+
+  &__held {
+    color: $brand-700;
+  }
+
+  &__answer {
+    display: inline-flex;
+    align-items: center;
+    align-self: flex-start;
+    gap: 0.4rem;
+    padding-block: 0.2rem;
+    padding-inline: 0.4rem 0.8rem;
+    border: 0;
+    border-radius: $radius-pill;
+    background-color: transparent;
+    color: $text-muted;
+    font-size: $font-xs;
+    font-weight: 700;
+    cursor: pointer;
+
+    svg {
+      font-size: 1.4rem;
+      color: $success-500;
+    }
+
+    &:hover:not(:disabled) {
+      color: $brand-700;
+    }
+
+    &:disabled {
+      cursor: default;
+    }
+  }
+
+  &__picked {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: $font-xs;
+    font-weight: 700;
+    color: $text-muted;
+  }
+
+  &__pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding-block: 0.2rem;
+    padding-inline: 1rem 0.6rem;
+    border: 0;
+    border-radius: $radius-pill;
+    background-color: $brand-700;
+    color: $text-on-dark;
+    font-size: $font-xs;
+    font-weight: 700;
+    cursor: pointer;
+
+    svg {
+      font-size: 1.3rem;
+    }
+  }
+
+  &__day {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  &__day-name {
+    min-width: 7rem;
+    font-size: $font-xs;
+    font-weight: 700;
+    color: $text-muted;
+  }
+
+  &__note .MuiInputBase-root,
+  &__date .MuiInputBase-root {
+    background-color: $surface;
+  }
+
+  &__date {
+    align-self: flex-start;
+  }
+
+  &__preview {
+    margin: 0;
+    font-size: $font-xs;
+    color: $text-muted;
+  }
+
+  &__submit {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.6rem;
+
+    .MuiButton-root {
+      text-transform: none;
+      font-weight: 700;
+    }
+  }
+
+  [dir='rtl'] &__back-icon {
+    transform: scaleX(-1);
+  }
+
+  &__done {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0;
+    font-size: $font-sm;
+    font-weight: 700;
+    color: $success-500;
+
+    svg {
+      font-size: 1.6rem;
+    }
+  }
+
+  &__alert.MuiAlert-root {
+    font-size: $font-xs;
+  }
 }
