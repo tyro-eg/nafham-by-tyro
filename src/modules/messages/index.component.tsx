@@ -41,7 +41,7 @@ import ThreadHeader from './thread-header.component';
 import NafhamMessageUI from './nafham-message-ui.component';
 import ThreadEmptyState from './thread-empty-state.component';
 import ChatScreensProvider from './chat-screens.component';
-import AssistantPrompt from './assistant-prompt.component';
+import AssistantPrompt from './assistant-prompt';
 import { getStreamI18n } from './stream-i18n';
 
 import 'stream-chat-react/dist/css/index.css';

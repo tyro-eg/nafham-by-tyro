@@ -3,6 +3,9 @@ import { get, patch, post } from '../assets/utils/api';
 import { queryKeys } from '../lib/queryKeys';
 import type { SessionType } from '../assets/types';
 
+/** Extra request headers (a parent names the child with X-Child-Id) */
+export type ChangeHeaders = Record<string, string> | undefined;
+
 /**
  * Cancelling a lesson and moving one by proposal: the family or the tutor
  * cancels with a reason (hours always go back), or proposes up to three
@@ -118,11 +121,16 @@ export function useCancelSession() {
       sessionId: number;
       reason: CancelReason;
       note?: string;
+      headers?: ChangeHeaders;
     }) => {
-      const response = await patch(`/sessions/${input.sessionId}/cancel`, {
-        reason: input.reason,
-        note: input.note?.trim() || undefined,
-      });
+      const response = await patch(
+        `/sessions/${input.sessionId}/cancel`,
+        {
+          reason: input.reason,
+          note: input.note?.trim() || undefined,
+        },
+        input.headers ? { headers: input.headers } : {},
+      );
       return response.data.data as SessionType;
     },
     onSuccess: () => invalidateSessions(queryClient),
@@ -130,11 +138,17 @@ export function useCancelSession() {
 }
 
 /** The times a lesson could move to, soonest first */
-export function useMoveOptions(sessionId: number | undefined, enabled = true) {
+export function useMoveOptions(
+  sessionId: number | undefined,
+  enabled = true,
+  headers?: ChangeHeaders,
+) {
   return useQuery({
     queryKey: queryKeys.sessions.moveOptions(sessionId ?? 0),
     queryFn: async () => {
-      const response = await get(`/sessions/${sessionId}/move_options`);
+      const response = await get(`/sessions/${sessionId}/move_options`, {
+        config: headers ? { headers } : {},
+      });
       return (response.data.data || []) as MoveOption[];
     },
     enabled: enabled && !!sessionId,
@@ -150,10 +164,12 @@ export function useProposeMove() {
       sessionId: number;
       options: TimeWindow[];
       note?: string;
+      headers?: ChangeHeaders;
     }) => {
       const response = await post(
         `/sessions/${input.sessionId}/reschedule_requests`,
         { options: input.options, note: input.note?.trim() || undefined },
+        input.headers ? { headers: input.headers } : {},
       );
       return response.data.data as RescheduleRequest;
     },

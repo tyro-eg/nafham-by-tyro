@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { get, patch, post } from '../assets/utils/api';
 import { queryKeys } from '../lib/queryKeys';
 import type { Package } from '../assets/types';
+import type { ChangeHeaders } from './useSessionChanges';
 
 /**
  * Pausing a package: the family pauses lessons for one to four weeks; the
@@ -71,12 +72,14 @@ export function useFreezeOptions(
   packageId: number | undefined,
   range: { starts_on?: string; ends_on?: string },
   enabled = true,
+  headers?: ChangeHeaders,
 ) {
   return useQuery({
     queryKey: queryKeys.packages.freezeOptions(packageId ?? 0, range),
     queryFn: async () => {
       const response = await get(`/packages/${packageId}/freeze_options`, {
         params: range,
+        config: headers ? { headers } : {},
       });
       return response.data.data as FreezeOptions;
     },
@@ -94,13 +97,18 @@ export function useCreateFreeze() {
       ends_on: string;
       reason: FreezeReason;
       note?: string;
+      headers?: ChangeHeaders;
     }) => {
-      const response = await post(`/packages/${input.packageId}/freezes`, {
-        starts_on: input.starts_on,
-        ends_on: input.ends_on,
-        reason: input.reason,
-        note: input.note?.trim() || undefined,
-      });
+      const response = await post(
+        `/packages/${input.packageId}/freezes`,
+        {
+          starts_on: input.starts_on,
+          ends_on: input.ends_on,
+          reason: input.reason,
+          note: input.note?.trim() || undefined,
+        },
+        input.headers ? { headers: input.headers } : {},
+      );
       return response.data.data as PackageFreeze;
     },
     onSuccess: () => invalidate(queryClient),

@@ -3,7 +3,12 @@ import { get, patch, post } from '../assets/utils/api';
 import { queryKeys } from '../lib/queryKeys';
 import type { Package } from '../assets/types';
 import type { WeeklyEntry } from './useFreezes';
-import type { ProposerRole, RequestBox, RequestTab } from './useSessionChanges';
+import type {
+  ChangeHeaders,
+  ProposerRole,
+  RequestBox,
+  RequestTab,
+} from './useSessionChanges';
 
 /**
  * Changing a package's weekly times by proposal: one side picks new weekly
@@ -63,12 +68,14 @@ export function useWeeklyOpenings(
   tutorId: number | undefined,
   durationMinutes: number,
   enabled = true,
+  headers?: ChangeHeaders,
 ) {
   return useQuery({
     queryKey: queryKeys.tutors.weeklyOpenings(tutorId ?? 0, durationMinutes),
     queryFn: async () => {
       const response = await get(`/tutors/${tutorId}/weekly_openings`, {
         params: { duration_minutes: durationMinutes },
+        config: headers ? { headers } : {},
       });
       return (response.data.data || []) as WeeklyOpening[];
     },
@@ -87,6 +94,7 @@ export function useProposeScheduleChange() {
       effective_from: string;
       time_zone: string;
       note?: string;
+      headers?: ChangeHeaders;
     }) => {
       const response = await post(
         `/packages/${input.packageId}/schedule_change_requests`,
@@ -96,6 +104,7 @@ export function useProposeScheduleChange() {
           time_zone: input.time_zone,
           note: input.note?.trim() || undefined,
         },
+        input.headers ? { headers: input.headers } : {},
       );
       return response.data.data as ScheduleChangeRequest;
     },

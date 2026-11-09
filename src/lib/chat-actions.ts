@@ -27,9 +27,10 @@ export type {
  * helpers decide who sees which button; useChatAction runs them.
  */
 
-/** The people a card is about: enough to know the viewer's side */
+/** The people a card is about: enough to know the viewer's side (and what it is about) */
 export type CardPeople = {
-  subject: Pick<BotSubject, 'student_id' | 'tutor_id'>;
+  subject: Pick<BotSubject, 'student_id' | 'tutor_id'> &
+    Partial<Pick<BotSubject, 'session_id' | 'package_id'>>;
 };
 
 type AnyMessage = Pick<
@@ -41,14 +42,49 @@ type AnyMessage = Pick<
 export const isBotMessage = (message?: AnyMessage | null): boolean =>
   !!message && message.bot === true && isAdminUser(message.user?.id);
 
+const isRecord = (value: unknown): value is Record<string, unknown> =>
+  typeof value === 'object' && value !== null;
+
+/** Only a path under the API base: a message never sends the token elsewhere */
+export const isSafeApiPath = (path: unknown): path is string =>
+  typeof path === 'string' &&
+  path.startsWith('/') &&
+  !path.startsWith('//') &&
+  !path.includes('://');
+
+/** A button the app can render and run; anything else on the card is dropped */
+const isWellFormedAction = (action: unknown): action is BotAction => {
+  if (!isRecord(action) || typeof action.id !== 'string') return false;
+  if (!isRecord(action.label)) return false;
+  const call = action.call;
+  if (!isRecord(call)) return false;
+  if (call.kind === 'api') {
+    return (
+      (call.method === 'POST' || call.method === 'PATCH') &&
+      isSafeApiPath(call.path) &&
+      (call.body === undefined || isRecord(call.body))
+    );
+  }
+  return call.kind === 'open' && typeof call.screen === 'string';
+};
+
 /** The card on a bot message, when it carries a version we understand */
 export const assistantCardOf = (
   message?: AnyMessage | null,
 ): AssistantCard | null => {
   if (!isBotMessage(message)) return null;
   const card = message?.assistant;
-  if (!card || card.v !== 1 || !card.subject) return null;
-  return { ...card, actions: Array.isArray(card.actions) ? card.actions : [] };
+  if (!card || card.v !== 1 || !isRecord(card.subject)) return null;
+  const { student_id, tutor_id } = card.subject;
+  if (
+    !Number.isFinite(Number(student_id)) ||
+    !Number.isFinite(Number(tutor_id))
+  )
+    return null;
+  const actions = Array.isArray(card.actions)
+    ? card.actions.filter(isWellFormedAction)
+    : [];
+  return { ...card, actions };
 };
 
 /** Arabic label when the UI is in Arabic, English otherwise */
@@ -60,7 +96,9 @@ export const viewerRole = (
   card: CardPeople,
   userId: number | string | undefined,
 ): BotRole =>
-  userId !== undefined && Number(userId) === card.subject.tutor_id
+  userId !== undefined &&
+  userId !== null &&
+  Number(userId) === Number(card.subject.tutor_id)
     ? 'tutor'
     : 'student';
 
@@ -81,8 +119,12 @@ export const childHeaderFor = (
   card: CardPeople,
   userId: number | string | undefined,
 ): Record<string, string> | undefined => {
+  if (userId === undefined || userId === null) return undefined;
   const id = Number(userId);
-  if (id === card.subject.student_id || id === card.subject.tutor_id) {
+  if (
+    id === Number(card.subject.student_id) ||
+    id === Number(card.subject.tutor_id)
+  ) {
     return undefined;
   }
   return { 'X-Child-Id': String(card.subject.student_id) };
@@ -91,13 +133,19 @@ export const childHeaderFor = (
 /** The hand-off to a person: the card stays open after it */
 export const isHandoff = (action: BotAction): boolean =>
   action.id === 'talk_to_person' ||
-  (action.call.kind === 'api' && action.call.path.endsWith('/handoff'));
+  (action.call?.kind === 'api' && action.call.path.endsWith('/handoff'));
 
 /** The time an accept button picks, when it is one */
 export const acceptTimeOf = (action: BotAction): string | null => {
-  if (action.call.kind !== 'api') return null;
+  if (action.call?.kind !== 'api') return null;
   const start = (action.call as BotApiCall).body?.start_time;
   return typeof start === 'string' ? start : null;
+};
+
+/** Same instant, whatever the ISO spelling ("…:00Z" vs "…:00.000Z") */
+export const sameTime = (a: string, b: string): boolean => {
+  const left = new Date(a).getTime();
+  return !Number.isNaN(left) && left === new Date(b).getTime();
 };
 
 /** Stream's channel id without the "messaging:" type prefix */

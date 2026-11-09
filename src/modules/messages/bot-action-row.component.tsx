@@ -15,6 +15,7 @@ import {
 import {
   acceptTimeOf,
   pickLabel,
+  sameTime,
   viewerRole,
   visibleActions,
   type AssistantCard,
@@ -40,9 +41,6 @@ const BUTTON_PROPS: Record<BotAction['style'], ButtonProps> = {
   danger: { variant: 'outlined', color: 'error' },
   link: { variant: 'text', color: 'primary' },
 };
-
-const sameTime = (a: string, b: string) =>
-  new Date(a).getTime() === new Date(b).getTime();
 
 interface BotActionRowProps {
   card: AssistantCard;
@@ -79,14 +77,29 @@ const BotActionRow: FC<BotActionRowProps> = ({
     if (left) setStillOpen(left);
   }, [error]);
 
-  // The server's update landed: forget the local "answered" mark
+  // The server replaced or settled the card: the local narrowing and the
+  // refusal it came with are history
   useEffect(() => {
-    if (card.state !== 'open') clearAnsweredHere(messageId);
-  }, [card.state, messageId]);
+    if (card.state === 'open') return;
+    setStillOpen(null);
+    reset();
+  }, [card.state, reset]);
+
+  // The server's update landed: forget the local "answered" mark (also
+  // when the mark arrives after the update, the call being slower than
+  // Stream's event)
+  useEffect(() => {
+    if (card.state !== 'open' && answeredHere) clearAnsweredHere(messageId);
+  }, [answeredHere, card.state, messageId]);
+
+  // Every time was taken: the server closes the request as expired and
+  // replaces the card; until then nothing here may be pressed
+  const allTaken = stillOpen !== null && stillOpen.length === 0;
 
   const actions = useMemo(() => {
     const all = visibleActions(card, role);
     if (!stillOpen) return all;
+    if (!stillOpen.length) return [];
     // A time was just taken: keep only the accept buttons still open
     return all.filter((action) => {
       const start = acceptTimeOf(action);
@@ -97,6 +110,8 @@ const BotActionRow: FC<BotActionRowProps> = ({
   // Pressed here: the buttons hide until the server updates the card
   const pressedHere = answeredHere && card.state === 'open';
   const fallbackKey = (() => {
+    if (allTaken && card.state === 'open')
+      return 'SESSION_CHANGES.CHAT.EXPIRED';
     if (card.kind === 'result') return null;
     if (card.state === 'answered') {
       return card.answered?.by_role === role
@@ -116,6 +131,21 @@ const BotActionRow: FC<BotActionRowProps> = ({
   const settled = pressedHere || !!card.answered;
   const showButtons =
     card.state === 'open' && !pressedHere && actions.length > 0;
+  // A taken time with others still open is a warning; with none left the
+  // server's own sentence says what happened
+  const errorText = error
+    ? remaining?.length
+      ? t('SESSION_CHANGES.CHAT.OPTION_TAKEN')
+      : changeErrorMessage(error, t('SESSION_CHANGES.CHAT.ERROR'))
+    : null;
+  const errorLine = errorText ? (
+    <Alert
+      severity={remaining?.length ? 'warning' : 'error'}
+      className="bot-actions__error"
+    >
+      {errorText}
+    </Alert>
+  ) : null;
 
   const outcomeLine = outcomeText ? (
     <p className="bot-actions__outcome" dir="auto">
@@ -128,7 +158,16 @@ const BotActionRow: FC<BotActionRowProps> = ({
     </p>
   ) : null;
 
-  if (!showButtons) return outcomeLine;
+  if (!showButtons) {
+    return (
+      <>
+        {outcomeLine}
+        {allTaken && errorLine && (
+          <div className="bot-actions">{errorLine}</div>
+        )}
+      </>
+    );
+  }
 
   const busy = pendingActionId !== null;
   const people = card;
@@ -152,12 +191,6 @@ const BotActionRow: FC<BotActionRowProps> = ({
     }
     press(action);
   };
-
-  const errorText = error
-    ? remaining
-      ? t('SESSION_CHANGES.CHAT.OPTION_TAKEN')
-      : changeErrorMessage(error, t('SESSION_CHANGES.CHAT.ERROR'))
-    : null;
 
   return (
     <>
@@ -233,14 +266,7 @@ const BotActionRow: FC<BotActionRowProps> = ({
           </div>
         )}
 
-        {errorText && (
-          <Alert
-            severity={remaining ? 'warning' : 'error'}
-            className="bot-actions__error"
-          >
-            {errorText}
-          </Alert>
-        )}
+        {errorLine}
       </div>
     </>
   );

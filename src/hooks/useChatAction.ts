@@ -2,6 +2,7 @@ import {
   createContext,
   useCallback,
   useContext,
+  useRef,
   useState,
   useSyncExternalStore,
 } from 'react';
@@ -12,6 +13,7 @@ import { queryKeys } from '../lib/queryKeys';
 import {
   childHeaderFor,
   isHandoff,
+  isSafeApiPath,
   type BotAction,
   type BotScreen,
   type CardPeople,
@@ -122,11 +124,16 @@ export function useChatAction(channelId: string | undefined) {
   const openScreen = useOpenScreen();
   const userId = useAppSelector(selectCurrentUser)?.id;
   const [pendingActionId, setPendingActionId] = useState<string | null>(null);
+  // A second tap while the first call runs is dropped, whatever React has rendered
+  const inFlight = useRef(false);
 
   const mutation = useMutation({
     mutationFn: async ({ action, people, reason }: ApiInput) => {
       if (action.call.kind !== 'api') throw new Error('Not an API action');
       const { method, path, body } = action.call;
+      if ((method !== 'POST' && method !== 'PATCH') || !isSafeApiPath(path)) {
+        throw new Error(`Unsupported assistant action ${action.id}`);
+      }
       const data: Record<string, unknown> = { ...(body ?? {}) };
       if (action.reason) data.reason = reason?.trim() || undefined;
       const headers = childHeaderFor(people, userId);
@@ -150,13 +157,19 @@ export function useChatAction(channelId: string | undefined) {
       options: RunOptions = {},
     ): Promise<boolean> => {
       if (action.call.kind === 'open') {
+        // The card's own subject fills in what the button leaves out
+        const params = action.call.params ?? {};
         openScreen?.(action.call.screen, {
-          ...action.call.params,
-          tutor_id: action.call.params?.tutor_id ?? people.subject.tutor_id,
+          ...params,
+          session_id: params.session_id ?? people.subject.session_id,
+          package_id: params.package_id ?? people.subject.package_id,
+          tutor_id: params.tutor_id ?? people.subject.tutor_id,
           child_headers: childHeaderFor(people, userId),
         });
         return true;
       }
+      if (inFlight.current) return false;
+      inFlight.current = true;
       setPendingActionId(action.id);
       try {
         await mutation.mutateAsync({ action, people, reason: options.reason });
@@ -167,6 +180,7 @@ export function useChatAction(channelId: string | undefined) {
       } catch {
         return false;
       } finally {
+        inFlight.current = false;
         setPendingActionId(null);
       }
     },
@@ -208,8 +222,8 @@ export interface ChatPackage {
     slug: string;
     pattern?: WeeklyEntry[];
   } | null;
-  grade_subject: { full_course_name: string };
-  tutor: { id: number; first_name: string };
+  grade_subject?: { full_course_name: string };
+  tutor?: { id: number; first_name: string };
   can_freeze: boolean;
   can_propose_schedule_change: boolean;
 }
@@ -224,16 +238,26 @@ export interface ChatConversationActions {
   actions: BotAction[];
 }
 
+/** 404: not a lesson conversation; 403: the viewer is not a member. Nothing to offer either way */
+export const isMissingConversation = (error: unknown): boolean => {
+  const status = (error as { response?: { status?: number } })?.response
+    ?.status;
+  return status === 404 || status === 403;
+};
+
 export function useChatConversationActions(channelId: string | undefined) {
   return useQuery({
     queryKey: queryKeys.chat.actions(channelId ?? ''),
     queryFn: async () => {
-      const response = await get(`/chat/conversations/${channelId}/actions`);
+      const response = await get(
+        `/chat/conversations/${encodeURIComponent(channelId ?? '')}/actions`,
+      );
       return response.data.data as ChatConversationActions;
     },
     enabled: !!channelId,
-    // A 404 (no endpoint, not a lesson conversation) is not retried and
-    // just hides the row
+    // A 404 (not a lesson conversation) or 403 is final and just hides the
+    // row; anything else is tried once more
+    retry: (count, error) => !isMissingConversation(error) && count < 1,
     staleTime: 30 * 1000,
   });
 }
