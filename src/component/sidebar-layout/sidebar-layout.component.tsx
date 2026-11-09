@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { Avatar, IconButton, Tooltip } from '@mui/material';
 import {
   AccountCircleRounded,
+  AssignmentRounded,
   CalendarMonthRounded,
   CloseRounded,
   DashboardRounded,
@@ -103,6 +104,11 @@ const SidebarLayout: FC<SidebarLayoutProps> = ({ children }) => {
       label: t('NAVIGATION.SESSIONS'),
     },
     {
+      to: '/homework',
+      icon: <AssignmentRounded />,
+      label: t('NAVIGATION.HOMEWORK'),
+    },
+    {
       to: '/calendar',
       icon: <CalendarMonthRounded />,
       label: t('NAVIGATION.CALENDAR'),
@@ -145,6 +151,11 @@ const SidebarLayout: FC<SidebarLayoutProps> = ({ children }) => {
       to: '/my_sessions',
       icon: <EventNoteRounded />,
       label: t('NAVIGATION.SESSIONS'),
+    },
+    {
+      to: '/homework',
+      icon: <AssignmentRounded />,
+      label: t('NAVIGATION.HOMEWORK'),
     },
     {
       to: '/calendar',
