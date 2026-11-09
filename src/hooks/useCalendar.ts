@@ -93,6 +93,11 @@ export interface RawAvailability {
   start_time: string;
   end_time: string;
   status: 'available' | 'reserved';
+  /** Kept for one of the tutor's students while they renew (status stays 'reserved') */
+  held?: boolean;
+  held_until?: string | null;
+  /** The student's first name; only on the tutor's own calendar */
+  held_for?: string | null;
 }
 
 /**

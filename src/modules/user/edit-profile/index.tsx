@@ -11,7 +11,10 @@ import { useParams } from 'react-router-dom';
 
 import { useAppSelector } from '../../../redux/store';
 import { selectCurrentUser } from '../../../redux/user/user.selectors';
-import { useStartConversation } from '../../../hooks/useStreamChat';
+import {
+  useCanMessage,
+  useStartConversation,
+} from '../../../hooks/useStreamChat';
 import {
   useInstructor,
   useUpdateTutorProfile,
@@ -79,6 +82,7 @@ const EditProfile: FC = () => {
 
   // Use TanStack Query hooks
   const { data: instructor } = useInstructor(id!, !!id);
+  const canMessage = useCanMessage(instructor?.id);
   const { data: slots = [] } = useSlots(
     Number(id),
     dateRange.from,
@@ -278,7 +282,7 @@ const EditProfile: FC = () => {
           {showEditMode && renderProfileMissingInfoBanner()}
           {!showEditMode && currentUser?.type === 'Student' && !!instructor && (
             <div className="profile__visitor-actions">
-              {chat.isAvailable && (
+              {canMessage && (
                 <Button
                   variant="outlined"
                   color="secondary"

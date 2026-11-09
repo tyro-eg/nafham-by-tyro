@@ -1,17 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { Button } from '@mui/material';
+import { Avatar, Button } from '@mui/material';
 import {
   TimerTwoTone,
   CheckCircle,
   Cancel,
+  ChatBubbleOutlineRounded,
   Group,
   Person,
   Schedule,
   CalendarToday,
   Timer,
+  AutoAwesomeRounded,
 } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {
   differenceInDays,
   differenceInHours,
@@ -24,8 +26,14 @@ import { enUS } from 'date-fns/locale/en-US';
 import RatingSummary from '../../../../../component/rating-summary/rating-summary.component';
 import { selectCurrentUser } from '../../../../../redux/user/user.selectors';
 import { useRtlClass } from '../../../../../assets/utils/utils';
+import {
+  useCanMessage,
+  useStartConversation,
+} from '../../../../../hooks/useStreamChat';
 
 import { useAppSelector } from '../../../../../redux/store';
+import { useFamily } from '../../../../../hooks/useFamily';
+import { childColor } from '../../../../../lib/family-child';
 import { SessionType } from '../../../../../assets/types';
 import {
   canJoin,
@@ -46,10 +54,20 @@ const SessionListCard: React.FC<SessionListCardProps> = ({ session }) => {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const currentUser = useAppSelector(selectCurrentUser);
+  const isParentViewer = currentUser?.type === 'Parent';
+  const family = useFamily(isParentViewer);
+  const childIndex = (family.data?.children ?? []).findIndex(
+    (child) => child.id === session.student?.id,
+  );
+  const childTone = childColor(childIndex < 0 ? 0 : childIndex);
   const rtlClass = useRtlClass();
 
   const [isInstructor, setIsInstructor] = useState(false);
   const [sessionName, setSessionName] = useState('');
+  // The other person in the session; chat only when the backend allows it
+  const counterpart = isInstructor ? session.student : session.tutor;
+  const canMessage = useCanMessage(counterpart?.id);
+  const chat = useStartConversation();
   const [sessionDuration, setSessionDuration] = useState(0);
   // const [isWithinTwelveHours, setIsWithinTwelveHours] = useState(false);
   // const [openCancelSessionModal, setOpenCancelSessionModal] = useState(false);
@@ -269,57 +287,132 @@ const SessionListCard: React.FC<SessionListCardProps> = ({ session }) => {
           </p>
         )}
 
-        <div className="sessions-card__person">
-          {isInstructorAndNotGroup() && (
-            <div className="sessions-card__avatar">
-              <img
-                src={session.student?.image || Profile}
-                alt="student"
-                loading="lazy"
-              />
+        {isParentViewer ? (
+          <div className="sessions-card__parties">
+            <div className="sessions-card__party sessions-card__party--tutor">
+              <Avatar
+                src={session.tutor?.image || undefined}
+                alt=""
+                className="sessions-card__party-avatar"
+              >
+                {session.tutor?.first_name?.[0]}
+              </Avatar>
+              <div className="sessions-card__party-text">
+                <span className="sessions-card__party-label">
+                  {t('HOMEWORK.CARD.TUTOR')}
+                </span>
+                <span className="sessions-card__party-name">
+                  {session.tutor?.first_name} {session.tutor?.last_name ?? ''}
+                </span>
+              </div>
             </div>
-          )}
-          {notInstructorOrIsGroup() && (
-            <Button
-              className="sessions-card__avatar sessions-card__instructor-img"
-              onClick={() => navigate(`/profile/${session.tutor?.id}`)}
+            <div
+              className="sessions-card__party sessions-card__party--student"
+              style={{ '--kid': childTone } as React.CSSProperties}
             >
-              <img
-                src={session.tutor?.image || Profile}
-                alt="instructor"
-                loading="lazy"
-              />
-            </Button>
-          )}
-          <div className="sessions-card__person-info">
+              <Avatar alt="" className="sessions-card__party-avatar">
+                {session.student?.first_name?.[0]}
+              </Avatar>
+              <div className="sessions-card__party-text">
+                <span className="sessions-card__party-label">
+                  {t('HOMEWORK.CARD.STUDENT')}
+                </span>
+                <span className="sessions-card__party-name">
+                  {session.student?.first_name}{' '}
+                  {session.student?.last_name ?? ''}
+                </span>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div className="sessions-card__person">
             {isInstructorAndNotGroup() && (
-              <p className="sessions-card__name">
-                {session.student?.first_name
-                  ? `${session.student?.first_name} ${session.student?.last_name ?? ''}`
-                  : ''}
-              </p>
+              <div className="sessions-card__avatar">
+                <img
+                  src={session.student?.image || Profile}
+                  alt="student"
+                  loading="lazy"
+                />
+              </div>
             )}
             {notInstructorOrIsGroup() && (
-              <p className="sessions-card__name">
-                {session.tutor?.first_name
-                  ? `${session.tutor?.first_name} ${session.tutor?.last_name ?? ''}`
-                  : ''}
-              </p>
-            )}
-            {/* The tutor's rating only makes sense when the counterpart is the tutor */}
-            {!isInstructor &&
-              session.session_type !== 'group' &&
-              !!session.tutor?.rating && (
-                <RatingSummary
-                  className="sessions-card__rating"
-                  value={session.tutor.rating}
+              <Button
+                className="sessions-card__avatar sessions-card__instructor-img"
+                onClick={() => navigate(`/profile/${session.tutor?.id}`)}
+              >
+                <img
+                  src={session.tutor?.image || Profile}
+                  alt="instructor"
+                  loading="lazy"
                 />
+              </Button>
+            )}
+            <div className="sessions-card__person-info">
+              {isInstructorAndNotGroup() && (
+                <p className="sessions-card__name">
+                  {session.student?.first_name
+                    ? `${session.student?.first_name} ${session.student?.last_name ?? ''}`
+                    : ''}
+                </p>
               )}
+              {notInstructorOrIsGroup() && (
+                <p className="sessions-card__name">
+                  {session.tutor?.first_name
+                    ? `${session.tutor?.first_name} ${session.tutor?.last_name ?? ''}`
+                    : ''}
+                </p>
+              )}
+              {/* The tutor's rating only makes sense when the counterpart is the tutor */}
+              {!isInstructor &&
+                session.session_type !== 'group' &&
+                !!session.tutor?.rating && (
+                  <RatingSummary
+                    className="sessions-card__rating"
+                    value={session.tutor.rating}
+                  />
+                )}
+            </div>
           </div>
-        </div>
+        )}
       </div>
 
       <div className={`sessions-card__actions ${rtlClass}`}>
+        {/* The AI Teaching Assistant: the plan before, the note after */}
+        {isInstructor &&
+          (session.plan_status ||
+            session.note_status ||
+            session.recording_status) && (
+            <Button
+              className="sessions-card__actions-button"
+              component={Link}
+              to={`/assistant?student=${session.student.id}&course=${session.grade_subject.id}&tab=${
+                session.plan_status && !session.note_status
+                  ? 'plan'
+                  : 'insights'
+              }`}
+              variant="outlined"
+              color="secondary"
+              startIcon={<AutoAwesomeRounded />}
+            >
+              {session.note_status
+                ? t('ASSISTANT.SESSION.NOTE_READY')
+                : session.plan_status
+                  ? t('ASSISTANT.SESSION.PLAN_READY')
+                  : t('ASSISTANT.SESSION.RECORDING')}
+            </Button>
+          )}
+        {canMessage && counterpart?.id && (
+          <Button
+            className="sessions-card__actions-button"
+            variant="outlined"
+            color="secondary"
+            startIcon={<ChatBubbleOutlineRounded />}
+            disabled={chat.isStarting}
+            onClick={() => chat.startConversation(counterpart.id, sessionName)}
+          >
+            {t('MESSAGES.MESSAGE_BUTTON')}
+          </Button>
+        )}
         {/* {(session.state === 'scheduled' ||
           session.state === 'rescheduled') &&
           isWithinTwelveHours && (

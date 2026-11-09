@@ -246,7 +246,15 @@ const apiUrl = import.meta.env.VITE_API_BASE_URL;
 ### Chat (Stream Chat)
 
 Messaging between students, instructors and Nafham Support runs on
-[Stream Chat](https://getstream.io/chat/). The web app needs:
+[Stream Chat](https://getstream.io/chat/). The backend signs the user token
+(`POST /chat/token`) and creates every conversation (`POST /chat/conversations`),
+adding Nafham Support as the third member. A student can only message
+instructors they have a package with (`GET /me/instructors`); the Message
+button is hidden elsewhere and the backend answers 403 regardless. Anyone can
+open a direct conversation with Nafham Support (`POST /chat/conversations`
+with `kind: "support"`, the "Chat with Nafham Support" button on Messages);
+channels carry a `kind` custom field (`lesson` | `support`) the UI reads, and
+Nafham Support's `system` messages render as announcements. The web app needs:
 
 ```env
 # Public API key of the Stream app. Leave empty to hide chat entirely.

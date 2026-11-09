@@ -1,79 +1,88 @@
 import { FC, useMemo } from 'react';
-import { Button } from '@mui/material';
-import {
-  Person,
-  Group,
-  AccessTime,
-  Payment,
-  CalendarToday,
-  Schedule,
-} from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { Avatar, Button } from '@mui/material';
+import {
+  AutorenewRounded,
+  Group,
+  Person,
+  Star,
+  WarningAmberRounded,
+} from '@mui/icons-material';
 import { parseISO, format } from 'date-fns';
 import { arSA } from 'date-fns/locale/ar-SA';
 import { enUS } from 'date-fns/locale/en-US';
-import RatingSummary from '../../../../component/rating-summary/rating-summary.component';
 import { useAppSelector } from '../../../../redux/store';
 import { selectCurrentUser } from '../../../../redux/user/user.selectors';
-import { useRtlClass } from '../../../../assets/utils/utils';
+import { subjectName } from '../../../dashboard/dashboard.utils';
 import type { Package } from '../../../../assets/types';
-
-import defaultProfileImage from '../../../../assets/images/videoSession/people/profile.png';
 
 import './packages-list-card.styles.scss';
 
 interface PackageListCardProps {
   packageData: Package;
+  /** A parent's list: the child's colour, as on the calendar */
+  color?: string;
+  /**
+   * Who renews this package: the viewer ('renew' opens the checkout), or
+   * the family's parent ('ask_parent', for a child with their own login)
+   */
+  renewal?: 'renew' | 'ask_parent';
+  onRenew?: (pkg: Package) => void;
 }
 
+const LOCALES = { ar: arSA, en: enUS };
+const LOW_HOURS = 2;
+
+/** Hours left as a ring, with the figure in the middle */
+const Ring: FC<{ value: number; label: string }> = ({ value, label }) => {
+  const radius = 26;
+  const circumference = 2 * Math.PI * radius;
+  const clamped = Math.min(1, Math.max(0, value));
+  return (
+    <span className="pk-ring" aria-hidden="true">
+      <svg viewBox="0 0 64 64">
+        <circle className="pk-ring__track" cx="32" cy="32" r={radius} />
+        <circle
+          className="pk-ring__value"
+          cx="32"
+          cy="32"
+          r={radius}
+          strokeDasharray={circumference}
+          strokeDashoffset={circumference * (1 - clamped)}
+        />
+      </svg>
+      <span className="pk-ring__label">{label}</span>
+    </span>
+  );
+};
+
 /**
- * PackageListCard Component
- *
- * Displays package information in a card format similar to session cards.
- * Shows user info, package type, hours, course, payment details, and dates.
- *
- * @param packageData - The package data object
- *
- * @example
- * <PackageListCard packageData={package} />
+ * One package: the course and the hours left up top, the person it is with,
+ * the hours as a bar (used, booked, free), then what was paid and when.
  */
-const PackageListCard: FC<PackageListCardProps> = ({ packageData }) => {
+const PackageListCard: FC<PackageListCardProps> = ({
+  packageData,
+  color,
+  renewal,
+  onRenew,
+}) => {
   const { t, i18n } = useTranslation();
-  const navigate = useNavigate();
   const currentUser = useAppSelector(selectCurrentUser);
-  const rtlClass = useRtlClass();
+  const locale = LOCALES[i18n.language as 'en' | 'ar'] ?? enUS;
+  const isTutor = currentUser?.id === packageData.tutor.id;
+  const person = isTutor ? packageData.student : packageData.tutor;
 
-  const locales = { ar: arSA, en: enUS };
-
-  // Determine if current user is the tutor
-  const isCurrentUserTutor = useMemo(() => {
-    return currentUser?.id === packageData.tutor.id;
-  }, [currentUser, packageData]);
-
-  // Determine which user to display based on current user role
-  const displayUser = useMemo(() => {
-    if (!currentUser) return null;
-    return isCurrentUserTutor ? packageData.student : packageData.tutor;
-  }, [currentUser, packageData, isCurrentUserTutor]);
-
-  const packageTypeLabel = useMemo(() => {
-    if (packageData.package_type === 'group_course') {
-      return t('MYPACKAGES.CARD.GROUP_COURSE');
-    }
-    if (packageData.package_type === 'trial_session') {
-      return t('MYPACKAGES.CARD.TRIAL_SESSION');
-    }
-    return t('MYPACKAGES.CARD.PRIVATE_SESSION');
-  }, [packageData.package_type, t]);
+  const typeLabel =
+    packageData.package_type === 'group_course'
+      ? t('MYPACKAGES.CARD.GROUP_COURSE')
+      : packageData.package_type === 'trial_session'
+        ? t('MYPACKAGES.CARD.TRIAL_SESSION')
+        : t('MYPACKAGES.CARD.PRIVATE_SESSION');
 
   const paymentMethodLabel = useMemo(() => {
     const method = packageData.payment_method;
-    if (!method || method.trim() === '') {
-      return t('MYPACKAGES.CARD.OTHER');
-    }
-
-    const methodMap: Record<string, string> = {
+    const map: Record<string, string> = {
       cash: t('MYPACKAGES.CARD.PAYMENT_METHODS.CASH'),
       credit_card: t('MYPACKAGES.CARD.PAYMENT_METHODS.CREDIT_CARD'),
       vodafone_cash: t('MYPACKAGES.CARD.PAYMENT_METHODS.VODAFONE_CASH'),
@@ -81,34 +90,10 @@ const PackageListCard: FC<PackageListCardProps> = ({ packageData }) => {
       fawry: t('MYPACKAGES.CARD.PAYMENT_METHODS.FAWRY'),
       western_union: t('MYPACKAGES.CARD.PAYMENT_METHODS.WESTERN_UNION'),
     };
-
-    return methodMap[method] || t('MYPACKAGES.CARD.OTHER');
+    return (method && map[method]) || t('MYPACKAGES.CARD.OTHER');
   }, [packageData.payment_method, t]);
 
-  const courseName = useMemo(() => {
-    return (
-      packageData.grade_subject?.full_course_name?.trim() ||
-      t('MYPACKAGES.CARD.NOT_AVAILABLE')
-    );
-  }, [packageData.grade_subject, t]);
-
-  const userName = useMemo(() => {
-    const firstName = displayUser?.first_name?.trim() || '';
-    const lastName = displayUser?.last_name?.trim() || '';
-    if (!firstName && !lastName) {
-      return t('MYPACKAGES.CARD.NOT_AVAILABLE');
-    }
-    return `${firstName} ${lastName}`.trim();
-  }, [displayUser, t]);
-
-  const handleUserClick = () => {
-    if (displayUser && displayUser.type === 'Tutor') {
-      navigate(`/profile/${displayUser.id}`);
-    }
-  };
-
-  if (!displayUser) return null;
-
+  const fullCourse = packageData.grade_subject?.full_course_name?.trim() || '';
   const remainingHours = packageData.remaining_hours ?? 0;
   const originalHours = packageData.original_hours ?? 0;
   // Older API responses carry only the balance: then everything not free is "used"
@@ -132,187 +117,193 @@ const PackageListCard: FC<PackageListCardProps> = ({ packageData }) => {
       : kind === 'moved_in'
         ? t('MYPACKAGES.CARD.HISTORY.MOVED_IN')
         : t('MYPACKAGES.CARD.HISTORY.BOUGHT');
+  const day = (iso: string) => format(parseISO(iso), 'PP', { locale });
+  const personName =
+    `${person?.first_name ?? ''} ${person?.last_name ?? ''}`.trim();
+  const exhausted = hoursLeft === 0;
 
   return (
-    <article className="packages-card">
-      <div className="packages-card__content">
-        <header className={`packages-card__content-top ${rtlClass}`}>
-          <div className="packages-card__img-container">
-            <Button
-              className="card-img packages-card__user-img"
-              onClick={handleUserClick}
-              disabled={displayUser.type !== 'Tutor'}
-            >
-              {displayUser.avatar ? (
-                <img
-                  src={displayUser.avatar}
-                  alt={displayUser.first_name}
-                  loading="lazy"
-                  onError={(e) => {
-                    const target = e.target as HTMLImageElement;
-                    target.src = defaultProfileImage;
-                  }}
-                />
-              ) : (
-                <img
-                  src={defaultProfileImage}
-                  alt={displayUser.first_name}
-                  loading="lazy"
-                />
-              )}
-            </Button>
-            <div className="user-info">
-              <p className="name">{userName}</p>
-              {displayUser.type === 'Tutor' && !!displayUser.average_rating && (
-                <RatingSummary
-                  className="review"
-                  value={displayUser.average_rating}
-                  count={displayUser.number_of_reviews}
-                />
-              )}
-            </div>
-          </div>
-          <span
-            className={`packages-card__type packages-card__type--${
-              packageData.package_type || 'private'
-            }`}
-          >
+    <article
+      className={`pk-card${exhausted ? ' pk-card--done' : ''}`}
+      style={color ? ({ '--kid': color } as React.CSSProperties) : undefined}
+    >
+      <header className="pk-card__head">
+        <div className="pk-card__course">
+          <span className="pk-card__type">
             {packageData.package_type === 'group_course' ? (
               <Group />
             ) : (
               <Person />
             )}
-            {packageTypeLabel}
+            {typeLabel}
           </span>
-        </header>
-
-        <div className="packages-card__progress">
-          <div className="packages-card__progress-labels">
-            <div className="packages-card__progress-stat">
-              <span className="label">
-                {t('MYPACKAGES.CARD.REMAINING_HOURS')}
-              </span>
-              <span className="value value--strong">
-                <AccessTime />
-                {hoursLeft} {t('MYPACKAGES.CARD.HOURS')}
-              </span>
-            </div>
-            <div className="packages-card__progress-stat packages-card__progress-stat--end">
-              <span className="label">{t('MYPACKAGES.CARD.BOUGHT_HOURS')}</span>
-              <span className="value">
-                {hours.bought} {t('MYPACKAGES.CARD.HOURS')}
-              </span>
-            </div>
-          </div>
-          <div
-            className="packages-card__progress-track"
-            role="progressbar"
-            aria-valuemin={0}
-            aria-valuemax={active}
-            aria-valuenow={hoursLeft}
-            aria-label={t('MYPACKAGES.CARD.REMAINING_HOURS')}
-          >
-            <span
-              className="packages-card__progress-bar packages-card__progress-bar--used"
-              style={{ width: `${share(hours.used)}%` }}
-            />
-            <span
-              className="packages-card__progress-bar packages-card__progress-bar--scheduled"
-              style={{ width: `${share(hours.scheduled)}%` }}
-            />
-            <span
-              className="packages-card__progress-bar packages-card__progress-bar--free"
-              style={{ width: `${share(hours.unscheduled)}%` }}
-            />
-          </div>
-          <ul className="packages-card__legend">
-            <li className="packages-card__legend-item packages-card__legend-item--used">
-              <strong>{hours.used}</strong> {t('MYPACKAGES.CARD.LEGEND.USED')}
-            </li>
-            <li className="packages-card__legend-item packages-card__legend-item--scheduled">
-              <strong>{hours.scheduled}</strong>{' '}
-              {t('MYPACKAGES.CARD.LEGEND.SCHEDULED')}
-            </li>
-            <li className="packages-card__legend-item packages-card__legend-item--free">
-              <strong>{hours.unscheduled}</strong>{' '}
-              {t('MYPACKAGES.CARD.LEGEND.FREE')}
-            </li>
-            {hours.moved_out > 0 && (
-              <li className="packages-card__legend-item">
-                <strong>{hours.moved_out}</strong>{' '}
-                {t('MYPACKAGES.CARD.LEGEND.MOVED_OUT')}
-              </li>
-            )}
-          </ul>
-          {purchases.length > 0 && (
-            <ul className="packages-card__history">
-              {purchases.map((entry, index) => (
-                <li key={index}>
-                  {purchaseLabel(entry.kind)} {entry.hours}{' '}
-                  {t('MYPACKAGES.CARD.HOURS')}
-                  {entry.kind === 'moved_in' && entry.tutor_name
-                    ? ` (${entry.tutor_name})`
-                    : ''}{' '}
-                  ·{' '}
-                  {format(parseISO(entry.at), 'PP', {
-                    locale: locales[i18n.language as 'en' | 'ar'],
-                  })}
-                </li>
-              ))}
-            </ul>
-          )}
+          <h3 className="pk-card__title" dir="auto">
+            {subjectName(fullCourse) || t('MYPACKAGES.CARD.NOT_AVAILABLE')}
+          </h3>
+          <p className="pk-card__full" dir="auto">
+            {fullCourse}
+          </p>
         </div>
+        <div className="pk-card__left">
+          <Ring
+            value={active ? hoursLeft / active : 0}
+            label={`${hoursLeft}h`}
+          />
+          <span className="pk-card__left-label">
+            {t('MYPACKAGES.CARD.REMAINING_HOURS')}
+          </span>
+        </div>
+      </header>
 
-        <div className="packages-card__content-middle">
-          <div className={`prop-card prop-card--wide ${rtlClass}`}>
-            <p className="title">{t('MYPACKAGES.CARD.COURSE')}</p>
-            <p className="value field">{courseName}</p>
-          </div>
-          {!isCurrentUserTutor && (
-            <>
-              <div className={`prop-card ${rtlClass}`}>
-                <p className="title">{t('MYPACKAGES.CARD.AMOUNT_PAID')}</p>
-                <p className="value value--strong">
-                  <Payment />
-                  {packageData.amount_paid_total ??
-                    packageData.amount_paid ??
-                    0}{' '}
-                  {packageData.amount_paid_currency || ''}
-                </p>
-              </div>
-              <div className={`prop-card ${rtlClass}`}>
-                <p className="title">{t('MYPACKAGES.CARD.PAYMENT_METHOD')}</p>
-                <p className="value">
-                  <Payment />
-                  {paymentMethodLabel}
-                </p>
-              </div>
-            </>
-          )}
-          <div className={`prop-card ${rtlClass}`}>
-            <p className="title">{t('MYPACKAGES.CARD.CREATED_DATE')}</p>
-            <p className="value">
-              <CalendarToday />
-              {format(parseISO(packageData.created_at), 'PP', {
-                locale: locales[i18n.language as 'en' | 'ar'],
-              })}
-            </p>
-          </div>
-          <div className={`prop-card ${rtlClass}`}>
-            <p className="title">{t('MYPACKAGES.CARD.UPDATED_DATE')}</p>
-            <p className="value">
-              <Schedule />
-              {format(
-                parseISO(
-                  packageData.last_activity_at ?? packageData.updated_at,
-                ),
-                'PP',
-                { locale: locales[i18n.language as 'en' | 'ar'] },
+      <div className="pk-card__person">
+        {person?.type === 'Tutor' ? (
+          <Link to={`/profile/${person.id}`} className="pk-card__avatar-link">
+            <Avatar
+              src={person.avatar ?? undefined}
+              alt={personName}
+              className="pk-card__avatar"
+            >
+              {personName[0]}
+            </Avatar>
+          </Link>
+        ) : (
+          <Avatar
+            src={person?.avatar ?? undefined}
+            alt={personName}
+            className="pk-card__avatar"
+          >
+            {personName[0]}
+          </Avatar>
+        )}
+        <div className="pk-card__who">
+          <span className="pk-card__name">
+            {personName || t('MYPACKAGES.CARD.NOT_AVAILABLE')}
+          </span>
+          <span className="pk-card__meta">
+            {person?.type === 'Tutor' && !!person.average_rating && (
+              <span className="pk-card__rating">
+                <Star /> {Number(person.average_rating).toFixed(1)}
+              </span>
+            )}
+            {currentUser?.type === 'Parent' &&
+              packageData.student?.first_name && (
+                <span className="pk-card__for">
+                  {t('FAMILY.FOR', { name: packageData.student.first_name })}
+                </span>
               )}
-            </p>
-          </div>
+          </span>
         </div>
       </div>
+
+      <div
+        className="pk-card__bar"
+        role="progressbar"
+        aria-valuemin={0}
+        aria-valuemax={active}
+        aria-valuenow={hoursLeft}
+        aria-label={t('MYPACKAGES.CARD.REMAINING_HOURS')}
+      >
+        <span
+          className="pk-card__seg pk-card__seg--used"
+          style={{ width: `${share(hours.used)}%` }}
+        />
+        <span
+          className="pk-card__seg pk-card__seg--scheduled"
+          style={{ width: `${share(hours.scheduled)}%` }}
+        />
+        <span
+          className="pk-card__seg pk-card__seg--free"
+          style={{ width: `${share(hours.unscheduled)}%` }}
+        />
+      </div>
+      <ul className="pk-card__legend">
+        <li className="pk-card__legend-item pk-card__legend-item--used">
+          <strong>{hours.used}</strong> {t('MYPACKAGES.CARD.LEGEND.USED')}
+        </li>
+        <li className="pk-card__legend-item pk-card__legend-item--scheduled">
+          <strong>{hours.scheduled}</strong>{' '}
+          {t('MYPACKAGES.CARD.LEGEND.SCHEDULED')}
+        </li>
+        <li className="pk-card__legend-item pk-card__legend-item--free">
+          <strong>{hours.unscheduled}</strong>{' '}
+          {t('MYPACKAGES.CARD.LEGEND.FREE')}
+        </li>
+        {hours.moved_out > 0 && (
+          <li className="pk-card__legend-item">
+            <strong>{hours.moved_out}</strong>{' '}
+            {t('MYPACKAGES.CARD.LEGEND.MOVED_OUT')}
+          </li>
+        )}
+      </ul>
+
+      <dl className="pk-card__facts">
+        <div>
+          <dt>{t('MYPACKAGES.CARD.BOUGHT_HOURS')}</dt>
+          <dd>
+            {hours.bought} {t('MYPACKAGES.CARD.HOURS')}
+          </dd>
+        </div>
+        {!isTutor && (
+          <div>
+            <dt>{t('MYPACKAGES.CARD.AMOUNT_PAID')}</dt>
+            <dd>
+              {packageData.amount_paid_total ?? packageData.amount_paid ?? 0}{' '}
+              {packageData.amount_paid_currency || ''}
+              <span className="pk-card__facts-sub">{paymentMethodLabel}</span>
+            </dd>
+          </div>
+        )}
+        <div>
+          <dt>{t('MYPACKAGES.CARD.CREATED_DATE')}</dt>
+          <dd>{day(packageData.created_at)}</dd>
+        </div>
+        <div>
+          <dt>{t('MYPACKAGES.CARD.UPDATED_DATE')}</dt>
+          <dd>{day(packageData.last_activity_at ?? packageData.updated_at)}</dd>
+        </div>
+      </dl>
+
+      {purchases.length > 1 && (
+        <ul className="pk-card__history">
+          {purchases.map((entry, index) => (
+            <li key={index}>
+              {purchaseLabel(entry.kind)} {entry.hours}{' '}
+              {t('MYPACKAGES.CARD.HOURS')}
+              {entry.kind === 'moved_in' && entry.tutor_name
+                ? ` (${entry.tutor_name})`
+                : ''}{' '}
+              · {day(entry.at)}
+            </li>
+          ))}
+        </ul>
+      )}
+
+      {!isTutor && renewal && (
+        <footer className="pk-card__actions">
+          {hoursLeft <= LOW_HOURS && (
+            <span className="pk-card__low">
+              <WarningAmberRounded fontSize="inherit" />
+              {t('PAYMENTS.RENEW.LOW', { count: hoursLeft })}
+            </span>
+          )}
+          {renewal === 'renew' ? (
+            <Button
+              fullWidth
+              size="large"
+              variant="contained"
+              className="pk-card__renew"
+              startIcon={<AutorenewRounded />}
+              onClick={() => onRenew?.(packageData)}
+            >
+              {t('PAYMENTS.RENEW.BUTTON_LONG')}
+            </Button>
+          ) : (
+            <p className="pk-card__ask">
+              {t('PAYMENTS.RENEW.ASK_PARENT_SHORT')}
+            </p>
+          )}
+        </footer>
+      )}
     </article>
   );
 };
