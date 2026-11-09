@@ -1,0 +1,508 @@
+@import '../../assets/styles/variables.scss';
+@import '../../assets/styles/mixins.scss';
+
+// ---------- Renew dialog ----------
+
+.renew-for,
+.renew-choose {
+  margin: 0;
+  color: $text-muted;
+  font-size: 1.4rem;
+}
+
+.renew-options {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 1rem;
+}
+
+.renew-option {
+  width: 100%;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-areas:
+    'hours price'
+    'tags tags';
+  align-items: center;
+  gap: 0.4rem 1.2rem;
+  padding: 1.2rem 1.6rem;
+  border: 2px solid $border;
+  border-radius: 1.6rem;
+  background: $surface;
+  text-align: start;
+  cursor: pointer;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+
+  &:hover {
+    border-color: $brand-700;
+  }
+
+  &--on {
+    border-color: $brand-700;
+    box-shadow: 0 0 0 3px rgba(23, 146, 186, 0.15);
+  }
+
+  &__hours {
+    grid-area: hours;
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: $text-strong;
+  }
+
+  &__price {
+    grid-area: price;
+    justify-self: end;
+    display: flex;
+    align-items: baseline;
+    gap: 0.8rem;
+    font-size: 1.7rem;
+    font-weight: 700;
+    color: $text-strong;
+  }
+
+  &__list {
+    font-size: 1.3rem;
+    font-weight: 500;
+    color: $text-muted;
+  }
+
+  &__tags {
+    grid-area: tags;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.6rem;
+    min-height: 1.6rem;
+  }
+
+  &__until {
+    font-size: 1.2rem;
+    color: $text-muted;
+  }
+}
+
+// The default: the same package again, one card and one button
+.renew-same {
+  display: grid;
+  gap: 0.4rem;
+  padding: 1.6rem;
+  border: 2px solid $brand-700;
+  border-radius: 1.6rem;
+  background: $surface;
+  box-shadow: 0 0 0 3px rgba(23, 146, 186, 0.15);
+
+  &__label {
+    font-size: 1.2rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: $brand-700;
+  }
+
+  &__deal {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1.2rem;
+    font-size: 2rem;
+    font-weight: 800;
+    color: $text-strong;
+  }
+
+  &__hint {
+    margin: 0;
+    font-size: 1.3rem;
+    color: $text-muted;
+  }
+}
+
+.renew-switch {
+  justify-self: start;
+}
+
+.renew-tag {
+  display: inline-flex;
+  padding: 0.1rem 0.8rem;
+  border-radius: $radius-pill;
+  background: $brand-50;
+  color: $brand-700;
+  font-size: 1.1rem;
+  font-weight: 700;
+
+  &--save {
+    background: #e8f7ee;
+    color: #1f7a45;
+  }
+}
+
+.renew-summary {
+  margin: 0;
+  display: grid;
+  gap: 0.6rem;
+  padding: 1.2rem 1.6rem;
+  border-radius: 1.6rem;
+  background: $brand-50;
+
+  div {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    font-size: 1.4rem;
+  }
+
+  dt,
+  dd {
+    margin: 0;
+  }
+
+  &__total {
+    padding-top: 0.6rem;
+    border-top: 1px solid rgba(15, 27, 45, 0.08);
+    font-weight: 800;
+    font-size: 1.6rem !important;
+  }
+}
+
+.renew-secure {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+  font-size: 1.2rem;
+  color: $text-muted;
+}
+
+.renew-reasons {
+  margin: 0.6rem 0 0;
+  padding-inline-start: 1.6rem;
+}
+
+// ---------- Renew-all sheet ----------
+
+.ra-child {
+  display: grid;
+  gap: 0.8rem;
+
+  &__name {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: $text-strong;
+  }
+}
+
+.ra-rows {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.8rem;
+}
+
+.ra-row {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 0.4rem 1rem;
+  padding: 0.8rem 1.2rem 0.8rem 0.4rem;
+  border: 2px solid $border;
+  border-radius: 1.4rem;
+  background: $surface;
+
+  &--on {
+    border-color: $brand-700;
+  }
+
+  &--off {
+    opacity: 0.6;
+  }
+
+  &__text {
+    display: grid;
+    gap: 0.2rem;
+    min-width: 0;
+  }
+
+  &__course {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: $text-strong;
+  }
+
+  &__meta {
+    font-size: 1.2rem;
+    color: $text-muted;
+  }
+
+  &__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  &__deal {
+    display: grid;
+    justify-items: end;
+    gap: 0.3rem;
+  }
+
+  &__hours {
+    font-size: 1.3rem;
+    min-width: 11rem;
+  }
+
+  &__price {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: $text-strong;
+
+    s {
+      margin-inline-end: 0.5rem;
+      font-size: 1.2rem;
+      font-weight: 500;
+      color: $text-muted;
+    }
+
+    small {
+      font-size: 1.1rem;
+      font-weight: 500;
+      color: $text-muted;
+    }
+  }
+
+  @media (max-width: 600px) {
+    grid-template-columns: auto 1fr;
+
+    &__deal {
+      grid-column: 2;
+      justify-items: start;
+    }
+  }
+}
+
+.renew-tag--muted {
+  background: rgba(15, 27, 45, 0.06);
+  color: $text-muted;
+}
+
+.renew-summary__discount dd {
+  color: #1f7a45;
+}
+
+// ---------- Return page ----------
+
+.pay-return {
+  min-height: 60vh;
+  display: grid;
+  place-items: center;
+  padding: 3rem 1.6rem;
+
+  &__card {
+    width: min(100%, 48rem);
+    display: grid;
+    justify-items: center;
+    gap: 1.2rem;
+    padding: 3.2rem 2.4rem;
+    border: 1px solid $border;
+    border-radius: 2.4rem;
+    background: $surface;
+    text-align: center;
+    box-shadow:
+      0 2px 6px rgba(15, 27, 45, 0.04),
+      0 12px 32px rgba(15, 27, 45, 0.05);
+
+    h1 {
+      margin: 0;
+      font-size: 2.4rem;
+      font-weight: 800;
+      color: $text-strong;
+    }
+
+    p {
+      margin: 0;
+      font-size: 1.5rem;
+      color: $text-muted;
+    }
+  }
+
+  &__icon svg {
+    font-size: 5.6rem;
+  }
+
+  &--good &__icon {
+    color: #1f7a45;
+  }
+
+  &--bad &__icon {
+    color: #c0392b;
+  }
+
+  &--info &__icon {
+    color: $brand-700;
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 0.8rem;
+  }
+
+  &__secure {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.3rem !important;
+  }
+}
+
+// ---------- Receipts ----------
+
+.pay-history {
+  padding: 2.4rem 1.6rem 4rem;
+  max-width: 96rem;
+  margin: 0 auto;
+
+  &__head {
+    margin-bottom: 2rem;
+
+    h1 {
+      margin: 0 0 0.4rem;
+      font-size: 2.8rem;
+      font-weight: 800;
+      color: $text-strong;
+    }
+
+    p {
+      margin: 0;
+      color: $text-muted;
+      font-size: 1.4rem;
+    }
+  }
+
+  &__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 1.2rem;
+  }
+
+  &__empty {
+    display: grid;
+    justify-items: center;
+    gap: 0.8rem;
+    padding: 4rem 1rem;
+    color: $text-muted;
+    text-align: center;
+
+    svg {
+      font-size: 4.8rem;
+    }
+  }
+}
+
+.pay-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 1.6rem;
+  padding: 1.6rem 2rem;
+  border: 1px solid $border;
+  border-radius: 1.8rem;
+  background: $surface;
+
+  @media (max-width: 640px) {
+    flex-direction: column;
+  }
+
+  &__main {
+    min-width: 0;
+    display: grid;
+    gap: 0.4rem;
+  }
+
+  &__when {
+    font-size: 1.2rem;
+    color: $text-muted;
+  }
+
+  &__lines {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: $text-strong;
+  }
+
+  &__side {
+    display: grid;
+    justify-items: end;
+    align-content: start;
+    gap: 0.6rem;
+
+    @media (max-width: 640px) {
+      justify-items: start;
+    }
+  }
+
+  &__amount {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: $text-strong;
+  }
+
+  &__actions {
+    display: flex;
+    gap: 0.6rem;
+  }
+}
+
+// ---------- The Renew button on a package card ----------
+
+.pk-card__actions {
+  display: grid;
+  justify-items: start;
+  gap: 0.8rem;
+  padding-top: 1rem;
+  border-top: 1px solid $border;
+
+  .pk-card__renew {
+    padding: 1rem 1.6rem;
+    border-radius: 1.4rem;
+    font-size: 1.5rem;
+    font-weight: 800;
+    text-transform: none;
+    box-shadow: 0 8px 20px rgba(23, 146, 186, 0.28);
+
+    .MuiButton-startIcon svg {
+      font-size: 2rem;
+    }
+  }
+
+  .pk-card__low {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.2rem 0.8rem;
+    border-radius: $radius-pill;
+    background: #fff4e5;
+    color: #9a5b00;
+    font-size: 1.2rem;
+    font-weight: 700;
+  }
+
+  .pk-card__ask {
+    margin: 0;
+    font-size: 1.3rem;
+    color: $text-muted;
+  }
+}

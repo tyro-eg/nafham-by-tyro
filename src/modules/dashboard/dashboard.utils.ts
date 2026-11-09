@@ -18,8 +18,9 @@ export const subjectName = (fullCourseName?: string): string => {
 };
 
 export const isUpcoming = (session: SessionType, now: Date): boolean =>
-  session.status === 'open' ||
-  (session.status === 'scheduled' && new Date(session.end_time) > now);
+  (session.status === 'open' || session.status === 'scheduled') &&
+  !session.awaiting_confirmation &&
+  new Date(session.end_time) > now;
 
 export const upcomingSessions = (
   sessions: SessionType[],

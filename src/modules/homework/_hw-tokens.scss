@@ -1,0 +1,59 @@
+// Shared tokens for the homework pages: status tones and the status chip.
+// Expects variables.scss to be imported first.
+
+$hw-tones: (
+  sky: (
+    bg: #e8f8fe,
+    fg: #1792ba,
+  ),
+  mint: (
+    bg: #eafaf0,
+    fg: #2f9a3a,
+  ),
+  sun: (
+    bg: #fff6e0,
+    fg: #b07800,
+  ),
+  lilac: (
+    bg: #f2efff,
+    fg: #6a52d6,
+  ),
+  coral: (
+    bg: #fff0ee,
+    fg: #d4554a,
+  ),
+);
+
+$hw-radius: 2rem;
+$hw-shadow:
+  0 2px 6px rgba(15, 27, 45, 0.04),
+  0 12px 32px rgba(15, 27, 45, 0.05);
+
+@mixin hw-chip {
+  display: inline-flex;
+  align-items: center;
+  flex: none;
+  padding: 0.4rem 1.1rem;
+  border-radius: $radius-pill;
+  font-size: $font-xs;
+  font-weight: 700;
+  white-space: nowrap;
+
+  @each $name, $tone in $hw-tones {
+    &--#{$name} {
+      background-color: map-get($tone, bg);
+      color: map-get($tone, fg);
+    }
+  }
+}
+
+@mixin hw-panel {
+  padding: $space-5;
+  border-radius: $hw-radius;
+  background-color: $surface;
+  box-shadow: $hw-shadow;
+
+  @include respond(phone) {
+    padding: $space-4;
+  }
+}

@@ -8,6 +8,7 @@ import axios, {
 import store from '@/redux/store';
 import { clearCurrentUser } from '@/redux/user/user.slice';
 import { queryClient } from '@/lib/queryClient';
+import { getActiveChildId } from '@/lib/family-child';
 
 // ============================================================================
 // Types
@@ -30,6 +31,12 @@ const baseURL =
   import.meta.env.VITE_API_BASE_URL ||
   'https://tyro-backend.onrender.com/api/v1';
 
+// A free ngrok endpoint answers browsers with a warning page unless asked
+// not to; harmless anywhere else
+const TUNNEL_HEADERS = baseURL.includes('ngrok')
+  ? { 'ngrok-skip-browser-warning': '1' }
+  : {};
+
 const STORAGE_KEYS = {
   TOKEN: 'tyro.token',
   REFRESH_TOKEN: 'tyro.refreshToken',
@@ -48,7 +55,7 @@ const PROTECTED_ENDPOINTS = ['/users/tokens', '/users/sign_out'] as const;
  * Separate axios instance for refresh token requests.
  * Bypasses interceptors to prevent infinite loops.
  */
-const refreshAxiosInstance = axios.create({ baseURL });
+const refreshAxiosInstance = axios.create({ baseURL, headers: TUNNEL_HEADERS });
 
 // ============================================================================
 // Token Refresh State Management
@@ -209,6 +216,17 @@ axios.interceptors.request.use(
       config.headers['Authorization'] = accessToken;
     }
 
+    // A parent's requests are about the child they picked
+    const childId = getActiveChildId();
+    if (childId && config.headers) {
+      config.headers['X-Child-Id'] = String(childId);
+    }
+    if (config.headers) {
+      Object.entries(TUNNEL_HEADERS).forEach(([key, value]) => {
+        config.headers[key] = value;
+      });
+    }
+
     return config;
   },
   (error: AxiosError) => Promise.reject(error),
@@ -337,9 +355,10 @@ export const post = (
   data: unknown,
   config: AxiosRequestConfig = {},
 ): Promise<AxiosResponse> => {
+  const isFormData = data instanceof FormData;
   return axios.post(`${baseURL}${url}`, data, {
     ...config,
-    headers: createDefaultHeaders(config),
+    headers: createDefaultHeaders(config, isFormData),
   });
 };
 
@@ -366,9 +385,10 @@ export const putRequest = (
   data: unknown,
   config: AxiosRequestConfig = {},
 ): Promise<AxiosResponse> => {
+  const isFormData = data instanceof FormData;
   return axios.put(`${baseURL}${url}`, data, {
     ...config,
-    headers: createDefaultHeaders(config),
+    headers: createDefaultHeaders(config, isFormData),
   });
 };
 

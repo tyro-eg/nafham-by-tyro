@@ -30,9 +30,12 @@ export type TutorReview = {
   created_at: string;
 };
 
+/** Whether the signed-in student may book a free trial with a tutor (GET /tutors) */
 export type FreeTrial = {
   enabled: boolean;
   claimed: boolean;
+  /** How long the trial lasts, in whole 30-minute slots */
+  minutes?: number;
 };
 
 export type TutorPackage = {
@@ -64,7 +67,7 @@ export type GradeSubject = {
     name: string;
   };
   /** Optional course variants (e.g. IGCSE O Level / A Level, Cambridge / Edexcel) */
-  sub_curriculum?: { id: number; name: string } | null;
+  sub_curriculum?: { id: number; name: string; position?: number } | null;
   exam_board?: { id: number; name: string } | null;
 };
 
@@ -111,9 +114,12 @@ export type Package = {
   source: string;
   student: PackageStudent;
   tutor: PackageTutor;
-  tutor_rate: number;
+  /** The tutor's hourly rate: only on the tutor's own list */
+  tutor_rate?: number;
   /** ISO code of the tutor rate, always EGP today */
   tutor_rate_currency?: string;
+  /** When the family was last told the package is low on hours */
+  renewal_nudged_at?: string | null;
   updated_at: string;
   /** This purchase plus its top-ups */
   amount_paid_total?: number;
@@ -213,9 +219,18 @@ export type CurrentUser = {
   first_name: string;
   last_name: string;
   phone_number: string;
-  type: 'Tutor' | 'Student';
+  type: 'Tutor' | 'Student' | 'Parent';
   updated_at: string;
   email_confirmed?: boolean;
+  /** Parents: the family and the children they can pick */
+  family_id?: number;
+  children?: Array<{
+    id: number;
+    first_name: string;
+    last_name: string;
+    login_enabled: boolean;
+    email: string | null;
+  }>;
   grade_subjects?: Array<{
     id: number;
     created_at: string;
@@ -223,6 +238,9 @@ export type CurrentUser = {
     updated_at: string;
   }>;
   previous_sessions_count?: number;
+  /** Sessions that drew on a package: taught, or missed and charged */
+  completed_sessions_count?: number;
+  cancelled_sessions_count?: number;
   recommended?: boolean;
   unscheduled_hours?: number;
   upcoming_sessions_count?: number;
@@ -242,6 +260,8 @@ export type SessionType = {
   session_type: 'regular' | 'trial' | 'group';
   start_time: string;
   status: 'open' | 'scheduled' | 'completed' | 'missed' | 'canceled';
+  /** Who booked it: support from the admin panel, or the student (free trials) */
+  booked_by?: 'admin' | 'student';
   /** What this session pays the tutor per hour, decided by the backend; null while unpriced */
   tutor_rate?: number | null;
   tutor_rate_currency?: string;
@@ -271,4 +291,14 @@ export type SessionType = {
   };
   updated_at: string;
   session_link: string;
+  /** zoom | manual | none: where the join link leads */
+  meeting_provider?: 'zoom' | 'manual' | 'none';
+  /** Over, but not yet closed from attendance or by support */
+  awaiting_confirmation?: boolean;
+  /** AI Teaching Assistant: where the recording is in the pipeline */
+  recording_status?: 'pending' | 'processing' | 'ready' | 'failed' | null;
+  /** AI Teaching Assistant: a lesson note exists */
+  note_status?: 'ready' | null;
+  /** AI Teaching Assistant: the plan for this session */
+  plan_status?: 'draft' | 'accepted' | null;
 };

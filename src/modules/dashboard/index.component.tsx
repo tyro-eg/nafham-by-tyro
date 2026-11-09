@@ -1,11 +1,12 @@
 import { FC, ReactNode, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Avatar, Button, Dialog, Skeleton } from '@mui/material';
+import { Alert, Avatar, Button, Dialog, Skeleton } from '@mui/material';
 import {
   AccessTimeRounded,
   ArrowForwardRounded,
-  AutoStoriesRounded,
+  AutorenewRounded,
+  CheckCircleRounded,
   CalendarMonthRounded,
   EmojiEventsRounded,
   EventAvailableRounded,
@@ -16,6 +17,12 @@ import {
 
 import { useAppSelector } from '../../redux/store';
 import { selectCurrentUser } from '../../redux/user/user.selectors';
+import {
+  canJoin,
+  counterpartName,
+  useLiveSessionToast,
+  useNow,
+} from '../sessions/session-state';
 import { useSessions } from '../../hooks/useSessions';
 import { usePackages } from '../../hooks/usePackages';
 import { useMyInstructors } from '../../hooks/useInstructors';
@@ -120,10 +127,15 @@ const Dashboard: FC = () => {
 
   const sessionsQuery = useSessions(1, HISTORY_SIZE);
   const packagesQuery = usePackages(1, 50);
+  // More than one low package sends the payer to the renew-all sheet
+  const lowPackages = (packagesQuery.data?.data ?? []).filter(
+    (pkg) => Number(pkg.remaining_hours) <= 2 && Number(pkg.original_hours) > 0,
+  ).length;
   const instructorsQuery = useMyInstructors();
 
   // Keep "now" stable for the lifetime of the page
-  const now = useMemo(() => new Date(), []);
+  // Ticks every 30 s so the countdown and the Join button move on their own
+  const now = useNow();
   const locale = `${i18n.language}-u-nu-latn`;
 
   const sessions = useMemo(
@@ -148,6 +160,11 @@ const Dashboard: FC = () => {
   const subjects = useMemo(() => subjectBreakdown(sessions, 5), [sessions]);
 
   const loading = sessionsQuery.isLoading;
+  useLiveSessionToast(sessionsQuery.data ? sessions : undefined, (session) =>
+    t('MYSESSIONS.MAIN.CARD.LIVE_TOAST', {
+      name: counterpartName(session, currentUser?.id),
+    }),
+  );
   const nextSession = upcoming[0];
   const laterSessions = upcoming.slice(1, 4);
   const maxWeekHours = Math.max(1, ...weeks.map((w) => w.hours));
@@ -219,11 +236,14 @@ const Dashboard: FC = () => {
       label: t('DASHBOARD.STATS.UPCOMING'),
     },
     {
-      key: 'learned',
+      key: 'completed',
       tone: 'mint',
-      icon: <AutoStoriesRounded />,
-      value: formatHours(insights.hoursLearned),
-      label: t('DASHBOARD.STATS.HOURS_LEARNED'),
+      icon: <CheckCircleRounded />,
+      // Counted on the server over every session, not only the page loaded here
+      value: String(
+        currentUser?.completed_sessions_count ?? insights.completed,
+      ),
+      label: t('DASHBOARD.STATS.COMPLETED'),
     },
     {
       key: 'remaining',
@@ -372,9 +392,7 @@ const Dashboard: FC = () => {
                     variant="contained"
                     size="large"
                     startIcon={<VideocamRounded />}
-                    disabled={
-                      nextSession.status !== 'open' || !nextSession.session_link
-                    }
+                    disabled={!canJoin(nextSession, now, false)}
                     onClick={() =>
                       window.open(nextSession.session_link, '_blank')
                     }
@@ -539,6 +557,32 @@ const Dashboard: FC = () => {
           </div>
 
           <aside className="sd-col sd-col--side">
+            {/* ---------- Low on hours: renew on the website ---------- */}
+            {lowPackages > 0 && (
+              <Alert
+                severity="warning"
+                icon={<AutorenewRounded fontSize="inherit" />}
+                action={
+                  <Button
+                    component={Link}
+                    to={
+                      lowPackages > 1 && !currentUser?.family_id
+                        ? '/my_packages?renew=all'
+                        : '/my_packages'
+                    }
+                    color="inherit"
+                    size="small"
+                  >
+                    {t('PAYMENTS.BANNER.RENEW')}
+                  </Button>
+                }
+                sx={{ mb: 2, borderRadius: '1.6rem' }}
+              >
+                {currentUser?.family_id
+                  ? t('PAYMENTS.BANNER.LOW_CHILD')
+                  : t('PAYMENTS.BANNER.LOW')}
+              </Alert>
+            )}
             {/* ---------- Packages ---------- */}
             <Section
               title={t('DASHBOARD.PACKAGES.TITLE')}
