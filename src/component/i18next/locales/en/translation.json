@@ -2608,7 +2608,8 @@
       "CURRENT": "Currently {{when}}",
       "MOVED_TO": "Moved to {{when}}",
       "PICK_ONE": "Pick the time that works for you, or decline.",
-      "ERROR_ANSWER": "We couldn't save your answer. Please try again."
+      "ERROR_ANSWER": "We couldn't save your answer. Please try again.",
+      "WAS": "Was {{when}}"
     },
     "PROPOSAL": {
       "YOURS_one": "You proposed a new time",

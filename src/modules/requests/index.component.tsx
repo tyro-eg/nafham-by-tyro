@@ -256,9 +256,14 @@ const MoveCard: FC<{ request: RescheduleRequest }> = ({ request }) => {
           {request.session.grade_subject?.full_course_name}
         </p>
         <p className="request-card__from">
-          {t('SESSION_CHANGES.MOVE.CURRENT', {
-            when: formatSlot(request.original_start_time, locale),
-          })}
+          {t(
+            pending
+              ? 'SESSION_CHANGES.MOVE.CURRENT'
+              : 'SESSION_CHANGES.MOVE.WAS',
+            {
+              when: formatSlot(request.original_start_time, locale),
+            },
+          )}
         </p>
         {request.note && (
           <blockquote className="request-card__note" dir="auto">

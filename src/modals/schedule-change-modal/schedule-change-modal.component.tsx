@@ -188,6 +188,10 @@ const ScheduleChangeModal: FC<ScheduleChangeModalProps> = ({
                       className={`weekly-modal__time${selected ? ' is-selected' : ''}`}
                       aria-pressed={selected}
                       disabled={full}
+                      aria-label={`${weeklyEntryLabel(item, locale)} · ${t(
+                        'SESSION_CHANGES.WEEKLY.OPEN_WEEKS',
+                        { open: item.open_weeks, total: item.published_weeks },
+                      )}`}
                       title={t('SESSION_CHANGES.WEEKLY.OPEN_WEEKS', {
                         open: item.open_weeks,
                         total: item.published_weeks,

@@ -342,6 +342,13 @@ const PackageChanges: FC<{ packageData: Package; isTutor: boolean }> = ({
     currentUser?.type === 'Parent' || currentUser?.type === 'Student';
   const minutes = (count: number) =>
     t('MYSESSIONS.MAIN.CARD.MINUTES_COUNT', { count });
+  // yyyy-mm-dd as the reader's calendar writes it, e.g. "Wed, Nov 11"
+  const shortDay = (iso: string) =>
+    new Date(`${iso}T00:00:00`).toLocaleDateString(locale, {
+      weekday: 'short',
+      day: 'numeric',
+      month: 'short',
+    });
 
   const run = async (action: () => Promise<unknown>) => {
     setError(null);
@@ -362,9 +369,9 @@ const PackageChanges: FC<{ packageData: Package; isTutor: boolean }> = ({
               {t(
                 `SESSION_CHANGES.FREEZE.STRIP.${freeze.status.toUpperCase()}`,
                 {
-                  from: freeze.starts_on,
-                  to: freeze.ends_on,
-                  resume: freeze.resumes_on,
+                  from: shortDay(freeze.starts_on),
+                  to: shortDay(freeze.ends_on),
+                  resume: shortDay(freeze.resumes_on),
                 },
               )}
             </strong>
@@ -405,7 +412,7 @@ const PackageChanges: FC<{ packageData: Package; isTutor: boolean }> = ({
             <strong>
               {t('SESSION_CHANGES.WEEKLY.STRIP', {
                 times: weeklyPatternLabel(change.pattern, locale, minutes),
-                date: change.effective_from,
+                date: shortDay(change.effective_from),
               })}
             </strong>
             <Link to="/requests" className="pk-card__strip-link">

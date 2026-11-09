@@ -162,7 +162,7 @@ export function useWithdrawScheduleChange() {
 }
 
 /** The weekday names of a fixed week, Sunday first, in the UI language */
-const WEEK_BASE = new Date(2026, 10, 1); // a Sunday
+const WEEK_BASE = Date.UTC(2026, 10, 1); // a Sunday at midnight UTC, as the entries are stored
 
 /** "Mon 7:00 PM" for a weekly entry, shown in the viewer's own time zone */
 export const weeklyEntryLabel = (
@@ -170,13 +170,8 @@ export const weeklyEntryLabel = (
   locale: string,
   long = false,
 ) => {
-  const date = new Date(WEEK_BASE);
-  date.setUTCDate(WEEK_BASE.getUTCDate() + entry.wday);
-  date.setUTCHours(
-    Math.floor(entry.minute_of_day / 60),
-    entry.minute_of_day % 60,
-    0,
-    0,
+  const date = new Date(
+    WEEK_BASE + entry.wday * 86_400_000 + entry.minute_of_day * 60_000,
   );
   const day = date.toLocaleDateString(locale, {
     weekday: long ? 'long' : 'short',
