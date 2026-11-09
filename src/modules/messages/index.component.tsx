@@ -12,6 +12,8 @@ import type {
   Channel as StreamChannel,
   ChannelFilters,
   ChannelSort,
+  Message,
+  SendMessageOptions,
 } from 'stream-chat';
 import {
   Channel,
@@ -36,6 +38,8 @@ import {
   toStreamUserId,
 } from '../../lib/streamChat';
 import { useRtlClass } from '../../assets/utils/utils';
+import { snackActions } from '../../assets/utils/toaster';
+import { sendAssistantTurn } from '../../lib/assistant';
 import ConversationItem from './conversation-item.component';
 import ThreadHeader from './thread-header.component';
 import NafhamMessageUI from './nafham-message-ui.component';
@@ -273,10 +277,11 @@ const ActiveThread: FC<ActiveThreadProps> = ({
   isTutor,
   onBack,
 }) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { client } = useStreamChat();
   const [channel, setChannel] = useState<StreamChannel | null>(null);
   const [loading, setLoading] = useState(false);
+  const locale = i18n.language;
 
   useEffect(() => {
     if (!client || !channelId) {
@@ -302,6 +307,40 @@ const ActiveThread: FC<ActiveThreadProps> = ({
       cancelled = true;
     };
   }, [client, channelId]);
+
+  // The Nafham Assistant lives in a parent's or student's support
+  // conversation: opening it greets when due, and every message sent
+  // there is also handed to the assistant (after Stream has it)
+  const assistantOn = Boolean(
+    channel && isSupportConversation(channel) && !isTutor,
+  );
+  const assistantCid = assistantOn ? channel?.cid : undefined;
+
+  useEffect(() => {
+    if (!assistantCid) return;
+    sendAssistantTurn({ open: true, locale }).catch((err: unknown) => {
+      console.error('The assistant could not greet', err);
+    });
+  }, [assistantCid, locale]);
+
+  const sendWithAssistant = useCallback(
+    async (
+      target: StreamChannel,
+      message: Message,
+      options?: SendMessageOptions,
+    ) => {
+      const response = await target.sendMessage(message, options);
+      const text = message.text?.trim();
+      if (text) {
+        sendAssistantTurn({ text, locale }).catch((err: unknown) => {
+          console.error('The assistant could not read the message', err);
+          snackActions.error(t('MESSAGES.ASSISTANT.UNAVAILABLE'));
+        });
+      }
+      return response;
+    },
+    [locale, t],
+  );
 
   if (!channelId) {
     return (
@@ -333,7 +372,11 @@ const ActiveThread: FC<ActiveThreadProps> = ({
   }
 
   return (
-    <Channel channel={channel} key={channel.cid}>
+    <Channel
+      channel={channel}
+      key={channel.cid}
+      doSendMessageRequest={assistantOn ? sendWithAssistant : undefined}
+    >
       <Window>
         <ThreadHeader
           channel={channel}
