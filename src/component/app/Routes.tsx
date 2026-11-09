@@ -48,6 +48,10 @@ const MyInstructors = lazy(
 // );
 const Sessions = lazy(() => import('../../modules/sessions/index.component'));
 const Messages = lazy(() => import('../../modules/messages/index.component'));
+const Homework = lazy(() => import('../../modules/homework/index.component'));
+const HomeworkDetail = lazy(
+  () => import('../../modules/homework/homework-detail/index.component'),
+);
 const Packages = lazy(() => import('../../modules/packages/index.component'));
 const Checkout = lazy(() => import('../../modules/checkout/index.component'));
 const Terms = lazy(() => import('../../modules/terms/index.component'));
@@ -165,6 +169,16 @@ const RoutesComponent: React.FC<RoutesProps> = ({ currentUser }) => (
       <Route
         path="/messages/:channelId"
         element={<GuardedRoute element={<Messages />} auth={!!currentUser} />}
+      />
+      <Route
+        path="/homework"
+        element={<GuardedRoute element={<Homework />} auth={!!currentUser} />}
+      />
+      <Route
+        path="/homework/:slug"
+        element={
+          <GuardedRoute element={<HomeworkDetail />} auth={!!currentUser} />
+        }
       />
       <Route
         path="/profile/:id"
