@@ -41,6 +41,7 @@ import ThreadHeader from './thread-header.component';
 import NafhamMessageUI from './nafham-message-ui.component';
 import ThreadEmptyState from './thread-empty-state.component';
 import ChatScreensProvider from './chat-screens.component';
+import AssistantPrompt from './assistant-prompt.component';
 import { getStreamI18n } from './stream-i18n';
 
 import 'stream-chat-react/dist/css/index.css';
@@ -335,10 +336,7 @@ const ActiveThread: FC<ActiveThreadProps> = ({
 
   return (
     <Channel channel={channel} key={channel.cid}>
-      <ChatScreensProvider
-        channelId={channel.id ?? channelId}
-        isTutor={isTutor}
-      >
+      <ChatScreensProvider channelId={channel.id ?? channelId}>
         <Window>
           <ThreadHeader
             channel={channel}
@@ -347,6 +345,7 @@ const ActiveThread: FC<ActiveThreadProps> = ({
             onBack={onBack}
           />
           <MessageList />
+          <AssistantPrompt channelId={channel.id ?? channelId} />
           <MessageComposer
             focus
             maxRows={6}

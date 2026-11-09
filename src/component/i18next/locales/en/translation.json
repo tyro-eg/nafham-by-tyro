@@ -2733,6 +2733,38 @@
         "WEEKLY": "Change weekly times",
         "HANDOFF": "Talk to a person",
         "PICK_LESSON": "Which lesson?"
+      },
+      "PROMPT": {
+        "WHICH_LESSON": "Which lesson?",
+        "WHAT": "What would you like to do?",
+        "MOVE_IT": "Move it",
+        "CANCEL_IT": "Cancel it",
+        "WHY": "Why?",
+        "PICK_DAY": "Which day?",
+        "PICK_TIMES": "Pick up to {{max}} times the instructor is open",
+        "PICKED": "Picked {{count}} of {{max}}:",
+        "NOTE": "A word for the other side (optional)",
+        "SEND_MOVE": "Propose these times",
+        "SEND_CANCEL": "Cancel the lesson",
+        "START": "From which day?",
+        "FROM_DAY": "From {{day}}",
+        "ANOTHER_DAY": "Another day",
+        "LENGTH": "For how long?",
+        "WEEKS_one": "{{count}} week",
+        "WEEKS_other": "{{count}} weeks",
+        "SEND_PAUSE": "Pause the lessons",
+        "LESSON_LENGTH": "Lesson length",
+        "PICK_WEEKLY": "Pick up to {{max}} weekly times",
+        "NEXT": "Next",
+        "FROM_WHEN": "From when?",
+        "SEND_WEEKLY": "Propose the new times",
+        "DONE_MOVE": "Sent. The answer will show up here.",
+        "DONE_CANCEL": "Done. The hours are back on the package.",
+        "DONE_PAUSE": "Done. The pause is set.",
+        "DONE_WEEKLY": "Sent. The answer will show up here.",
+        "NOTHING": "There is nothing to change from here right now.",
+        "BACK": "Back",
+        "CLOSE": "Close"
       }
     }
   }
