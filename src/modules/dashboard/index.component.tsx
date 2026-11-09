@@ -5,7 +5,7 @@ import { Avatar, Button, Dialog, Skeleton } from '@mui/material';
 import {
   AccessTimeRounded,
   ArrowForwardRounded,
-  AutoStoriesRounded,
+  CheckCircleRounded,
   CalendarMonthRounded,
   EmojiEventsRounded,
   EventAvailableRounded,
@@ -219,11 +219,14 @@ const Dashboard: FC = () => {
       label: t('DASHBOARD.STATS.UPCOMING'),
     },
     {
-      key: 'learned',
+      key: 'completed',
       tone: 'mint',
-      icon: <AutoStoriesRounded />,
-      value: formatHours(insights.hoursLearned),
-      label: t('DASHBOARD.STATS.HOURS_LEARNED'),
+      icon: <CheckCircleRounded />,
+      // Counted on the server over every session, not only the page loaded here
+      value: String(
+        currentUser?.completed_sessions_count ?? insights.completed,
+      ),
+      label: t('DASHBOARD.STATS.COMPLETED'),
     },
     {
       key: 'remaining',
