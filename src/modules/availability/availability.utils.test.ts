@@ -9,6 +9,7 @@ import {
   slotDate,
   togglePending,
   weekStartFor,
+  weekSummary,
   type Pending,
   type SavedSlot,
 } from './availability.utils';
@@ -17,6 +18,13 @@ const saved = (status: SavedSlot['status'] = 'available'): SavedSlot => ({
   id: 1,
   key: '2026-10-19T08:00:00.000Z',
   status,
+});
+
+const held = (): SavedSlot => ({
+  ...saved('reserved'),
+  held: true,
+  heldFor: 'Ali',
+  heldUntil: '2026-11-01T21:59:00.000Z',
 });
 
 describe('nextEditableSlot', () => {
@@ -115,5 +123,38 @@ describe('applyPaint', () => {
       add: 1,
       remove: 1,
     });
+  });
+});
+
+describe('held slots', () => {
+  it('shows a slot kept for a renewing student as held, and locks it', () => {
+    expect(cellState(held(), undefined, false)).toBe('held');
+    expect(cellState(held(), 'remove', false)).toBe('held');
+    expect(cellState(held(), undefined, true)).toBe('past');
+    expect(paintModeFor('held')).toBeNull();
+  });
+
+  it('never paints over a held slot', () => {
+    const pending: Pending = new Map();
+    const slot = held();
+    expect(applyPaint(pending, slot.key, slot, false, 'remove')).toBe(pending);
+    expect(togglePending(pending, slot.key, slot, false)).toBe(pending);
+  });
+
+  it('counts held time apart from bookings', () => {
+    const week = weekStartFor(new Date(2026, 9, 19));
+    const map = new Map<string, SavedSlot>([
+      ['a', { ...saved(), id: 1, key: new Date(2026, 9, 19, 9).toISOString() }],
+      [
+        'b',
+        {
+          ...saved('reserved'),
+          id: 2,
+          key: new Date(2026, 9, 19, 10).toISOString(),
+        },
+      ],
+      ['c', { ...held(), id: 3, key: new Date(2026, 9, 19, 11).toISOString() }],
+    ]);
+    expect(weekSummary(map, week)).toEqual({ open: 1, booked: 1, held: 1 });
   });
 });

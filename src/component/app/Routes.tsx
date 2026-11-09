@@ -64,6 +64,12 @@ const FamilySettings = lazy(
 const FamilyNotes = lazy(
   () => import('../../modules/family/family-notes.component'),
 );
+const PaymentsHistory = lazy(
+  () => import('../../modules/payments/history.component'),
+);
+const PaymentReturn = lazy(
+  () => import('../../modules/payments/return.component'),
+);
 const NotFound404 = lazy(() => import('../../modules/404/index.component'));
 
 interface RoutesProps {
@@ -119,6 +125,17 @@ const RoutesComponent: React.FC<RoutesProps> = ({ currentUser }) => {
           path="/family/notes"
           element={<GuardedRoute element={<FamilyNotes />} auth={isParent} />}
         />
+        {/* Online renewals: receipts, and where Nomod sends the payer back */}
+        <Route
+          path="/payments"
+          element={
+            <GuardedRoute
+              element={<PaymentsHistory />}
+              auth={isParent || currentUser?.type === 'Student'}
+            />
+          }
+        />
+        <Route path="/payments/:slug/return" element={<PaymentReturn />} />
         <Route
           path="/login"
           element={
