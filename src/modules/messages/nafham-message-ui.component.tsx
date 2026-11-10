@@ -35,6 +35,7 @@ import { isAssistantMessage } from '../../lib/assistant';
 import { useAppSelector } from '../../redux/store';
 import { selectCurrentUser } from '../../redux/user/user.selectors';
 import AssistantOptions from './assistant-options.component';
+import { textInLanguage } from './messages.utils';
 import BotActionRow from './bot-action-row.component';
 
 type Role = 'student' | 'instructor' | 'support';
@@ -154,6 +155,12 @@ const NafhamMessageUI: FC = () => {
     [message],
   );
 
+  // Nafham's notices come in English and Arabic: show the reader's one
+  const shown =
+    fromAdmin && message.text
+      ? { ...message, text: textInLanguage(message.text, i18n.language) }
+      : message;
+
   if (isDateSeparatorMessage(message)) return null;
 
   if (announcement) {
@@ -167,7 +174,7 @@ const NafhamMessageUI: FC = () => {
             {t('MESSAGES.NAFHAM_SUPPORT')}
             <span className="nf-note__time">{time}</span>
           </p>
-          <MessageText message={message} renderText={renderText} />
+          <MessageText message={shown} renderText={renderText} />
           {cta}
         </div>
       </div>
@@ -271,7 +278,7 @@ const NafhamMessageUI: FC = () => {
                   />
                 )}
                 {message.text && (
-                  <MessageText message={message} renderText={renderText} />
+                  <MessageText message={shown} renderText={renderText} />
                 )}
               </>
             )}
@@ -299,24 +306,28 @@ const NafhamMessageUI: FC = () => {
           )}
         </div>
 
-        {card && message.id && (
-          <BotActionRow
-            card={card}
-            messageId={message.id}
-            channelId={channel?.id}
-            userId={userId}
-          />
-        )}
+        {(card || helper || cta) && (
+          <div className="nf-msg__extras">
+            {card && message.id && (
+              <BotActionRow
+                card={card}
+                messageId={message.id}
+                channelId={channel?.id}
+                userId={userId}
+              />
+            )}
 
-        {helper && (
-          <AssistantOptions
-            options={message.options ?? []}
-            links={message.links ?? []}
-            latest={latest}
-          />
-        )}
+            {helper && (
+              <AssistantOptions
+                options={message.options ?? []}
+                links={message.links ?? []}
+                latest={latest}
+              />
+            )}
 
-        {cta}
+            {cta}
+          </div>
+        )}
 
         {hasReactions && (
           <div className="nf-msg__reactions">

@@ -17,7 +17,9 @@ import {
   isAdminUser,
   isSupportConversation,
 } from '../../lib/streamChat';
-import { formatConversationTime } from './messages.utils';
+import { formatConversationTime, textInLanguage } from './messages.utils';
+import { isBotMessage } from '../../lib/chat-actions';
+import { isAssistantMessage } from '../../lib/assistant';
 
 interface ConversationItemProps {
   channel: Channel;
@@ -87,14 +89,18 @@ const ConversationItem: FC<ConversationItemProps> = ({
   );
   const mine = latest?.user?.id === currentUserId;
   const fromAdmin = isAdminUser(latest?.user?.id);
-  const preview = previewOf(latest, t);
+  const preview = previewOf(latest, t, i18n.language);
+  const fromAssistant =
+    fromAdmin && (isBotMessage(latest) || isAssistantMessage(latest));
   const who = !latest
     ? ''
     : mine
       ? t('MESSAGES.YOU')
-      : fromAdmin
-        ? t('MESSAGES.NAFHAM_SUPPORT')
-        : latest.user?.name?.split(' ')[0] || '';
+      : fromAssistant
+        ? t('MESSAGES.ASSISTANT.NAME')
+        : fromAdmin
+          ? t('MESSAGES.NAFHAM_SUPPORT')
+          : latest.user?.name?.split(' ')[0] || '';
 
   return (
     <button
@@ -176,6 +182,7 @@ const ConversationItem: FC<ConversationItemProps> = ({
 function previewOf(
   message: LocalMessage | undefined,
   t: (key: string, opts?: Record<string, unknown>) => string,
+  language: string,
 ): { icon: JSX.Element | null; text: string } {
   if (!message) return { icon: null, text: t('MESSAGES.NO_MESSAGES_YET') };
   if (message.type === 'deleted') {
@@ -193,7 +200,11 @@ function previewOf(
     };
   }
   if (message.text?.trim()) {
-    return { icon: null, text: message.text.trim() };
+    // Nafham's notices carry both languages: preview the reader's one
+    const text = isAdminUser(message.user?.id)
+      ? textInLanguage(message.text.trim(), language)
+      : message.text.trim();
+    return { icon: null, text: text.replace(/\s+/g, ' ') };
   }
   if (attachments.some((a) => a.type === 'image')) {
     return {

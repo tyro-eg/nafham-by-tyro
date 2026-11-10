@@ -31,3 +31,25 @@ export const formatConversationTime = (
     year: isSameYear(date, now) ? undefined : 'numeric',
   });
 };
+
+const ARABIC = /[؀-ۿ]/g;
+const LATIN = /[A-Za-z]/g;
+
+const isArabicParagraph = (paragraph: string): boolean =>
+  (paragraph.match(ARABIC)?.length ?? 0) >
+  (paragraph.match(LATIN)?.length ?? 0);
+
+/**
+ * Nafham's own messages (notices, the welcome, the assistant) carry the
+ * English and the Arabic text one after the other. Keep the paragraphs in
+ * the reader's language; text in one language only is left as it is.
+ */
+export const textInLanguage = (text: string, language: string): string => {
+  const paragraphs = text.split(/\n\s*\n/);
+  const arabic = paragraphs.filter(isArabicParagraph);
+  if (arabic.length === 0 || arabic.length === paragraphs.length) return text;
+  const wanted = language.startsWith('ar')
+    ? arabic
+    : paragraphs.filter((p) => !isArabicParagraph(p));
+  return wanted.join('\n\n');
+};

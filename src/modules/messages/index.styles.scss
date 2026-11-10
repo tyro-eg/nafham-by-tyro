@@ -1913,6 +1913,34 @@ $avatar-size: 3.2rem;
   }
 }
 
+// Under a Nafham bubble: the card's outcome, its buttons, the
+// assistant's options and the button to where a notice points, on as
+// few lines as they fit
+.nf-msg__extras {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem 0.8rem;
+  margin-top: 0.6rem;
+
+  > .bot-actions,
+  > .nf-assistant {
+    margin-top: 0;
+  }
+
+  > .bot-actions__outcome {
+    margin: 0;
+    padding: 0.4rem 1rem;
+    border-radius: $radius-pill;
+    background-color: $gray-100;
+    color: $gray-700;
+  }
+
+  > .nf-cta {
+    margin-top: 0;
+  }
+}
+
 // An announcement's button to where it points (the requests, a package)
 .nf-cta {
   display: inline-flex;
