@@ -47,6 +47,8 @@ const ConversationItem: FC<ConversationItemProps> = ({
       'message.updated',
       'message.deleted',
       'member.added',
+      'typing.start',
+      'typing.stop',
     ] as const;
     const subs = events.map((type) => channel.on(type, rerender));
     return () => subs.forEach((s) => s.unsubscribe());
@@ -80,6 +82,9 @@ const ConversationItem: FC<ConversationItemProps> = ({
     ? formatConversationTime(new Date(lastAt), i18n.language, t)
     : '';
 
+  const typer = Object.values(channel.state.typing ?? {}).find(
+    (event) => event.user?.id && event.user.id !== currentUserId,
+  );
   const mine = latest?.user?.id === currentUserId;
   const fromAdmin = isAdminUser(latest?.user?.id);
   const preview = previewOf(latest, t);
@@ -132,14 +137,27 @@ const ConversationItem: FC<ConversationItemProps> = ({
           </span>
         )}
         <span className="conv-item__row">
-          <span className="conv-item__preview" dir="auto">
-            {mine && (
-              <DoneAllRounded className="conv-item__seen" aria-hidden="true" />
-            )}
-            {preview.icon}
-            {who && <span>{who}: </span>}
-            {preview.text}
-          </span>
+          {typer ? (
+            <span className="conv-item__preview conv-item__preview--typing">
+              {t('MESSAGES.TYPING_ONE', {
+                name: typer.user?.name?.split(' ')[0] ?? '',
+              })}
+            </span>
+          ) : (
+            <span className="conv-item__preview" dir="auto">
+              {mine && (
+                <DoneAllRounded
+                  className="conv-item__seen"
+                  aria-hidden="true"
+                />
+              )}
+              {preview.icon}
+              <span className="conv-item__preview-text">
+                {who ? `${who}: ` : ''}
+                {preview.text}
+              </span>
+            </span>
+          )}
           {unread > 0 && (
             <span
               className="conv-item__unread"

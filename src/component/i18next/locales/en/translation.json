@@ -1560,7 +1560,8 @@
     "FILTER": {
       "ALL": "All",
       "UNREAD": "Unread",
-      "NAFHAM": "Nafham"
+      "NAFHAM": "Nafham",
+      "LABEL": "Filter conversations"
     },
     "YOU": "You",
     "NAFHAM_SUPPORT": "Nafham Support",
@@ -1623,6 +1624,19 @@
       "NAME": "Nafham Assistant",
       "OPTIONS": "Assistant options",
       "UNAVAILABLE": "The assistant is unavailable right now. Nafham Support will reply here."
+    },
+    "TODAY": "Today",
+    "NEW_MESSAGES": "New messages",
+    "EDITED": "edited",
+    "NOT_SENT": "Not sent",
+    "NOT_SENT_RETRY": "Not sent · Tap to retry",
+    "TYPING_ONE": "{{name}} is typing…",
+    "TYPING_MANY": "Several people are typing…",
+    "STATUS": {
+      "SENDING": "Sending",
+      "SENT": "Sent",
+      "DELIVERED": "Delivered",
+      "READ": "Read"
     }
   },
   "SESSION_REQUEST": {

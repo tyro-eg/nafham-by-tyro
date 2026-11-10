@@ -1,7 +1,14 @@
 import { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Button, CircularProgress, InputBase } from '@mui/material';
+import {
+  Button,
+  CircularProgress,
+  IconButton,
+  InputBase,
+  Skeleton,
+  Tooltip,
+} from '@mui/material';
 import {
   ChatBubbleOutlineRounded,
   PersonSearchRounded,
@@ -46,6 +53,10 @@ import NafhamMessageUI from './nafham-message-ui.component';
 import ThreadEmptyState from './thread-empty-state.component';
 import ChatScreensProvider from './chat-screens.component';
 import AssistantPrompt from './assistant-prompt';
+import {
+  DaySeparator,
+  NewMessagesSeparator,
+} from './thread-separators.component';
 import { getStreamI18n } from './stream-i18n';
 
 import 'stream-chat-react/dist/css/index.css';
@@ -57,6 +68,23 @@ const sort: ChannelSort = { last_message_at: -1 };
 // The page has its own title and filters; hide Stream's "Chats" header
 const NoHeader = () => null;
 const options = { limit: 20, state: true, watch: true, presence: false };
+// Messages from one person this close together share a group
+const GROUP_WINDOW_MS = 5 * 60 * 1000;
+
+/** Placeholder rows while the conversation list loads. */
+const ListSkeleton = () => (
+  <div className="messages__skeleton" aria-hidden="true">
+    {[0, 1, 2, 3, 4].map((i) => (
+      <div key={i} className="messages__skeleton-row">
+        <Skeleton variant="circular" width={44} height={44} />
+        <div>
+          <Skeleton variant="text" width="55%" height={18} />
+          <Skeleton variant="text" width="85%" height={16} />
+        </div>
+      </div>
+    ))}
+  </div>
+);
 
 /**
  * Messages page: conversations on one side, the open thread on the other.
@@ -152,11 +180,27 @@ const Messages: FC = () => {
             MessageUI: NafhamMessageUI,
             ChannelListHeader: NoHeader,
             EmptyStateIndicator: ThreadEmptyState,
+            DateSeparator: DaySeparator,
+            UnreadMessagesSeparator: NewMessagesSeparator,
           }}
         >
           <section className="messages__list" aria-label={t('MESSAGES.TITLE')}>
             <div className="messages__list-head">
-              <h1 className="messages__title">{t('MESSAGES.TITLE')}</h1>
+              <div className="messages__title-row">
+                <h1 className="messages__title">{t('MESSAGES.TITLE')}</h1>
+                <Tooltip title={t('MESSAGES.SUPPORT.BUTTON')}>
+                  <span>
+                    <IconButton
+                      className="messages__support"
+                      aria-label={t('MESSAGES.SUPPORT.BUTTON')}
+                      disabled={support.isStarting}
+                      onClick={() => support.open()}
+                    >
+                      <SupportAgentRounded />
+                    </IconButton>
+                  </span>
+                </Tooltip>
+              </div>
               <label className="messages__search">
                 <SearchRounded aria-hidden="true" />
                 <InputBase
@@ -167,7 +211,11 @@ const Messages: FC = () => {
                   inputProps={{ 'aria-label': t('MESSAGES.SEARCH') }}
                 />
               </label>
-              <div className="messages__pills" role="group">
+              <div
+                className="messages__pills"
+                role="group"
+                aria-label={t('MESSAGES.FILTER.LABEL')}
+              >
                 {(['all', 'unread', 'nafham'] as ListFilter[]).map((key) => (
                   <button
                     key={key}
@@ -182,70 +230,62 @@ const Messages: FC = () => {
                   </button>
                 ))}
               </div>
-              <Button
-                className="messages__support"
-                variant="text"
-                size="small"
-                startIcon={<SupportAgentRounded />}
-                disabled={support.isStarting}
-                onClick={() => support.open()}
-              >
-                {t('MESSAGES.SUPPORT.BUTTON')}
-              </Button>
             </div>
 
-            <ChannelList
-              filters={filters}
-              sort={sort}
-              options={options}
-              setActiveChannelOnMount={false}
-              channelRenderFilterFn={channelRenderFilterFn}
-              EmptyStateIndicator={() => (
-                <div className="messages__empty">
-                  <ChatBubbleOutlineRounded aria-hidden="true" />
-                  <p className="messages__empty-title">
-                    {t('MESSAGES.EMPTY.TITLE')}
-                  </p>
-                  <p className="messages__empty-text">
-                    {isTutor
-                      ? t('MESSAGES.EMPTY.TUTOR_TEXT')
-                      : t('MESSAGES.EMPTY.STUDENT_TEXT')}
-                  </p>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    size="small"
-                    startIcon={<SupportAgentRounded />}
-                    disabled={support.isStarting}
-                    onClick={() => support.open()}
-                  >
-                    {t('MESSAGES.SUPPORT.BUTTON')}
-                  </Button>
-                  {!isTutor && (
+            <WithComponents overrides={{ LoadingIndicator: ListSkeleton }}>
+              <ChannelList
+                filters={filters}
+                sort={sort}
+                options={options}
+                setActiveChannelOnMount={false}
+                channelRenderFilterFn={channelRenderFilterFn}
+                EmptyStateIndicator={() => (
+                  <div className="messages__empty">
+                    <ChatBubbleOutlineRounded aria-hidden="true" />
+                    <p className="messages__empty-title">
+                      {t('MESSAGES.EMPTY.TITLE')}
+                    </p>
+                    <p className="messages__empty-text">
+                      {isTutor
+                        ? t('MESSAGES.EMPTY.TUTOR_TEXT')
+                        : t('MESSAGES.EMPTY.STUDENT_TEXT')}
+                    </p>
                     <Button
-                      variant="outlined"
-                      color="secondary"
+                      variant="contained"
+                      color="primary"
                       size="small"
-                      startIcon={<PersonSearchRounded />}
-                      onClick={() => navigate('/home')}
+                      startIcon={<SupportAgentRounded />}
+                      disabled={support.isStarting}
+                      onClick={() => support.open()}
                     >
-                      {t('NAVIGATION.BROWSE_INSTRUCTORS')}
+                      {t('MESSAGES.SUPPORT.BUTTON')}
                     </Button>
-                  )}
-                </div>
-              )}
-              renderChannels={(channels) =>
-                channels.map((channel) => (
-                  <ConversationItem
-                    key={channel.cid}
-                    channel={channel}
-                    currentUserId={userId}
-                    active={channel.id === channelId}
-                    onSelect={(c) => navigate(`/messages/${c.id}`)}
-                  />
-                ))
-              }
-            />
+                    {!isTutor && (
+                      <Button
+                        variant="outlined"
+                        color="secondary"
+                        size="small"
+                        startIcon={<PersonSearchRounded />}
+                        onClick={() => navigate('/home')}
+                      >
+                        {t('NAVIGATION.BROWSE_INSTRUCTORS')}
+                      </Button>
+                    )}
+                  </div>
+                )}
+                renderChannels={(channels) =>
+                  channels.map((channel) => (
+                    <ConversationItem
+                      key={channel.cid}
+                      channel={channel}
+                      currentUserId={userId}
+                      active={channel.id === channelId}
+                      onSelect={(c) => navigate(`/messages/${c.id}`)}
+                    />
+                  ))
+                }
+              />
+            </WithComponents>
           </section>
 
           <section className="messages__thread">
@@ -291,8 +331,14 @@ const ActiveThread: FC<ActiveThreadProps> = ({
       return undefined;
     }
     let cancelled = false;
-    setLoading(true);
     const next = client.channel(CHANNEL_TYPE, channelId);
+    // The list already watches its conversations: open those at once
+    if (next.initialized) {
+      setChannel(next);
+      setLoading(false);
+      return undefined;
+    }
+    setLoading(true);
     next
       .watch()
       .then(() => {
@@ -360,7 +406,7 @@ const ActiveThread: FC<ActiveThreadProps> = ({
     return (
       <div className="messages__placeholder" role="status">
         {loading ? (
-          <CircularProgress size={28} />
+          <ThreadSkeleton />
         ) : (
           <>
             <ChatBubbleOutlineRounded aria-hidden="true" />
@@ -387,7 +433,13 @@ const ActiveThread: FC<ActiveThreadProps> = ({
             isTutor={isTutor}
             onBack={onBack}
           />
-          <MessageList />
+          {/* Stream marks the first unread message with a second day
+              separator; our "New messages" rule does that job instead */}
+          <MessageList
+            hideNewMessageSeparator
+            returnAllReadData
+            maxTimeBetweenGroupedMessages={GROUP_WINDOW_MS}
+          />
           <AssistantPrompt channelId={channel.id ?? channelId} />
           <MessageComposer
             focus
@@ -396,13 +448,31 @@ const ActiveThread: FC<ActiveThreadProps> = ({
             asyncMessagesMultiSendEnabled
             additionalTextareaProps={{
               placeholder: t('MESSAGES.COMPOSER.PLACEHOLDER'),
+              'aria-describedby': 'messages-composer-hint',
             }}
           />
-          <p className="messages__hint">{t('MESSAGES.COMPOSER.HINT')}</p>
+          <p id="messages-composer-hint" className="messages__hint">
+            {t('MESSAGES.COMPOSER.HINT')}
+          </p>
         </Window>
       </ChatScreensProvider>
     </Channel>
   );
 };
+
+/** Placeholder bubbles while a conversation opens. */
+const ThreadSkeleton = () => (
+  <div className="messages__thread-skeleton" aria-hidden="true">
+    {['62%', '40%', '55%', '30%'].map((width, i) => (
+      <Skeleton
+        key={width + i}
+        variant="rounded"
+        width={width}
+        height={i % 2 ? 36 : 52}
+        className={i % 2 ? 'is-mine' : undefined}
+      />
+    ))}
+  </div>
+);
 
 export default Messages;
