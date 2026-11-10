@@ -58,11 +58,10 @@ import {
   NewMessagesSeparator,
 } from './thread-separators.component';
 import { getStreamI18n } from './stream-i18n';
+import { matchesListFilter, type ListFilter } from './messages.utils';
 
 import 'stream-chat-react/dist/css/index.css';
 import './index.styles.scss';
-
-type ListFilter = 'all' | 'unread' | 'nafham';
 
 const sort: ChannelSort = { last_message_at: -1 };
 // The page has its own title and filters; hide Stream's "Chats" header
@@ -119,20 +118,25 @@ const Messages: FC = () => {
   // Keep only the rows matching the pill filter and the search box
   const channelRenderFilterFn = useCallback(
     (channels: StreamChannel[]) => {
-      const q = query.trim().toLowerCase();
       return channels.filter((channel) => {
-        if (filter === 'unread' && channel.countUnread() === 0) return false;
-        if (filter === 'nafham' && !isSupportConversation(channel))
-          return false;
-        if (!q) return true;
-        const other = getCounterpart(channel, userId);
-        const haystack = `${other?.user?.name ?? ''} ${
-          (channel.data?.subject as string | undefined) ?? ''
-        }`.toLowerCase();
-        return haystack.includes(q);
+        const support = isSupportConversation(channel);
+        return matchesListFilter(
+          {
+            unread: channel.countUnread(),
+            support,
+            searchable: [
+              support
+                ? t('MESSAGES.NAFHAM_SUPPORT')
+                : getCounterpart(channel, userId)?.user?.name,
+              channel.data?.subject as string | undefined,
+            ],
+          },
+          filter,
+          query,
+        );
       });
     },
-    [filter, query, userId],
+    [filter, query, t, userId],
   );
 
   if (!client) {

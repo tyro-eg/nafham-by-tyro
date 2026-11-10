@@ -12,7 +12,6 @@ import {
   ShieldRounded,
   SmartToyRounded,
 } from '@mui/icons-material';
-import type { Channel, LocalMessage } from 'stream-chat';
 import {
   Attachment,
   MessageActions,
@@ -29,53 +28,24 @@ import {
   useMessageContext,
 } from 'stream-chat-react';
 
-import { initialsOf, isAdminUser } from '../../lib/streamChat';
-import { assistantCardOf, isBotMessage } from '../../lib/chat-actions';
-import { isAssistantMessage } from '../../lib/assistant';
+import { initialsOf } from '../../lib/streamChat';
 import { useAppSelector } from '../../redux/store';
 import { selectCurrentUser } from '../../redux/user/user.selectors';
 import AssistantOptions from './assistant-options.component';
-import { textInLanguage } from './messages.utils';
+import { clockTime, textInLanguage } from './messages.utils';
+import {
+  groupPositionOf,
+  isLatestFromNafham,
+  isMediaOnly,
+  messageKindOf,
+  noticePathOf,
+  pathLabelOf,
+  roleOf,
+  seenByOthers,
+  ticksOf,
+  type Ticks as TickState,
+} from './message-model';
 import BotActionRow from './bot-action-row.component';
-
-type Role = 'student' | 'instructor' | 'support';
-
-/** Announcements that point somewhere in the app, by template */
-const PATH_LABELS: Record<string, string> = {
-  move_proposed: 'SESSION_CHANGES.CHAT.ANSWER',
-  schedule_change_proposed: 'SESSION_CHANGES.CHAT.ANSWER',
-  freeze_created: 'SESSION_CHANGES.CHAT.PACKAGES',
-  freeze_resumed: 'SESSION_CHANGES.CHAT.SESSIONS',
-  freeze_cancelled: 'SESSION_CHANGES.CHAT.PACKAGES',
-};
-
-/** The button label for an announcement's path */
-const pathLabelOf = (path: string, template: string): string =>
-  path.startsWith('/messages/')
-    ? 'SESSION_CHANGES.CHAT.OPEN_CHAT'
-    : (PATH_LABELS[template] ??
-      (path === '/requests'
-        ? 'SESSION_CHANGES.CHAT.ANSWER'
-        : path === '/my_packages'
-          ? 'SESSION_CHANGES.CHAT.PACKAGES'
-          : 'SESSION_CHANGES.CHAT.SESSIONS'));
-
-/** Who sent a message in a lesson conversation, for the name line. */
-const roleOf = (channel: Channel, userId?: string): Role | undefined => {
-  if (!userId) return undefined;
-  if (isAdminUser(userId)) return 'support';
-  if (String(channel.data?.tutor_id ?? '') === userId) return 'instructor';
-  if (String(channel.data?.student_id ?? '') === userId) return 'student';
-  return undefined;
-};
-
-const clockTime = (date: Date | string | undefined, language: string) =>
-  date
-    ? new Date(date).toLocaleTimeString(
-        language.startsWith('ar') ? 'ar-EG-u-nu-latn' : 'en-GB',
-        { hour: 'numeric', minute: '2-digit' },
-      )
-    : '';
 
 /**
  * One message, drawn by us rather than Stream's default UI so the thread
@@ -110,40 +80,21 @@ const NafhamMessageUI: FC = () => {
   const [actionsShown, setActionsShown] = useState(false);
 
   const mine = isMyMessage();
-  const fromAdmin = isAdminUser(message.user?.id);
-  const helper = fromAdmin && isAssistantMessage(message);
-  const bot = isBotMessage(message) || helper;
-  const card = assistantCardOf(message);
-  const announcement = fromAdmin && !bot && message.system === true;
-  // No link to the chat being read, nor next to buttons that answer here
-  const rawPath = fromAdmin && message.system === true ? message.path : '';
-  const path =
-    typeof rawPath === 'string' &&
-    rawPath.startsWith('/') &&
-    card?.state !== 'open' &&
-    rawPath !== `/messages/${channel?.id}`
-      ? rawPath
-      : undefined;
+  const { fromAdmin, helper, bot, announcement, card } = messageKindOf(message);
+  const path = noticePathOf(message, card, channel?.id);
   const cta = path && (
     <Link to={path} className="nf-cta">
-      {t(pathLabelOf(path, (message.template as string | undefined) ?? ''))}
+      {t(pathLabelOf(path, message.template as string | undefined))}
       <ArrowForwardRounded aria-hidden="true" />
     </Link>
   );
-  // The assistant's options stay on its last message until Nafham (the
-  // bot or a person) says something newer; the person's own replies in
-  // between do not take them away
-  const lastFromNafham = helper
-    ? messages
-        ?.slice()
-        .reverse()
-        .find((m) => isAdminUser(m.user?.id))
-    : undefined;
-  const latest = !!lastFromNafham && lastFromNafham.id === message.id;
+  const latest = helper && isLatestFromNafham(messages, message.id);
   const deleted = isMessageDeleted(message);
-  const group = groupStyles?.[0] || 'single';
-  const firstOfGroup = group === 'top' || group === 'single';
-  const lastOfGroup = group === 'bottom' || group === 'single';
+  const {
+    group,
+    first: firstOfGroup,
+    last: lastOfGroup,
+  } = groupPositionOf(groupStyles?.[0]);
   const memberCount = Object.keys(channel?.state?.members ?? {}).length;
   const time = clockTime(message.created_at, i18n.language);
 
@@ -182,21 +133,16 @@ const NafhamMessageUI: FC = () => {
   }
 
   // The assistant's name says what it is; no chip beside it
-  const role = bot ? undefined : roleOf(channel, message.user?.id);
+  const role = bot ? undefined : roleOf(channel?.data, message.user?.id);
   const showName = !mine && firstOfGroup && (memberCount > 2 || bot);
-  const mediaOnly =
-    !deleted &&
-    !message.text &&
-    !message.quoted_message &&
-    attachments.length > 0 &&
-    attachments.every(
-      (a) => 'type' in a && (a.type === 'image' || a.type === 'video'),
-    );
+  const mediaOnly = !deleted && isMediaOnly(message, attachments);
   const failed = message.status === 'failed';
   const canRetry = failed && isMessageErrorRetryable(message);
-  const read = mine && (readBy ?? []).some((u) => u.id !== message.user?.id);
-  const delivered =
-    mine && (deliveredTo ?? []).some((u) => u.id !== message.user?.id);
+  const ticks = ticksOf(
+    message.status,
+    seenByOthers(readBy, message.user?.id),
+    seenByOthers(deliveredTo, message.user?.id),
+  );
   const hasReactions = !deleted && messageHasReactions(message);
   const showReplies = !threadList && !!message.reply_count;
 
@@ -289,14 +235,7 @@ const NafhamMessageUI: FC = () => {
               <time dateTime={new Date(message.created_at).toISOString()}>
                 {time}
               </time>
-              {mine && !deleted && (
-                <Ticks
-                  message={message}
-                  read={read}
-                  delivered={delivered}
-                  t={t}
-                />
-              )}
+              {mine && !deleted && <Ticks state={ticks} t={t} />}
             </span>
           </div>
           {!deleted && (
@@ -359,41 +298,24 @@ const NafhamMessageUI: FC = () => {
   );
 };
 
-interface TicksProps {
-  message: LocalMessage;
-  read: boolean;
-  delivered: boolean;
-  t: (key: string) => string;
-}
+const TICK_ICONS: Record<Exclude<TickState, 'failed'>, typeof DoneRounded> = {
+  sending: ScheduleRounded,
+  sent: DoneRounded,
+  delivered: DoneAllRounded,
+  read: DoneAllRounded,
+};
 
 /** Sending clock, then one tick (sent), two ticks (delivered), blue (read). */
-const Ticks: FC<TicksProps> = ({ message, read, delivered, t }) => {
-  if (message.status === 'sending') {
-    return (
-      <ScheduleRounded
-        className="nf-msg__tick"
-        aria-label={t('MESSAGES.STATUS.SENDING')}
-      />
-    );
-  }
-  if (message.status === 'failed') return null;
-  if (read) {
-    return (
-      <DoneAllRounded
-        className="nf-msg__tick nf-msg__tick--read"
-        aria-label={t('MESSAGES.STATUS.READ')}
-      />
-    );
-  }
-  return delivered ? (
-    <DoneAllRounded
-      className="nf-msg__tick"
-      aria-label={t('MESSAGES.STATUS.DELIVERED')}
-    />
-  ) : (
-    <DoneRounded
-      className="nf-msg__tick"
-      aria-label={t('MESSAGES.STATUS.SENT')}
+const Ticks: FC<{ state: TickState; t: (key: string) => string }> = ({
+  state,
+  t,
+}) => {
+  if (state === 'failed') return null;
+  const Icon = TICK_ICONS[state];
+  return (
+    <Icon
+      className={`nf-msg__tick${state === 'read' ? ' nf-msg__tick--read' : ''}`}
+      aria-label={t(`MESSAGES.STATUS.${state.toUpperCase()}`)}
     />
   );
 };

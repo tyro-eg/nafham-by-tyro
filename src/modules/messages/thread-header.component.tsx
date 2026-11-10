@@ -25,6 +25,7 @@ import {
   isSupportConversation,
 } from '../../lib/streamChat';
 import { useRtlClass } from '../../assets/utils/utils';
+import { typingLabelOf } from './messages.utils';
 import QuickActions from './quick-actions.component';
 
 interface ThreadHeaderProps {
@@ -78,14 +79,10 @@ const ThreadHeader: FC<ThreadHeaderProps> = ({
   const typers = Object.values(typing).filter(
     (event) => event.user?.id && event.user.id !== currentUserId,
   );
-  const typingLabel =
-    typers.length === 0
-      ? ''
-      : typers.length === 1
-        ? t('MESSAGES.TYPING_ONE', {
-            name: typers[0].user?.name?.split(' ')[0] ?? '',
-          })
-        : t('MESSAGES.TYPING_MANY');
+  const typingLabel = typingLabelOf(
+    typers.map((event) => event.user?.name),
+    t,
+  );
 
   const members = [
     other?.user?.name || name,

@@ -1,10 +1,11 @@
 import { FC } from 'react';
 import { useTranslation } from 'react-i18next';
-import { isSameDay, isSameYear, isThisWeek, subDays } from 'date-fns';
 import type {
   DateSeparatorProps,
   UnreadMessagesSeparatorProps,
 } from 'stream-chat-react';
+
+import { dayLabel } from './messages.utils';
 
 /**
  * Day label between messages: "Today", "Yesterday", the weekday within
@@ -13,21 +14,7 @@ import type {
  */
 export const DaySeparator: FC<DateSeparatorProps> = ({ date, floating }) => {
   const { t, i18n } = useTranslation();
-  const locale = i18n.language.startsWith('ar') ? 'ar-EG-u-nu-latn' : 'en-GB';
-  const now = new Date();
-
-  let label: string;
-  if (isSameDay(date, now)) label = t('MESSAGES.TODAY');
-  else if (isSameDay(date, subDays(now, 1))) label = t('MESSAGES.YESTERDAY');
-  else if (isThisWeek(date, { weekStartsOn: 6 }))
-    label = date.toLocaleDateString(locale, { weekday: 'long' });
-  else
-    label = date.toLocaleDateString(locale, {
-      weekday: 'short',
-      day: 'numeric',
-      month: 'short',
-      year: isSameYear(date, now) ? undefined : 'numeric',
-    });
+  const label = dayLabel(date, i18n.language, t);
 
   return (
     <div

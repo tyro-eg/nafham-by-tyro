@@ -1438,11 +1438,6 @@ $avatar-size: 3.2rem;
     margin-inline-start: auto;
   }
 
-  &__menu-icon {
-    margin-inline-end: 0.8rem;
-    color: $text-muted;
-  }
-
   &__error.MuiAlert-root {
     flex-basis: 100%;
     font-size: $font-xs;

@@ -14,12 +14,21 @@ import {
   getStudentMember,
   hasAdminMember,
   initialsOf,
-  isAdminUser,
   isSupportConversation,
 } from '../../lib/streamChat';
-import { formatConversationTime, textInLanguage } from './messages.utils';
-import { isBotMessage } from '../../lib/chat-actions';
-import { isAssistantMessage } from '../../lib/assistant';
+import {
+  formatConversationTime,
+  textInLanguage,
+  typingLabelOf,
+} from './messages.utils';
+import { authorOf, previewOf, type PreviewKind } from './message-model';
+
+/** The small icon before a preview that is not text */
+const KIND_ICONS: Record<Exclude<PreviewKind, null>, typeof MicRounded> = {
+  voice: MicRounded,
+  photo: AttachFileRounded,
+  file: AttachFileRounded,
+};
 
 interface ConversationItemProps {
   channel: Channel;
@@ -87,20 +96,22 @@ const ConversationItem: FC<ConversationItemProps> = ({
   const typer = Object.values(channel.state.typing ?? {}).find(
     (event) => event.user?.id && event.user.id !== currentUserId,
   );
-  const mine = latest?.user?.id === currentUserId;
-  const fromAdmin = isAdminUser(latest?.user?.id);
-  const preview = previewOf(latest, t, i18n.language);
-  const fromAssistant =
-    fromAdmin && (isBotMessage(latest) || isAssistantMessage(latest));
-  const who = !latest
-    ? ''
-    : mine
-      ? t('MESSAGES.YOU')
-      : fromAssistant
-        ? t('MESSAGES.ASSISTANT.NAME')
-        : fromAdmin
-          ? t('MESSAGES.NAFHAM_SUPPORT')
-          : latest.user?.name?.split(' ')[0] || '';
+  const author = authorOf(latest, currentUserId);
+  const mine = author === 'you';
+  const preview = previewOf(latest, (text) =>
+    textInLanguage(text, i18n.language),
+  );
+  const previewText = preview.literal
+    ? preview.text
+    : `${t(preview.text)}${preview.duration ? ` · ${preview.duration}` : ''}`;
+  const KindIcon = preview.kind ? KIND_ICONS[preview.kind] : null;
+  const who = {
+    none: '',
+    you: t('MESSAGES.YOU'),
+    assistant: t('MESSAGES.ASSISTANT.NAME'),
+    support: t('MESSAGES.NAFHAM_SUPPORT'),
+    person: latest?.user?.name?.split(' ')[0] || '',
+  }[author];
 
   return (
     <button
@@ -145,9 +156,7 @@ const ConversationItem: FC<ConversationItemProps> = ({
         <span className="conv-item__row">
           {typer ? (
             <span className="conv-item__preview conv-item__preview--typing">
-              {t('MESSAGES.TYPING_ONE', {
-                name: typer.user?.name?.split(' ')[0] ?? '',
-              })}
+              {typingLabelOf([typer.user?.name], t)}
             </span>
           ) : (
             <span className="conv-item__preview" dir="auto">
@@ -157,10 +166,12 @@ const ConversationItem: FC<ConversationItemProps> = ({
                   aria-hidden="true"
                 />
               )}
-              {preview.icon}
+              {KindIcon && (
+                <KindIcon className="conv-item__kind" aria-hidden="true" />
+              )}
               <span className="conv-item__preview-text">
                 {who ? `${who}: ` : ''}
-                {preview.text}
+                {previewText}
               </span>
             </span>
           )}
@@ -177,52 +188,5 @@ const ConversationItem: FC<ConversationItemProps> = ({
     </button>
   );
 };
-
-/** Short description of the latest message for the list row. */
-function previewOf(
-  message: LocalMessage | undefined,
-  t: (key: string, opts?: Record<string, unknown>) => string,
-  language: string,
-): { icon: JSX.Element | null; text: string } {
-  if (!message) return { icon: null, text: t('MESSAGES.NO_MESSAGES_YET') };
-  if (message.type === 'deleted') {
-    return { icon: null, text: t('MESSAGES.DELETED_MESSAGE') };
-  }
-  const attachments = message.attachments ?? [];
-  const voice = attachments.find((a) => a.type === 'voiceRecording');
-  if (voice) {
-    const seconds = Math.round((voice.duration as number) || 0);
-    const mm = Math.floor(seconds / 60);
-    const ss = String(seconds % 60).padStart(2, '0');
-    return {
-      icon: <MicRounded className="conv-item__kind" aria-hidden="true" />,
-      text: `${t('MESSAGES.VOICE_NOTE')} · ${mm}:${ss}`,
-    };
-  }
-  if (message.text?.trim()) {
-    // Nafham's notices carry both languages: preview the reader's one
-    const text = isAdminUser(message.user?.id)
-      ? textInLanguage(message.text.trim(), language)
-      : message.text.trim();
-    return { icon: null, text: text.replace(/\s+/g, ' ') };
-  }
-  if (attachments.some((a) => a.type === 'image')) {
-    return {
-      icon: (
-        <AttachFileRounded className="conv-item__kind" aria-hidden="true" />
-      ),
-      text: t('MESSAGES.PHOTO'),
-    };
-  }
-  if (attachments.length) {
-    return {
-      icon: (
-        <AttachFileRounded className="conv-item__kind" aria-hidden="true" />
-      ),
-      text: attachments[0].title || t('MESSAGES.FILE'),
-    };
-  }
-  return { icon: null, text: '' };
-}
 
 export default ConversationItem;
