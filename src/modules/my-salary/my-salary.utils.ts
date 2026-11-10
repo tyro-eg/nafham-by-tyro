@@ -1,6 +1,3 @@
-import type { Package, SessionType } from '../../assets/types';
-import { sessionHours } from '../dashboard/dashboard.utils';
-
 export interface CourseParts {
   curriculum: string;
   stage: string;
@@ -8,7 +5,7 @@ export interface CourseParts {
 }
 
 /** "IGCSE - Grade 10 - Mathematics" -> curriculum / stage / subject */
-export const splitCourse = (fullCourseName?: string): CourseParts => {
+export const splitCourse = (fullCourseName?: string | null): CourseParts => {
   const parts = (fullCourseName || '').split(' - ').map((p) => p.trim());
   if (parts.length >= 3) {
     return {
@@ -23,49 +20,50 @@ export const splitCourse = (fullCourseName?: string): CourseParts => {
   return { curriculum: '', stage: '', subject: parts[0] || '' };
 };
 
-export interface Rate {
-  /** Hourly rate, or null when no package gives a rate for the course */
-  perHour: number | null;
-  currency: string;
+/** Rates and amounts from GET /my_salary are in EGP */
+export const SALARY_CURRENCY = 'EGP';
+
+export interface MySalaryLine {
+  session_id: number;
+  start_time: string;
+  end_time: string;
+  student_id: number;
+  student_name: string | null;
+  grade_subject_id: number;
+  course: string | null;
+  session_type: 'regular' | 'trial';
+  status: string;
+  hours: number;
+  /** Per hour, null when the session has no rate yet */
+  rate: number | null;
+  amount: number;
+  /** False for sessions not paid (yet): missed but unconfirmed, or not closed */
+  paid: boolean;
+  flags: string[];
 }
 
-/**
- * Hourly rate for a session: the package for the same student and course
- * first, then the newest package for the same course.
- */
-export const rateFor = (session: SessionType, packages: Package[]): Rate => {
-  // The backend stores the rate each session pays (raises can split a
-  // student's sessions between an old and a new rate); older responses
-  // without it fall back to the newest package for the course.
-  if (session.tutor_rate != null) {
-    return {
-      perHour: Number(session.tutor_rate),
-      currency: session.tutor_rate_currency || 'EGP',
-    };
-  }
-  const courseId = session.grade_subject?.id;
-  const sameCourse = packages
-    .filter((p) => p.grade_subject?.id === courseId && p.tutor_rate != null)
-    .sort(
-      (a, b) =>
-        new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
-    );
-  const match =
-    sameCourse.find((p) => p.student?.id === session.student?.id) ||
-    sameCourse[0];
-  if (!match) return { perHour: null, currency: '' };
-  return {
-    perHour: Number(match.tutor_rate),
-    currency: match.tutor_rate_currency || 'EGP',
+export interface MySalaryResponse {
+  month: string;
+  totals: {
+    sessions: number;
+    completed: number;
+    missed: number;
+    trials: number;
+    hours: number;
+    amount: number;
+    unpriced: number;
   };
-};
-
-export interface SalaryLine {
-  session: SessionType;
-  course: CourseParts;
-  hours: number;
-  rate: Rate;
-  amount: number;
+  groups: {
+    grade_subject_id: number;
+    course: string | null;
+    rate: number | null;
+    sessions: number;
+    hours: number;
+    amount: number;
+  }[];
+  lines: MySalaryLine[];
+  /** Sessions still booked later this month, at their rate */
+  upcoming: { sessions: number; amount: number };
 }
 
 export interface SalaryGroup {
@@ -73,107 +71,69 @@ export interface SalaryGroup {
   course: CourseParts;
   sessions: number;
   hours: number;
-  rate: Rate;
+  rate: number | null;
   amount: number;
 }
 
 export interface SalaryReport {
-  lines: SalaryLine[];
+  /** Paid sessions only, newest first */
+  lines: MySalaryLine[];
   groups: SalaryGroup[];
   hours: number;
   sessions: number;
-  /** Totals per currency (normally just one) */
-  totals: Record<string, number>;
+  amount: number;
   unpricedSessions: number;
-  /** Scheduled sessions later this month, valued at the same rates */
-  upcomingTotals: Record<string, number>;
+  upcomingAmount: number;
   upcomingSessions: number;
+  /** Paid hours that have a rate, for the average */
+  pricedHours: number;
 }
 
-const addTo = (totals: Record<string, number>, currency: string, v: number) => {
-  totals[currency] = (totals[currency] || 0) + v;
+/** "2026-11" for the month `offset` months from `now` (0 = this month) */
+export const monthKey = (now: Date, offset: number): string => {
+  const d = new Date(now.getFullYear(), now.getMonth() + offset, 1);
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
 };
 
-/**
- * Earnings for one calendar month. For the current month only sessions up
- * to `now` count (month to date); later scheduled sessions are reported
- * separately as upcoming.
- */
-export const buildSalaryReport = (
-  sessions: SessionType[],
-  packages: Package[],
-  month: Date,
-  now: Date,
-): SalaryReport => {
-  const start = new Date(month.getFullYear(), month.getMonth(), 1);
-  const end = new Date(month.getFullYear(), month.getMonth() + 1, 1);
-  const inMonth = (s: SessionType) => {
-    const t = new Date(s.start_time);
-    return t >= start && t < end;
-  };
+export const EMPTY_REPORT: SalaryReport = {
+  lines: [],
+  groups: [],
+  hours: 0,
+  sessions: 0,
+  amount: 0,
+  unpricedSessions: 0,
+  upcomingAmount: 0,
+  upcomingSessions: 0,
+  pricedHours: 0,
+};
 
-  const lines: SalaryLine[] = sessions
-    .filter((s) => s.status === 'completed' && inMonth(s))
-    .filter((s) => new Date(s.start_time) <= now)
+/** The page's view of GET /my_salary: only what the tutor is paid for */
+export const toSalaryReport = (data?: MySalaryResponse): SalaryReport => {
+  if (!data) return EMPTY_REPORT;
+  const lines = data.lines
+    .filter((line) => line.paid)
     .sort(
       (a, b) =>
         new Date(b.start_time).getTime() - new Date(a.start_time).getTime(),
-    )
-    .map((session) => {
-      const hours = sessionHours(session);
-      const rate = rateFor(session, packages);
-      return {
-        session,
-        course: splitCourse(session.grade_subject?.full_course_name),
-        hours,
-        rate,
-        amount: rate.perHour === null ? 0 : hours * rate.perHour,
-      };
-    });
-
-  const groupMap = new Map<string, SalaryGroup>();
-  const totals: Record<string, number> = {};
-  lines.forEach((line) => {
-    const key = `${line.session.grade_subject?.id}|${line.rate.perHour}|${line.rate.currency}`;
-    const group = groupMap.get(key) || {
-      key,
-      course: line.course,
-      sessions: 0,
-      hours: 0,
-      rate: line.rate,
-      amount: 0,
-    };
-    group.sessions += 1;
-    group.hours += line.hours;
-    group.amount += line.amount;
-    groupMap.set(key, group);
-    if (line.rate.perHour !== null) {
-      addTo(totals, line.rate.currency, line.amount);
-    }
-  });
-
-  const upcomingTotals: Record<string, number> = {};
-  const upcoming = sessions.filter(
-    (s) =>
-      inMonth(s) &&
-      new Date(s.start_time) > now &&
-      (s.status === 'scheduled' || s.status === 'open'),
-  );
-  upcoming.forEach((s) => {
-    const rate = rateFor(s, packages);
-    if (rate.perHour !== null) {
-      addTo(upcomingTotals, rate.currency, sessionHours(s) * rate.perHour);
-    }
-  });
-
+    );
   return {
     lines,
-    groups: [...groupMap.values()].sort((a, b) => b.amount - a.amount),
-    hours: lines.reduce((acc, l) => acc + l.hours, 0),
-    sessions: lines.length,
-    totals,
-    unpricedSessions: lines.filter((l) => l.rate.perHour === null).length,
-    upcomingTotals,
-    upcomingSessions: upcoming.length,
+    groups: data.groups.map((group) => ({
+      key: `${group.grade_subject_id}|${group.rate}`,
+      course: splitCourse(group.course),
+      sessions: group.sessions,
+      hours: group.hours,
+      rate: group.rate,
+      amount: group.amount,
+    })),
+    hours: data.totals.hours,
+    sessions: data.totals.sessions,
+    amount: data.totals.amount,
+    unpricedSessions: data.totals.unpriced,
+    upcomingAmount: data.upcoming.amount,
+    upcomingSessions: data.upcoming.sessions,
+    pricedHours: lines
+      .filter((line) => line.rate !== null)
+      .reduce((acc, line) => acc + line.hours, 0),
   };
 };
