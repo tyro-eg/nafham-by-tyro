@@ -385,6 +385,15 @@ $sal-radius: 2rem;
   font-weight: 600;
 }
 
+.sal-chip--missed {
+  align-self: flex-start;
+  margin-top: 0.4rem;
+  padding: 0.1rem 0.8rem;
+  font-size: 1.1rem;
+  background-color: $warning-50;
+  color: #8a5a00;
+}
+
 .sal-missing {
   color: $danger-500;
   font-weight: 600;

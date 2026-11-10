@@ -92,6 +92,10 @@ export const queryKeys = {
   },
 
   // Package keys
+  mySalary: {
+    all: ['mySalary'] as const,
+    month: (month: string) => [...queryKeys.mySalary.all, month] as const,
+  },
   packages: {
     all: ['packages'] as const,
     lists: () => [...queryKeys.packages.all, 'list'] as const,
