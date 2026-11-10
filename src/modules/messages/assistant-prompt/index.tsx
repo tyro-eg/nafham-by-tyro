@@ -87,7 +87,7 @@ const AssistantPrompt: FC<AssistantPromptProps> = ({ channelId }) => {
     <section className="assistant-prompt" aria-live="polite">
       <header className="assistant-prompt__header">
         <SmartToyRounded aria-hidden="true" />
-        <span>{t('MESSAGES.ASSISTANT')}</span>
+        <span>{t('MESSAGES.ASSISTANT.NAME')}</span>
         <IconButton
           size="small"
           className="assistant-prompt__close"

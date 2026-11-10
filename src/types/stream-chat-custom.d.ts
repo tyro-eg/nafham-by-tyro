@@ -116,7 +116,14 @@ declare module 'stream-chat' {
     schedule_change_request_id?: number;
     /** Posted by the Nafham Assistant bot (as the Nafham Support member) */
     bot?: boolean;
-    /** The bot's card: state, subject and buttons */
-    assistant?: AssistantCard;
+    /**
+     * The lesson bot's card (state, subject and buttons), or `true` on a
+     * message from the support chat's assistant
+     */
+    assistant?: AssistantCard | true;
+    /** The choices the assistant offers; tapping one answers it */
+    options?: Array<{ id: string; label: string }>;
+    /** Pages the assistant points at (a payment page, a page of the app) */
+    links?: Array<{ label: string; url: string }>;
   }
 }

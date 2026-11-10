@@ -16,6 +16,8 @@ import {
 
 import { isAdminUser } from '../../lib/streamChat';
 import { assistantCardOf, isBotMessage } from '../../lib/chat-actions';
+import { isAssistantMessage } from '../../lib/assistant';
+import AssistantOptions from './assistant-options.component';
 import { useAppSelector } from '../../redux/store';
 import { selectCurrentUser } from '../../redux/user/user.selectors';
 import BotActionRow from './bot-action-row.component';
@@ -34,18 +36,31 @@ const PATH_LABELS: Record<string, string> = {
  * "Nafham Support · Admin" label and their own styling, and the backend's
  * announcements (the welcome message, lesson changes) read as such, with a
  * button to where they point when they carry a path. The Nafham Assistant
- * bot's messages are labelled as such and carry their card's buttons.
+ * bot's messages are labelled as such and carry their card's buttons; the
+ * support chat's assistant carries its options and links.
  */
 const NafhamMessageUI: FC<MessageUIComponentProps> = (props) => {
   const { t } = useTranslation();
   const { message } = useMessageContext();
-  const { channel } = useChannelStateContext('NafhamMessageUI');
+  const { channel, messages } = useChannelStateContext('NafhamMessageUI');
   const userId = useAppSelector(selectCurrentUser)?.id;
   const fromAdmin = isAdminUser(message?.user?.id);
-  const bot = isBotMessage(message);
+  const helper = fromAdmin && isAssistantMessage(message);
+  const bot = isBotMessage(message) || helper;
+  // The helper's options stay on its last message until Nafham (the bot or
+  // a person) says something newer; the person's own replies in between do
+  // not take them away
+  const lastFromNafham = helper
+    ? messages
+        ?.slice()
+        .reverse()
+        .find((m) => isAdminUser(m.user?.id))
+    : undefined;
+  const latest =
+    lastFromNafham !== undefined && lastFromNafham.id === message?.id;
   const card = assistantCardOf(message);
   const cardOpen = card?.state === 'open';
-  const announcement = fromAdmin && message?.system === true;
+  const announcement = fromAdmin && !helper && message?.system === true;
   const rawPath = announcement ? message?.path : undefined;
   // No link to the chat being read, nor next to buttons that answer here
   const path =
@@ -70,7 +85,7 @@ const NafhamMessageUI: FC<MessageUIComponentProps> = (props) => {
         (bot ? (
           <span className="nf-msg__admin-label nf-msg__admin-label--bot">
             <SmartToyRounded aria-hidden="true" />
-            {t('MESSAGES.ASSISTANT')}
+            {t('MESSAGES.ASSISTANT.NAME')}
           </span>
         ) : (
           <span className="nf-msg__admin-label">
@@ -92,6 +107,13 @@ const NafhamMessageUI: FC<MessageUIComponentProps> = (props) => {
           messageId={message.id}
           channelId={channel?.id}
           userId={userId}
+        />
+      )}
+      {helper && (
+        <AssistantOptions
+          options={message.options ?? []}
+          links={message.links ?? []}
+          latest={latest}
         />
       )}
       {typeof path === 'string' && path.startsWith('/') && (
