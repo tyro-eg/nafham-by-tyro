@@ -114,6 +114,10 @@ const PackagesList: FC = () => {
     [data],
   );
 
+  const renewingType = packages.find(
+    (pkg) => pkg.id === renewing,
+  )?.package_type;
+
   // A parent's groups follow the family's order, so the colours match the calendar
   const groups = useMemo(() => {
     if (!isParent) return null;
@@ -226,6 +230,7 @@ const PackagesList: FC = () => {
         {renewing !== null && (
           <RenewDialog
             packageId={renewing}
+            packageType={renewingType}
             onClose={closeRenew}
             onRequestInstead={() => {
               closeRenew();
@@ -260,6 +265,7 @@ const PackagesList: FC = () => {
       {renewing !== null && (
         <RenewDialog
           packageId={renewing}
+          packageType={renewingType}
           onClose={closeRenew}
           onRequestInstead={() => {
             closeRenew();

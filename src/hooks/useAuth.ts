@@ -8,6 +8,8 @@ import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../redux/store';
 import { setCurrentUser, clearCurrentUser } from '../redux/user/user.slice';
 import { CurrentUser, ApiError, AuthHeaders } from '../assets/types';
+import { setActiveChildId } from '../lib/family-child';
+import { markFromApp } from '../lib/from-app';
 
 /**
  * Sign in payload
@@ -49,10 +51,7 @@ interface ChangePasswordPayload {
 /**
  * Save user authentication data to local storage
  */
-const saveUserDataToLocalStorage = (
-  userData: CurrentUser,
-  headers: AuthHeaders,
-) => {
+const saveTokensToLocalStorage = (headers: AuthHeaders) => {
   const {
     'access-token': accessToken,
     'refresh-token': refreshToken,
@@ -62,6 +61,20 @@ const saveUserDataToLocalStorage = (
   if (accessToken) localStorage.setItem('tyro.token', accessToken);
   if (refreshToken) localStorage.setItem('tyro.refreshToken', refreshToken);
   if (expireAt) localStorage.setItem('tyro.expireAt', expireAt);
+};
+
+const AUTH_KEYS = [
+  'tyro.token',
+  'tyro.refreshToken',
+  'tyro.expireAt',
+  'tyro.id',
+];
+
+const saveUserDataToLocalStorage = (
+  userData: CurrentUser,
+  headers: AuthHeaders,
+) => {
+  saveTokensToLocalStorage(headers);
   localStorage.setItem('tyro.id', String(userData.id));
 };
 
@@ -284,6 +297,66 @@ export function useImpersonate() {
         error.message ||
         'Impersonation failed. Invalid or expired token.';
       snackActions.error(errorMessage);
+    },
+  });
+}
+
+/** Only a path on this site: never another origin, never `//host` */
+const sameSitePath = (next: unknown): string =>
+  typeof next === 'string' && next.startsWith('/') && !next.startsWith('//')
+    ? next
+    : '/';
+
+/**
+ * Mobile app handoff
+ *
+ * The app opens /handoff#code=… in a browser; the single-use code is traded
+ * for a normal session (tokens in the headers, as at sign-in) and the page
+ * the app asked for. The tab is marked as the app's, so checkouts say
+ * `client: 'mobile'` and the return page hands back to the app.
+ */
+export function useHandoff() {
+  const dispatch = useAppDispatch();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (payload: { code: string }) => {
+      // Whoever was signed in on this browser before is not who the app sent
+      AUTH_KEYS.forEach((key) => localStorage.removeItem(key));
+      setActiveChildId(null);
+      dispatch(clearCurrentUser());
+      queryClient.clear();
+
+      const {
+        data: { data: handoff },
+        headers,
+      } = await post('/web_handoffs/redeem', payload);
+      if (!(headers as AuthHeaders)['access-token']) {
+        throw new Error('No session received');
+      }
+      // The refresh token too, so the session outlives the first access token
+      saveTokensToLocalStorage(headers as AuthHeaders);
+
+      const { data: userData, headers: meHeaders } = await get('/me');
+      if (!userData || !userData.id) {
+        throw new Error('Invalid user data received from /me');
+      }
+      saveUserDataToLocalStorage(userData, meHeaders as AuthHeaders);
+
+      return {
+        userData: userData as CurrentUser,
+        next: sameSitePath(handoff?.next),
+      };
+    },
+    onSuccess: ({ userData, next }) => {
+      dispatch(setCurrentUser(userData));
+      markFromApp();
+      // A full load, so the page starts clean as the new user
+      window.location.replace(next);
+    },
+    // The page shows its own message
+    onError: () => {
+      AUTH_KEYS.forEach((key) => localStorage.removeItem(key));
     },
   });
 }

@@ -1025,6 +1025,12 @@
   "IMPERSONATE": {
     "LOADING": "Logging you in..."
   },
+  "HANDOFF": {
+    "LOADING": "Opening Nafham…",
+    "FAILED": "This link has expired",
+    "FAILED_TEXT": "Go back to the app and try again, or sign in here.",
+    "SIGN_IN": "Sign in"
+  },
   "REGISTER": {
     "REGISTER_TITLE": "Register to complete the scheduling process",
     "REGISTER_TITLE_1": "Register to complete the joining process",
@@ -2318,6 +2324,7 @@
     }
   },
   "PAYMENTS": {
+    "GROUP_COURSE_SUPPORT": "Contact support for group courses",
     "TITLE": "Payments",
     "SUBTITLE": "Your receipts for renewals paid online.",
     "EMPTY": "No payments yet.",
@@ -2348,6 +2355,7 @@
       "BACK_TO_SAME": "Back to the same package"
     },
     "RETURN": {
+      "BACK_TO_APP": "Back to the app",
       "CONFIRMING": "Confirming your payment…",
       "CONFIRMING_TEXT": "This takes a few seconds.",
       "KEEP_OPEN": "Please keep this page open.",

@@ -45,7 +45,11 @@ const STORAGE_KEYS = {
   ID: 'tyro.id',
 } as const;
 
-const PROTECTED_ENDPOINTS = ['/users/tokens', '/users/sign_out'] as const;
+const PROTECTED_ENDPOINTS = [
+  '/users/tokens',
+  '/users/sign_out',
+  '/web_handoffs/redeem',
+] as const;
 
 // ============================================================================
 // Axios Instances

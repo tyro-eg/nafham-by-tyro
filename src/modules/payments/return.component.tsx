@@ -19,6 +19,7 @@ import {
   type PaymentStatus,
 } from '../../hooks/usePayments';
 import { formatMoney } from '../../lib/money';
+import { appPaymentCompleteUrl } from '../../lib/from-app';
 import { trackPurchase } from '../../lib/analytics';
 import { subjectName } from '../dashboard/dashboard.utils';
 import './payments.styles.scss';
@@ -80,6 +81,16 @@ const PaymentReturn: FC = () => {
       })),
     );
   }, [payment.data]);
+
+  // A payment the app started goes back to the app once it has settled;
+  // the browser the app opened closes on that link
+  const appUrl =
+    payment.data?.final && payment.data.client === 'mobile'
+      ? appPaymentCompleteUrl(payment.data.slug, payment.data.status)
+      : null;
+  useEffect(() => {
+    if (appUrl) window.location.href = appUrl;
+  }, [appUrl]);
 
   const packagesPath =
     currentUser?.type === 'Parent' ? '/family' : '/my_packages';
@@ -228,15 +239,24 @@ const PaymentReturn: FC = () => {
     title,
     text,
     <div className="pay-return__actions">
+      {appUrl && (
+        <Button href={appUrl} variant="contained">
+          {t('PAYMENTS.RETURN.BACK_TO_APP')}
+        </Button>
+      )}
       {tone === 'bad' && (newCourses || packageId) && (
-        <Button component={Link} to={tryAgain} variant="contained">
+        <Button
+          component={Link}
+          to={tryAgain}
+          variant={appUrl ? 'outlined' : 'contained'}
+        >
           {t('PAYMENTS.RETURN.TRY_AGAIN')}
         </Button>
       )}
       <Button
         component={Link}
         to={packagesPath}
-        variant={tone === 'bad' ? 'outlined' : 'contained'}
+        variant={tone === 'bad' || appUrl ? 'outlined' : 'contained'}
       >
         {t('PAYMENTS.RETURN.SEE_PACKAGES')}
       </Button>

@@ -1,4 +1,4 @@
-import { FC, useMemo, useState } from 'react';
+import { FC, useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import {
@@ -358,18 +358,33 @@ const FamilyHome: FC = () => {
     packageId: number;
     child: FamilyChild;
   } | null>(null);
-  // `?renew=all` (the nudge's link) opens the renew-all sheet at once
+  // `?renew=all` (the nudge's link) opens the renew-all sheet at once;
+  // `?renew=<package id>` (the app's handoff) opens that package's dialog
+  // once the family has loaded and the child owning it is known
   const [searchParams, setSearchParams] = useSearchParams();
   const [renewingAll, setRenewingAll] = useState(
     () => searchParams.get('renew') === 'all',
   );
-  const closeRenewAll = () => {
-    setRenewingAll(false);
+  const dropRenewParam = () => {
     if (searchParams.has('renew')) {
       searchParams.delete('renew');
       setSearchParams(searchParams, { replace: true });
     }
   };
+  const closeRenewAll = () => {
+    setRenewingAll(false);
+    dropRenewParam();
+  };
+  useEffect(() => {
+    const packageId = Number(searchParams.get('renew'));
+    if (!(packageId > 0) || !children) return;
+    const child = children.find((c) =>
+      c.packages.some((pkg) => pkg.id === packageId),
+    );
+    if (child) setRenewing({ packageId, child });
+    dropRenewParam();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [children]);
   const loading = family.isLoading;
   const locale = `${i18n.language}-u-nu-latn`;
 
@@ -565,6 +580,11 @@ const FamilyHome: FC = () => {
         {renewing && (
           <RenewDialog
             packageId={renewing.packageId}
+            packageType={
+              renewing.child.packages.find(
+                (pkg) => pkg.id === renewing.packageId,
+              )?.package_type
+            }
             onClose={() => setRenewing(null)}
             onRequestInstead={() => {
               const { child } = renewing;

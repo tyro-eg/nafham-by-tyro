@@ -22,6 +22,7 @@ import {
   type RenewalOption,
 } from '../../hooks/usePayments';
 import { formatMoney } from '../../lib/money';
+import { blockedInApp } from '../../lib/from-app';
 import { trackEvent } from '../../lib/analytics';
 import { subjectName } from '../dashboard/dashboard.utils';
 import './payments.styles.scss';
@@ -30,6 +31,8 @@ const LOCALES = { ar: arSA, en: enUS };
 
 interface RenewDialogProps {
   packageId: number;
+  /** When the caller already knows it: a group course is not sold from the app */
+  packageType?: string | null;
   onClose: () => void;
   /** Offered when the package cannot be renewed online: the old request flow */
   onRequestInstead?: () => void;
@@ -52,6 +55,7 @@ interface Charge {
  */
 const RenewDialog: FC<RenewDialogProps> = ({
   packageId,
+  packageType,
   onClose,
   onRequestInstead,
 }) => {
@@ -62,6 +66,10 @@ const RenewDialog: FC<RenewDialogProps> = ({
   const [hours, setHours] = useState<number | null>(null);
   const [showOptions, setShowOptions] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Opened from the app, a group course is the team's to sell
+  const groupInApp = blockedInApp(packageType ?? quote.data?.package_type);
+  const renewable = !!quote.data?.renewable && !groupInApp;
 
   const sameAgain = quote.data?.same_again ?? null;
   const options = quote.data?.options ?? [];
@@ -226,7 +234,11 @@ const RenewDialog: FC<RenewDialogProps> = ({
           </Alert>
         )}
 
-        {quote.data && !quote.data.renewable && (
+        {groupInApp && (
+          <Alert severity="info">{t('PAYMENTS.GROUP_COURSE_SUPPORT')}</Alert>
+        )}
+
+        {quote.data && !quote.data.renewable && !groupInApp && (
           <Alert severity="info">
             <strong>{t('PAYMENTS.RENEW.NOT_RENEWABLE')}</strong>
             <ul className="renew-reasons">
@@ -237,7 +249,7 @@ const RenewDialog: FC<RenewDialogProps> = ({
           </Alert>
         )}
 
-        {quote.data?.renewable && (
+        {renewable && quote.data && (
           <>
             {listing ? renderListing() : renderSameAgain()}
             {charge && (
@@ -272,12 +284,12 @@ const RenewDialog: FC<RenewDialogProps> = ({
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>{t('FAMILY.CANCEL')}</Button>
-        {quote.data && !quote.data.renewable && onRequestInstead && (
+        {quote.data && !renewable && onRequestInstead && (
           <Button variant="outlined" onClick={onRequestInstead}>
             {t('PAYMENTS.RENEW.ASK_INSTEAD')}
           </Button>
         )}
-        {quote.data?.renewable && (
+        {renewable && (
           <Button
             variant="contained"
             onClick={pay}

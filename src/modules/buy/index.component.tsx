@@ -1,6 +1,7 @@
 import { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { Alert } from '@mui/material';
 import {
   EventRepeatRounded,
   FamilyRestroomRounded,
@@ -18,6 +19,7 @@ import { useTrialCourses } from '../../hooks/useTrial';
 import { usePurchaseTutors, type TutorSearch } from '../../hooks/usePurchases';
 import { trackEvent } from '../../lib/analytics';
 import { formatMoney } from '../../lib/money';
+import { isFromApp } from '../../lib/from-app';
 import {
   scheduleIsEmpty,
   scheduleSummary,
@@ -277,6 +279,12 @@ const BuyPage: FC = () => {
         </header>
 
         <OpenPaymentBanner />
+        {/* Opened from the app: only one-to-one lessons are sold here */}
+        {isFromApp() && (
+          <Alert severity="info" sx={{ mb: 2 }}>
+            {t('PAYMENTS.GROUP_COURSE_SUPPORT')}
+          </Alert>
+        )}
 
         <div className="trial__layout">
           <BuyRail

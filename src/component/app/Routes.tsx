@@ -30,6 +30,9 @@ const Registered = lazy(
 const Impersonate = lazy(
   () => import('../../modules/auth/impersonate/impersonate.component'),
 );
+const Handoff = lazy(
+  () => import('../../modules/auth/handoff/handoff.component'),
+);
 const AccountSettings = lazy(
   () => import('../../modules/user/account-settings/index'),
 );
@@ -166,6 +169,8 @@ const RoutesComponent: React.FC<RoutesProps> = ({ currentUser }) => {
           }
         />
         <Route path="/impersonate" element={<Impersonate />} />
+        {/* The mobile app's way into the website, signed in, to pay */}
+        <Route path="/handoff" element={<Handoff />} />
         <Route
           path="/account_settings"
           element={
