@@ -9,6 +9,7 @@ import store from '@/redux/store';
 import { clearCurrentUser } from '@/redux/user/user.slice';
 import { queryClient } from '@/lib/queryClient';
 import { getActiveChildId } from '@/lib/family-child';
+import { onHandoffPage } from '@/lib/handoff-reset';
 
 // ============================================================================
 // Types
@@ -124,6 +125,10 @@ const isProtectedEndpoint = (url: string | undefined): boolean => {
  * Clear all authentication data and perform logout.
  */
 const performLogout = (): void => {
+  // The handoff replaces the session itself; a stale one failing must not
+  // wipe the session it is putting in place
+  if (onHandoffPage()) return;
+
   // Clear localStorage
   Object.values(STORAGE_KEYS).forEach((key) => {
     localStorage.removeItem(key);

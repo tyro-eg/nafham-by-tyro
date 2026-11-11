@@ -1,3 +1,5 @@
+// First: drops a stale session before the store rehydrates on /handoff
+import './lib/handoff-reset';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
