@@ -10,20 +10,6 @@ import { SessionType, ApiError } from '../assets/types';
 import { snackActions } from '../assets/utils/toaster';
 
 /**
- * Trial session booking data (POST /sessions/trial). The backend decides the
- * length; the student picks the start of an open slot and may leave a
- * parent's phone number.
- */
-export interface TrialSessionData {
-  tutor_id: number;
-  start_time: string;
-  grade_subject_id: number;
-  guardian_phone?: string;
-  /** The exam board the student sits, when the course's tutors declare boards */
-  exam_board_id?: number;
-}
-
-/**
  * Private session booking data
  */
 export interface PrivateSessionData {
@@ -176,29 +162,6 @@ export function useEndSession() {
       const errorMessage =
         error.response?.data?.error || error.message || 'Failed to end session';
       snackActions.error(errorMessage);
-    },
-  });
-}
-
-/**
- * Book a free trial. Students book these themselves; the caller shows the
- * backend's reasons when the booking is refused (bookingErrorMessage).
- */
-export function useBookTrialSession() {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async (sessionData: TrialSessionData) => {
-      const response = await post(`/sessions/trial`, {
-        trial_session: sessionData,
-      });
-      return response.data.data as SessionType;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.sessions.all });
-      // The slot is now reserved, and the tutor's free trial is claimed
-      queryClient.invalidateQueries({ queryKey: queryKeys.calendar.all });
-      queryClient.invalidateQueries({ queryKey: queryKeys.instructors.all });
     },
   });
 }

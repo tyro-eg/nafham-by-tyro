@@ -30,6 +30,7 @@ import { useMyInstructors } from '../../hooks/useInstructors';
 import { useRtlClass } from '../../assets/utils/utils';
 import type { SessionType } from '../../assets/types';
 import RequestSessionsModal from '../../modals/request-sessions-modal/request-sessions-modal.component';
+import TrialRequestsCard from '../trial/trial-requests-card.component';
 import heroArt from '../../assets/images/newLanding/start-learning.webp';
 import emptyArt from '../../assets/images/newLanding/rafiki.svg?url';
 import {
@@ -337,6 +338,9 @@ const Dashboard: FC = () => {
             </div>
           ))}
         </div>
+
+        {/* ---------- Free trials waiting for an instructor ---------- */}
+        <TrialRequestsCard />
 
         <div className="sd-grid">
           <div className="sd-col">

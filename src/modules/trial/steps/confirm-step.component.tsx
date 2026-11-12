@@ -13,62 +13,75 @@ import {
   EventRounded,
   LockOutlined,
   MenuBookRounded,
-  PersonRounded,
 } from '@mui/icons-material';
 
 import type { GradeSubject } from '../../../assets/types';
-import type {
-  ExamBoardOption,
-  TrialSlot,
-  TrialTutor,
-} from '../../../hooks/useTrial';
 import {
-  bookingErrorMessage,
-  useBookTrialSession,
-} from '../../../hooks/useSessions';
+  useCreateTrialRequest,
+  type ExamBoardOption,
+  type TrialDispatch,
+  type TrialRequest,
+  type TrialTutor,
+} from '../../../hooks/useTrial';
+import { bookingErrorMessage } from '../../../hooks/useSessions';
 import RegisterModal from '../../../modals/register-modal/register-modal.component';
 import LoginModal from '../../../modals/login-modal/login-modal.component';
-import { formatSlot } from '../trial.types';
+import { formatSlot, localTimeZone } from '../trial.types';
+import { DISPATCH_UI } from '../dispatch-ui';
 
 interface ConfirmStepProps {
   course?: GradeSubject;
   examBoard?: ExamBoardOption;
+  dispatch?: TrialDispatch;
+  /** The picked tutor, for a direct request */
   tutor?: TrialTutor;
-  slot?: TrialSlot;
+  startTime?: string;
+  /** The time is one of the tutor's published slots */
+  onCalendar: boolean;
   loading: boolean;
+  note: string;
+  onNote: (value: string) => void;
   guardianPhone: string;
   onGuardianPhone: (value: string) => void;
   signedIn: boolean;
+  /** A parent's pick: the child the trial is for */
+  childId?: number;
   onBack: () => void;
-  onBooked: () => void;
+  onSent: (request: TrialRequest) => void;
 }
 
 const SLOT_MINUTES = 30;
+const NOTE_LENGTH = 1000;
 
 /**
- * The summary, an optional parent's phone, and the booking itself. A
- * visitor creates an account (or signs in) first; the auth modals bring
- * them back here and the draft is restored.
+ * The summary, a note for the instructor, an optional parent's phone, and
+ * the request itself. A visitor creates an account (or signs in) first;
+ * the auth modals bring them back here and the draft is restored.
  */
 const ConfirmStep: FC<ConfirmStepProps> = ({
   course,
   examBoard,
+  dispatch,
   tutor,
-  slot,
+  startTime,
+  onCalendar,
   loading,
+  note,
+  onNote,
   guardianPhone,
   onGuardianPhone,
   signedIn,
+  childId,
   onBack,
-  onBooked,
+  onSent,
 }) => {
   const { t, i18n } = useTranslation();
   const locale = `${i18n.language}-u-nu-latn`;
-  const bookTrial = useBookTrialSession();
+  const createRequest = useCreateTrialRequest();
   const [error, setError] = useState<string | null>(null);
   const [auth, setAuth] = useState<'register' | 'login' | null>(null);
 
-  if (loading || !course || !tutor || !slot) {
+  if (loading) {
     return (
       <div className="trial__loading">
         <CircularProgress size={28} />
@@ -76,26 +89,58 @@ const ConfirmStep: FC<ConfirmStepProps> = ({
     );
   }
 
-  const minutes = Math.round(
-    (new Date(slot.end_time).getTime() - new Date(slot.start_time).getTime()) /
-      60000,
-  );
+  // The tutor is no longer listed for that window, or the draft is incomplete
+  if (!course || !startTime || !dispatch || (dispatch === 'direct' && !tutor)) {
+    return (
+      <div className="trial__step">
+        <Alert severity="info">{t('TRIAL.CONFIRM.MISSING')}</Alert>
+        <div className="trial__actions">
+          <Button
+            className="trial__back"
+            variant="outlined"
+            startIcon={<ArrowBackRounded />}
+            onClick={onBack}
+          >
+            {t('TRIAL.ACTIONS.BACK')}
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
-  const book = async () => {
+  const send = async () => {
     setError(null);
     try {
-      await bookTrial.mutateAsync({
-        tutor_id: tutor.id,
+      const request = await createRequest.mutateAsync({
         grade_subject_id: course.id,
-        start_time: slot.start_time,
-        guardian_phone: guardianPhone.trim() || undefined,
         exam_board_id: examBoard?.id,
+        start_time: startTime,
+        time_zone: localTimeZone(),
+        dispatch,
+        tutor_id: dispatch === 'direct' ? tutor?.id : undefined,
+        note: note.trim() || undefined,
+        guardian_phone: guardianPhone.trim() || undefined,
+        childId,
       });
-      onBooked();
+      onSent(request);
     } catch (err) {
       setError(bookingErrorMessage(err, t('TRIAL.ERROR')));
     }
   };
+
+  const tutorName = tutor
+    ? `${tutor.first_name} ${tutor.last_name}`.trim()
+    : '';
+  const dispatchUi = DISPATCH_UI[dispatch];
+  const DispatchIcon = dispatchUi.Icon;
+  const how =
+    dispatch === 'fastest'
+      ? t('TRIAL.CONFIRM.HOW_FASTEST')
+      : dispatch === 'best_match'
+        ? t('TRIAL.CONFIRM.HOW_BEST')
+        : onCalendar
+          ? t('TRIAL.CONFIRM.HOW_DIRECT', { name: tutor?.first_name })
+          : t('TRIAL.CONFIRM.HOW_ASK', { name: tutor?.first_name });
 
   const rows = [
     {
@@ -106,14 +151,14 @@ const ConfirmStep: FC<ConfirmStepProps> = ({
         : course.full_course_name,
     },
     {
-      icon: <PersonRounded />,
+      icon: <DispatchIcon />,
       label: t('TRIAL.CONFIRM.TUTOR'),
-      value: `${tutor.first_name} ${tutor.last_name}`.trim(),
+      value: dispatchUi.label ? t(dispatchUi.label) : tutorName,
     },
     {
       icon: <EventRounded />,
       label: t('TRIAL.CONFIRM.WHEN'),
-      value: `${formatSlot(slot.start_time, locale)} · ${t('TRIAL.CONFIRM.DURATION', { minutes: minutes || SLOT_MINUTES })}`,
+      value: `${formatSlot(startTime, locale)} · ${t('TRIAL.CONFIRM.DURATION', { minutes: SLOT_MINUTES })}`,
     },
   ];
 
@@ -137,7 +182,20 @@ const ConfirmStep: FC<ConfirmStepProps> = ({
             </li>
           ))}
         </ul>
+        <p className="trial-receipt__how">{how}</p>
       </div>
+
+      <TextField
+        className="trial__guardian"
+        fullWidth
+        multiline
+        minRows={2}
+        label={t('TRIAL.CONFIRM.NOTE')}
+        helperText={t('TRIAL.CONFIRM.NOTE_HINT')}
+        value={note}
+        onChange={(event) => onNote(event.target.value)}
+        inputProps={{ maxLength: NOTE_LENGTH, dir: 'auto' }}
+      />
 
       <TextField
         className="trial__guardian"
@@ -174,10 +232,10 @@ const ConfirmStep: FC<ConfirmStepProps> = ({
             className="trial__cta trial__cta--gold"
             variant="contained"
             startIcon={<CardGiftcardRounded />}
-            disabled={bookTrial.isPending}
-            onClick={book}
+            disabled={createRequest.isPending}
+            onClick={send}
           >
-            {bookTrial.isPending
+            {createRequest.isPending
               ? t('TRIAL.CONFIRM.BOOKING')
               : t('TRIAL.CONFIRM.BOOK')}
           </Button>
