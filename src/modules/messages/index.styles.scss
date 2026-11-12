@@ -3,12 +3,29 @@
 
 // ============================================================
 // Messages page: conversation list + open thread.
-// Stream Chat components are themed below under .str-chat.
+// Rows, header and message bubbles are our components; Stream's
+// list, composer and attachments are themed under .str-chat below.
 // ============================================================
 
 $list-width: 34rem;
-$thread-bg: $surface-alt;
-$own-bubble: $brand-100;
+$thread-bg: #f4f7fb;
+$own-bubble: $navy-900;
+$other-bubble: $surface;
+$bubble-radius: 1.8rem;
+$bubble-tight: 0.6rem;
+$avatar-size: 3.2rem;
+
+@keyframes nf-msg-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.6rem);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
 
 .messages {
   display: flex;
@@ -18,11 +35,12 @@ $own-bubble: $brand-100;
   overflow: hidden;
   background-color: $surface;
   border: 1px solid $border;
-  border-radius: $radius-md;
+  border-radius: $radius-lg;
   box-shadow: $shadow-sm;
 
   @include respond(tab-port) {
     height: calc(100vh - 6.4rem); // below the small-screen top bar
+    height: calc(100dvh - 6.4rem);
     min-height: 0;
     margin: 0;
     border: 0;
@@ -72,6 +90,16 @@ $own-bubble: $brand-100;
     flex: 1;
     height: 100%;
     background-color: $thread-bg;
+
+    > svg {
+      width: 7.2rem;
+      height: 7.2rem;
+      padding: 1.8rem;
+      border-radius: 50%;
+      background-color: $surface;
+      box-shadow: $shadow-sm;
+      color: $brand-700;
+    }
   }
 
   &__placeholder-title,
@@ -82,7 +110,10 @@ $own-bubble: $brand-100;
   }
 
   &__empty .MuiButton-root {
-    margin-top: $space-3;
+    margin-top: $space-2;
+    border-radius: $radius-pill;
+    text-transform: none;
+    font-weight: 600;
   }
 
   // ---------- Conversation list ----------
@@ -108,18 +139,40 @@ $own-bubble: $brand-100;
     display: flex;
     flex-direction: column;
     gap: $space-3;
-    padding: $space-5 $space-4 $space-3;
+    padding: $space-4 $space-4 $space-3;
+  }
+
+  &__title-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: $space-2;
   }
 
   &__title {
     margin: 0;
     font-size: 2.2rem;
-    font-weight: 700;
-    letter-spacing: -0.01em;
+    font-weight: 800;
+    letter-spacing: -0.02em;
     color: $text-strong;
 
     [dir='rtl'] & {
       letter-spacing: 0;
+    }
+  }
+
+  &__support.MuiIconButton-root {
+    width: 3.8rem;
+    height: 3.8rem;
+    background-color: $brand-50;
+    color: $brand-800;
+
+    &:hover {
+      background-color: $brand-100;
+    }
+
+    svg {
+      font-size: 2rem;
     }
   }
 
@@ -129,14 +182,23 @@ $own-bubble: $brand-100;
     gap: $space-2;
     height: 4rem;
     padding: 0 $space-3;
-    border: 1px solid $border;
-    border-radius: $radius-sm;
-    background-color: $surface-alt;
-    color: $gray-400;
+    border: 1px solid transparent;
+    border-radius: $radius-pill;
+    background-color: $gray-100;
+    color: $gray-500;
+    transition:
+      background-color $transition,
+      border-color $transition,
+      box-shadow $transition;
+
+    > svg {
+      font-size: 2rem;
+    }
 
     &:focus-within {
       border-color: $brand-400;
       background-color: $surface;
+      box-shadow: 0 0 0 3px rgba($brand-400, 0.18);
     }
 
     .MuiInputBase-root {
@@ -146,28 +208,33 @@ $own-bubble: $brand-100;
     }
   }
 
+  // Segmented control: All · Unread · Nafham
   &__pills {
     display: flex;
-    flex-wrap: wrap;
-    gap: $space-2;
+    gap: 0.2rem;
+    padding: 0.3rem;
+    border-radius: $radius-pill;
+    background-color: $gray-100;
   }
 
   &__pill {
-    padding: 0.5rem 1.2rem;
-    border: 1px solid $border;
+    flex: 1;
+    padding: 0.6rem 1rem;
+    border: 0;
     border-radius: $radius-pill;
-    background-color: $surface;
+    background-color: transparent;
+    font: inherit;
     font-size: $font-xs;
     font-weight: 600;
-    color: $gray-700;
+    color: $gray-500;
     cursor: pointer;
     transition:
       background-color $transition,
-      border-color $transition,
-      color $transition;
+      color $transition,
+      box-shadow $transition;
 
     &:hover {
-      background-color: $surface-alt;
+      color: $text-strong;
     }
 
     &:focus-visible {
@@ -176,28 +243,56 @@ $own-bubble: $brand-100;
 
     &--on,
     &--on:hover {
-      border-color: $navy-900;
-      background-color: $navy-900;
-      color: $text-on-dark;
+      background-color: $surface;
+      color: $text-strong;
+      box-shadow: $shadow-xs;
     }
   }
 
-  // Stream's list container; rows are our ConversationItem
+  // Stream's list container; rows are our ConversationItem. On small
+  // screens Stream turns the list into a closed off-canvas drawer
+  // (absolute, shifted, hidden, inert), which left phones with an empty list;
+  // the page handles phones itself, so keep it in the flow.
   .str-chat__channel-list,
-  .str-chat__channel-list-messenger,
-  .str-chat__channel-list-messenger__main {
+  .str-chat__channel-list-inner,
+  .str-chat__channel-list-inner__main {
+    position: static;
+    inset: auto;
     display: flex;
     flex: 1;
     flex-direction: column;
+    width: auto;
     min-height: 0;
+    visibility: visible;
+    pointer-events: auto;
+    transform: none;
     background: transparent;
     border: 0;
+    box-shadow: none;
   }
 
-  .str-chat__channel-list-messenger__main {
+  .str-chat__channel-list-inner__main {
     gap: 0.2rem;
-    padding: 0 $space-3 $space-4;
+    padding: 0 $space-2 $space-4;
     overflow-y: auto;
+  }
+
+  &__skeleton {
+    display: flex;
+    flex-direction: column;
+    gap: $space-1;
+    padding: 0 $space-2;
+  }
+
+  &__skeleton-row {
+    display: flex;
+    align-items: center;
+    gap: $space-3;
+    padding: $space-3;
+
+    > div:last-child {
+      flex: 1;
+    }
   }
 
   // ---------- Thread ----------
@@ -210,6 +305,24 @@ $own-bubble: $brand-100;
 
     @include respond(tab-port) {
       display: none;
+    }
+  }
+
+  &__thread-skeleton {
+    display: flex;
+    flex-direction: column;
+    gap: $space-3;
+    width: 100%;
+    max-width: 72rem;
+    padding: $space-5;
+
+    .MuiSkeleton-root {
+      border-radius: $bubble-radius;
+      background-color: rgba($navy-900, 0.07);
+    }
+
+    .is-mine {
+      align-self: flex-end;
     }
   }
 
@@ -228,10 +341,15 @@ $own-bubble: $brand-100;
 
   &__hint {
     margin: 0;
-    padding: 0 $space-4 $space-3;
-    font-size: $font-xs;
-    color: $text-muted;
+    padding: 0 $space-5 $space-2;
+    font-size: 1.1rem;
+    color: $gray-400;
+    text-align: end;
     background-color: $surface;
+
+    @include respond(tab-port) {
+      display: none; // no Enter key to speak of on a touch keyboard
+    }
   }
 }
 
@@ -239,13 +357,14 @@ $own-bubble: $brand-100;
 // Conversation row
 // ============================================================
 .conv-item {
+  position: relative;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: $space-3;
   width: 100%;
-  padding: $space-3;
+  padding: 1rem $space-3;
   border: 0;
-  border-radius: 1.4rem;
+  border-radius: $radius-md;
   background: transparent;
   text-align: start;
   font: inherit;
@@ -254,7 +373,7 @@ $own-bubble: $brand-100;
   transition: background-color $transition;
 
   &:hover {
-    background-color: $surface-alt;
+    background-color: $gray-50;
   }
 
   &:focus-visible {
@@ -264,6 +383,16 @@ $own-bubble: $brand-100;
   &--active,
   &--active:hover {
     background-color: $brand-50;
+
+    &::before {
+      content: '';
+      position: absolute;
+      inset-block: 1.2rem;
+      inset-inline-start: 0;
+      width: 0.3rem;
+      border-radius: $radius-pill;
+      background-color: $brand-700;
+    }
   }
 
   &__avatar {
@@ -271,8 +400,8 @@ $own-bubble: $brand-100;
     flex: none;
 
     .MuiAvatar-root {
-      width: 4.4rem;
-      height: 4.4rem;
+      width: 4.6rem;
+      height: 4.6rem;
       font-size: $font-sm;
       font-weight: 700;
       color: $navy-900;
@@ -282,8 +411,8 @@ $own-bubble: $brand-100;
 
   &__admin-dot {
     position: absolute;
-    inset-inline-end: -0.3rem;
-    bottom: -0.3rem;
+    inset-inline-end: -0.2rem;
+    bottom: -0.2rem;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -303,7 +432,7 @@ $own-bubble: $brand-100;
     display: flex;
     flex: 1;
     flex-direction: column;
-    gap: 0.2rem;
+    gap: 0.1rem;
     min-width: 0;
   }
 
@@ -312,55 +441,67 @@ $own-bubble: $brand-100;
     align-items: center;
     justify-content: space-between;
     gap: $space-2;
+    min-width: 0;
   }
 
   &__name {
     @include ellipsis;
-    font-size: $font-sm;
+    min-width: 0;
+    font-size: 1.5rem;
     font-weight: 600;
     color: $text-strong;
   }
 
   &__time {
     flex: none;
-    font-size: $font-xs;
-    color: $text-muted;
+    font-size: 1.1rem;
+    color: $gray-400;
     font-variant-numeric: tabular-nums;
   }
 
   &__subject {
     @include ellipsis;
     font-size: $font-xs;
-    color: $text-muted;
+    color: $gray-500;
   }
 
   &__preview {
-    @include ellipsis;
     display: flex;
+    flex: 1;
     align-items: center;
     gap: 0.4rem;
+    min-width: 0;
+    overflow: hidden;
     font-size: 1.3rem;
-    color: $gray-700;
+    color: $gray-500;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 
-    > span {
-      flex: none;
+    &--typing {
+      color: $brand-800;
+      font-style: italic;
     }
+  }
+
+  &__preview-text {
+    @include ellipsis;
+    min-width: 0;
   }
 
   &__seen {
     flex: none;
     font-size: 1.5rem;
-    color: $brand-400;
+    color: $brand-700;
   }
 
   &__kind {
     flex: none;
     font-size: 1.5rem;
-    color: $gray-500;
+    color: $gray-400;
   }
 
   &__unread {
-    @include badge($accent-500, $navy-950);
+    @include badge($brand-700, $text-on-dark);
     flex: none;
     justify-content: center;
     min-width: 2rem;
@@ -371,24 +512,44 @@ $own-bubble: $brand-100;
   }
 
   &--unread &__name,
-  &--unread &__time,
   &--unread &__preview {
     font-weight: 700;
     color: $text-strong;
   }
+
+  &--unread &__time {
+    font-weight: 700;
+    color: $brand-800;
+  }
+}
+
+.conv-item__support-avatar,
+.thread-header__admin-avatar {
+  background-color: $navy-900 !important;
+  color: $text-on-dark !important;
 }
 
 // ============================================================
-// Thread header
+// Thread header: one compact row
 // ============================================================
 .thread-header {
+  position: relative;
+  z-index: 2;
   display: flex;
-  flex-wrap: wrap;
+  flex: none; // never squeezed by a long message list
+  flex-wrap: wrap; // a lesson's quick actions take a row of their own
   align-items: center;
   gap: $space-3;
-  padding: $space-3 $space-4;
-  background-color: $surface;
+  min-height: 6.4rem;
+  padding: $space-2 $space-4;
+  background-color: rgba($surface, 0.92);
+  backdrop-filter: saturate(1.4) blur(12px);
   border-bottom: 1px solid $border;
+
+  @include respond(tab-port) {
+    gap: $space-2;
+    padding: $space-2;
+  }
 
   &__back.MuiIconButton-root {
     display: none;
@@ -399,9 +560,7 @@ $own-bubble: $brand-100;
     }
   }
 
-  &__avatars {
-    display: flex;
-    align-items: center;
+  &__avatars.MuiAvatarGroup-root {
     flex: none;
 
     .MuiAvatar-root {
@@ -412,84 +571,96 @@ $own-bubble: $brand-100;
       font-weight: 700;
       color: $navy-900;
       background-color: $brand-100;
-
-      + .MuiAvatar-root {
-        margin-inline-start: -1rem;
-      }
     }
-  }
 
-  &__admin-avatar.MuiAvatar-root {
-    color: $text-on-dark;
-    background-color: $navy-900;
+    .MuiAvatar-root + .MuiAvatar-root,
+    .MuiAvatarGroup-avatar:not(:last-of-type) {
+      margin-inline-start: -1.2rem;
+    }
 
-    svg {
+    .thread-header__admin-avatar svg {
       font-size: 1.8rem;
     }
   }
 
   &__who {
-    flex: 1 1 16rem;
+    flex: 1 1 auto;
     min-width: 0;
   }
 
   &__name {
     @include ellipsis;
     margin: 0;
-    font-size: 1.7rem;
+    font-size: 1.6rem;
     font-weight: 700;
     color: $text-strong;
   }
 
   &__meta {
     @include ellipsis;
-    margin: 0.2rem 0 0;
-    font-size: 1.3rem;
-    color: $text-muted;
-  }
+    margin: 0.1rem 0 0;
+    font-size: 1.25rem;
+    color: $gray-500;
+    transition: color $transition;
 
-  &__members {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.6rem;
-    margin: 0;
-    padding: 0;
-    list-style: none;
-
-    @include respond(tab-land) {
-      display: none;
-    }
-  }
-
-  &__chip {
-    @include badge($gray-100, $gray-700);
-    padding: 0.3rem 1rem;
-    font-size: $font-xs;
-
-    &--admin {
-      background-color: $navy-900;
-      color: $text-on-dark;
-
-      svg {
-        font-size: 1.2rem;
-      }
+    &--typing {
+      color: $brand-800;
+      font-weight: 600;
     }
   }
 
   &__book.MuiButton-root {
     flex: none;
-    border-radius: 1rem;
+    height: 3.6rem;
+    padding: 0 1.4rem;
+    border-radius: $radius-pill;
+    background-color: $navy-900;
+    color: $text-on-dark;
     text-transform: none;
     font-weight: 600;
+    white-space: nowrap;
+
+    &:hover {
+      background-color: $navy-800;
+    }
+
+    // MUI's icon margins assume left-to-right
+    .MuiButton-startIcon {
+      margin: 0;
+      margin-inline: -0.2rem 0.6rem;
+    }
+
+    // Phone: icon only
+    @include respond(phone) {
+      min-width: 3.6rem;
+      padding: 0;
+
+      .MuiButton-startIcon {
+        margin-inline: 0;
+      }
+    }
+  }
+
+  &__book-label {
+    // Phone: kept for screen readers, hidden from view
+    @include respond(phone) {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
+    }
   }
 }
 
 // ============================================================
-// Stream Chat theming (bubbles, composer, voice notes)
+// Stream Chat shell
 // ============================================================
 .messages .str-chat {
   --str-chat__font-family: inherit;
   --str-chat__accent-primary: #{$navy-900};
+  --str-chat__primary-color: #{$navy-900};
   --str-chat__background-core-app: #{$thread-bg};
   --str-chat__background-core-surface-default: #{$surface};
 
@@ -509,98 +680,678 @@ $own-bubble: $brand-100;
   background: transparent;
 }
 
-.messages .str-chat__list {
-  background-color: $thread-bg;
+.messages .str-chat__main-panel-inner {
+  position: relative;
+  flex: 1 1 auto;
 }
 
-// Message rows: our wrapper adds the admin label and styling
+.messages .str-chat__list {
+  padding-block: $space-3;
+  background-color: $thread-bg;
+  scroll-behavior: smooth;
+}
+
+// Keep the conversation a readable column on wide screens
+.messages .str-chat__list .str-chat__message-list-scroll,
+.messages .str-chat__list .str-chat__ul {
+  max-width: 80rem;
+  margin-inline: auto;
+}
+
+.messages .str-chat__li {
+  padding-inline: $space-4;
+
+  @include respond(tab-port) {
+    padding-inline: $space-2;
+  }
+}
+
+// ============================================================
+// Message (our NafhamMessageUI)
+// ============================================================
 .nf-msg {
-  position: relative;
+  display: flex;
+  align-items: flex-end;
+  gap: $space-2;
+  margin-top: 0.2rem;
 
-  &__admin-label {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    margin: 0 0 0.2rem 5.2rem;
-    font-size: $font-xs;
-    font-weight: 700;
-    color: $navy-900;
-
-    svg {
-      font-size: 1.2rem;
-    }
-
-    [dir='rtl'] & {
-      margin: 0 5.2rem 0.2rem 0;
-    }
+  // New group: a little air above it
+  &--top,
+  &--single {
+    margin-top: $space-3;
   }
 
-  &--admin .str-chat__message-bubble,
-  &--admin .str-chat__message-text {
-    border-inline-start: 3px solid $navy-900 !important;
+  // Fresh messages ease in; the list keeps older ones still
+  .str-chat__li:last-child > & {
+    animation: nf-msg-in 220ms ease-out;
   }
 
-  &--admin .str-chat__avatar-fallback {
-    background-color: $navy-900 !important;
-    color: $text-on-dark !important;
+  &--me {
+    flex-direction: row-reverse;
   }
 
-  // Announcements (the welcome message): quieter, no accent bar
-  &--system .str-chat__message-bubble,
-  &--system .str-chat__message-text {
-    background-color: $surface-alt !important;
-    border-inline-start: 0 !important;
-    color: $text-strong;
-  }
+  &__avatar {
+    flex: none;
+    width: $avatar-size;
 
-  &--system .nf-msg__admin-label {
-    color: $text-muted;
-  }
-
-  // An announcement's button to where it points (the requests, a package)
-  &__cta {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    margin: 0.2rem 0 0.6rem 5.2rem;
-    padding: 0.4rem 1.2rem;
-    border-radius: $radius-pill;
-    background-color: $brand-50;
-    color: $brand-700;
-    font-size: $font-xs;
-    font-weight: 700;
-    text-decoration: none;
-
-    svg {
-      font-size: 1.4rem;
-    }
-
-    &:hover {
+    .MuiAvatar-root {
+      width: $avatar-size;
+      height: $avatar-size;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: $navy-900;
       background-color: $brand-100;
     }
 
-    [dir='rtl'] & {
-      margin: 0.2rem 5.2rem 0.6rem 0;
+    svg {
+      font-size: 1.6rem;
+    }
+  }
 
-      svg {
-        transform: scaleX(-1);
-      }
+  &__avatar-admin.MuiAvatar-root {
+    background-color: $navy-900;
+    color: $text-on-dark;
+  }
+
+  &__col {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    min-width: 0;
+    max-width: min(76%, 60rem); // avatar included
+
+    @include respond(phone) {
+      max-width: 82%;
+    }
+  }
+
+  &--me &__col {
+    align-items: flex-end;
+  }
+
+  // The avatar sits in the bubble's row; the name above and anything
+  // under the bubble (reactions, buttons, links) line up with the bubble
+  &--other &__col > :not(.nf-msg__row) {
+    margin-inline-start: calc(#{$avatar-size} + #{$space-2});
+  }
+
+  &__sender {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin: 0 0 0.4rem;
+    padding-inline: 1.2rem;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: $gray-700;
+  }
+
+  &__role {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.1rem 0.7rem;
+    border-radius: $radius-pill;
+    font-size: 1.05rem;
+    font-weight: 600;
+    background-color: $gray-100;
+    color: $gray-500;
+
+    svg {
+      font-size: 1.1rem;
+    }
+
+    &--instructor {
+      background-color: $brand-50;
+      color: $brand-800;
+    }
+
+    &--support {
+      background-color: $navy-900;
+      color: $text-on-dark;
+    }
+  }
+
+  &__row {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    gap: 0.4rem;
+    max-width: 100%;
+  }
+
+  &--me &__row {
+    flex-direction: row-reverse;
+  }
+
+  &__bubble {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    column-gap: 0.8rem;
+    min-width: 0;
+    max-width: 100%;
+    padding: 0.8rem 1.2rem 0.6rem;
+    border-radius: $bubble-radius;
+    background-color: $other-bubble;
+    box-shadow:
+      0 1px 1px rgba(15, 27, 45, 0.04),
+      0 1px 3px rgba(15, 27, 45, 0.06);
+    color: $text-strong;
+    font-size: 1.45rem;
+    line-height: 1.45;
+    overflow-wrap: anywhere;
+
+    > .str-chat__message-text,
+    > .str-chat__quoted-message-preview,
+    > .str-chat__attachment-list {
+      flex: 1 1 auto;
+      min-width: 0;
+    }
+
+    > .str-chat__quoted-message-preview,
+    > .str-chat__attachment-list {
+      flex-basis: 100%;
+      margin-bottom: 0.4rem;
+    }
+  }
+
+  &--me &__bubble {
+    background-color: $own-bubble;
+    color: $text-on-dark;
+    box-shadow: none;
+  }
+
+  &--admin &__bubble {
+    box-shadow:
+      inset 0 0 0 1px rgba($navy-900, 0.14),
+      0 1px 3px rgba(15, 27, 45, 0.06);
+  }
+
+  // Grouping: flatten the corners that face the neighbouring bubble
+  &--other#{&}--top &__bubble {
+    border-end-start-radius: $bubble-tight;
+  }
+
+  &--other#{&}--middle &__bubble {
+    border-start-start-radius: $bubble-tight;
+    border-end-start-radius: $bubble-tight;
+  }
+
+  &--other#{&}--bottom &__bubble {
+    border-start-start-radius: $bubble-tight;
+  }
+
+  &--me#{&}--top &__bubble {
+    border-end-end-radius: $bubble-tight;
+  }
+
+  &--me#{&}--middle &__bubble {
+    border-start-end-radius: $bubble-tight;
+    border-end-end-radius: $bubble-tight;
+  }
+
+  &--me#{&}--bottom &__bubble {
+    border-start-end-radius: $bubble-tight;
+  }
+
+  // Photos and videos on their own: no padding, time over the image
+  &--media &__bubble {
+    padding: 0.3rem;
+    overflow: hidden;
+
+    .nf-msg__meta {
+      position: absolute;
+      inset-inline-end: 0.8rem;
+      bottom: 0.8rem;
+      padding: 0.2rem 0.7rem;
+      border-radius: $radius-pill;
+      background-color: rgba($navy-950, 0.55);
+      color: $text-on-dark;
+    }
+  }
+
+  &__meta {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    gap: 0.3rem;
+    margin-inline-start: auto;
+    padding-top: 0.2rem;
+    font-size: 1.05rem;
+    line-height: 1;
+    color: $gray-400;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+    user-select: none;
+  }
+
+  &--me &__meta {
+    color: rgba($text-on-dark, 0.7);
+  }
+
+  &__tick.MuiSvgIcon-root {
+    font-size: 1.5rem;
+
+    &.nf-msg__tick--read {
+      color: $brand-300;
+    }
+  }
+
+  &__deleted {
+    margin: 0;
+    font-style: italic;
+    opacity: 0.7;
+  }
+
+  // Hover actions (react, more): hidden until the row is hovered/focused
+  &__actions {
+    flex: none;
+    align-self: center;
+    opacity: 0;
+    transition: opacity $transition;
+
+    .str-chat__message-options {
+      display: flex;
+      flex-direction: row;
+      gap: 0;
+    }
+
+    .str-chat__message-actions-box-button {
+      width: 3rem;
+      height: 3rem;
+      color: $gray-500;
+    }
+
+    // Threads are not part of this page; replying quotes instead
+    .str-chat__message-reply-in-thread-button {
+      display: none;
+    }
+  }
+
+  &:hover &__actions,
+  &:focus-within &__actions,
+  &__actions:has([aria-expanded='true']) {
+    opacity: 1;
+  }
+
+  // Touch: hidden until the bubble is tapped
+  @media (hover: none) {
+    &__actions {
+      pointer-events: none;
+    }
+
+    &:hover &__actions,
+    &:focus-within &__actions {
+      opacity: 0;
+    }
+
+    &--actions-shown &__actions,
+    &--actions-shown:hover &__actions {
+      opacity: 1;
+      pointer-events: auto;
+    }
+  }
+
+  &__reactions {
+    margin-top: -0.6rem;
+    padding-inline: 0.8rem;
+    z-index: 1;
+  }
+
+  &__retry {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-top: 0.4rem;
+    padding: 0;
+    border: 0;
+    background: none;
+    font: inherit;
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: $danger-500;
+    cursor: pointer;
+
+    &:disabled {
+      cursor: default;
+    }
+
+    svg {
+      font-size: 1.5rem;
+    }
+  }
+
+  &--failed &__bubble {
+    opacity: 0.75;
+  }
+
+  &--highlighted &__bubble {
+    box-shadow: 0 0 0 3px rgba($accent-500, 0.55);
+  }
+}
+
+// Message text inside bubbles
+.nf-msg .str-chat__message-text {
+  padding: 0;
+  background: none;
+  border: 0;
+  color: inherit;
+  font-size: inherit;
+  hyphens: manual; // whole words wrap; Stream's auto hyphenation chops them
+
+  // The site's global p colour would grey out text on dark bubbles
+  p,
+  li {
+    margin: 0;
+    color: inherit;
+    font-size: inherit;
+    line-height: inherit;
+    white-space: pre-wrap;
+  }
+
+  p + p {
+    margin-top: 0.6rem;
+  }
+
+  a {
+    color: $brand-800;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+}
+
+.nf-msg--me .str-chat__message-text a {
+  color: $brand-200;
+}
+
+// Quoted message inside a bubble
+.nf-msg .str-chat__quoted-message-preview {
+  padding: 0.6rem 1rem;
+  border-inline-start: 3px solid $brand-700;
+  border-radius: $radius-sm;
+  background-color: rgba($navy-900, 0.05);
+  color: inherit;
+  font-size: 1.3rem;
+}
+
+.nf-msg--me .str-chat__quoted-message-preview {
+  border-inline-start-color: $brand-300;
+  background-color: rgba(#fff, 0.12);
+}
+
+.nf-msg .str-chat__attachment-list {
+  border-radius: 1.4rem;
+  overflow: hidden;
+}
+
+// Voice notes inside our bubbles
+.nf-msg .str-chat__message-attachment--voiceRecording,
+.nf-msg .str-chat__voice-recording-widget {
+  min-width: 24rem;
+  padding: 0.2rem 0;
+  background: transparent;
+  border: 0;
+}
+
+.nf-msg .str-chat__voice-recording-widget__play-button,
+.nf-msg .str-chat__audio_player-play-button,
+.nf-msg .str-chat__voice-recording-widget__audio-player-button {
+  background-color: $brand-700;
+  color: $text-on-dark;
+  border-radius: 50%;
+}
+
+.nf-msg .str-chat__wave-progress-bar__amplitude-bar--active,
+.nf-msg .str-chat__wave-progress-bar__progress-indicator {
+  background-color: $brand-700;
+}
+
+.nf-msg--me .str-chat__voice-recording-widget,
+.nf-msg--me .str-chat__message-attachment-file--item {
+  color: $text-on-dark;
+}
+
+.nf-msg--me .str-chat__wave-progress-bar__amplitude-bar {
+  background-color: rgba(#fff, 0.35);
+}
+
+.nf-msg--me .str-chat__wave-progress-bar__amplitude-bar--active,
+.nf-msg--me .str-chat__wave-progress-bar__progress-indicator {
+  background-color: $brand-300;
+}
+
+.nf-msg--me .str-chat__voice-recording-widget__play-button,
+.nf-msg--me .str-chat__audio_player-play-button,
+.nf-msg--me .str-chat__voice-recording-widget__audio-player-button {
+  background-color: $surface;
+  color: $navy-900;
+}
+
+// ============================================================
+// Announcements from Nafham (welcome, hours left): a centred card
+// ============================================================
+.nf-note {
+  display: flex;
+  gap: $space-3;
+  width: min(100%, 52rem);
+  margin: $space-4 auto;
+  padding: $space-3 $space-4;
+  border: 1px solid rgba($brand-700, 0.22);
+  border-radius: $radius-lg;
+  background: linear-gradient(180deg, $brand-50, rgba($brand-50, 0.5));
+  color: $gray-700;
+  font-size: 1.35rem;
+  line-height: 1.5;
+  animation: nf-msg-in 220ms ease-out;
+
+  &__icon {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    width: 3.2rem;
+    height: 3.2rem;
+    border-radius: 50%;
+    background-color: $surface;
+    color: $brand-800;
+    box-shadow: $shadow-xs;
+
+    svg {
+      font-size: 1.8rem;
+    }
+  }
+
+  &__body {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__title {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: $space-2;
+    margin: 0 0 0.2rem;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: $navy-900;
+  }
+
+  &__time {
+    font-size: 1.05rem;
+    font-weight: 500;
+    color: $gray-400;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .str-chat__message-text {
+    padding: 0;
+    background: none;
+    border: 0;
+    color: inherit;
+    font-size: inherit;
+    overflow-wrap: anywhere;
+
+    p {
+      margin: 0;
+      color: inherit;
+      font-size: inherit;
+      white-space: pre-wrap;
+    }
+
+    p + p {
+      margin-top: 0.6rem;
+    }
+
+    a {
+      color: $brand-800;
+      font-weight: 600;
     }
   }
 }
 
-// Nafham Assistant: the bot's label, its buttons and the outcome line
-.nf-msg__admin-label--bot {
-  color: $brand-700;
+// ============================================================
+// Day pills and the "New messages" rule
+// ============================================================
+.nf-day {
+  display: flex;
+  justify-content: center;
+  margin: $space-4 0 $space-2;
+  pointer-events: none;
+
+  &__pill {
+    padding: 0.4rem 1.2rem;
+    border-radius: $radius-pill;
+    background-color: rgba($surface, 0.9);
+    box-shadow: $shadow-xs;
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: $gray-500;
+  }
+
+  // Pinned copy while scrolling: floats above the messages
+  &--floating {
+    position: absolute;
+    top: $space-2;
+    inset-inline: 0;
+    z-index: 3;
+    margin: 0;
+
+    .nf-day__pill {
+      backdrop-filter: blur(8px);
+      box-shadow: $shadow-md;
+    }
+  }
+}
+
+.nf-unread {
+  display: flex;
+  align-items: center;
+  gap: $space-3;
+  margin: $space-4 0 $space-2;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: $brand-800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+
+  &::before,
+  &::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background-color: rgba($brand-700, 0.35);
+  }
+
+  [dir='rtl'] & {
+    letter-spacing: 0;
+  }
+}
+
+// Stream's "N unread ↑" banner at the top of the list
+.messages .str-chat__unread-messages-notification {
+  top: $space-2;
+  gap: 0;
+  overflow: hidden;
+  border-radius: $radius-pill;
+  background-color: $navy-900;
+  box-shadow: $shadow-md;
+
+  .str-chat__button {
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    color: $text-on-dark;
+    font-size: 1.2rem;
+    font-weight: 600;
+  }
+}
+
+// Jump to latest
+.messages .str-chat__jump-to-latest-message {
+  inset-inline-end: $space-4;
+  bottom: $space-3;
+
+  .str-chat__jump-to-latest-message__button {
+    width: 4rem;
+    height: 4rem;
+    border: 0;
+    background-color: $surface;
+    color: $navy-900;
+    box-shadow: $shadow-md;
+  }
+
+  .str-chat__jump-to-latest__unread-count {
+    background-color: $brand-700;
+    color: $text-on-dark;
+  }
+}
+
+// Typing bubble at the bottom of the list
+.messages .str-chat__typing-indicator {
+  padding-inline: $space-4;
+
+  .str-chat__typing-indicator__bubble {
+    border-radius: $bubble-radius;
+    border-end-start-radius: $bubble-tight;
+    background-color: $surface;
+    box-shadow: 0 1px 3px rgba(15, 27, 45, 0.08);
+  }
+
+  .str-chat__typing-indicator__dot {
+    background-color: $gray-400;
+  }
+}
+
+// ============================================================
+// Nafham Assistant: its bubbles, the lesson bot's card buttons and
+// the support assistant's options, under the bubble in its column
+// ============================================================
+.nf-msg--bot .nf-msg__bubble {
+  box-shadow:
+    inset 0 0 0 1px rgba($brand-700, 0.28),
+    0 1px 3px rgba(15, 27, 45, 0.06);
+  background: linear-gradient(180deg, $surface, $brand-50);
+}
+
+.nf-msg--bot .nf-msg__sender {
+  color: $brand-800;
+}
+
+.nf-msg__avatar-bot.MuiAvatar-root {
+  background: linear-gradient(135deg, $brand-400, $brand-800);
+  color: $text-on-dark;
 }
 
 .bot-actions {
   display: flex;
   flex-direction: column;
   gap: 0.6rem;
+  width: 100%;
   max-width: 48rem;
-  margin-block: 0.2rem 0.8rem;
-  margin-inline: 5.2rem 1.6rem;
+  margin-top: 0.6rem;
 
   &__buttons {
     display: flex;
@@ -619,8 +1370,10 @@ $own-bubble: $brand-100;
   }
 
   &__button.MuiButton-root {
+    border-radius: $radius-pill;
     text-transform: none;
     font-weight: 700;
+    box-shadow: none;
   }
 
   &__button--link.MuiButton-root {
@@ -646,8 +1399,8 @@ $own-bubble: $brand-100;
     display: inline-flex;
     align-items: center;
     gap: 0.4rem;
-    margin-block: 0.2rem 0.8rem;
-    margin-inline: 5.2rem 0;
+    margin-top: 0.6rem;
+    padding-inline: 1.2rem;
     font-size: $font-xs;
     font-weight: 700;
     color: $text-muted;
@@ -665,19 +1418,24 @@ $own-bubble: $brand-100;
   flex-wrap: wrap;
   align-items: center;
   gap: 0.6rem;
+  padding-bottom: 0.2rem;
+
+  // Phone: one sideways-scrolling row instead of a stack of chips
+  @include respond(phone) {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
 
   &__chip.MuiChip-root {
+    flex: none;
+    border-radius: $radius-pill;
     font-weight: 700;
     font-size: $font-xs;
   }
 
   &__chip--handoff.MuiChip-root {
     margin-inline-start: auto;
-  }
-
-  &__menu-icon {
-    margin-inline-end: 0.8rem;
-    color: $text-muted;
   }
 
   &__error.MuiAlert-root {
@@ -699,9 +1457,14 @@ $own-bubble: $brand-100;
   color: $text-muted;
 
   svg {
-    font-size: 3.6rem;
-    color: $gray-400;
-    margin-bottom: 0.4rem;
+    width: 6.4rem;
+    height: 6.4rem;
+    margin-bottom: $space-2;
+    padding: 1.6rem;
+    border-radius: 50%;
+    background-color: $surface;
+    box-shadow: $shadow-sm;
+    color: $brand-700;
   }
 
   &__title {
@@ -719,118 +1482,149 @@ $own-bubble: $brand-100;
   }
 }
 
-// "Chat with Nafham Support" under the filter pills
-.messages__support {
-  align-self: flex-start;
-  margin-top: 0.4rem;
-}
-
-.conv-item__support-avatar,
-.thread-header__admin-avatar {
-  background-color: $navy-900 !important;
-  color: $text-on-dark !important;
-}
-
-// Whole words wrap; Stream's auto hyphenation chops words mid-bubble
-.messages .str-chat__message-text,
-.messages .str-chat__message-text-inner {
-  hyphens: manual;
-}
-
-// Other people: white bubble with a border; own: light brand tint
-.messages .str-chat__message--other .str-chat__message-bubble,
-.messages .str-chat__message--other .str-chat__message-text {
-  background-color: $surface;
-  border: 1px solid $border;
-  color: $text-strong;
-}
-
-.messages .str-chat__message--me .str-chat__message-bubble,
-.messages .str-chat__message--me .str-chat__message-text {
-  background-color: $own-bubble;
-  border: 1px solid $own-bubble;
-  color: $text-strong;
-}
-
-.messages .str-chat__avatar-fallback {
-  background-color: $brand-100;
-  color: $navy-900;
-  font-weight: 700;
-}
-
-// Composer: Stream gives it flex: 1, which would split the column with the
-// message list; it only needs its own height, pinned under the list
+// ============================================================
+// Composer: one rounded field, + on the leading side, mic that
+// becomes send once there is something to send
+// ============================================================
 .messages .str-chat__dropzone-root,
-.messages .str-chat__message-composer,
-.messages .str-chat__message-input {
-  flex: 0 0 auto;
+.messages .str-chat__message-composer-container {
+  flex: 0 0 auto; // Stream's flex: 1 would split the column with the list
   background-color: $surface;
   border-top: 1px solid $border;
 }
 
-.messages .str-chat__main-panel-inner {
-  flex: 1 1 auto;
-}
-
-.messages .str-chat__message-composer-inner,
-.messages .str-chat__message-input-inner {
+.messages .str-chat__message-composer {
+  display: flex;
+  align-items: flex-end;
+  gap: $space-2;
+  width: 100%;
+  max-width: 80rem;
+  margin-inline: auto;
   padding: $space-3 $space-4 $space-2;
+  background: transparent;
+
+  @include respond(tab-port) {
+    padding: $space-2;
+    padding-bottom: calc(#{$space-2} + env(safe-area-inset-bottom));
+  }
 }
 
-.messages .str-chat__textarea textarea,
-.messages .str-chat__message-textarea textarea {
+.messages .str-chat__message-composer-compose-area {
+  flex: 1;
+  min-width: 0;
+  border: 1px solid $border-strong;
+  border-radius: 2.2rem;
+  background-color: $surface;
+  transition:
+    border-color $transition,
+    box-shadow $transition;
+
+  &:focus-within {
+    border-color: $brand-400;
+    box-shadow: 0 0 0 3px rgba($brand-400, 0.18);
+  }
+}
+
+.messages .str-chat__message-composer-controls {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.4rem;
+  padding: 0.3rem 0.4rem 0.3rem 0;
+
+  [dir='rtl'] & {
+    padding: 0.3rem 0 0.3rem 0.4rem;
+  }
+}
+
+.messages .str-chat__message-composer-controls__text-composition-controls {
+  flex: 1;
+  min-width: 0;
+}
+
+.messages .str-chat__textarea,
+.messages .str-chat__message-textarea {
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.messages textarea.str-chat__message-textarea {
+  min-height: 3.6rem;
+  max-height: 16rem;
+  padding: 0.9rem 1.4rem;
+  border: 0;
+  outline: 0;
+  background: transparent;
   font-family: inherit;
-  font-size: $font-sm;
+  font-size: 1.45rem;
+  line-height: 1.3;
   color: $text-strong;
-  border-color: $border-strong;
-  border-radius: $radius-sm;
+  resize: none;
 
   &::placeholder {
     color: $gray-400;
   }
 }
 
-.messages .str-chat__send-button,
-.messages .str-chat__start-recording-audio-button,
-.messages .str-chat__attachment-selector__button,
-.messages .str-chat__file-input-container {
-  min-width: 4.4rem;
-  min-height: 4.4rem;
-  border-radius: $radius-sm;
+.messages .str-chat__message-composer-previews {
+  padding: $space-2 $space-2 0;
 }
 
-.messages .str-chat__send-button:not(:disabled) {
-  background-color: $navy-900;
-  color: $text-on-dark;
+.messages .str-chat__attachment-selector__menu-button {
+  width: 4.2rem;
+  height: 4.2rem;
+  border: 0;
+  background-color: $gray-100;
+  color: $navy-900;
+
+  &:hover {
+    background-color: $gray-200;
+  }
 }
 
-.messages .str-chat__send-button:disabled {
-  background-color: $gray-300;
-  color: $text-on-dark;
-}
+.messages .str-chat__message-composer__actions {
+  display: flex;
+  align-items: center;
 
-// Voice note playback
-.messages .str-chat__voice-recording-widget {
-  background-color: transparent;
-}
+  .str-chat__button {
+    width: 3.6rem;
+    height: 3.6rem;
+    border: 0;
+    border-radius: 50%;
+  }
 
-.messages .str-chat__voice-recording-widget__play-button,
-.messages .str-chat__audio_player-play-button,
-.messages .str-chat__voice-recording-widget__audio-player-button {
-  background-color: $navy-900;
-  color: $text-on-dark;
-  border-radius: 50%;
-}
+  .str-chat__start-recording-audio-button {
+    color: $gray-500;
 
-.messages .str-chat__wave-progress-bar__progress-indicator {
-  background-color: $brand-400;
-}
+    &:hover {
+      background-color: $gray-100;
+      color: $navy-900;
+    }
+  }
 
-.messages .str-chat__wave-progress-bar__amplitude-bar--active {
-  background-color: $brand-400;
+  .str-chat__send-button.str-chat__button {
+    background-color: $navy-900;
+    color: $text-on-dark;
+    animation: nf-msg-in 160ms ease-out;
+
+    &:hover:not(:disabled) {
+      background-color: $navy-800;
+    }
+
+    &:disabled {
+      background-color: $gray-200;
+      color: $gray-400;
+    }
+  }
 }
 
 // Recording in progress
+.messages .str-chat__audio_recorder-container {
+  flex: 1;
+  border-radius: 2.2rem;
+  background-color: $danger-50;
+}
+
 .messages .str-chat__recording-timer {
   color: $danger-500;
   font-weight: 700;
@@ -1063,5 +1857,110 @@ $own-bubble: $brand-100;
 
   &__alert.MuiAlert-root {
     font-size: $font-xs;
+  }
+}
+
+.nf-assistant {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  width: 100%;
+  margin-top: 0.6rem;
+
+  &__links,
+  &__options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  &__options .MuiButton-root {
+    padding: 0.5rem 1.2rem;
+    border-color: rgba($brand-700, 0.45);
+    border-radius: $radius-pill;
+    background-color: $surface;
+    color: $navy-900;
+    text-transform: none;
+    text-align: start;
+    font-weight: 600;
+    line-height: 1.3;
+    transition:
+      background-color $transition,
+      border-color $transition;
+
+    &:hover {
+      border-color: $brand-700;
+      background-color: $brand-50;
+    }
+  }
+
+  &__number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 1.4rem;
+    height: 1.4rem;
+    margin-inline-end: 0.5rem;
+    border-radius: 50%;
+    background: $surface-alt;
+    font-size: $font-xs;
+    font-weight: 700;
+  }
+}
+
+// Under a Nafham bubble: the card's outcome, its buttons, the
+// assistant's options and the button to where a notice points, on as
+// few lines as they fit
+.nf-msg__extras {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem 0.8rem;
+  margin-top: 0.6rem;
+
+  > .bot-actions,
+  > .nf-assistant {
+    margin-top: 0;
+  }
+
+  > .bot-actions__outcome {
+    margin: 0;
+    padding: 0.4rem 1rem;
+    border-radius: $radius-pill;
+    background-color: $gray-100;
+    color: $gray-700;
+  }
+
+  > .nf-cta {
+    margin-top: 0;
+  }
+}
+
+// An announcement's button to where it points (the requests, a package)
+.nf-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.8rem;
+  padding: 0.5rem 1.2rem;
+  border-radius: $radius-pill;
+  background-color: $navy-900;
+  color: $text-on-dark;
+  font-size: $font-xs;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background-color $transition;
+
+  svg {
+    font-size: 1.4rem;
+  }
+
+  &:hover {
+    background-color: $navy-800;
+    color: $text-on-dark;
+  }
+
+  [dir='rtl'] & svg {
+    transform: scaleX(-1);
   }
 }

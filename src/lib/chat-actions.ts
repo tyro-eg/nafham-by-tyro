@@ -74,7 +74,9 @@ export const assistantCardOf = (
 ): AssistantCard | null => {
   if (!isBotMessage(message)) return null;
   const card = message?.assistant;
-  if (!card || card.v !== 1 || !isRecord(card.subject)) return null;
+  // `true` marks the support chat's assistant, which has no card
+  if (!card || card === true || card.v !== 1 || !isRecord(card.subject))
+    return null;
   const { student_id, tutor_id } = card.subject;
   if (
     !Number.isFinite(Number(student_id)) ||
