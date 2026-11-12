@@ -27,6 +27,7 @@ import {
 import { useSessions } from '../../hooks/useSessions';
 import { usePackages } from '../../hooks/usePackages';
 import { useInstructor } from '../../hooks/useInstructors';
+import { targetProgress } from '../user/edit-profile/edit-profile.utils';
 import { useRtlClass } from '../../assets/utils/utils';
 import RatingSummary from '../../component/rating-summary/rating-summary.component';
 import type { SessionType } from '../../assets/types';
@@ -212,7 +213,19 @@ const TutorDashboard: FC = () => {
   })();
 
   const rating = Number(profile?.average_rating) || 0;
-  const stats = [
+  // The server's count is the one the target uses (see the profile's
+  // teaching preferences); the page's own count covers older servers
+  const studentCount = profile?.active_students_count ?? activeStudents;
+  const studentTarget = profile?.target_students ?? null;
+  const studentProgress = targetProgress(studentCount, studentTarget);
+  const stats: {
+    key: string;
+    tone: string;
+    icon: ReactNode;
+    value: string;
+    label: string;
+    progress?: { width: number; text: string };
+  }[] = [
     {
       key: 'upcoming',
       tone: 'sky',
@@ -231,8 +244,19 @@ const TutorDashboard: FC = () => {
       key: 'students',
       tone: 'sun',
       icon: <GroupsRounded />,
-      value: String(activeStudents),
+      value: studentTarget
+        ? `${studentCount} / ${studentTarget}`
+        : String(studentCount),
       label: t('TUTOR_DASHBOARD.STATS.ACTIVE_STUDENTS'),
+      progress: studentProgress
+        ? {
+            width: studentProgress.width,
+            text: t('TUTOR_DASHBOARD.STATS.OF_TARGET', {
+              percent: studentProgress.percent,
+              target: studentTarget,
+            }),
+          }
+        : undefined,
     },
     {
       key: 'rating',
@@ -309,6 +333,24 @@ const TutorDashboard: FC = () => {
                 <span className="sd-stat__value">{stat.value}</span>
               )}
               <span className="sd-stat__label">{stat.label}</span>
+              {stat.progress && !loading && (
+                <>
+                  <span
+                    className="sd-stat__track"
+                    role="progressbar"
+                    aria-valuemin={0}
+                    aria-valuemax={100}
+                    aria-valuenow={stat.progress.width}
+                    aria-label={stat.progress.text}
+                  >
+                    <span
+                      className="sd-stat__bar"
+                      style={{ width: `${stat.progress.width}%` }}
+                    />
+                  </span>
+                  <span className="sd-stat__note">{stat.progress.text}</span>
+                </>
+              )}
             </div>
           ))}
         </div>
