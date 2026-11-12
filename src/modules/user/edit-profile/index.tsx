@@ -27,6 +27,7 @@ import ProfileMissingInfoBanner from './profile-missing-info-banner/profile-miss
 import ProfileReviewsList from './profile-reviews-list/profile-reviews-list.component';
 import ProfileInfo from './profile-info/profile-info.component';
 import ProfileFields from './profile-fields/profile-fields.component';
+import ProfilePreferences from './profile-preferences/profile-preferences.component';
 import RequestSessionsModal from '../../../modals/request-sessions-modal/request-sessions-modal.component';
 import type { SessionRequestKind } from '../../../hooks/useSessionRequests';
 import { getYoutubeId } from './edit-profile.utils';
@@ -344,6 +345,9 @@ const EditProfile: FC = () => {
                   : t('PROFILE.EDITPROFILE.EDITACTION.EDITYOURPROFILE')}
               </Button>
             </div>
+          )}
+          {showEditMode && !!instructor && (
+            <ProfilePreferences instructor={instructor} />
           )}
           {showEditMode && currentUser?.type === 'Tutor' && !!instructor && (
             <WantsStudents

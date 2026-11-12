@@ -6,6 +6,7 @@ export interface ApiError {
   response?: {
     data?: {
       error?: string;
+      errors?: string[];
     };
   };
   message?: string;
@@ -216,6 +217,12 @@ export type Instructor = {
   last_name: string;
   phone_number: string;
   recommended: boolean;
+  // Only on the instructor's own profile: teaching preferences and progress
+  target_students?: number | null;
+  accepting_new_students?: boolean;
+  same_day_trials?: boolean;
+  active_students_count?: number;
+  target_progress?: number | null;
   updated_at: string;
   created_at: string;
 };

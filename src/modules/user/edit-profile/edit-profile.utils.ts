@@ -57,3 +57,27 @@ export const getYoutubeId = (url: string) => {
   }
   return 'error';
 };
+
+export const TARGET_STUDENTS_MAX = 200;
+
+/**
+ * Progress toward a tutor's target number of students: the percent reached
+ * (may pass 100) and the bar width (capped at 100). Null without a target.
+ */
+export const targetProgress = (
+  current: number,
+  target?: number | null,
+): { percent: number; width: number; reached: boolean } | null => {
+  if (!target || target <= 0) return null;
+  const percent = Math.round((Math.max(current, 0) / target) * 100);
+  return { percent, width: Math.min(percent, 100), reached: percent >= 100 };
+};
+
+/** A target as typed: '' clears it, otherwise a whole number from 1 to 200 */
+export const parseTargetStudents = (value: string): number | '' | null => {
+  const trimmed = value.trim();
+  if (trimmed === '') return '';
+  if (!/^\d+$/.test(trimmed)) return null;
+  const target = Number(trimmed);
+  return target >= 1 && target <= TARGET_STUDENTS_MAX ? target : null;
+};

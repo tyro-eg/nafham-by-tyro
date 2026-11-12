@@ -592,6 +592,23 @@
         "CURRICULUMS": "Curriculums",
         "SUBJECTS": "Subjects",
         "CATEGORY": "Category"
+      },
+      "PREFERENCES": {
+        "TITLE": "My teaching preferences",
+        "SUBTITLE": "Only you and the Nafham team can see these.",
+        "TARGET_LABEL": "Target number of students",
+        "TARGET_HINT": "How many students you'd like to teach at the same time.",
+        "TARGET_SAVE": "Save",
+        "TARGET_INVALID": "Enter a whole number from 1 to 200, or leave it empty.",
+        "PROGRESS": "{{current}} of {{target}} students · {{percent}}%",
+        "PROGRESS_REACHED": "Target reached: {{current}} of {{target}} students · {{percent}}% 🎉",
+        "NO_TARGET_one": "{{count}} active student. Set a target to track your progress.",
+        "NO_TARGET_other": "{{count}} active students. Set a target to track your progress.",
+        "ACTIVE_HINT": "Active students have hours left or a lesson coming with you, or had a lesson with you in the last 30 days.",
+        "SAME_DAY_LABEL": "Same-day trials",
+        "SAME_DAY_HINT": "Students can book a free trial with you for later the same day (at least 4 hours ahead). Turn this off if you need a day's notice.",
+        "NEW_STUDENTS_LABEL": "I'm open to new students",
+        "NEW_STUDENTS_HINT": "When off, you won't appear in the free trial or the instructor list. Your current students are not affected."
       }
     },
     "WANTS_STUDENTS": {
@@ -1462,7 +1479,8 @@
       "HOURS_MONTH": "Hours taught this month",
       "ACTIVE_STUDENTS": "Active students",
       "RATING_one": "Rating · {{count}} review",
-      "RATING_other": "Rating · {{count}} reviews"
+      "RATING_other": "Rating · {{count}} reviews",
+      "OF_TARGET": "{{percent}}% of your target of {{target}}"
     },
     "SCHEDULE": {
       "TITLE": "Your schedule",
