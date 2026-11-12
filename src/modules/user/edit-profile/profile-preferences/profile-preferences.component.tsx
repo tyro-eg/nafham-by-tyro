@@ -108,17 +108,12 @@ const ProfilePreferences: FC<ProfilePreferencesProps> = ({ instructor }) => {
           {progress ? (
             <>
               <p className="profile-preferences__progress-text">
-                {progress.reached
-                  ? t('PROFILE.EDITPROFILE.PREFERENCES.PROGRESS_REACHED', {
-                      current,
-                      target: savedTarget,
-                      percent: progress.percent,
-                    })
-                  : t('PROFILE.EDITPROFILE.PREFERENCES.PROGRESS', {
-                      current,
-                      target: savedTarget,
-                      percent: progress.percent,
-                    })}
+                {t(
+                  progress.reached
+                    ? 'PROFILE.EDITPROFILE.PREFERENCES.PROGRESS_REACHED'
+                    : 'PROFILE.EDITPROFILE.PREFERENCES.PROGRESS',
+                  { current, target: savedTarget, percent: progress.percent },
+                )}
               </p>
               <span
                 className="profile-preferences__track"

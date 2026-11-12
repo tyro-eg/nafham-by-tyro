@@ -10,6 +10,10 @@ import { Instructor, ApiError } from '../assets/types';
 import { snackActions } from '../assets/utils/toaster';
 import { useAppDispatch } from '../redux/store';
 import { setCurrentUser } from '../redux/user/user.slice';
+import {
+  instructorListParams,
+  type InstructorFilters,
+} from './useInstructors.utils';
 
 /**
  * Tutor profile update data
@@ -44,14 +48,7 @@ interface UserInfoUpdateData {
     | Record<string, unknown>;
 }
 
-/**
- * Instructor filters
- */
-export interface InstructorFilters {
-  grade_subject_id?: number;
-  /** Leave out instructors who are not taking new students */
-  accepting_new_students?: boolean;
-}
+export type { InstructorFilters } from './useInstructors.utils';
 
 /**
  * Fetch paginated list of instructors
@@ -64,18 +61,7 @@ export function useInstructors(
   return useQuery({
     queryKey: queryKeys.instructors.list({ pageNumber, pageSize, ...filters }),
     queryFn: async () => {
-      const params: Record<string, any> = {
-        per_page: pageSize,
-        page: pageNumber,
-      };
-
-      if (filters?.grade_subject_id) {
-        params.grade_subject_id = filters.grade_subject_id;
-      }
-      if (filters?.accepting_new_students) {
-        params.accepting_new_students = true;
-      }
-
+      const params = instructorListParams(pageNumber, pageSize, filters);
       const response = await get(`/tutors`, { params });
       return {
         data: response.data.data as Instructor[],
@@ -116,18 +102,7 @@ export function useInfiniteInstructors(
   return useInfiniteQuery({
     queryKey: [...queryKeys.instructors.all, 'infinite', filters],
     queryFn: async ({ pageParam = 1 }) => {
-      const params: Record<string, any> = {
-        per_page: pageSize,
-        page: pageParam,
-      };
-
-      if (filters?.grade_subject_id) {
-        params.grade_subject_id = filters.grade_subject_id;
-      }
-      if (filters?.accepting_new_students) {
-        params.accepting_new_students = true;
-      }
-
+      const params = instructorListParams(pageParam, pageSize, filters);
       const response = await get(`/tutors`, { params });
       return {
         data: response.data.data as Instructor[],
