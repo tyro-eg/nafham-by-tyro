@@ -23,6 +23,9 @@ interface TutorProfileUpdateData {
     video_url?: string;
     bio?: string;
     avatar?: File | string;
+    target_students?: number | '';
+    accepting_new_students?: boolean;
+    same_day_trials?: boolean;
   };
 }
 
@@ -46,6 +49,8 @@ interface UserInfoUpdateData {
  */
 export interface InstructorFilters {
   grade_subject_id?: number;
+  /** Leave out instructors who are not taking new students */
+  accepting_new_students?: boolean;
 }
 
 /**
@@ -66,6 +71,9 @@ export function useInstructors(
 
       if (filters?.grade_subject_id) {
         params.grade_subject_id = filters.grade_subject_id;
+      }
+      if (filters?.accepting_new_students) {
+        params.accepting_new_students = true;
       }
 
       const response = await get(`/tutors`, { params });
@@ -116,6 +124,9 @@ export function useInfiniteInstructors(
       if (filters?.grade_subject_id) {
         params.grade_subject_id = filters.grade_subject_id;
       }
+      if (filters?.accepting_new_students) {
+        params.accepting_new_students = true;
+      }
 
       const response = await get(`/tutors`, { params });
       return {
@@ -159,7 +170,7 @@ export function useUpdateTutorProfile() {
 
       Object.entries(info).forEach(([key, value]) => {
         if (value !== undefined) {
-          formData.append(`tutor[${key}]`, value as string);
+          formData.append(`tutor[${key}]`, String(value));
         }
       });
 
@@ -192,6 +203,7 @@ export function useUpdateTutorProfile() {
     onError: (error: ApiError) => {
       const errorMessage =
         error.response?.data?.error ||
+        error.response?.data?.errors?.join(', ') ||
         error.message ||
         'Failed to update profile';
       snackActions.error(errorMessage);
@@ -267,6 +279,7 @@ export function useUpdateUserInfo() {
     onError: (error: ApiError) => {
       const errorMessage =
         error.response?.data?.error ||
+        error.response?.data?.errors?.join(', ') ||
         error.message ||
         'Failed to update information';
       snackActions.error(errorMessage);
