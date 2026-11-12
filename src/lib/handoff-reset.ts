@@ -1,3 +1,5 @@
+import { clearAuthStorage } from './auth-storage';
+
 /**
  * Imported first by the entry point, before the store rehydrates. On
  * /handoff the app is about to sign someone in, so whatever session this
@@ -7,20 +9,11 @@
  */
 export const HANDOFF_PATH = '/handoff';
 
-export const onHandoffPage = () =>
-  window.location.pathname.replace(/\/+$/, '') === HANDOFF_PATH;
+export const isHandoffPath = (pathname: string) =>
+  pathname.replace(/\/+$/, '') === HANDOFF_PATH;
 
-if (onHandoffPage()) {
-  try {
-    [
-      'tyro.token',
-      'tyro.refreshToken',
-      'tyro.expireAt',
-      'tyro.type',
-      'tyro.id',
-      'persist:root',
-    ].forEach((key) => localStorage.removeItem(key));
-  } catch {
-    // storage unavailable: nothing was kept to get in the way
-  }
+export const onHandoffPage = () => isHandoffPath(window.location.pathname);
+
+if (typeof window !== 'undefined' && onHandoffPage()) {
+  clearAuthStorage({ persistedUser: true });
 }

@@ -33,3 +33,16 @@ export const appPaymentCompleteUrl = (slug: string, status: string) =>
 /** Group courses are sold by the team, never from the app's handoff */
 export const blockedInApp = (packageType: string | null | undefined) =>
   packageType === 'group_course' && isFromApp();
+
+/** The single-use code in /handoff#code=…, kept out of server logs */
+export const readHandoffCode = (hash: string): string | null =>
+  new URLSearchParams(hash.replace(/^#/, '')).get('code') || null;
+
+/** Only a path on this site: never another origin (`//host`, or `/\host`, which browsers read the same way) */
+export const safeNextPath = (next: unknown): string =>
+  typeof next === 'string' &&
+  next.startsWith('/') &&
+  !next.startsWith('//') &&
+  !next.startsWith('/\\')
+    ? next
+    : '/';

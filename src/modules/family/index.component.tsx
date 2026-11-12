@@ -35,12 +35,13 @@ import {
   useFamily,
   useRequestTopUp,
   type FamilyChild,
+  type FamilyPackage,
 } from '../../hooks/useFamily';
 import { useRtlClass } from '../../assets/utils/utils';
 import { snackActions } from '../../assets/utils/toaster';
 import { formatRelative } from '../homework/homework.utils';
 import { subjectName } from '../dashboard/dashboard.utils';
-import { childColor } from '../../lib/family-child';
+import { childColor, findChildPackage } from '../../lib/family-child';
 import RenewDialog from '../payments/renew-dialog.component';
 import RenewAllSheet from '../payments/renew-all-sheet.component';
 import RenewAllBanner from '../payments/renew-all-banner.component';
@@ -173,7 +174,7 @@ const ChildCard: FC<{
   color: string;
   onOpen: (path: string) => void;
   onTopUp: () => void;
-  onRenew: (packageId: number) => void;
+  onRenew: (pkg: FamilyPackage) => void;
 }> = ({ child, color, onOpen, onTopUp, onRenew }) => {
   const { t, i18n } = useTranslation();
   const locale = `${i18n.language}-u-nu-latn`;
@@ -286,7 +287,7 @@ const ChildCard: FC<{
               variant={pkg.hours_left <= LOW_HOURS ? 'contained' : 'text'}
               className="fam-kid__renew"
               startIcon={<AutorenewRounded />}
-              onClick={() => onRenew(pkg.id)}
+              onClick={() => onRenew(pkg)}
             >
               {t('PAYMENTS.RENEW.BUTTON')}
             </Button>
@@ -355,7 +356,7 @@ const FamilyHome: FC = () => {
   const { choose } = useActiveChild(children);
   const [topUpFor, setTopUpFor] = useState<FamilyChild | null>(null);
   const [renewing, setRenewing] = useState<{
-    packageId: number;
+    pkg: FamilyPackage;
     child: FamilyChild;
   } | null>(null);
   // `?renew=all` (the nudge's link) opens the renew-all sheet at once;
@@ -378,10 +379,8 @@ const FamilyHome: FC = () => {
   useEffect(() => {
     const packageId = Number(searchParams.get('renew'));
     if (!(packageId > 0) || !children) return;
-    const child = children.find((c) =>
-      c.packages.some((pkg) => pkg.id === packageId),
-    );
-    if (child) setRenewing({ packageId, child });
+    const found = findChildPackage(children, packageId);
+    if (found) setRenewing(found);
     dropRenewParam();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [children]);
@@ -507,10 +506,8 @@ const FamilyHome: FC = () => {
             onClose={closeRenewAll}
             onRequestInstead={(packageId) => {
               closeRenewAll();
-              const child = children?.find((c) =>
-                c.packages.some((pkg) => pkg.id === packageId),
-              );
-              if (child) setTopUpFor(child);
+              const found = findChildPackage(children, packageId);
+              if (found) setTopUpFor(found.child);
             }}
           />
         )}
@@ -571,7 +568,7 @@ const FamilyHome: FC = () => {
                 color={childColor(index)}
                 onOpen={(path) => open(child, path)}
                 onTopUp={() => setTopUpFor(child)}
-                onRenew={(packageId) => setRenewing({ packageId, child })}
+                onRenew={(pkg) => setRenewing({ pkg, child })}
               />
             ))}
           </div>
@@ -579,12 +576,8 @@ const FamilyHome: FC = () => {
 
         {renewing && (
           <RenewDialog
-            packageId={renewing.packageId}
-            packageType={
-              renewing.child.packages.find(
-                (pkg) => pkg.id === renewing.packageId,
-              )?.package_type
-            }
+            packageId={renewing.pkg.id}
+            packageType={renewing.pkg.package_type}
             onClose={() => setRenewing(null)}
             onRequestInstead={() => {
               const { child } = renewing;

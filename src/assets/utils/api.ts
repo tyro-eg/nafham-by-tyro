@@ -10,6 +10,7 @@ import { clearCurrentUser } from '@/redux/user/user.slice';
 import { queryClient } from '@/lib/queryClient';
 import { getActiveChildId } from '@/lib/family-child';
 import { onHandoffPage } from '@/lib/handoff-reset';
+import { AUTH_KEYS, clearAuthStorage, saveTokens } from '@/lib/auth-storage';
 
 // ============================================================================
 // Types
@@ -37,14 +38,6 @@ const baseURL =
 const TUNNEL_HEADERS = baseURL.includes('ngrok')
   ? { 'ngrok-skip-browser-warning': '1' }
   : {};
-
-const STORAGE_KEYS = {
-  TOKEN: 'tyro.token',
-  REFRESH_TOKEN: 'tyro.refreshToken',
-  EXPIRE_AT: 'tyro.expireAt',
-  TYPE: 'tyro.type',
-  ID: 'tyro.id',
-} as const;
 
 const PROTECTED_ENDPOINTS = [
   '/users/tokens',
@@ -129,10 +122,7 @@ const performLogout = (): void => {
   // wipe the session it is putting in place
   if (onHandoffPage()) return;
 
-  // Clear localStorage
-  Object.values(STORAGE_KEYS).forEach((key) => {
-    localStorage.removeItem(key);
-  });
+  clearAuthStorage();
 
   // Clear Redux state
   store.dispatch(clearCurrentUser());
@@ -182,32 +172,13 @@ const refreshAccessToken = async (
   };
 };
 
-/**
- * Save tokens to localStorage.
- */
-const saveTokens = (
-  accessToken: string,
-  refreshToken: string,
-  expireAt: string,
-): void => {
-  if (accessToken) {
-    localStorage.setItem(STORAGE_KEYS.TOKEN, accessToken);
-  }
-  if (refreshToken) {
-    localStorage.setItem(STORAGE_KEYS.REFRESH_TOKEN, refreshToken);
-  }
-  if (expireAt) {
-    localStorage.setItem(STORAGE_KEYS.EXPIRE_AT, expireAt);
-  }
-};
-
 // ============================================================================
 // Request Interceptor
 // ============================================================================
 
 axios.interceptors.request.use(
   (config: InternalAxiosRequestConfig): InternalAxiosRequestConfig => {
-    const accessToken = localStorage.getItem(STORAGE_KEYS.TOKEN);
+    const accessToken = localStorage.getItem(AUTH_KEYS.TOKEN);
     const lang = localStorage.getItem('i18nextLng') || 'en';
     const isFormData = config.data instanceof FormData;
 
@@ -269,8 +240,8 @@ axios.interceptors.response.use(
       return Promise.reject(error);
     }
 
-    const refreshToken = localStorage.getItem(STORAGE_KEYS.REFRESH_TOKEN);
-    const accessToken = localStorage.getItem(STORAGE_KEYS.TOKEN);
+    const refreshToken = localStorage.getItem(AUTH_KEYS.REFRESH_TOKEN);
+    const accessToken = localStorage.getItem(AUTH_KEYS.TOKEN);
 
     // If tokens are missing, perform logout
     if (!refreshToken || !accessToken) {
@@ -300,10 +271,8 @@ axios.interceptors.response.use(
 
     try {
       // Get fresh tokens (in case they were updated by another process)
-      const currentAccessToken = localStorage.getItem(STORAGE_KEYS.TOKEN);
-      const currentRefreshToken = localStorage.getItem(
-        STORAGE_KEYS.REFRESH_TOKEN,
-      );
+      const currentAccessToken = localStorage.getItem(AUTH_KEYS.TOKEN);
+      const currentRefreshToken = localStorage.getItem(AUTH_KEYS.REFRESH_TOKEN);
 
       if (!currentAccessToken || !currentRefreshToken) {
         throw new Error('Tokens missing from storage');
@@ -317,7 +286,11 @@ axios.interceptors.response.use(
       } = await refreshAccessToken(currentAccessToken, currentRefreshToken);
 
       // Save new tokens
-      saveTokens(newAccessToken, newRefreshToken, expireAt);
+      saveTokens({
+        accessToken: newAccessToken,
+        refreshToken: newRefreshToken,
+        expireAt,
+      });
 
       // Process queued requests
       processQueue(undefined, newAccessToken);

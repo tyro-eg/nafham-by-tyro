@@ -1,9 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useSyncExternalStore } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Box, Button, CircularProgress, Typography } from '@mui/material';
 
 import { useHandoff } from '../../../hooks/useAuth';
+import { readHandoffCode } from '../../../lib/from-app';
 
 import '../impersonate/impersonate.styles.scss';
 import './handoff.styles.scss';
@@ -24,44 +25,45 @@ import './handoff.styles.scss';
 // layout, which remounts this route after the code has left the URL; the
 // remounted copy waits on the first exchange instead of starting another.
 const started = new Set<string>();
-let failed = false;
-const failedListeners = new Set<(value: boolean) => void>();
 
-const fail = () => {
-  failed = true;
-  failedListeners.forEach((listener) => listener(true));
+// Whether the exchange failed, outside React for the same reason: the copy
+// on screen may not be the one that started it
+let failed = false;
+const listeners = new Set<() => void>();
+const setFailed = (value: boolean) => {
+  failed = value;
+  listeners.forEach((listener) => listener());
 };
+const fail = () => setFailed(true);
+const subscribe = (listener: () => void) => {
+  listeners.add(listener);
+  return () => {
+    listeners.delete(listener);
+  };
+};
+const getFailed = () => failed;
 
 const Handoff = () => {
   const { t } = useTranslation();
   const handoff = useHandoff();
-  const [error, setError] = useState(failed);
+  const error = useSyncExternalStore(subscribe, getFailed);
 
   useEffect(() => {
-    failedListeners.add(setError);
-    return () => {
-      failedListeners.delete(setError);
-    };
-  }, []);
-
-  useEffect(() => {
-    const code = new URLSearchParams(window.location.hash.slice(1)).get('code');
-    if (code) {
-      window.history.replaceState(
-        window.history.state,
-        '',
-        window.location.pathname + window.location.search,
-      );
-    }
-
+    const code = readHandoffCode(window.location.hash);
     if (!code) {
       // Nothing to trade, unless an exchange is already under way
       if (started.size === 0) fail();
       return;
     }
+    // Out of the address bar and history before anything else runs
+    window.history.replaceState(
+      window.history.state,
+      '',
+      window.location.pathname + window.location.search,
+    );
     if (started.has(code)) return;
     started.add(code);
-    failed = false;
+    setFailed(false);
 
     // The hook itself moves on when it succeeds (a remounted copy of this
     // component never sees its own callbacks)
