@@ -56,6 +56,9 @@ const TrialPage = lazy(() => import('../../modules/trial/index.component'));
 const TrialRequests = lazy(
   () => import('../../modules/trial-requests/index.component'),
 );
+const RequestsPage = lazy(
+  () => import('../../modules/requests/index.component'),
+);
 const BuyPage = lazy(() => import('../../modules/buy/index.component'));
 const FamilyHome = lazy(() => import('../../modules/family/index.component'));
 const FamilySettings = lazy(
@@ -243,6 +246,13 @@ const RoutesComponent: React.FC<RoutesProps> = ({ currentUser }) => {
         <Route
           path="/my_sessions"
           element={<GuardedRoute element={<Sessions />} auth={!!currentUser} />}
+        />
+        {/* Proposals to move a lesson or change weekly times; emails and chat notices link here */}
+        <Route
+          path="/requests"
+          element={
+            <GuardedRoute element={<RequestsPage />} auth={!!currentUser} />
+          }
         />
         <Route
           path="/my_packages"

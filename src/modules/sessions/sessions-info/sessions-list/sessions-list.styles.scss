@@ -99,7 +99,9 @@ $tl-dot-phone: 2.6rem;
       background: $gray-200;
 
       @include respond(phone) {
-        inset-inline-start: calc(#{$tl-time-phone} + #{$tl-dot-phone} / 2 - 1px);
+        inset-inline-start: calc(
+          #{$tl-time-phone} + #{$tl-dot-phone} / 2 - 1px
+        );
       }
     }
   }
@@ -111,7 +113,8 @@ $tl-dot-phone: 2.6rem;
     isolation: isolate;
     display: grid;
     grid-template-columns: $tl-time $tl-dot 1.8rem minmax(0, 1fr) auto 1.8rem;
-    grid-template-rows: 1.4rem auto auto auto auto 1.4rem;
+    // badges, subject, person, hint, an open move proposal
+    grid-template-rows: 1.4rem auto auto auto auto auto 1.4rem;
     align-items: center;
     gap: 0;
     padding: 0;
@@ -165,8 +168,11 @@ $tl-dot-phone: 2.6rem;
     }
 
     @include respond(phone) {
-      grid-template-columns: $tl-time-phone $tl-dot-phone 1.4rem minmax(0, 1fr) 1.4rem;
-      grid-template-rows: 1.2rem auto auto auto auto auto 1.2rem;
+      grid-template-columns: $tl-time-phone $tl-dot-phone 1.4rem minmax(
+          0,
+          1fr
+        ) 1.4rem;
+      grid-template-rows: 1.2rem auto auto auto auto auto auto 1.2rem;
     }
   }
 
@@ -406,6 +412,17 @@ $tl-dot-phone: 2.6rem;
     grid-column: 4 / 6;
     grid-row: 5;
     margin: 0.8rem 0 0;
+
+    @include respond(phone) {
+      grid-column: 4;
+    }
+  }
+
+  // An open proposal to move the lesson sits under the person, full width of the panel
+  .sessions-card__proposal {
+    grid-column: 4 / 6;
+    grid-row: 6;
+    margin: 1rem 0 0;
 
     @include respond(phone) {
       grid-column: 4;

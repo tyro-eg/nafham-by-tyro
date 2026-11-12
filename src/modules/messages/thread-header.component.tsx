@@ -18,6 +18,7 @@ import {
   isSupportConversation,
 } from '../../lib/streamChat';
 import { useRtlClass } from '../../assets/utils/utils';
+import QuickActions from './quick-actions.component';
 
 interface ThreadHeaderProps {
   channel: Channel;
@@ -28,7 +29,8 @@ interface ThreadHeaderProps {
 
 /**
  * Header of the open conversation: who you are talking to, the subject,
- * the three members as chips, and a shortcut to book a session.
+ * the three members as chips, a shortcut to book a session and, in a
+ * lesson conversation, the quick actions (can't make a lesson, pause…).
  */
 const ThreadHeader: FC<ThreadHeaderProps> = ({
   channel,
@@ -127,6 +129,8 @@ const ThreadHeader: FC<ThreadHeaderProps> = ({
           {t('MESSAGES.BOOK_SESSION')}
         </Button>
       )}
+
+      {!support && channel.id && <QuickActions channelId={channel.id} />}
     </header>
   );
 };

@@ -61,7 +61,8 @@
     "COLLAPSE": "Hide menu",
     "EXPAND": "Show menu",
     "PAYMENTS": "Payments",
-    "TRIAL_REQUESTS": "Trial requests"
+    "TRIAL_REQUESTS": "Trial requests",
+    "REQUESTS": "Requests"
   },
   "CARDS": {
     "FREE_ASSESMENT": {
@@ -1565,6 +1566,7 @@
     },
     "YOU": "You",
     "NAFHAM_SUPPORT": "Nafham Support",
+    "ASSISTANT": "Nafham Assistant",
     "ADMIN_IN_CHAT": "Nafham Support is in this conversation",
     "MEMBERS": "Members",
     "ROLE": {
@@ -2584,5 +2586,212 @@
     "SENT": "Thank you. We have your request and will email you to confirm it.",
     "FAILED": "We couldn't send your request. Check the email address and try again, or email us.",
     "CONTACT": "Questions about your data? Email"
+  },
+  "SESSION_CHANGES": {
+    "CLOSE": "Close",
+    "REASONS": {
+      "SICK": "Unwell",
+      "SCHEDULE_CONFLICT": "A clash with something else",
+      "TRAVEL": "Travelling",
+      "EXAM": "An exam",
+      "EMERGENCY": "An emergency",
+      "CONNECTIVITY": "A connection problem",
+      "OTHER": "Another reason",
+      "FREEZE": "Lessons paused",
+      "SCHEDULE_CHANGE": "New weekly times",
+      "TUTOR_CHANGE": "Change of instructor"
+    },
+    "CANCELLED_BY": {
+      "STUDENT": "Cancelled by the family",
+      "TUTOR": "Cancelled by the instructor",
+      "ADMIN": "Cancelled by Nafham Support",
+      "SYSTEM": "Cancelled by a change to the schedule"
+    },
+    "CANCEL": {
+      "TEXT": "The hours go back to the package and the other side is told right away.",
+      "TEXT_TRIAL": "The trial is cancelled and the instructor is told right away.",
+      "WHY": "Why?",
+      "NOTE": "A word for the other side (optional)",
+      "KEEP": "Keep the lesson",
+      "CONFIRM": "Cancel the lesson",
+      "ERROR": "We couldn't cancel this lesson. Please try again."
+    },
+    "MOVE": {
+      "BUTTON": "Move",
+      "TITLE": "Propose new times",
+      "TEXT": "The lesson is on {{when}}. Pick up to {{count}} times the instructor is open; the lesson stays where it is until one is accepted.",
+      "DAY": "Day",
+      "TIME": "Time",
+      "HELD_FOR_YOU": "Kept for you",
+      "PICKED": "Picked {{count}} of {{max}}",
+      "REMOVE": "Remove",
+      "NOTE": "A word for the other side (optional)",
+      "SUBMIT_one": "Propose this time",
+      "SUBMIT_other": "Propose these times",
+      "SUBMIT_zero": "Propose",
+      "ERROR": "We couldn't send the proposal. Please try again.",
+      "ERROR_LOADING": "We couldn't load the open times. Please try again.",
+      "NO_TIMES": "No open times in the next two weeks. Message the instructor or Nafham Support in the chat.",
+      "CURRENT": "Currently {{when}}",
+      "MOVED_TO": "Moved to {{when}}",
+      "PICK_ONE": "Pick the time that works for you, or decline.",
+      "ERROR_ANSWER": "We couldn't save your answer. Please try again.",
+      "WAS": "Was {{when}}"
+    },
+    "PROPOSAL": {
+      "YOURS_one": "You proposed a new time",
+      "YOURS_other": "You proposed {{count}} new times",
+      "THEIRS_one": "{{name}} proposes a new time",
+      "THEIRS_other": "{{name}} proposes {{count}} new times",
+      "OPEN_SENT": "See the proposal",
+      "ANSWER": "Answer",
+      "OPEN_REQUESTS": "Open requests"
+    },
+    "STATUS": {
+      "PENDING": "Waiting",
+      "ACCEPTED": "Accepted",
+      "APPROVED": "Approved",
+      "DECLINED": "Declined",
+      "EXPIRED": "Lapsed",
+      "WITHDRAWN": "Withdrawn"
+    },
+    "REQUESTS": {
+      "TITLE": "Requests",
+      "SUBTITLE": "Proposals to move a lesson or change weekly times. Times are in your timezone ({{tz}}).",
+      "TABS": {
+        "INBOX": "Needs your answer",
+        "SENT": "Sent",
+        "HISTORY": "History"
+      },
+      "ERROR_LOADING": "We couldn't load the requests. Please try again.",
+      "EMPTY": {
+        "INBOX": "Nothing to answer right now. We message you in the chat and by email when the other side proposes a change.",
+        "SENT": "You have no open proposals. Move a lesson from My sessions, or change the weekly times from My packages.",
+        "HISTORY": "Answered proposals will show here."
+      },
+      "KIND": {
+        "MOVE": "Move a lesson",
+        "WEEKLY": "Weekly times"
+      },
+      "YOU_ASKED": "You asked {{name}}",
+      "ASKS": "{{name}} asks you",
+      "REASON": "Reason: {{reason}}",
+      "WITHDRAW": "Withdraw",
+      "WAITING_COUNT_one": "{{count}} request waiting",
+      "WAITING_COUNT_other": "{{count}} requests waiting"
+    },
+    "FREEZE": {
+      "BUTTON": "Pause lessons",
+      "TITLE": "Pause the lessons",
+      "TEXT": "{{course}} with {{tutor}}: pause for {{min}} to {{max}} days. The booked lessons in between are cancelled and the hours stay on the package; the usual times are kept and booked again when you're back.",
+      "FROM": "First day",
+      "TO": "Last day",
+      "LENGTH_one": "{{count}} day · lessons resume on {{resume}}",
+      "LENGTH_other": "{{count}} days · lessons resume on {{resume}}",
+      "LENGTH_WRONG": "A pause lasts between {{min}} and {{max}} days",
+      "CANCELS_zero": "No booked lesson falls in these days.",
+      "CANCELS_one": "{{count}} booked lesson is cancelled:",
+      "CANCELS_other": "{{count}} booked lessons are cancelled:",
+      "KEPT": "The usual times ({{times}}) are kept and booked again after the pause.",
+      "NO_PATTERN": "There is no regular weekly time yet; Nafham Support will book the lessons after the pause.",
+      "WHY": "Why?",
+      "REASONS": {
+        "TRAVEL": "Travelling",
+        "EXAMS": "Exams",
+        "ILLNESS": "Illness",
+        "FINANCIAL": "Finances",
+        "OTHER": "Another reason"
+      },
+      "NOTE": "A word for the instructor (optional)",
+      "SUBMIT": "Pause the lessons",
+      "ERROR": "We couldn't save that. Please try again.",
+      "STRIP": {
+        "SCHEDULED": "Lessons pause from {{from}} to {{to}}; back on {{resume}}",
+        "ACTIVE": "Lessons paused until {{to}}; back on {{resume}}"
+      },
+      "END_EARLY": "Come back early",
+      "CALL_OFF": "Call it off"
+    },
+    "WEEKLY": {
+      "BUTTON": "Change weekly times",
+      "TITLE": "New weekly times",
+      "TEXT": "{{course}}: pick the weekly times the instructor is open for every week. Once the other side approves, the booked lessons move to them. Times in your timezone ({{tz}}).",
+      "LENGTH": "Lesson length",
+      "TIMES": "Weekly times · picked {{count}} of {{max}}",
+      "ERROR_LOADING": "We couldn't load the instructor's weekly times. Please try again.",
+      "NO_TIMES": "The instructor has no weekly time open for this length in the coming weeks. Ask in the chat.",
+      "OPEN_WEEKS": "Open {{open}} of the next {{total}} weeks",
+      "HOURS_one": "{{count}} hour a week",
+      "HOURS_other": "{{count}} hours a week",
+      "FROM": "From",
+      "NOTE": "A word for the other side (optional)",
+      "SUBMIT": "Propose the new times",
+      "ERROR": "We couldn't send the proposal. Please try again.",
+      "ERROR_ANSWER": "We couldn't save your answer. Please try again.",
+      "INSTEAD_OF": "instead of {{times}}",
+      "EFFECTIVE": "From {{date}}",
+      "BOOKED_one": "{{count}} lesson booked on the new times.",
+      "BOOKED_other": "{{count}} lessons booked on the new times.",
+      "CONFLICTS_one": "{{count}} week could not be booked; Nafham Support is on it.",
+      "CONFLICTS_other": "{{count}} weeks could not be booked; Nafham Support is on it.",
+      "APPROVE": "Approve",
+      "APPROVE_HINT": "Approving moves the booked lessons to the new times.",
+      "STRIP": "New weekly times proposed: {{times}}, from {{date}}"
+    },
+    "CHAT": {
+      "ANSWER": "Answer in Requests",
+      "SESSIONS": "Open My sessions",
+      "PACKAGES": "Open My packages",
+      "CONFIRM": "Confirm: {{action}}",
+      "ERROR": "That didn't go through. Please try again.",
+      "OPTION_TAKEN": "That time was just taken. The times still open are below.",
+      "ANSWERED": "Answered",
+      "YOU_ANSWERED": "You answered",
+      "EXPIRED": "This request expired",
+      "SUPERSEDED": "Replaced by a newer message",
+      "OPEN_CHAT": "Open the chat",
+      "REASON_OPTIONAL": "Reason (optional)",
+      "QUICK": {
+        "CANT_MAKE": "Can't make a lesson",
+        "CANCEL": "Cancel the lesson",
+        "MOVE": "Propose another time",
+        "PAUSE": "Pause lessons",
+        "WEEKLY": "Change weekly times",
+        "HANDOFF": "Talk to a person",
+        "PICK_LESSON": "Which lesson?"
+      },
+      "PROMPT": {
+        "WHICH_LESSON": "Which lesson?",
+        "WHAT": "What would you like to do?",
+        "MOVE_IT": "Move it",
+        "CANCEL_IT": "Cancel it",
+        "WHY": "Why?",
+        "PICK_DAY": "Which day?",
+        "PICK_TIMES": "Pick up to {{max}} times the instructor is open",
+        "PICKED": "Picked {{count}} of {{max}}:",
+        "NOTE": "A word for the other side (optional)",
+        "SEND_MOVE": "Propose these times",
+        "SEND_CANCEL": "Cancel the lesson",
+        "START": "From which day?",
+        "FROM_DAY": "From {{day}}",
+        "ANOTHER_DAY": "Another day",
+        "LENGTH": "For how long?",
+        "WEEKS_one": "{{count}} week",
+        "WEEKS_other": "{{count}} weeks",
+        "SEND_PAUSE": "Pause the lessons",
+        "LESSON_LENGTH": "Lesson length",
+        "PICK_WEEKLY": "Pick up to {{max}} weekly times",
+        "NEXT": "Next",
+        "FROM_WHEN": "From when?",
+        "SEND_WEEKLY": "Propose the new times",
+        "DONE_MOVE": "Sent. The answer will show up here.",
+        "DONE_CANCEL": "Done. The hours are back on the package.",
+        "DONE_PAUSE": "Done. The pause is set.",
+        "DONE_WEEKLY": "Sent. The answer will show up here.",
+        "NOTHING": "There is nothing to change from here right now.",
+        "BACK": "Back",
+        "CLOSE": "Close"
+      }
+    }
   }
 }

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Avatar, Button } from '@mui/material';
+import { Avatar, Button, Dialog } from '@mui/material';
 import {
   TimerTwoTone,
   CheckCircle,
@@ -11,7 +11,12 @@ import {
   CalendarToday,
   Timer,
   AutoAwesomeRounded,
+  EventRepeatRounded,
+  EventBusyRounded,
 } from '@mui/icons-material';
+import CancelSessionModal from '../../../../../modals/cancel-session-modal/cancel-session-modal.component';
+import RescheduleSessionModal from '../../../../../modals/reschedule-session-modal/reschedule-session-modal.component';
+import { formatSlot } from '../../../../trial/trial.types';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
 import {
@@ -102,18 +107,17 @@ const SessionListCard: React.FC<SessionListCardProps> = ({ session }) => {
   const canMessage = useCanMessage(counterpart?.id);
   const chat = useStartConversation();
   const [sessionDuration, setSessionDuration] = useState(0);
-  // const [isWithinTwelveHours, setIsWithinTwelveHours] = useState(false);
-  // const [openCancelSessionModal, setOpenCancelSessionModal] = useState(false);
-  // const [modalType, setModalType] = useState<'cancel' | 'end'>('cancel');
+  // Cancelling and moving: the backend says what this viewer may do
+  const [changeModal, setChangeModal] = useState<'cancel' | 'move' | null>(
+    null,
+  );
+  const proposal = session.pending_reschedule_request;
 
   const locales = { ar: arSA, en: enUS };
 
   useEffect(() => {
     setIsInstructor(session?.tutor?.id === currentUser?.id);
     calculateSessionDetails();
-    // setIsWithinTwelveHours(
-    //   differenceInHours(parseISO(session.start_time!), new Date()) < 12,
-    // );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [session, currentUser]);
 
@@ -169,24 +173,14 @@ const SessionListCard: React.FC<SessionListCardProps> = ({ session }) => {
     }
   };
 
-  // const openCancelModal = (type: 'cancel' | 'end') => {
-  //   setModalType(type);
-  //   setOpenCancelSessionModal(true);
-  // };
-
-  // const closeModal = () => {
-  //   setOpenCancelSessionModal(false);
-  // };
-
   const isInstructorAndNotGroup = () =>
     isInstructor && session.session_type !== 'group';
 
   const notInstructorOrIsGroup = () =>
     !isInstructor || session.session_type === 'group';
 
-  // const triggerOpenRescheduleModal = () => {};
-
   const locale = locales[i18n.language as 'en' | 'ar'];
+  const intlLocale = `${i18n.language}-u-nu-latn`;
   const startDate = parseISO(session.start_time!);
   // Ticks every 30 s so countdowns and the Join button move on their own
   const now = useNow();
@@ -300,6 +294,48 @@ const SessionListCard: React.FC<SessionListCardProps> = ({ session }) => {
           <p className="sessions-card__hint">
             {t('MYSESSIONS.MAIN.CARD.JOIN_HINT')}
           </p>
+        )}
+        {phase === 'cancelled' && session.cancelled_by && (
+          <p className="sessions-card__hint">
+            {t(
+              `SESSION_CHANGES.CANCELLED_BY.${session.cancelled_by.toUpperCase()}`,
+            )}
+            {session.cancellation_reason &&
+              session.cancelled_by !== 'admin' &&
+              ` · ${t(
+                `SESSION_CHANGES.REASONS.${session.cancellation_reason.toUpperCase()}`,
+                {
+                  defaultValue: session.cancellation_reason,
+                },
+              )}`}
+          </p>
+        )}
+        {proposal && isUpcoming && (
+          <div className="sessions-card__proposal">
+            <EventRepeatRounded aria-hidden="true" />
+            <div>
+              <p className="sessions-card__proposal-title">
+                {proposal.mine
+                  ? t('SESSION_CHANGES.PROPOSAL.YOURS', {
+                      count: proposal.options.length,
+                    })
+                  : t('SESSION_CHANGES.PROPOSAL.THEIRS', {
+                      name: proposal.proposed_by_first_name,
+                      count: proposal.options.length,
+                    })}
+              </p>
+              <p className="sessions-card__proposal-times">
+                {proposal.options
+                  .map((option) => formatSlot(option.start_time, intlLocale))
+                  .join(' · ')}
+              </p>
+              <Link to="/requests" className="sessions-card__proposal-link">
+                {proposal.mine
+                  ? t('SESSION_CHANGES.PROPOSAL.OPEN_SENT')
+                  : t('SESSION_CHANGES.PROPOSAL.ANSWER')}
+              </Link>
+            </div>
+          </div>
         )}
 
         <p className="sessions-card__time">
@@ -454,52 +490,52 @@ const SessionListCard: React.FC<SessionListCardProps> = ({ session }) => {
             {t('MESSAGES.MESSAGE_BUTTON')}
           </Button>
         )}
-        {/* {(session.state === 'scheduled' ||
-          session.state === 'rescheduled') &&
-          isWithinTwelveHours && (
-            <div>
-              {session.type !== 'GroupSession' && (
-                <div>
-                  {!isInstructor && (
-                    <Button
-                      className="sessions-card__actions-button"
-                      color="primary"
-                      variant="contained"
-                      onClick={triggerOpenRescheduleModal}
-                    >
-                      {t('MYSESSIONS.MAIN.CARD.RESCHEDULE')}
-                    </Button>
-                  )}
-                  <Button
-                    className="sessions-card__actions-button"
-                    variant="text"
-                    onClick={() => openCancelModal('cancel')}
-                  >
-                    {t('MYSESSIONS.MAIN.CARD.CANCEL')}
-                  </Button>
-                </div>
-              )}
-              {session.type === 'GroupSession' && isInstructor && (
-                <div>
-                  <Button
-                    className="sessions-card__actions-button"
-                    color="primary"
-                    variant="contained"
-                    onClick={triggerOpenRescheduleModal}
-                  >
-                    {t('MYSESSIONS.MAIN.CARD.RESCHEDULE')}
-                  </Button>
-                  <Button
-                    className="sessions-card__actions-button"
-                    variant="outlined"
-                    onClick={() => openCancelModal('cancel')}
-                  >
-                    {t('MYSESSIONS.MAIN.CARD.CANCEL')}
-                  </Button>
-                </div>
-              )}
-            </div>
-          )} */}
+        {/* Moving by proposal and cancelling: what the backend allows this viewer */}
+        {session.can_propose_move && !proposal && (
+          <Button
+            className="sessions-card__actions-button"
+            variant="outlined"
+            color="secondary"
+            startIcon={<EventRepeatRounded />}
+            onClick={() => setChangeModal('move')}
+          >
+            {t('SESSION_CHANGES.MOVE.BUTTON')}
+          </Button>
+        )}
+        {session.can_cancel && (
+          <Button
+            className="sessions-card__actions-button"
+            variant="text"
+            color="inherit"
+            startIcon={<EventBusyRounded />}
+            onClick={() => setChangeModal('cancel')}
+          >
+            {t('MYSESSIONS.MAIN.CARD.CANCEL')}
+          </Button>
+        )}
+        <Dialog
+          open={changeModal === 'cancel'}
+          onClose={() => setChangeModal(null)}
+          maxWidth="sm"
+          fullWidth
+        >
+          <CancelSessionModal
+            session={session}
+            isInstructor={isInstructor}
+            handleClose={() => setChangeModal(null)}
+          />
+        </Dialog>
+        <Dialog
+          open={changeModal === 'move'}
+          onClose={() => setChangeModal(null)}
+          maxWidth="sm"
+          fullWidth
+        >
+          <RescheduleSessionModal
+            session={session}
+            handleClose={() => setChangeModal(null)}
+          />
+        </Dialog>
         {(isLive || phase === 'starting_soon') && (
           <div className="sessions-card__status-wrapper">
             {/* {isInstructor && (
