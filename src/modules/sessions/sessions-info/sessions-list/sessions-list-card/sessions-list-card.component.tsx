@@ -42,13 +42,46 @@ import {
   useNow,
 } from '../../../session-state';
 
-import Profile from '../../../../../assets/images/videoSession/people/profile.png';
-
 import './sessions-list-card.styles.scss';
 
 interface SessionListCardProps {
   session: SessionType;
 }
+
+// Soft background and ink pairs for initials, picked by name so a person
+// keeps the same colour everywhere
+// (tints of the brand sky blue, navy and yellow)
+const AVATAR_TONES = [
+  ['#d6f1fc', '#1d7fa3'],
+  ['#e6ebf1', '#2c3e50'],
+  ['#fff3cc', '#8a6400'],
+  ['#eef9fe', '#2fa3c9'],
+  ['#dfe5ec', '#161c2d'],
+  ['#ecfdf3', '#2f8f2e'],
+];
+
+const PersonAvatar: React.FC<{
+  person?: { first_name?: string; last_name?: string; image?: string | null };
+  alt: string;
+}> = ({ person, alt }) => {
+  if (person?.image) {
+    return <img src={person.image} alt={alt} loading="lazy" />;
+  }
+  const name = `${person?.first_name ?? ''}${person?.last_name ?? ''}`;
+  const hash = [...name].reduce((sum, ch) => sum + ch.charCodeAt(0), 0);
+  const [bg, ink] = AVATAR_TONES[hash % AVATAR_TONES.length];
+  return (
+    <span
+      className="sessions-card__initials"
+      style={{ background: bg, color: ink }}
+      aria-label={alt}
+      role="img"
+    >
+      {person?.first_name?.[0]}
+      {person?.last_name?.[0]}
+    </span>
+  );
+};
 
 const SessionListCard: React.FC<SessionListCardProps> = ({ session }) => {
   const { t, i18n } = useTranslation();
@@ -162,6 +195,10 @@ const SessionListCard: React.FC<SessionListCardProps> = ({ session }) => {
   const isUpcoming =
     isLive || phase === 'upcoming' || phase === 'starting_soon';
   const joinable = canJoin(session, now, isInstructor);
+  const courseParts = (session.grade_subject?.full_course_name ?? '')
+    .split(' - ')
+    .map((part) => part.trim())
+    .filter(Boolean);
   const typeVariant =
     session.session_type === 'group'
       ? 'group'
@@ -171,7 +208,7 @@ const SessionListCard: React.FC<SessionListCardProps> = ({ session }) => {
 
   return (
     <article
-      className={`sessions-card sessions-card--${isUpcoming ? 'upcoming' : 'past'}${isLive ? ' sessions-card--live' : ''}`}
+      className={`sessions-card sessions-card--${isUpcoming ? 'upcoming' : 'past'} sessions-card--phase-${phase}${isLive ? ' sessions-card--live' : ''}`}
     >
       <div className="sessions-card__date">
         <span className="sessions-card__date-month">
@@ -197,8 +234,9 @@ const SessionListCard: React.FC<SessionListCardProps> = ({ session }) => {
           {phase === 'starting_soon' && (
             <span className="sessions-card__status sessions-card__status--soon">
               <Timer aria-hidden="true" />
-              {t('MYSESSIONS.MAIN.CARD.STARTING_SOON')}{' '}
-              {getRelativeSessionDate()}
+              {differenceInMinutes(startDate, now) > 0
+                ? `${t('MYSESSIONS.MAIN.CARD.STARTING_SOON')} ${getRelativeSessionDate()}`
+                : t('MYSESSIONS.MAIN.CARD.STARTING_NOW')}
             </span>
           )}
 
@@ -283,7 +321,18 @@ const SessionListCard: React.FC<SessionListCardProps> = ({ session }) => {
 
         {session?.grade_subject?.full_course_name && (
           <p className="sessions-card__subject">
-            {session.grade_subject.full_course_name}
+            {courseParts.length > 1 ? (
+              <>
+                <span className="sessions-card__subject-name">
+                  {courseParts[courseParts.length - 1]}
+                </span>
+                <span className="sessions-card__subject-meta">
+                  {courseParts.slice(0, -1).join(' · ')}
+                </span>
+              </>
+            ) : (
+              session.grade_subject.full_course_name
+            )}
           </p>
         )}
 
@@ -328,11 +377,7 @@ const SessionListCard: React.FC<SessionListCardProps> = ({ session }) => {
           <div className="sessions-card__person">
             {isInstructorAndNotGroup() && (
               <div className="sessions-card__avatar">
-                <img
-                  src={session.student?.image || Profile}
-                  alt="student"
-                  loading="lazy"
-                />
+                <PersonAvatar person={session.student} alt="student" />
               </div>
             )}
             {notInstructorOrIsGroup() && (
@@ -340,11 +385,7 @@ const SessionListCard: React.FC<SessionListCardProps> = ({ session }) => {
                 className="sessions-card__avatar sessions-card__instructor-img"
                 onClick={() => navigate(`/profile/${session.tutor?.id}`)}
               >
-                <img
-                  src={session.tutor?.image || Profile}
-                  alt="instructor"
-                  loading="lazy"
-                />
+                <PersonAvatar person={session.tutor} alt="instructor" />
               </Button>
             )}
             <div className="sessions-card__person-info">

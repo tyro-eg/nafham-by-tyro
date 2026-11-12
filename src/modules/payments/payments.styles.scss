@@ -506,3 +506,42 @@
     color: $text-muted;
   }
 }
+
+// What a fulfilled payment became, line by line (the return page)
+.pay-return__lines {
+  margin: 0 0 1.6rem;
+  text-align: start;
+
+  ul {
+    display: grid;
+    gap: 0.6rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    line-height: 1.5;
+
+    svg {
+      flex: none;
+      margin-top: 0.2rem;
+      color: $brand-700;
+    }
+  }
+}
+
+.pay-return__next {
+  margin: 1.2rem 0 0;
+  font-size: $font-sm;
+  color: $text-body;
+}
+
+.pay-row__kind.MuiChip-root {
+  margin-inline-start: 0.6rem;
+  height: 2rem;
+  font-size: 1.1rem;
+}

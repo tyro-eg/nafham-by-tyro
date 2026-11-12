@@ -7,6 +7,12 @@ $session-group-text: mix($color-group, $navy-900, 40%);
 $session-private-bg: rgba($color-private, 0.22);
 $session-private-text: mix($color-private, #000, 42%);
 
+// The sessions page in brand colours: sky blue for what to act on (with
+// navy text, since white does not read on it), navy for the hero
+$session-blue: $brand-400;
+$session-blue-dark: $brand-800;
+$session-ink: $navy-950;
+
 @mixin session-badge-icon {
   svg {
     font-size: 1.6rem;

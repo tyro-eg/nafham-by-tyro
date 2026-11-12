@@ -16,6 +16,7 @@ import {
 import {
   AccessTimeRounded,
   AddRounded,
+  AddShoppingCartRounded,
   ArrowForwardRounded,
   AssignmentRounded,
   AutorenewRounded,
@@ -43,6 +44,8 @@ import { childColor } from '../../lib/family-child';
 import RenewDialog from '../payments/renew-dialog.component';
 import RenewAllSheet from '../payments/renew-all-sheet.component';
 import RenewAllBanner from '../payments/renew-all-banner.component';
+import OpenPaymentBanner from '../payments/open-payment-banner.component';
+import TrialFollowUps from '../buy/trial-follow-ups.component';
 import '../dashboard/dashboard.styles.scss';
 import './family.styles.scss';
 
@@ -308,6 +311,15 @@ const ChildCard: FC<{
           {t('NAVIGATION.CALENDAR')}
         </Button>
         <Button
+          variant="outlined"
+          size="small"
+          className="fam-kid__buy"
+          startIcon={<AddShoppingCartRounded />}
+          onClick={() => onOpen(`/buy?child=${child.id}`)}
+        >
+          {t('BUY.ADD_COURSE')}
+        </Button>
+        <Button
           variant="text"
           size="small"
           startIcon={<CardGiftcardRounded />}
@@ -471,6 +483,8 @@ const FamilyHome: FC = () => {
           </div>
         </section>
 
+        <OpenPaymentBanner />
+        <TrialFollowUps />
         <RenewAllBanner onOpen={() => setRenewingAll(true)} />
         {renewingAll && (
           <RenewAllSheet
@@ -510,8 +524,16 @@ const FamilyHome: FC = () => {
             <p className="sd-empty__text">{t('FAMILY.EMPTY')}</p>
             <Button
               component={Link}
-              to="/family/settings"
+              to="/buy"
               variant="contained"
+              startIcon={<AddShoppingCartRounded />}
+            >
+              {t('BUY.FIRST_COURSE')}
+            </Button>
+            <Button
+              component={Link}
+              to="/family/settings"
+              variant="text"
               startIcon={<AddRounded />}
             >
               {t('FAMILY.SETTINGS.ADD_CHILD')}
