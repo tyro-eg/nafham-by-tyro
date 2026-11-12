@@ -49,6 +49,9 @@ const HomeworkDetail = lazy(
 const Packages = lazy(() => import('../../modules/packages/index.component'));
 const Assistant = lazy(() => import('../../modules/assistant/index.component'));
 const Terms = lazy(() => import('../../modules/terms/index.component'));
+const DeleteAccount = lazy(
+  () => import('../../modules/delete-account/index.component'),
+);
 const TrialPage = lazy(() => import('../../modules/trial/index.component'));
 const TrialRequests = lazy(
   () => import('../../modules/trial-requests/index.component'),
@@ -282,6 +285,8 @@ const RoutesComponent: React.FC<RoutesProps> = ({ currentUser }) => {
           }
         />
         <Route path="/terms" element={<Terms />} />
+        {/* Linked from the App Store and Google Play listings */}
+        <Route path="/delete-account" element={<DeleteAccount />} />
         <Route path="*" element={<NotFound404 />} />
       </Routes>
     </Suspense>
