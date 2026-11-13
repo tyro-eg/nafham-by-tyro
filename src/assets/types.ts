@@ -6,6 +6,7 @@ export interface ApiError {
   response?: {
     data?: {
       error?: string;
+      errors?: string[];
     };
   };
   message?: string;
@@ -129,6 +130,29 @@ export type Package = {
   hours?: PackageHours;
   /** The purchase, top-ups and hours moved in, oldest first */
   purchases?: PackagePurchase[];
+  /** A pause running or about to start */
+  freeze?: {
+    id: number;
+    slug: string;
+    status: 'scheduled' | 'active';
+    starts_on: string;
+    ends_on: string;
+    resumes_on: string;
+    reason?: string | null;
+  } | null;
+  /** An open proposal to change the weekly times */
+  pending_schedule_change?: {
+    id: number;
+    slug: string;
+    proposer_role: 'student' | 'tutor';
+    pattern: {
+      wday: number;
+      minute_of_day: number;
+      duration_minutes: number;
+    }[];
+    effective_from: string;
+    expires_at: string;
+  } | null;
 };
 
 export type PackageHours = {
@@ -168,6 +192,8 @@ export type Field = {
 
 export type Instructor = {
   id: number;
+  /** Takes free-trial requests outside their published times */
+  wants_students?: boolean;
   available?: boolean;
   online?: boolean;
   rate_to_display?: number;
@@ -191,6 +217,12 @@ export type Instructor = {
   last_name: string;
   phone_number: string;
   recommended: boolean;
+  // Only on the instructor's own profile: teaching preferences and progress
+  target_students?: number | null;
+  accepting_new_students?: boolean;
+  same_day_trials?: boolean;
+  active_students_count?: number;
+  target_progress?: number | null;
   updated_at: string;
   created_at: string;
 };
@@ -242,6 +274,8 @@ export type CurrentUser = {
   completed_sessions_count?: number;
   cancelled_sessions_count?: number;
   recommended?: boolean;
+  /** Tutors: takes free-trial requests outside their published times */
+  wants_students?: boolean;
   unscheduled_hours?: number;
   upcoming_sessions_count?: number;
   video_url?: string;
@@ -259,9 +293,38 @@ export type SessionType = {
   };
   session_type: 'regular' | 'trial' | 'group';
   start_time: string;
-  status: 'open' | 'scheduled' | 'completed' | 'missed' | 'canceled';
+  status:
+    | 'open'
+    | 'scheduled'
+    | 'completed'
+    | 'missed'
+    | 'cancelled'
+    | 'canceled';
   /** Who booked it: support from the admin panel, or the student (free trials) */
   booked_by?: 'admin' | 'student';
+  /** Who cancelled it (the side) and why, once cancelled */
+  cancelled_at?: string | null;
+  cancelled_by?: 'student' | 'tutor' | 'admin' | 'system' | null;
+  cancellation_reason?: string | null;
+  cancellation_note?: string | null;
+  /** How many times it was moved, and its first time when it was */
+  rescheduled_count?: number;
+  rescheduled_from?: string | null;
+  /** What this viewer may do now (SessionPolicy) */
+  can_cancel?: boolean;
+  can_propose_move?: boolean;
+  /** The open proposal to move this lesson, if any */
+  pending_reschedule_request?: {
+    id: number;
+    slug: string;
+    proposer_role: 'student' | 'tutor';
+    proposed_by_first_name: string;
+    options: { start_time: string; end_time: string }[];
+    note?: string | null;
+    expires_at: string;
+    /** The viewer's side proposed it */
+    mine: boolean;
+  } | null;
   /** What this session pays the tutor per hour, decided by the backend; null while unpriced */
   tutor_rate?: number | null;
   tutor_rate_currency?: string;

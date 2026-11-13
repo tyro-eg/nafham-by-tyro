@@ -229,31 +229,28 @@ Marks a session as ended.
 - Invalidates session queries
 - Success notification
 
-#### `useBookTrialSession()`
+#### `useCreateTrialRequest()` (in `useTrial.ts`)
 
-Books a free trial session with a tutor.
-
-**Returns**: `UseMutationResult<void, Error, TrialSessionData>`
-
-**Features**:
-
-- Wraps data in `{ trial_session: data }` format
-- Invalidates sessions and calendar
-- Success notification
+Asks for a free trial: `POST /trial_requests`. The request becomes a
+session once an instructor accepts it. `dispatch` is `direct` (with
+`tutor_id`), `best_match` or `fastest`.
 
 **Usage**:
 
 ```typescript
-const bookTrialMutation = useBookTrialSession();
+const createRequest = useCreateTrialRequest();
 
-const handleBookTrial = (sessionData) => {
-  bookTrialMutation.mutate({
-    tutor_id: tutorId,
-    start_time: startTime,
-    // ... other fields
-  });
-};
+createRequest.mutate({
+  grade_subject_id: courseId,
+  start_time: startTime,
+  time_zone: localTimeZone(),
+  dispatch: 'fastest',
+});
 ```
+
+`useTrialRequests`, `useCancelTrialRequest` (families) and
+`useTrialOffers`, `useAcceptTrialOffer`, `useDeclineTrialOffer` (tutors)
+live in the same file.
 
 #### `useBookPrivateSession()`
 
@@ -639,11 +636,16 @@ export interface ApiError {
 ### Session Data Types
 
 ```typescript
-// Trial sessions
-interface TrialSessionData {
-  tutor_id: number;
-  start_time: string;
+// Free-trial requests (useTrial.ts), confirmed by an instructor
+interface TrialRequestData {
   grade_subject_id: number;
+  start_time: string;
+  time_zone: string;
+  dispatch: 'direct' | 'best_match' | 'fastest';
+  tutor_id?: number; // direct only
+  exam_board_id?: number;
+  note?: string;
+  guardian_phone?: string;
 }
 
 // Private sessions

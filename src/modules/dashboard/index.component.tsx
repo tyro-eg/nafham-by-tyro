@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { Alert, Avatar, Button, Dialog, Skeleton } from '@mui/material';
 import {
   AccessTimeRounded,
+  AddShoppingCartRounded,
   ArrowForwardRounded,
   AutorenewRounded,
   CheckCircleRounded,
@@ -29,6 +30,7 @@ import { useMyInstructors } from '../../hooks/useInstructors';
 import { useRtlClass } from '../../assets/utils/utils';
 import type { SessionType } from '../../assets/types';
 import RequestSessionsModal from '../../modals/request-sessions-modal/request-sessions-modal.component';
+import TrialRequestsCard from '../trial/trial-requests-card.component';
 import heroArt from '../../assets/images/newLanding/start-learning.webp';
 import emptyArt from '../../assets/images/newLanding/rafiki.svg?url';
 import {
@@ -305,6 +307,16 @@ const Dashboard: FC = () => {
               >
                 {t('DASHBOARD.HERO.MY_SESSIONS')}
               </Button>
+              {!currentUser?.family_id && (
+                <Button
+                  component={Link}
+                  to="/buy"
+                  className="sd-hero__secondary"
+                  startIcon={<AddShoppingCartRounded />}
+                >
+                  {t('BUY.ENTRY')}
+                </Button>
+              )}
             </div>
           </div>
           <img src={heroArt} alt="" className="sd-hero__art" />
@@ -326,6 +338,9 @@ const Dashboard: FC = () => {
             </div>
           ))}
         </div>
+
+        {/* ---------- Free trials waiting for an instructor ---------- */}
+        <TrialRequestsCard />
 
         <div className="sd-grid">
           <div className="sd-col">

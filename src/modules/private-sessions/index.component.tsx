@@ -5,6 +5,7 @@ import { Pagination } from '@mui/material';
 import {
   useInstructors,
   useInfiniteInstructors,
+  type InstructorFilters,
 } from '../../hooks/useInstructors';
 import { Instructor, GradeSubject } from '../../assets/types';
 
@@ -26,7 +27,8 @@ const PrivateSessions: FC = () => {
 
   // Build filters object
   const filters = useMemo(() => {
-    const filterObj: { grade_subject_id?: number } = {};
+    // Instructors who are full stay off the list students browse
+    const filterObj: InstructorFilters = { accepting_new_students: true };
     if (selectedCourse) {
       filterObj.grade_subject_id = selectedCourse.id;
     }

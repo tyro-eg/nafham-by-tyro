@@ -80,6 +80,9 @@ const Footer = () => {
             <NavLink className={navClass} to="/terms">
               {t('NAVIGATION.TERMS')}
             </NavLink>
+            <NavLink className={navClass} to="/delete-account">
+              {t('NAVIGATION.DELETE_ACCOUNT')}
+            </NavLink>
           </nav>
 
           <div className="app-footer__contact">

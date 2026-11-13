@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { Avatar, IconButton, Tooltip } from '@mui/material';
 import {
   AccountCircleRounded,
+  AddShoppingCartRounded,
   AssignmentRounded,
   CalendarMonthRounded,
   CloseRounded,
@@ -26,12 +27,17 @@ import {
   FamilyRestroomRounded,
   MenuBookRounded,
   ReceiptLongRounded,
+  ScheduleSendRounded,
+  EventRepeatRounded,
 } from '@mui/icons-material';
 
 import { useAppSelector } from '../../redux/store';
 import { selectCurrentUser } from '../../redux/user/user.selectors';
 import { useSignOut } from '../../hooks/useAuth';
 import { useStreamChat } from '../../hooks/useStreamChat';
+import { useTrialOffers } from '../../hooks/useTrial';
+import { useRescheduleRequests } from '../../hooks/useSessionChanges';
+import { useScheduleChangeRequests } from '../../hooks/useScheduleChanges';
 import { useRtlClass } from '../../assets/utils/utils';
 import LanguageSelector from '../i18next/LanguageSelector';
 import ChildSwitcher from '../../modules/family/child-switcher.component';
@@ -40,6 +46,16 @@ import logo from '../../assets/images/logo.png';
 import './sidebar-layout.styles.scss';
 
 const SIDEBAR_KEY = 'nafham.sidebar';
+
+/** One link of the sidebar, with an optional count beside it */
+interface NavItem {
+  to: string;
+  icon: JSX.Element;
+  label: string;
+  badge?: number;
+  /** What the count means, for screen readers; unread messages otherwise */
+  badgeLabel?: string;
+}
 
 interface SidebarLayoutProps {
   children: ReactNode;
@@ -59,6 +75,26 @@ const SidebarLayout: FC<SidebarLayoutProps> = ({ children }) => {
   const signOutMutation = useSignOut();
   const { client: chatClient, unreadCount } = useStreamChat();
   const location = useLocation();
+  // A tutor's trial requests still waiting for their answer
+  const trialOffers = useTrialOffers('pending', currentUser?.type === 'Tutor');
+  // Proposals to move a lesson or change weekly times waiting for this side
+  const inboxMoves = useRescheduleRequests('inbox', 'pending', !!currentUser);
+  const inboxWeekly = useScheduleChangeRequests(
+    'inbox',
+    'pending',
+    !!currentUser,
+  );
+  const requestsWaiting =
+    (inboxMoves.data?.length ?? 0) + (inboxWeekly.data?.length ?? 0);
+  const requestsItem: NavItem = {
+    to: '/requests',
+    icon: <EventRepeatRounded />,
+    label: t('NAVIGATION.REQUESTS'),
+    badge: requestsWaiting,
+    badgeLabel: t('SESSION_CHANGES.REQUESTS.WAITING_COUNT', {
+      count: requestsWaiting,
+    }),
+  };
   const [drawerOpen, setDrawerOpen] = useState(false);
   // Desktop: the sidebar folds to a rail of icons, remembered per browser
   const [collapsed, setCollapsed] = useState(() => {
@@ -100,6 +136,23 @@ const SidebarLayout: FC<SidebarLayoutProps> = ({ children }) => {
   const isParent = currentUser.type === 'Parent';
 
   // Shown to both roles once Stream Chat is configured
+  // A parent, or an adult student, buys courses; a child asks the parent
+  const buyItem: {
+    to: string;
+    icon: JSX.Element;
+    label: string;
+    badge?: number;
+  }[] =
+    isParent || (!isTutor && !currentUser.family_id)
+      ? [
+          {
+            to: '/buy',
+            icon: <AddShoppingCartRounded />,
+            label: t('BUY.ENTRY'),
+          },
+        ]
+      : [];
+
   const messagesItem = chatClient
     ? [
         {
@@ -111,12 +164,22 @@ const SidebarLayout: FC<SidebarLayoutProps> = ({ children }) => {
       ]
     : [];
 
-  const tutorItems = [
+  const tutorItems: NavItem[] = [
     {
       to: '/dashboard',
       icon: <DashboardRounded />,
       label: t('NAVIGATION.DASHBOARD'),
     },
+    {
+      to: '/trial_requests',
+      icon: <ScheduleSendRounded />,
+      label: t('NAVIGATION.TRIAL_REQUESTS'),
+      badge: trialOffers.data?.length ?? 0,
+      badgeLabel: t('TRIAL_OFFERS.WAITING_COUNT', {
+        count: trialOffers.data?.length ?? 0,
+      }),
+    },
+    requestsItem,
     {
       to: '/availability',
       icon: <EditCalendarRounded />,
@@ -170,7 +233,7 @@ const SidebarLayout: FC<SidebarLayoutProps> = ({ children }) => {
     },
   ];
 
-  const studentItems = [
+  const studentItems: NavItem[] = [
     {
       to: '/dashboard',
       icon: <DashboardRounded />,
@@ -186,11 +249,13 @@ const SidebarLayout: FC<SidebarLayoutProps> = ({ children }) => {
       icon: <CardGiftcardRounded />,
       label: t('NAVIGATION.FREE_TRIAL'),
     },
+    ...buyItem,
     {
       to: '/my_sessions',
       icon: <EventNoteRounded />,
       label: t('NAVIGATION.SESSIONS'),
     },
+    requestsItem,
     {
       to: '/homework',
       icon: <AssignmentRounded />,
@@ -215,7 +280,7 @@ const SidebarLayout: FC<SidebarLayoutProps> = ({ children }) => {
   ];
 
   // Parents: the family home first, then the picked child's pages
-  const parentItems = [
+  const parentItems: NavItem[] = [
     {
       to: '/family',
       icon: <FamilyRestroomRounded />,
@@ -231,6 +296,7 @@ const SidebarLayout: FC<SidebarLayoutProps> = ({ children }) => {
       icon: <CardGiftcardRounded />,
       label: t('NAVIGATION.FREE_TRIAL'),
     },
+    ...buyItem,
     {
       to: '/my_instructors',
       icon: <PeopleAltRounded />,
@@ -241,6 +307,7 @@ const SidebarLayout: FC<SidebarLayoutProps> = ({ children }) => {
       icon: <EventNoteRounded />,
       label: t('NAVIGATION.SESSIONS'),
     },
+    requestsItem,
     {
       to: '/homework',
       icon: <AssignmentRounded />,
@@ -390,12 +457,13 @@ const SidebarLayout: FC<SidebarLayoutProps> = ({ children }) => {
                 {item.icon}
               </span>
               <span className="side-layout__label">{item.label}</span>
-              {'badge' in item && item.badge > 0 && (
+              {!!item.badge && item.badge > 0 && (
                 <span
                   className="side-layout__badge"
-                  aria-label={t('MESSAGES.UNREAD_COUNT', {
-                    count: item.badge,
-                  })}
+                  aria-label={
+                    item.badgeLabel ??
+                    t('MESSAGES.UNREAD_COUNT', { count: item.badge })
+                  }
                 >
                   {item.badge > 99 ? '99+' : item.badge}
                 </span>

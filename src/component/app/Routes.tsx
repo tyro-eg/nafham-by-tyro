@@ -40,12 +40,6 @@ const PrivateSessions = lazy(
 const MyInstructors = lazy(
   () => import('../../modules/my-instructors/index.component'),
 );
-// const CoursesList = lazy(
-//   () => import('../../modules/courses/courses-list/courses-list.component'),
-// );
-// const CourseDetails = lazy(
-//   () => import('../../modules/courses/course-details/index.component'),
-// );
 const Sessions = lazy(() => import('../../modules/sessions/index.component'));
 const Messages = lazy(() => import('../../modules/messages/index.component'));
 const Homework = lazy(() => import('../../modules/homework/index.component'));
@@ -54,9 +48,18 @@ const HomeworkDetail = lazy(
 );
 const Packages = lazy(() => import('../../modules/packages/index.component'));
 const Assistant = lazy(() => import('../../modules/assistant/index.component'));
-const Checkout = lazy(() => import('../../modules/checkout/index.component'));
 const Terms = lazy(() => import('../../modules/terms/index.component'));
+const DeleteAccount = lazy(
+  () => import('../../modules/delete-account/index.component'),
+);
 const TrialPage = lazy(() => import('../../modules/trial/index.component'));
+const TrialRequests = lazy(
+  () => import('../../modules/trial-requests/index.component'),
+);
+const RequestsPage = lazy(
+  () => import('../../modules/requests/index.component'),
+);
+const BuyPage = lazy(() => import('../../modules/buy/index.component'));
 const FamilyHome = lazy(() => import('../../modules/family/index.component'));
 const FamilySettings = lazy(
   () => import('../../modules/family/family-settings.component'),
@@ -230,11 +233,26 @@ const RoutesComponent: React.FC<RoutesProps> = ({ currentUser }) => {
             />
           }
         />
-        {/* <Route path="/courses" element={<CoursesList />} />
-      <Route path="/course/:courseId" element={<CourseDetails />} /> */}
+        {/* A tutor's free-trial requests; their emails and chat notices link here */}
+        <Route
+          path="/trial_requests"
+          element={
+            <GuardedRoute
+              element={<TrialRequests />}
+              auth={!!currentUser && currentUser.type === 'Tutor'}
+            />
+          }
+        />
         <Route
           path="/my_sessions"
           element={<GuardedRoute element={<Sessions />} auth={!!currentUser} />}
+        />
+        {/* Proposals to move a lesson or change weekly times; emails and chat notices link here */}
+        <Route
+          path="/requests"
+          element={
+            <GuardedRoute element={<RequestsPage />} auth={!!currentUser} />
+          }
         />
         <Route
           path="/my_packages"
@@ -266,8 +284,19 @@ const RoutesComponent: React.FC<RoutesProps> = ({ currentUser }) => {
         />
         {/* The free-trial wizard: visitors register at the last step */}
         <Route path="/trial" element={<TrialPage />} />
-        <Route path="/checkout" element={<Checkout />} />
+        {/* The buy wizard: a parent, or an adult student, buys a course */}
+        <Route
+          path="/buy"
+          element={
+            <GuardedRoute
+              element={<BuyPage />}
+              auth={isParent || currentUser?.type === 'Student'}
+            />
+          }
+        />
         <Route path="/terms" element={<Terms />} />
+        {/* Linked from the App Store and Google Play listings */}
+        <Route path="/delete-account" element={<DeleteAccount />} />
         <Route path="*" element={<NotFound404 />} />
       </Routes>
     </Suspense>

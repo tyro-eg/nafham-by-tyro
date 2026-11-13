@@ -666,17 +666,17 @@ Use TanStack Query hooks from `@/hooks`:
 
 ```tsx
 import { useInstructors } from '../../hooks/useInstructors';
-import { useBookTrialSession } from '../../hooks/useSessions';
+import { useBookPrivateSession } from '../../hooks/useSessions';
 
 const MyModal: FC<MyModalProps> = () => {
   // Fetch data
   const { data, isLoading } = useInstructors(1, 10);
 
   // Mutations
-  const bookTrialMutation = useBookTrialSession();
+  const bookMutation = useBookPrivateSession();
 
   const handleBook = async () => {
-    await bookTrialMutation.mutateAsync(bookingData);
+    await bookMutation.mutateAsync(bookingData);
   };
 
   return (/* ... */);
