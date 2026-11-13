@@ -12,16 +12,12 @@ import {
   TrendingUpRounded,
 } from '@mui/icons-material';
 
-import { useSessions } from '../../hooks/useSessions';
-import { usePackages } from '../../hooks/usePackages';
+import { useMySalary } from '../../hooks/useMySalary';
 import { useRtlClass } from '../../assets/utils/utils';
 import { formatHours } from '../dashboard/dashboard.utils';
-import { buildSalaryReport } from './my-salary.utils';
+import { monthKey, SALARY_CURRENCY, toSalaryReport } from './my-salary.utils';
 
 import './my-salary.styles.scss';
-
-// Enough history for a few months without paging through the API
-const HISTORY_SIZE = 200;
 
 const MySalary: FC = () => {
   const { t, i18n } = useTranslation();
@@ -37,19 +33,11 @@ const MySalary: FC = () => {
   );
   const isCurrentMonth = offset === 0;
 
-  const sessionsQuery = useSessions(1, HISTORY_SIZE);
-  const packagesQuery = usePackages(1, HISTORY_SIZE);
-  const loading = sessionsQuery.isLoading || packagesQuery.isLoading;
-
+  const salaryQuery = useMySalary(monthKey(now, offset));
+  const loading = salaryQuery.isLoading;
   const report = useMemo(
-    () =>
-      buildSalaryReport(
-        sessionsQuery.data?.data || [],
-        packagesQuery.data?.data || [],
-        month,
-        now,
-      ),
-    [sessionsQuery.data, packagesQuery.data, month, now],
+    () => toSalaryReport(salaryQuery.data),
+    [salaryQuery.data],
   );
 
   const money = (value: number, currency: string, decimals = 2) => {
@@ -70,20 +58,12 @@ const MySalary: FC = () => {
     }).format(value)}${currency ? ` ${currency}` : ''}`;
   };
 
-  const totalsText = (totals: Record<string, number>) => {
-    const entries = Object.entries(totals);
-    if (entries.length === 0) return money(0, '');
-    return entries.map(([currency, v]) => money(v, currency)).join(' + ');
-  };
+  const egp = (value: number, decimals = 2) =>
+    money(value, SALARY_CURRENCY, decimals);
 
-  const averageRate = (() => {
-    const priced = report.lines.filter((l) => l.rate.perHour !== null);
-    const hours = priced.reduce((acc, l) => acc + l.hours, 0);
-    const currencies = [...new Set(priced.map((l) => l.rate.currency))];
-    if (!hours || currencies.length !== 1) return '–';
-    const amount = priced.reduce((acc, l) => acc + l.amount, 0);
-    return money(amount / hours, currencies[0], 0);
-  })();
+  const averageRate = report.pricedHours
+    ? egp(report.amount / report.pricedHours, 0)
+    : '–';
 
   const monthLabel = month.toLocaleDateString(locale, {
     month: 'long',
@@ -106,7 +86,7 @@ const MySalary: FC = () => {
       key: 'earned',
       tone: 'mint',
       icon: <AccountBalanceWalletRounded />,
-      value: totalsText(report.totals),
+      value: egp(report.amount),
       label: isCurrentMonth
         ? t('MY_SALARY.STATS.EARNED_MTD')
         : t('MY_SALARY.STATS.EARNED_MONTH'),
@@ -198,7 +178,7 @@ const MySalary: FC = () => {
             <p>
               {t('MY_SALARY.PROJECTION', {
                 count: report.upcomingSessions,
-                amount: totalsText(report.upcomingTotals),
+                amount: egp(report.upcomingAmount),
               })}
             </p>
           </div>
@@ -266,26 +246,19 @@ const MySalary: FC = () => {
                         {formatHours(group.hours)}
                       </td>
                       <td data-label={t('MY_SALARY.COLS.RATE')} className="num">
-                        {group.rate.perHour === null ? (
+                        {group.rate === null ? (
                           <span className="sal-missing">
                             {t('MY_SALARY.NO_RATE')}
                           </span>
                         ) : (
-                          t('MY_SALARY.PER_HOUR', {
-                            amount: money(
-                              group.rate.perHour,
-                              group.rate.currency,
-                            ),
-                          })
+                          t('MY_SALARY.PER_HOUR', { amount: egp(group.rate) })
                         )}
                       </td>
                       <td
                         data-label={t('MY_SALARY.COLS.AMOUNT')}
                         className="num strong"
                       >
-                        {group.rate.perHour === null
-                          ? '–'
-                          : money(group.amount, group.rate.currency)}
+                        {group.rate === null ? '–' : egp(group.amount)}
                       </td>
                     </tr>
                   ))}
@@ -296,7 +269,7 @@ const MySalary: FC = () => {
                     <td className="num">{report.sessions}</td>
                     <td className="num">{formatHours(report.hours)}</td>
                     <td className="num" />
-                    <td className="num">{totalsText(report.totals)}</td>
+                    <td className="num">{egp(report.amount)}</td>
                   </tr>
                 </tfoot>
               </table>
@@ -322,44 +295,45 @@ const MySalary: FC = () => {
             </header>
             <ul className="sal-lines">
               {report.lines.map((line) => {
-                const student = line.session.student;
-                const name =
-                  `${student?.first_name || ''} ${student?.last_name || ''}`.trim();
+                const name = line.student_name || '';
+                const initials = name
+                  .split(' ')
+                  .filter(Boolean)
+                  .slice(0, 2)
+                  .map((part) => part[0])
+                  .join('')
+                  .toUpperCase();
                 return (
-                  <li key={line.session.id} className="sal-line">
+                  <li key={line.session_id} className="sal-line">
                     <span className="sal-line__date">
-                      <strong>{formatDate(line.session.start_time)}</strong>
-                      <span>{formatTime(line.session.start_time)}</span>
+                      <strong>{formatDate(line.start_time)}</strong>
+                      <span>{formatTime(line.start_time)}</span>
                     </span>
                     <span className="sal-line__who">
-                      <Avatar src={student?.image} alt={name}>
-                        {`${student?.first_name?.[0] || ''}${
-                          student?.last_name?.[0] || ''
-                        }`.toUpperCase()}
-                      </Avatar>
+                      <Avatar alt={name}>{initials}</Avatar>
                       <span>
                         <strong>{name}</strong>
-                        <span dir="auto">
-                          {line.session.grade_subject?.full_course_name}
-                        </span>
+                        <span dir="auto">{line.course}</span>
+                        {line.status === 'missed' && (
+                          <span className="sal-chip sal-chip--missed">
+                            {t('MY_SALARY.STUDENT_MISSED')}
+                          </span>
+                        )}
                       </span>
                     </span>
                     <span className="sal-line__calc">
                       {t('MY_SALARY.LINE_CALC', {
                         hours: formatHours(line.hours),
-                        rate:
-                          line.rate.perHour === null
-                            ? '?'
-                            : money(line.rate.perHour, line.rate.currency),
+                        rate: line.rate === null ? '?' : egp(line.rate),
                       })}
                     </span>
                     <strong className="sal-line__amount">
-                      {line.rate.perHour === null ? (
+                      {line.rate === null ? (
                         <Tooltip title={t('MY_SALARY.NO_RATE')}>
                           <span>–</span>
                         </Tooltip>
                       ) : (
-                        money(line.amount, line.rate.currency)
+                        egp(line.amount)
                       )}
                     </strong>
                   </li>
