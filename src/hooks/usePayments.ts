@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { get, patch, post } from '../assets/utils/api';
 import { queryKeys } from '../lib/queryKeys';
 import type { WeeklySchedule } from '../lib/weekly-schedule';
+import { isFromApp } from '../lib/from-app';
 
 /**
  * Online payments: the sizes a package can be renewed at, a payment that
@@ -66,6 +67,8 @@ export type CheckoutLine =
   | NewCourseCheckoutLine
   | MatchCheckoutLine;
 
+export type PackageType = 'private_session' | 'group_course';
+
 export interface RenewalQuote {
   package: {
     id: number;
@@ -79,6 +82,8 @@ export interface RenewalQuote {
     low_on_hours: boolean;
     current_size: number;
   };
+  /** A group course is never sold from the app's handoff */
+  package_type?: PackageType;
   renewable: boolean;
   reasons: string[];
   renew_instead_package_id: number | null;
@@ -228,7 +233,8 @@ export function useStartCheckout() {
       (
         await post('/payments', {
           lines,
-          client: 'web',
+          // A tab the app opened pays as the app, so the server applies its rules
+          client: isFromApp() ? 'mobile' : 'web',
           bundle,
           expected_total_cents,
           payer_country,
