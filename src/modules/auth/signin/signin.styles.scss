@@ -171,6 +171,9 @@
       left: 50%;
       width: 100%;
       height: 92%;
+      // The cutout is only 292x310, so never draw it taller than that or it blurs.
+      // Swap in a larger photo (and raise this) for a sharp result on retina screens.
+      max-height: 310px;
       transform: translateX(-50%);
       object-fit: contain;
       object-position: bottom center;
