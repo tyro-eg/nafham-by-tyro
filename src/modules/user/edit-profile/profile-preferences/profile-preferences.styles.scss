@@ -1,0 +1,114 @@
+@import '../../../../assets/styles/variables.scss';
+@import '../../../../assets/styles/mixins.scss';
+
+.profile-preferences {
+  @include card($space-5);
+  display: flex;
+  flex-direction: column;
+  gap: $space-4;
+  margin-bottom: $space-5;
+  text-align: start;
+
+  @include respond(phone) {
+    padding: $space-4;
+  }
+
+  &__header {
+    h2 {
+      font-size: $font-lg;
+      font-weight: 700;
+      color: $text-strong;
+    }
+
+    p {
+      margin-top: $space-1;
+      font-size: $font-sm;
+      color: $text-muted;
+    }
+  }
+
+  &__row {
+    display: flex;
+    flex-direction: column;
+    gap: $space-3;
+    padding-top: $space-4;
+    border-top: 1px solid $border;
+
+    &--toggle {
+      flex-direction: row;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: $space-4;
+    }
+  }
+
+  &__text {
+    display: flex;
+    flex-direction: column;
+    gap: $space-1;
+  }
+
+  &__label,
+  &__checkbox .MuiFormControlLabel-label {
+    font-weight: 600;
+    color: $text-strong;
+  }
+
+  &__checkbox {
+    margin-inline-start: -1.1rem;
+  }
+
+  &__hint {
+    font-size: $font-sm;
+    color: $text-muted;
+  }
+
+  &__target {
+    display: flex;
+    align-items: flex-start;
+    gap: $space-3;
+
+    &-input {
+      width: 12rem;
+    }
+
+    .MuiButton-root {
+      min-height: 4rem;
+      border-radius: $radius-pill;
+      text-transform: none;
+      font-weight: 600;
+    }
+  }
+
+  &__progress {
+    display: flex;
+    flex-direction: column;
+    gap: $space-2;
+
+    &-text {
+      font-weight: 600;
+      color: $text-body;
+      font-variant-numeric: tabular-nums;
+    }
+  }
+
+  &__track {
+    display: block;
+    height: 0.8rem;
+    border-radius: $radius-pill;
+    background-color: $gray-200;
+    overflow: hidden;
+  }
+
+  &__bar {
+    display: block;
+    height: 100%;
+    border-radius: $radius-pill;
+    background-color: $brand-400;
+    transition: width 0.3s ease;
+
+    &--done {
+      background-color: $success-500;
+    }
+  }
+}
