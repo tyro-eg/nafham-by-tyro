@@ -23,6 +23,7 @@ import {
 } from '../../hooks/useSessionChanges';
 import { dayOf, formatSlot, formatTime } from '../../modules/trial/trial.types';
 import type { SessionType } from '../../assets/types';
+import PolicyNotice from '../cancel-session-modal/policy-notice.component';
 
 import './reschedule-session-modal.styles.scss';
 
@@ -238,6 +239,8 @@ const RescheduleSessionModal: FC<RescheduleSessionModalProps> = ({
             }
             inputProps={{ maxLength: NOTE_LENGTH, dir: 'auto' }}
           />
+
+          <PolicyNotice session={session} change="move" />
         </>
       )}
 

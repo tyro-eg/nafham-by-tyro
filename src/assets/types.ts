@@ -313,6 +313,21 @@ export type SessionType = {
   /** What this viewer may do now (SessionPolicy) */
   can_cancel?: boolean;
   can_propose_move?: boolean;
+  /**
+   * The cancellation policy if this viewer cancelled or moved the lesson now
+   * (null once it can't be changed): the family's charge, or the free time
+   * the student would get from the tutor's late change
+   */
+  change_terms?: {
+    side: 'family' | 'tutor';
+    notice_hours: number;
+    hours: number;
+    percent: number;
+    charge: boolean;
+    compensation: boolean;
+  } | null;
+  /** What the policy booked for this lesson: charges (negative hours) or free time */
+  policy_adjustments?: { category: string; hours: number; at: string }[];
   /** The open proposal to move this lesson, if any */
   pending_reschedule_request?: {
     id: number;
