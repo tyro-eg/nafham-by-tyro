@@ -5,7 +5,7 @@ import { selectCurrentUser } from '../redux/user/user.selectors';
 import { snackActions } from '../assets/utils/toaster';
 import { showSpinner, hideSpinner } from '../assets/utils/utils';
 import { useNavigate } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from '../redux/store';
+import { persistor, useAppDispatch, useAppSelector } from '../redux/store';
 import { setCurrentUser, clearCurrentUser } from '../redux/user/user.slice';
 import { CurrentUser, ApiError, AuthHeaders } from '../assets/types';
 
@@ -271,9 +271,13 @@ export function useImpersonate() {
         hideSpinner();
       }
     },
-    onSuccess: (userData) => {
+    onSuccess: async (userData) => {
       dispatch(setCurrentUser(userData));
       snackActions.success('Impersonation successful');
+      // Save the signed-in user to storage before reloading (16 Nov 2026):
+      // the reload came too early, the saved user was still empty, and the
+      // site opened signed out
+      await persistor.flush();
       // A full load, so nothing of the admin's previous state survives and
       // the route that started the exchange is gone for good
       window.location.replace('/dashboard');
