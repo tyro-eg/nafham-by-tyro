@@ -12,6 +12,7 @@ import {
   type CancelReason,
 } from '../../hooks/useSessionChanges';
 import type { SessionType } from '../../assets/types';
+import PolicyNotice from './policy-notice.component';
 
 interface CancelSessionModalProps {
   session: SessionType;
@@ -25,7 +26,8 @@ const NOTE_LENGTH = 500;
 /**
  * The family or the tutor cancels a scheduled lesson: a reason from their
  * list, an optional note. The hours go back to the package and the other
- * side is told in the chat and by email.
+ * side is told in the chat and by email. A late cancellation follows the
+ * cancellation policy, shown before confirming (PolicyNotice).
  */
 const CancelSessionModal: FC<CancelSessionModalProps> = ({
   session,
@@ -89,6 +91,8 @@ const CancelSessionModal: FC<CancelSessionModalProps> = ({
           ))}
         </div>
       </div>
+
+      <PolicyNotice session={session} change="cancel" />
 
       <TextField
         className="cancelCalendarModal__note"

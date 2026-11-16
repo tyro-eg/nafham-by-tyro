@@ -2661,6 +2661,16 @@
       "CONFIRM": "Cancel the lesson",
       "ERROR": "We couldn't cancel this lesson. Please try again."
     },
+    "POLICY": {
+      "FAMILY_CHARGE_CANCEL": "This is {{notice}} hours before the lesson. Under our cancellation policy, cancelling now takes {{percent}}% of the lesson ({{hours}} h) from the package.",
+      "FAMILY_CHARGE_MOVE": "This is {{notice}} hours before the lesson. Under our cancellation policy, moving it now takes {{percent}}% of the lesson ({{hours}} h) from the package, once the new time is accepted.",
+      "FAMILY_FREE_CANCEL": "More than 12 hours before the lesson: cancelling is free.",
+      "FAMILY_FREE_MOVE": "More than 12 hours before the lesson: moving it is free.",
+      "FAMILY_RULES": "Free 12 hours or more before the lesson · half the lesson from 4 to 12 hours · the whole lesson under 4 hours.",
+      "TUTOR_COMPENSATION_CANCEL": "This is {{notice}} hours before the lesson. Under our cancellation policy, cancelling now gives the student {{hours}} h free.",
+      "TUTOR_COMPENSATION_MOVE": "This is {{notice}} hours before the lesson. Under our cancellation policy, moving it now gives the student {{hours}} h free, once the new time is accepted.",
+      "TUTOR_RULES": "Changes 12 hours or more ahead: the lesson is rebooked · 4 to 12 hours: 30 free minutes for the student · under 4 hours: a free hour. A lesson you cancel is not paid."
+    },
     "MOVE": {
       "BUTTON": "Move",
       "TITLE": "Propose new times",
