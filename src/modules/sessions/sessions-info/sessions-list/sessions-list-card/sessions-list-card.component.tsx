@@ -47,6 +47,11 @@ import {
   useNow,
 } from '../../../session-state';
 
+import {
+  ReportLinkProblem,
+  TutorMeetingLink,
+} from './meeting-link-panel.component';
+
 import './sessions-list-card.styles.scss';
 
 interface SessionListCardProps {
@@ -336,6 +341,13 @@ const SessionListCard: React.FC<SessionListCardProps> = ({ session }) => {
               </Link>
             </div>
           </div>
+        )}
+
+        {/* The tutor's own meeting link; the student says it isn't working */}
+        {isInstructor ? (
+          <TutorMeetingLink session={session} />
+        ) : (
+          <ReportLinkProblem session={session} />
         )}
 
         <p className="sessions-card__time">

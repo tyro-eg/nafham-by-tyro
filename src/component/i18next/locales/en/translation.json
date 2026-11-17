@@ -608,7 +608,12 @@
         "SAME_DAY_LABEL": "Same-day trials",
         "SAME_DAY_HINT": "Students can book a free trial with you for later the same day (at least 4 hours ahead). Turn this off if you need a day's notice.",
         "NEW_STUDENTS_LABEL": "I'm open to new students",
-        "NEW_STUDENTS_HINT": "When off, you won't appear in the free trial or the instructor list. Your current students are not affected."
+        "NEW_STUDENTS_HINT": "When off, you won't appear in the free trial or the instructor list. Your current students are not affected.",
+        "BACKUP_LABEL": "Backup meeting room",
+        "BACKUP_HINT": "Your own Google Meet, Zoom or Teams link. If Zoom can't make a room for one of your lessons, the Join button takes you and your student here instead. Leave empty to remove it.",
+        "BACKUP_SAVE": "Save room",
+        "BACKUP_SAVED": "Backup room saved",
+        "BACKUP_ERROR": "Couldn't save the backup room"
       }
     },
     "WANTS_STUDENTS": {
@@ -2848,5 +2853,19 @@
         "CLOSE": "Close"
       }
     }
+  },
+  "MEETING_LINK": {
+    "NO_ROOM": "Zoom couldn't make a room for this lesson. Add your own meeting link here (Google Meet, Zoom or Teams): the Join button then takes you and your student there.",
+    "ADD": "Add meeting link",
+    "REPLACE": "Replace meeting link",
+    "LABEL": "Meeting link",
+    "HELP": "Google Meet, Zoom or Microsoft Teams link. Your student is told in the lesson chat.",
+    "SAVE": "Save link",
+    "SAVE_REPLACE": "Replace link",
+    "SAVED": "Saved. Both Join buttons now lead to this link and your student was told in the chat.",
+    "ERROR": "Couldn't save the meeting link",
+    "REPORT": "The link isn't working",
+    "REPORTED": "Thanks, your tutor was told the link isn't working. Press Join again in a few minutes; Nafham Support steps in if it isn't fixed.",
+    "REPORT_ERROR": "Couldn't send that, please message your tutor in the chat"
   }
 }
