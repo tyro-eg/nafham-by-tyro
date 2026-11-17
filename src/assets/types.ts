@@ -221,6 +221,8 @@ export type Instructor = {
   target_students?: number | null;
   accepting_new_students?: boolean;
   same_day_trials?: boolean;
+  /** The standing backup room for lessons Zoom cannot host (Meet, Zoom, Teams) */
+  backup_meeting_link?: string | null;
   active_students_count?: number;
   target_progress?: number | null;
   updated_at: string;
@@ -313,6 +315,16 @@ export type SessionType = {
   /** What this viewer may do now (SessionPolicy) */
   can_cancel?: boolean;
   can_propose_move?: boolean;
+  /** The tutor may add or replace the lesson's meeting link (30 min before until the end) */
+  can_set_meeting_link?: boolean;
+  /** The student side may say the link isn't working (while Join is open) */
+  can_report_link_problem?: boolean;
+  /** No Zoom room and no link at all: the tutor is asked to add one */
+  needs_meeting_link?: boolean;
+  /** The link typed for the lesson (tutor's view only) */
+  meeting_link?: string | null;
+  /** When the student last said the link isn't working */
+  link_problem_reported_at?: string | null;
   /**
    * The cancellation policy if this viewer cancelled or moved the lesson now
    * (null once it can't be changed): the family's charge, or the free time

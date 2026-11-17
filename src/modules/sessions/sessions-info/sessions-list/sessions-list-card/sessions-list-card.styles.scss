@@ -272,6 +272,26 @@
     color: $gray-600;
   }
 
+  // ---- Meeting link (tutor adds it, student reports it) ----------
+  &__meeting-link {
+    margin-top: $space-2;
+    display: flex;
+    flex-direction: column;
+    gap: $space-2;
+    min-width: 0;
+  }
+
+  &__meeting-link-form {
+    display: flex;
+    align-items: flex-start;
+    gap: $space-2;
+
+    @include respond(phone) {
+      flex-direction: column;
+      align-items: stretch;
+    }
+  }
+
   &__time {
     display: flex;
     flex-wrap: wrap;
