@@ -1,4 +1,4 @@
-import { FC, useMemo, useState } from 'react';
+import { FC, useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import {
@@ -23,6 +23,7 @@ import {
 } from '../../../schemas/authSchemas';
 import { useRtlClass } from '../../../assets/utils/utils';
 import { peekReturnTo } from '../../../lib/return-to';
+import { trackFunnel } from '../../../lib/funnel';
 import {
   getCountries,
   getNationalities,
@@ -71,6 +72,10 @@ const Register: FC = () => {
   });
 
   const goToTerms = () => navigate('/terms');
+
+  useEffect(() => {
+    trackFunnel('signup_started', { from: 'register', kind: 'register' });
+  }, []);
 
   const onSubmit = async (values: RegisterFormData) => {
     try {

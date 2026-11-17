@@ -1,7 +1,8 @@
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { useRtlClass } from '../../assets/utils/utils';
+import { trackFunnel } from '../../lib/funnel';
 
 import HomeIntro from './home-intro/home-intro.component';
 import HomeFeatures from './home-features/home-features.component';
@@ -25,6 +26,10 @@ const Home: FC = () => {
   const rtlClass = useRtlClass();
   const navigate = useNavigate();
   const openFreeTrial = () => navigate('/trial');
+
+  useEffect(() => {
+    trackFunnel('landing_viewed');
+  }, []);
 
   return (
     <div className={`home ${rtlClass}`}>
