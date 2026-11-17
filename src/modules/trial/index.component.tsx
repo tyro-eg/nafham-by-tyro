@@ -16,6 +16,7 @@ import { useAppSelector } from '../../redux/store';
 import { selectCurrentUser } from '../../redux/user/user.selectors';
 import { useRtlClass } from '../../assets/utils/utils';
 import { useFamily } from '../../hooks/useFamily';
+import { trackFunnel } from '../../lib/funnel';
 import {
   useTrialCourses,
   useTrialTutors,
@@ -100,6 +101,15 @@ const TrialPage: FC = () => {
   useEffect(() => {
     saveDraft(draft);
   }, [draft]);
+
+  // The funnel: the flow was opened, and each step as it is reached
+  useEffect(() => {
+    trackFunnel('trial_started', { parent: isParent, guest: !currentUser });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  useEffect(() => {
+    trackFunnel('trial_step_viewed', { step: draft.step });
+  }, [draft.step]);
 
   // The link's tutor is in the draft now; keep the address clean
   useEffect(() => {
