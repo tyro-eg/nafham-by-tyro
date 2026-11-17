@@ -1,12 +1,19 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import {
+  emptyDraft,
   firstDay,
   freshWhen,
+  loadDraft,
+  markAutoSend,
   openWindows,
+  saveDraft,
+  takeAutoSend,
   today,
   todayOver,
   tomorrow,
+  wantedFirst,
 } from './trial.types';
+import { blockedStorage, memoryStorage } from '../../test/memory-storage';
 
 /** Pins the clock to a local time today */
 const at = (hours: number, minutes = 0) => {
@@ -91,5 +98,63 @@ describe('freshWhen', () => {
     expect(
       freshWhen({ day: 'today', date: today(), window: 'morning' }),
     ).toMatchObject({ day: 'tomorrow', date: tomorrow(), window: 'morning' });
+  });
+});
+
+describe('the saved trial draft', () => {
+  const DAY = 24 * 60 * 60 * 1000;
+  afterEach(() => vi.unstubAllGlobals());
+
+  it('comes back in a new tab for a week, then starts again', () => {
+    vi.stubGlobal('localStorage', memoryStorage());
+    saveDraft({ ...emptyDraft(), courseId: 10, note: 'Algebra' }, 0);
+    expect(loadDraft(6 * DAY)).toMatchObject({ courseId: 10, note: 'Algebra' });
+    expect(loadDraft(8 * DAY).courseId).toBeUndefined();
+  });
+
+  it('starts empty without storage', () => {
+    vi.stubGlobal('localStorage', blockedStorage());
+    expect(() => saveDraft(emptyDraft())).not.toThrow();
+    expect(loadDraft().courseId).toBeUndefined();
+  });
+});
+
+describe('booking right after signing up', () => {
+  const MINUTE = 60 * 1000;
+  afterEach(() => vi.unstubAllGlobals());
+
+  it('sends once, within a quarter of an hour of asking', () => {
+    vi.stubGlobal('sessionStorage', memoryStorage());
+    markAutoSend(0);
+    expect(takeAutoSend(5 * MINUTE)).toBe(true);
+    // Asked once: a reload does not book a second trial
+    expect(takeAutoSend(5 * MINUTE)).toBe(false);
+  });
+
+  it('does nothing when they never asked, or came back much later', () => {
+    vi.stubGlobal('sessionStorage', memoryStorage());
+    expect(takeAutoSend(0)).toBe(false);
+    markAutoSend(0);
+    expect(takeAutoSend(20 * MINUTE)).toBe(false);
+  });
+
+  it('leaves the button to them when storage is blocked', () => {
+    vi.stubGlobal('sessionStorage', blockedStorage());
+    expect(() => markAutoSend(0)).not.toThrow();
+    expect(takeAutoSend(0)).toBe(false);
+  });
+});
+
+describe('wantedFirst', () => {
+  const tutors = [{ id: 1 }, { id: 2 }, { id: 3 }];
+
+  it('puts the tutor from the profile first and keeps the rest in order', () => {
+    expect(wantedFirst(tutors, 3)).toEqual([{ id: 3 }, { id: 1 }, { id: 2 }]);
+  });
+
+  it('changes nothing when that tutor is not free, or none was asked for', () => {
+    expect(wantedFirst(tutors, 9)).toBe(tutors);
+    expect(wantedFirst(tutors, undefined)).toBe(tutors);
+    expect(wantedFirst(undefined, 3)).toBeUndefined();
   });
 });

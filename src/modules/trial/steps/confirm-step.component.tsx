@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Alert,
@@ -26,7 +26,12 @@ import {
 import { bookingErrorMessage } from '../../../hooks/useSessions';
 import RegisterModal from '../../../modals/register-modal/register-modal.component';
 import LoginModal from '../../../modals/login-modal/login-modal.component';
-import { formatSlot, localTimeZone } from '../trial.types';
+import {
+  formatSlot,
+  localTimeZone,
+  markAutoSend,
+  takeAutoSend,
+} from '../trial.types';
 import { DISPATCH_UI } from '../dispatch-ui';
 
 interface ConfirmStepProps {
@@ -46,6 +51,8 @@ interface ConfirmStepProps {
   signedIn: boolean;
   /** A parent's pick: the child the trial is for */
   childId?: number;
+  /** A parent books for a child: nothing is sent until one is picked */
+  needsChild?: boolean;
   onBack: () => void;
   onSent: (request: TrialRequest) => void;
 }
@@ -56,7 +63,8 @@ const NOTE_LENGTH = 1000;
 /**
  * The summary, a note for the instructor, an optional parent's phone, and
  * the request itself. A visitor creates an account (or signs in) first;
- * the auth modals bring them back here and the draft is restored.
+ * the auth modals bring them back here, the draft is restored, and the
+ * request goes out on its own: they already said "book" once.
  */
 const ConfirmStep: FC<ConfirmStepProps> = ({
   course,
@@ -72,6 +80,7 @@ const ConfirmStep: FC<ConfirmStepProps> = ({
   onGuardianPhone,
   signedIn,
   childId,
+  needsChild = false,
   onBack,
   onSent,
 }) => {
@@ -80,6 +89,47 @@ const ConfirmStep: FC<ConfirmStepProps> = ({
   const createRequest = useCreateTrialRequest();
   const [error, setError] = useState<string | null>(null);
   const [auth, setAuth] = useState<'register' | 'login' | null>(null);
+
+  const complete =
+    !!course && !!startTime && !!dispatch && (dispatch !== 'direct' || !!tutor);
+
+  const send = async () => {
+    if (!course || !startTime || !dispatch) return;
+    setError(null);
+    try {
+      const request = await createRequest.mutateAsync({
+        grade_subject_id: course.id,
+        exam_board_id: examBoard?.id,
+        start_time: startTime,
+        time_zone: localTimeZone(),
+        dispatch,
+        tutor_id: dispatch === 'direct' ? tutor?.id : undefined,
+        note: note.trim() || undefined,
+        guardian_phone: guardianPhone.trim() || undefined,
+        childId,
+      });
+      onSent(request);
+    } catch (err) {
+      setError(bookingErrorMessage(err, t('TRIAL.ERROR')));
+    }
+  };
+
+  // Back from creating an account or logging in at this step: book now
+  const canAutoSend =
+    signedIn && !loading && complete && (!needsChild || childId !== undefined);
+  const autoSent = useRef(false);
+  useEffect(() => {
+    if (!canAutoSend || autoSent.current) return;
+    if (!takeAutoSend()) return;
+    autoSent.current = true;
+    void send();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [canAutoSend]);
+
+  const openAuth = (which: 'register' | 'login') => {
+    markAutoSend();
+    setAuth(which);
+  };
 
   if (loading) {
     return (
@@ -107,26 +157,6 @@ const ConfirmStep: FC<ConfirmStepProps> = ({
       </div>
     );
   }
-
-  const send = async () => {
-    setError(null);
-    try {
-      const request = await createRequest.mutateAsync({
-        grade_subject_id: course.id,
-        exam_board_id: examBoard?.id,
-        start_time: startTime,
-        time_zone: localTimeZone(),
-        dispatch,
-        tutor_id: dispatch === 'direct' ? tutor?.id : undefined,
-        note: note.trim() || undefined,
-        guardian_phone: guardianPhone.trim() || undefined,
-        childId,
-      });
-      onSent(request);
-    } catch (err) {
-      setError(bookingErrorMessage(err, t('TRIAL.ERROR')));
-    }
-  };
 
   const tutorName = tutor
     ? `${tutor.first_name} ${tutor.last_name}`.trim()
@@ -244,14 +274,14 @@ const ConfirmStep: FC<ConfirmStepProps> = ({
             <Button
               className="trial__link"
               variant="text"
-              onClick={() => setAuth('login')}
+              onClick={() => openAuth('login')}
             >
               {t('TRIAL.CONFIRM.LOGIN')}
             </Button>
             <Button
               className="trial__cta trial__cta--gold"
               variant="contained"
-              onClick={() => setAuth('register')}
+              onClick={() => openAuth('register')}
             >
               {t('TRIAL.CONFIRM.REGISTER')}
             </Button>

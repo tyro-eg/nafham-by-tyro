@@ -1020,7 +1020,8 @@
       "SUBTITLE": "Your sessions, packages and tutors are waiting.",
       "QUOTE": "She is the best teacher we've dealt with. Ahmed got better at school and she follows up with him every week.",
       "QUOTE_BY": "Ahmed's parent"
-    }
+    },
+    "TITLE": "Sign in"
   },
   "IMPERSONATE": {
     "LOADING": "Logging you in..."
@@ -1433,7 +1434,8 @@
       "EMPTY": "You haven't studied with an instructor yet.",
       "FIND": "Find an instructor"
     },
-    "ROLE": "Student"
+    "ROLE": "Student",
+    "BOOK_TRIAL": "Book a free trial"
   },
   "MY_STUDENTS": {
     "TITLE": "My Students",
@@ -2380,7 +2382,9 @@
       "LINE_NEW": "{{hours}}h {{course}} for {{student}}: new package with {{tutor}}, hours added.",
       "LINE_TOP_UP": "{{hours}}h {{course}} for {{student}}: added to the package with {{tutor}}.",
       "LINE_MATCH": "{{hours}}h {{course}} for {{student}}: we're finding a tutor who fits your times, within two working days.",
-      "NEXT_STEPS": "Our team books the first lessons from your preferred times, and the chat with the tutor opens in Messages."
+      "NEXT_STEPS": "Our team books the first lessons from your preferred times, and the chat with the tutor opens in Messages.",
+      "BACK_TO_BASKET": "Back to my basket",
+      "BACK_TO_PACKAGE": "Back to my packages"
     },
     "STATUS": {
       "created": "Starting",
@@ -2561,7 +2565,7 @@
       "DISCOUNT_HINT": "Add one more subject for {{percent}}% off everything.",
       "TOO_MANY": "Up to {{count}} courses in one payment.",
       "COUNTRY": "Your country",
-      "COUNTRY_HINT": "Two-letter code, e.g. AE or EG. It decides VAT and is kept for next time.",
+      "COUNTRY_HINT": "It decides VAT and is kept for next time.",
       "TERMS": "I accept the",
       "TERMS_LINK": "terms of service",
       "PRICE_CHANGED": "Prices were updated while you were choosing. The new total is {{amount}}.",
@@ -2569,7 +2573,9 @@
       "PENDING_OPEN": "A payment for one of these courses is already open. Continue it, or cancel it from your receipts and try again.",
       "RESUME": "Continue that payment",
       "CANCEL_OPEN": "My receipts",
-      "REDIRECT": "You pay by card on Nomod's secure page and come straight back. Hours land the moment the card clears; our team then books the first lessons from your times."
+      "REDIRECT": "You pay by card on Nomod's secure page and come straight back. Hours land the moment the card clears; our team then books the first lessons from your times.",
+      "COUNTRY_NEEDED": "Choose your country to continue.",
+      "TERMS_NEEDED": "Please accept the terms of service to continue."
     }
   },
   "TRIAL_OFFERS": {
@@ -2848,5 +2854,12 @@
         "CLOSE": "Close"
       }
     }
+  },
+  "AUTH_TOAST": {
+    "SIGNED_IN": "Signed in successfully",
+    "SIGNED_UP": "Account created successfully",
+    "SIGNED_OUT": "Signed out successfully",
+    "SIGN_IN_FAILED": "Sign in failed",
+    "SIGN_UP_FAILED": "Sign up failed"
   }
 }

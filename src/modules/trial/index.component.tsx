@@ -1,6 +1,6 @@
 import { FC, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { Button } from '@mui/material';
 import {
   CheckRounded,
@@ -35,6 +35,7 @@ import {
   saveDraft,
   type Step as WizardStep,
   type TrialDraft,
+  wantedFirst,
 } from './trial.types';
 import { DISPATCH_UI } from './dispatch-ui';
 import ChildStep from './steps/child-step.component';
@@ -62,7 +63,7 @@ const ICONS: Record<WizardStep, JSX.Element> = {
  * instructor (quickest to confirm, or best match) or a tutor and their
  * slot, then confirmation. What is sent is a request the instructor
  * confirms. A visitor creates their account at the last step; the draft
- * lives in sessionStorage so it survives the sign-up round trip.
+ * is kept for a week, so it survives the sign-up round trip and a new tab.
  */
 const TrialPage: FC = () => {
   const { t, i18n } = useTranslation();
@@ -71,8 +72,20 @@ const TrialPage: FC = () => {
   const currentUser = useAppSelector(selectCurrentUser);
   const isParent = currentUser?.type === 'Parent';
   const steps = stepsFor(isParent);
+  const [params, setParams] = useSearchParams();
   const [draft, setDraft] = useState<TrialDraft>(() => {
-    const saved = loadDraft();
+    let saved = loadDraft();
+    // From a tutor's profile (/trial?tutor=12): that tutor is shown first.
+    // The course still comes first, since a tutor teaches several.
+    const wantTutorId = Number(params.get('tutor'));
+    if (Number.isInteger(wantTutorId) && wantTutorId > 0) {
+      saved = {
+        ...saved,
+        ...NO_CHOICE,
+        wantTutorId,
+        step: saved.courseId === undefined ? 'course' : 'when',
+      };
+    }
     // A parent starts by saying which child; a student never sees that step
     if (isParent && saved.childId === undefined)
       return { ...saved, step: 'child' };
@@ -87,6 +100,12 @@ const TrialPage: FC = () => {
   useEffect(() => {
     saveDraft(draft);
   }, [draft]);
+
+  // The link's tutor is in the draft now; keep the address clean
+  useEffect(() => {
+    if (params.has('tutor')) setParams({}, { replace: true });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const update = (patch: Partial<TrialDraft>) =>
     setDraft((prev) => ({ ...prev, ...patch }));
@@ -122,6 +141,10 @@ const TrialPage: FC = () => {
     stepIndex >= steps.indexOf('tutors') ? search : null,
   );
   const tutor = tutorsQuery.data?.find((item) => item.id === draft.tutorId);
+  const listedTutors = useMemo(
+    () => wantedFirst(tutorsQuery.data, draft.wantTutorId),
+    [tutorsQuery.data, draft.wantTutorId],
+  );
 
   if (currentUser?.type === 'Tutor') {
     return (
@@ -297,7 +320,7 @@ const TrialPage: FC = () => {
             {draft.step === 'tutors' && (
               <TutorsStep
                 course={course}
-                tutors={tutorsQuery.data}
+                tutors={listedTutors}
                 loading={tutorsQuery.isLoading}
                 failed={tutorsQuery.isError}
                 signedIn={!!currentUser}
@@ -371,6 +394,7 @@ const TrialPage: FC = () => {
                 onGuardianPhone={(guardianPhone) => update({ guardianPhone })}
                 signedIn={!!currentUser}
                 childId={isParent ? draft.childId : undefined}
+                needsChild={isParent}
                 // A slot was picked on the slot step; a time asked for, on the tutors step
                 onBack={() => goTo(draft.slot ? 'slot' : 'tutors')}
                 onSent={(request) => {

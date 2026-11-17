@@ -22,6 +22,8 @@ import { formatMoney } from '../../lib/money';
 import { appPaymentCompleteUrl } from '../../lib/from-app';
 import { trackPurchase } from '../../lib/analytics';
 import { subjectName } from '../dashboard/dashboard.utils';
+import { settleCheckout } from '../buy/buy.types';
+import { rememberReturnTo } from '../../lib/return-to';
 import './payments.styles.scss';
 
 type Tone = 'wait' | 'good' | 'bad' | 'info';
@@ -82,6 +84,16 @@ const PaymentReturn: FC = () => {
     );
   }, [payment.data]);
 
+  // The basket this payment came from: emptied once the money was taken,
+  // kept for another try when the payment failed or was cancelled
+  const settledStatus = payment.data?.final ? payment.data.status : undefined;
+  const payerId = currentUser?.id;
+  useEffect(() => {
+    if (slug && settledStatus && payerId) {
+      settleCheckout(payerId, slug, settledStatus);
+    }
+  }, [slug, settledStatus, payerId]);
+
   // A payment the app started goes back to the app once it has settled;
   // the browser the app opened closes on that link
   const appUrl =
@@ -129,8 +141,18 @@ const PaymentReturn: FC = () => {
       outcome === 'success' ? 'good' : 'bad',
       hint,
       t('PAYMENTS.RETURN.SIGN_IN'),
-      <Button component={Link} to="/login" variant="contained">
-        {t('LOGIN.TITLE', { defaultValue: 'Sign in' })}
+      <Button
+        component={Link}
+        to="/login"
+        variant="contained"
+        // Signing in brings them back to this receipt
+        onClick={() =>
+          rememberReturnTo(
+            `${window.location.pathname}${window.location.search}`,
+          )
+        }
+      >
+        {t('LOGIN.TITLE')}
       </Button>,
     );
   }
@@ -148,7 +170,15 @@ const PaymentReturn: FC = () => {
   }
 
   const data: Payment | undefined = payment.data;
-  if (!data || !data.final) {
+  // A declined card, or coming back without paying, leaves the payment open
+  // on our side: nothing more is coming, so the page stops waiting and
+  // offers the way back. It keeps polling, and turns good if money arrives.
+  const unfinished =
+    !!data &&
+    !data.final &&
+    data.open &&
+    (data.status === 'failed' || (outcome !== null && outcome !== 'success'));
+  if (!data || (!data.final && !unfinished)) {
     return render(
       'wait',
       t('PAYMENTS.RETURN.CONFIRMING'),
@@ -162,7 +192,7 @@ const PaymentReturn: FC = () => {
     );
   }
 
-  const tone = TONES[data.status];
+  const tone = unfinished ? 'bad' : TONES[data.status];
   const hours = data.lines.reduce((sum, line) => sum + line.hours, 0);
   const amount = formatMoney(data.amount, data.currency, i18n.language);
   const matches = data.lines.filter(
@@ -187,10 +217,21 @@ const PaymentReturn: FC = () => {
     ],
     expired: [t('PAYMENTS.RETURN.EXPIRED'), t('PAYMENTS.RETURN.EXPIRED_TEXT')],
   };
-  const [title, text] = titles[data.status] ?? [
-    t(`PAYMENTS.STATUS.${data.status}`),
-    t('PAYMENTS.RETURN.REVIEW_TEXT'),
-  ];
+  const [title, text] = unfinished
+    ? [
+        t(
+          outcome === 'cancelled'
+            ? 'PAYMENTS.RETURN.CANCELLED'
+            : 'PAYMENTS.RETURN.FAILED',
+        ),
+        t('PAYMENTS.RETURN.FAILED_TEXT'),
+      ]
+    : (titles[data.status] ?? [
+        t(`PAYMENTS.STATUS.${data.status}`),
+        t('PAYMENTS.RETURN.REVIEW_TEXT'),
+      ]);
+  // The same checkout is still open at Nomod: trying again reopens it
+  const resumeUrl = unfinished ? data.checkout_url : null;
   const packageId = data.lines.find((line) => line.package_id)?.package_id;
   const tryAgain = newCourses
     ? '/buy'
@@ -244,13 +285,24 @@ const PaymentReturn: FC = () => {
           {t('PAYMENTS.RETURN.BACK_TO_APP')}
         </Button>
       )}
+      {resumeUrl && (
+        <Button href={resumeUrl} variant={appUrl ? 'outlined' : 'contained'}>
+          {t('PAYMENTS.RETURN.TRY_AGAIN')}
+        </Button>
+      )}
       {tone === 'bad' && (newCourses || packageId) && (
         <Button
           component={Link}
           to={tryAgain}
-          variant={appUrl ? 'outlined' : 'contained'}
+          variant={appUrl || resumeUrl ? 'outlined' : 'contained'}
         >
-          {t('PAYMENTS.RETURN.TRY_AGAIN')}
+          {t(
+            resumeUrl
+              ? newCourses
+                ? 'PAYMENTS.RETURN.BACK_TO_BASKET'
+                : 'PAYMENTS.RETURN.BACK_TO_PACKAGE'
+              : 'PAYMENTS.RETURN.TRY_AGAIN',
+          )}
         </Button>
       )}
       <Button

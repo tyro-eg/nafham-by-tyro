@@ -1,11 +1,13 @@
-import { FC, useState } from 'react';
+import { FC, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import {
   Alert,
   Button,
   Checkbox,
+  Divider,
   FormControlLabel,
+  MenuItem,
   TextField,
 } from '@mui/material';
 import {
@@ -32,6 +34,10 @@ import {
 } from '../../../lib/weekly-schedule';
 import { subjectName } from '../../dashboard/dashboard.utils';
 import {
+  getCountries,
+  PREFERRED_COUNTRIES,
+} from '../../../assets/utils/countries';
+import {
   MAX_LINES,
   basketTotals,
   toCheckoutLine,
@@ -51,7 +57,8 @@ interface BasketStepProps {
   onRemove: (key: string) => void;
   onAddAnother: () => void;
   onBack: () => void;
-  onPaid: () => void;
+  /** The basket is on its way to Nomod's page to pay this payment */
+  onCheckout: (slug: string) => void;
 }
 
 /**
@@ -73,7 +80,7 @@ const BasketStep: FC<BasketStepProps> = ({
   onRemove,
   onAddAnother,
   onBack,
-  onPaid,
+  onCheckout,
 }) => {
   const { t, i18n } = useTranslation();
   const locale = `${i18n.language}-u-nu-latn`;
@@ -81,6 +88,19 @@ const BasketStep: FC<BasketStepProps> = ({
   const acceptTerms = useAcceptTerms();
   const [terms, setTerms] = useState(!termsPending);
   const [country, setCountry] = useState('');
+  // The server can still ask for either one when the page thought it had it
+  const [countryAsked, setCountryAsked] = useState(false);
+  const [termsAsked, setTermsAsked] = useState(false);
+  const needCountry = countryMissing || countryAsked;
+  const needTerms = termsPending || termsAsked;
+  // Country names in the reader's language, the usual ones first
+  const countries = useMemo(() => {
+    const names = new Intl.DisplayNames([i18n.language], { type: 'region' });
+    return getCountries().map((item) => ({
+      code: item.code,
+      name: names.of(item.code) ?? item.name,
+    }));
+  }, [i18n.language]);
   const [error, setError] = useState<string | null>(null);
   const [newTotal, setNewTotal] = useState<number | null>(null);
   const [pending, setPending] = useState<{
@@ -104,15 +124,12 @@ const BasketStep: FC<BasketStepProps> = ({
     setNewTotal(null);
     setPending(null);
     try {
-      if (termsPending && !acceptTerms.isSuccess)
-        await acceptTerms.mutateAsync();
+      if (needTerms && !acceptTerms.isSuccess) await acceptTerms.mutateAsync();
       const payment = await start.mutateAsync({
         lines: lines.map(toCheckoutLine),
         bundle: lines.length > 1,
         expected_total_cents: expectedTotalCents,
-        payer_country: countryMissing
-          ? country.trim().toUpperCase()
-          : undefined,
+        payer_country: needCountry ? country : undefined,
       });
       trackEvent('Payment', 'begin_checkout', payment.slug, payment.amount, {
         currency: payment.currency,
@@ -120,7 +137,7 @@ const BasketStep: FC<BasketStepProps> = ({
         kinds: lines.map((line) => line.choice.kind).join(','),
       });
       if (payment.checkout_url) {
-        onPaid();
+        onCheckout(payment.slug);
         window.location.assign(payment.checkout_url);
       } else {
         setError(t('PAYMENTS.RENEW.UNAVAILABLE'));
@@ -137,6 +154,16 @@ const BasketStep: FC<BasketStepProps> = ({
         }>(err);
         if (details)
           setPending({ slug: details.payment_slug, url: details.checkout_url });
+      } else if (code === 'country_required') {
+        // Nothing on file after all: the picker appears and Pay waits for it
+        setCountryAsked(true);
+        setError(t('BUY.BASKET.COUNTRY_NEEDED'));
+        return;
+      } else if (code === 'terms_required') {
+        setTermsAsked(true);
+        setTerms(false);
+        setError(t('BUY.BASKET.TERMS_NEEDED'));
+        return;
       }
       setError(
         errorStatus(err) === 503
@@ -150,7 +177,7 @@ const BasketStep: FC<BasketStepProps> = ({
     lines.length > 0 &&
     lines.length <= MAX_LINES &&
     terms &&
-    (!countryMissing || country.trim().length === 2) &&
+    (!needCountry || country.length === 2) &&
     !start.isPending;
 
   return (
@@ -276,22 +303,30 @@ const BasketStep: FC<BasketStepProps> = ({
         </dl>
       )}
 
-      {countryMissing && lines.length > 0 && (
+      {needCountry && lines.length > 0 && (
         <TextField
+          select
           label={t('BUY.BASKET.COUNTRY')}
           helperText={t('BUY.BASKET.COUNTRY_HINT')}
           value={country}
-          onChange={(event) => setCountry(event.target.value.slice(0, 2))}
-          inputProps={{
-            maxLength: 2,
-            dir: 'ltr',
-            style: { textTransform: 'uppercase' },
+          onChange={(event) => setCountry(event.target.value)}
+          sx={{ maxWidth: 320 }}
+          SelectProps={{
+            MenuProps: { PaperProps: { sx: { maxHeight: 320 } } },
           }}
-          sx={{ maxWidth: 240 }}
-        />
+        >
+          {countries.flatMap((item, index) => [
+            <MenuItem key={item.code} value={item.code}>
+              {item.name}
+            </MenuItem>,
+            ...(index === PREFERRED_COUNTRIES.length - 1
+              ? [<Divider key="divider" />]
+              : []),
+          ])}
+        </TextField>
       )}
 
-      {termsPending && lines.length > 0 && (
+      {needTerms && lines.length > 0 && (
         <FormControlLabel
           control={
             <Checkbox

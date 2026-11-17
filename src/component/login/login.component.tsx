@@ -22,6 +22,7 @@ import './login.styles.scss';
 // import ResetPasswordModal from '../../modals/reset-password/reset-password-modal.component';
 import { useSignIn } from '../../hooks/useAuth';
 import { getHomePath } from '../../assets/utils/home-path';
+import { peekReturnTo } from '../../lib/return-to';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -55,7 +56,7 @@ const Login = () => {
     try {
       const userData = await signInMutation.mutateAsync(values);
       if (userData?.id) {
-        navigate(getHomePath(userData));
+        navigate(peekReturnTo() ?? getHomePath(userData));
       }
     } catch (error) {
       console.error('Login error:', error);
