@@ -22,6 +22,7 @@ import {
   type RegisterFormData,
 } from '../../../schemas/authSchemas';
 import { useRtlClass } from '../../../assets/utils/utils';
+import { peekReturnTo } from '../../../lib/return-to';
 import {
   getCountries,
   getNationalities,
@@ -92,7 +93,9 @@ const Register: FC = () => {
       });
 
       if (userData?.id) {
-        navigate(role === 'Parent' ? '/family' : '/dashboard');
+        navigate(
+          peekReturnTo() ?? (role === 'Parent' ? '/family' : '/dashboard'),
+        );
       }
     } catch (error) {
       console.error('Registration error:', error);

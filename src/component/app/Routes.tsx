@@ -1,6 +1,7 @@
 import React, { Suspense, lazy } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import GuardedRoute from '../guarded-route/guarded-route.component';
+import AfterAuth from '../guarded-route/after-auth.component';
 import Loader from './Loader';
 import { CurrentUser } from '../../assets/types';
 import { getHomePath } from '../../assets/utils/home-path';
@@ -144,22 +145,12 @@ const RoutesComponent: React.FC<RoutesProps> = ({ currentUser }) => {
         <Route path="/payments/:slug/return" element={<PaymentReturn />} />
         <Route
           path="/login"
-          element={
-            currentUser ? (
-              <Navigate to={getHomePath(currentUser)} />
-            ) : (
-              <SignIn />
-            )
-          }
+          element={currentUser ? <AfterAuth user={currentUser} /> : <SignIn />}
         />
         <Route
           path="/register"
           element={
-            currentUser ? (
-              <Navigate to={getHomePath(currentUser)} />
-            ) : (
-              <Register />
-            )
+            currentUser ? <AfterAuth user={currentUser} /> : <Register />
           }
         />
         <Route

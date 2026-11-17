@@ -11,6 +11,7 @@ import { CurrentUser, ApiError, AuthHeaders } from '../assets/types';
 import { setActiveChildId } from '../lib/family-child';
 import { markFromApp, safeNextPath } from '../lib/from-app';
 import { AUTH_KEYS, clearAuthStorage, saveTokens } from '../lib/auth-storage';
+import i18n from '../component/i18next/i18n';
 
 /**
  * Sign in payload
@@ -106,11 +107,13 @@ export function useSignIn() {
     },
     onSuccess: (userData) => {
       dispatch(setCurrentUser(userData));
-      snackActions.success('Signed in successfully');
+      snackActions.success(i18n.t('AUTH_TOAST.SIGNED_IN'));
     },
     onError: (error: ApiError) => {
       const errorMessage =
-        error.response?.data?.error || error.message || 'Sign in failed';
+        error.response?.data?.error ||
+        error.message ||
+        i18n.t('AUTH_TOAST.SIGN_IN_FAILED');
       snackActions.error(errorMessage);
     },
   });
@@ -155,11 +158,13 @@ export function useSignUp() {
     },
     onSuccess: (userData) => {
       dispatch(setCurrentUser(userData));
-      snackActions.success('Account created successfully');
+      snackActions.success(i18n.t('AUTH_TOAST.SIGNED_UP'));
     },
     onError: (error: ApiError) => {
       const errorMessage =
-        error.response?.data?.error || error.message || 'Sign up failed';
+        error.response?.data?.error ||
+        error.message ||
+        i18n.t('AUTH_TOAST.SIGN_UP_FAILED');
       snackActions.error(errorMessage);
     },
   });
@@ -196,8 +201,8 @@ export function useSignOut() {
     onSuccess: () => {
       dispatch(clearCurrentUser());
       queryClient.clear(); // Clear all cached queries
-      navigate('/home');
-      snackActions.success('Signed out successfully');
+      navigate('/');
+      snackActions.success(i18n.t('AUTH_TOAST.SIGNED_OUT'));
     },
     onError: (error: ApiError) => {
       const errorMessage =
