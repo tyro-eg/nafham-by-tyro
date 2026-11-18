@@ -29,6 +29,8 @@ import {
 import type { Package } from '../../assets/types';
 
 import './request-sessions-modal.styles.scss';
+import { hoursFree } from '../../lib/package-hours';
+import { formatHours } from '../../modules/dashboard/dashboard.utils';
 
 /** The minimum an instructor option needs; cards and profiles pass more */
 export interface RequestInstructor {
@@ -291,7 +293,7 @@ const RequestSessionsModal: FC<RequestSessionsModalProps> = ({
         {kind === 'schedule' && matchedPackage && (
           <p className="request-sessions-modal__hint">
             {t('SESSION_REQUEST.HOURS_LEFT', {
-              hours: matchedPackage.remaining_hours,
+              hours: formatHours(hoursFree(matchedPackage)),
               course: matchedPackage.grade_subject.full_course_name,
             })}
           </p>

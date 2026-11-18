@@ -38,6 +38,7 @@ import ChildSwitcher from '../../modules/family/child-switcher.component';
 import logo from '../../assets/images/logo.png';
 
 import './sidebar-layout.styles.scss';
+import StaffBanner from '../staff-banner/staff-banner.component';
 
 const SIDEBAR_KEY = 'nafham.sidebar';
 
@@ -207,11 +208,16 @@ const SidebarLayout: FC<SidebarLayoutProps> = ({ children }) => {
       icon: <Inventory2Rounded />,
       label: t('NAVIGATION.PACKAGES'),
     },
-    {
-      to: '/payments',
-      icon: <ReceiptLongRounded />,
-      label: t('NAVIGATION.PAYMENTS'),
-    },
+    // A child in a family never pays: the parent does, from their own account
+    ...(currentUser?.family_id
+      ? []
+      : [
+          {
+            to: '/payments',
+            icon: <ReceiptLongRounded />,
+            label: t('NAVIGATION.PAYMENTS'),
+          },
+        ]),
   ];
 
   // Parents: the family home first, then the picked child's pages
@@ -443,7 +449,10 @@ const SidebarLayout: FC<SidebarLayoutProps> = ({ children }) => {
         </div>
       </aside>
 
-      <main className="side-layout__main">{children}</main>
+      <main className="side-layout__main">
+        <StaffBanner />
+        {children}
+      </main>
     </div>
   );
 };

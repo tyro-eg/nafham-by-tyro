@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import {
   useQuery,
   useMutation,
@@ -247,4 +248,61 @@ export function useBookPrivateSession() {
       snackActions.error(errorMessage);
     },
   });
+}
+
+/** The server hands out at most 100 rows a page */
+const ALL_PAGE_SIZE = 100;
+/** Safety stop: 50 pages is 5,000 sessions */
+const ALL_MAX_PAGES = 50;
+
+/**
+ * Every session of the viewer, all pages. Totals (completed, hours per week,
+ * each student's sessions, a month's pay) used to be worked out from the first
+ * 100 only: a tutor with 600 completed sessions read "0 completed".
+ * Re-read every few minutes; the live first page comes from `useSessionHistory`.
+ */
+export function useAllSessions(enabled = true) {
+  return useQuery({
+    queryKey: [...queryKeys.sessions.all, 'all-pages'] as const,
+    enabled,
+    queryFn: async () => {
+      const rows: SessionType[] = [];
+      for (let page = 1; page <= ALL_MAX_PAGES; page += 1) {
+        const response = await get(`/sessions`, {
+          params: { per_page: ALL_PAGE_SIZE, page },
+        });
+        rows.push(...((response.data.data || response.data) as SessionType[]));
+        const totalPages = Number(response.headers?.['total-pages']) || 1;
+        if (page >= totalPages) break;
+      }
+      return rows;
+    },
+    staleTime: 3 * 60 * 1000,
+    refetchInterval: 3 * 60 * 1000,
+    refetchIntervalInBackground: false,
+  });
+}
+
+/**
+ * All sessions for totals, with the first page kept live (every 30 s) so the
+ * schedule, countdowns and Join buttons stay fresh. Same shape as
+ * `useSessions`: `{ data: { data: SessionType[] }, isLoading }`.
+ */
+export function useSessionHistory() {
+  const live = useSessions(1, ALL_PAGE_SIZE);
+  const all = useAllSessions();
+  const data = useMemo(() => {
+    if (!live.data && !all.data) return undefined;
+    const byId = new Map<number, SessionType>();
+    (all.data ?? []).forEach((s) => byId.set(s.id, s));
+    (live.data?.data ?? []).forEach((s) => byId.set(s.id, s));
+    return { data: [...byId.values()] };
+  }, [live.data, all.data]);
+  return {
+    data,
+    isLoading: live.isLoading,
+    /** True until every page has arrived (totals may still grow) */
+    isFetchingAll: all.isLoading,
+    isError: live.isError,
+  };
 }

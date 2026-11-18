@@ -20,7 +20,14 @@ i18n
   .use(detector)
   .use(initReactI18next)
   .init({
-    lng: 'en', // Initial language
+    // No fixed `lng`: it overrode the saved choice, so Arabic fell back to
+    // English on every page load. The choice is kept in localStorage; a first
+    // visit is English, as before (the browser's language is not used).
+    detection: {
+      order: ['localStorage'],
+      lookupLocalStorage: 'i18nextLng',
+      caches: ['localStorage'],
+    },
     resources,
     initImmediate: true,
     fallbackLng: 'en', // Fallback language

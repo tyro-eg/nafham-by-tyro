@@ -1,5 +1,6 @@
 import type { Package, SessionType } from '../../assets/types';
 import { sessionHours, subjectName } from '../dashboard/dashboard.utils';
+import { hoursLeft } from '../../lib/package-hours';
 
 export interface StudentSummary {
   id: number;
@@ -72,7 +73,7 @@ export const buildStudents = (
       pkg.student.email,
       pkg.student.avatar,
     );
-    s.hoursRemaining += Number(pkg.remaining_hours) || 0;
+    s.hoursRemaining += hoursLeft(pkg);
     s.hoursPurchased += Number(pkg.original_hours) || 0;
     addCourse(s, pkg.grade_subject?.full_course_name);
   });

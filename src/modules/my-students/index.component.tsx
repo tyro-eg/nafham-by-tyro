@@ -19,8 +19,8 @@ import {
   SearchRounded,
 } from '@mui/icons-material';
 
-import { useSessions } from '../../hooks/useSessions';
-import { usePackages } from '../../hooks/usePackages';
+import { useSessionHistory } from '../../hooks/useSessions';
+import { useAllPackages } from '../../hooks/usePackages';
 import { useStartConversation } from '../../hooks/useStreamChat';
 import { useRtlClass } from '../../assets/utils/utils';
 import { formatHours, subjectName } from '../dashboard/dashboard.utils';
@@ -29,8 +29,6 @@ import emptyArt from '../../assets/images/newLanding/rafiki.svg?url';
 
 import './my-students.styles.scss';
 
-// Enough history to list every student without paging through the API
-const HISTORY_SIZE = 100;
 const TONES = ['sky', 'mint', 'sun', 'lilac', 'coral'] as const;
 
 type StatusFilter = 'all' | 'active' | 'inactive';
@@ -46,8 +44,8 @@ const MyStudents: FC = () => {
   const [course, setCourse] = useState('all');
   const [status, setStatus] = useState<StatusFilter>('all');
 
-  const sessionsQuery = useSessions(1, HISTORY_SIZE);
-  const packagesQuery = usePackages(1, HISTORY_SIZE);
+  const sessionsQuery = useSessionHistory();
+  const packagesQuery = useAllPackages();
   const loading = sessionsQuery.isLoading || packagesQuery.isLoading;
 
   const now = useMemo(() => new Date(), []);

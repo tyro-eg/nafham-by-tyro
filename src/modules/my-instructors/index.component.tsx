@@ -40,15 +40,9 @@ import { ReactComponent as EmptyImg } from '../../assets/images/empty.svg';
 
 import '../sessions/dashboard-shell.styles.scss';
 import './index.styles.scss';
+import { hoursLeft } from '../../lib/package-hours';
 
 const UPCOMING = ['scheduled', 'open'];
-
-/** Hours still owned on a package: bought less moved out and taught */
-const hoursLeft = (pkg: Package) => {
-  const hours = pkg.hours;
-  if (!hours) return pkg.remaining_hours ?? 0;
-  return Math.max(hours.bought - hours.moved_out - hours.used, 0);
-};
 
 interface TutorCardProps {
   tutor: Instructor;
