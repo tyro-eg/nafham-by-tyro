@@ -26,6 +26,16 @@
     @include modal-title;
   }
 
+  &__names {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+
+    @media (max-width: 480px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
   &__subtitle {
     @include modal-subtitle;
   }

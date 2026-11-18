@@ -259,7 +259,13 @@ export type SessionType = {
   };
   session_type: 'regular' | 'trial' | 'group';
   start_time: string;
-  status: 'open' | 'scheduled' | 'completed' | 'missed' | 'canceled';
+  status:
+    | 'open'
+    | 'scheduled'
+    | 'completed'
+    | 'missed'
+    | 'cancelled'
+    | 'canceled';
   /** Who booked it: support from the admin panel, or the student (free trials) */
   booked_by?: 'admin' | 'student';
   /** What this session pays the tutor per hour, decided by the backend; null while unpriced */

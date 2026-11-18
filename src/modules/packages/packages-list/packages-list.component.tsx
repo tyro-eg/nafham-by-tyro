@@ -18,15 +18,9 @@ import RenewAllBanner from '../../payments/renew-all-banner.component';
 import RequestSessionsModal from '../../../modals/request-sessions-modal/request-sessions-modal.component';
 
 import './packages-list.styles.scss';
+import { hoursLeft } from '../../../lib/package-hours';
 
 const PAGE = 50;
-
-/** Hours still owned on a package: bought less moved out and taught */
-const hoursLeft = (pkg: Package) => {
-  const hours = pkg.hours;
-  if (!hours) return pkg.remaining_hours ?? 0;
-  return Math.max(hours.bought - hours.moved_out - hours.used, 0);
-};
 
 /**
  * Every package of the viewer, loaded in full. A parent looking at all the
@@ -111,6 +105,11 @@ const PackagesList: FC = () => {
       ),
     [data],
   );
+
+  const renewingPackage = packages.find((pkg) => pkg.id === renewing);
+  const renewingHours = renewingPackage
+    ? hoursLeft(renewingPackage)
+    : undefined;
 
   // A parent's groups follow the family's order, so the colours match the calendar
   const groups = useMemo(() => {
@@ -214,6 +213,7 @@ const PackagesList: FC = () => {
         {renewing !== null && (
           <RenewDialog
             packageId={renewing}
+            hoursLeft={renewingHours}
             onClose={closeRenew}
             onRequestInstead={() => {
               closeRenew();
@@ -248,6 +248,7 @@ const PackagesList: FC = () => {
       {renewing !== null && (
         <RenewDialog
           packageId={renewing}
+          hoursLeft={renewingHours}
           onClose={closeRenew}
           onRequestInstead={() => {
             closeRenew();

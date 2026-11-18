@@ -342,7 +342,7 @@ const SessionListCard: React.FC<SessionListCardProps> = ({ session }) => {
               >
                 <img
                   src={session.tutor?.image || Profile}
-                  alt="instructor"
+                  alt="Tutor"
                   loading="lazy"
                 />
               </Button>

@@ -9,6 +9,7 @@ import type { Package } from '../../../assets/types';
 import defaultProfileImage from '../../../assets/images/videoSession/people/profile.png';
 
 import './sessions-schedule.styles.scss';
+import { hoursLeft } from '../../../lib/package-hours';
 
 interface UserPackageData {
   user_id: number;
@@ -64,7 +65,7 @@ const SessionsSchedule: FC<SessionsScheduleProps> = ({ packages }) => {
       }
 
       grouped[userId].packages.push(pkg);
-      grouped[userId].total_hours += pkg.remaining_hours;
+      grouped[userId].total_hours += hoursLeft(pkg);
     });
 
     return Object.values(grouped);

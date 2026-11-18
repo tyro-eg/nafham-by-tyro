@@ -1,4 +1,5 @@
 import type { Package, SessionType } from '../../assets/types';
+import { hoursLeft } from '../../lib/package-hours';
 
 const HOUR_MS = 60 * 60 * 1000;
 const WEEK_MS = 7 * 24 * HOUR_MS;
@@ -120,7 +121,9 @@ export const studentInsights = (
   const completedSessions = sessions.filter((s) => s.status === 'completed');
   const completed = completedSessions.length;
   const missed = sessions.filter((s) => s.status === 'missed').length;
-  const canceled = sessions.filter((s) => s.status === 'canceled').length;
+  const canceled = sessions.filter(
+    (s) => s.status === 'cancelled' || s.status === 'canceled',
+  ).length;
   const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
 
   return {
@@ -133,22 +136,21 @@ export const studentInsights = (
     canceled,
     attendanceRate:
       completed + missed > 0 ? completed / (completed + missed) : null,
-    hoursRemaining: packages.reduce(
-      (acc, p) => acc + (Number(p.remaining_hours) || 0),
-      0,
-    ),
+    hoursRemaining: packages.reduce((acc, p) => acc + hoursLeft(p), 0),
     hoursPurchased: packages.reduce(
       (acc, p) => acc + (Number(p.original_hours) || 0),
       0,
     ),
-    activePackages: packages.filter((p) => Number(p.remaining_hours) > 0)
-      .length,
+    activePackages: packages.filter((p) => hoursLeft(p) > 0).length,
     hoursThisMonth: completedSessions
       .filter((s) => new Date(s.start_time) >= monthStart)
       .reduce((acc, s) => acc + sessionHours(s), 0),
   };
 };
 
-/** Round to at most one decimal, dropping a trailing ".0". */
+/**
+ * Hours as the Admin shows them: halves and quarters exact (0.75, not 0.8),
+ * at most two decimals, no trailing zeros.
+ */
 export const formatHours = (hours: number): string =>
-  String(Math.round(hours * 10) / 10);
+  String(Math.round((Number(hours) || 0) * 100) / 100);

@@ -23,7 +23,7 @@ import {
   useLiveSessionToast,
   useNow,
 } from '../sessions/session-state';
-import { useSessions } from '../../hooks/useSessions';
+import { useSessionHistory } from '../../hooks/useSessions';
 import { usePackages } from '../../hooks/usePackages';
 import { useMyInstructors } from '../../hooks/useInstructors';
 import { useRtlClass } from '../../assets/utils/utils';
@@ -41,9 +41,7 @@ import {
 } from './dashboard.utils';
 
 import './dashboard.styles.scss';
-
-// Enough history for the insights without paging through the API
-const HISTORY_SIZE = 100;
+import { hoursLeft } from '../../lib/package-hours';
 
 // Friendly rotating colours for subjects and packages
 const TONES = ['sky', 'mint', 'sun', 'lilac', 'coral'] as const;
@@ -125,7 +123,7 @@ const Dashboard: FC = () => {
   const openRequest = () => setRequestOpen(true);
   const closeRequest = () => setRequestOpen(false);
 
-  const sessionsQuery = useSessions(1, HISTORY_SIZE);
+  const sessionsQuery = useSessionHistory();
   const packagesQuery = usePackages(1, 50);
   // More than one low package sends the payer to the renew-all sheet
   const lowPackages = (packagesQuery.data?.data ?? []).filter(
@@ -563,18 +561,21 @@ const Dashboard: FC = () => {
                 severity="warning"
                 icon={<AutorenewRounded fontSize="inherit" />}
                 action={
-                  <Button
-                    component={Link}
-                    to={
-                      lowPackages > 1 && !currentUser?.family_id
-                        ? '/my_packages?renew=all'
-                        : '/my_packages'
-                    }
-                    color="inherit"
-                    size="small"
-                  >
-                    {t('PAYMENTS.BANNER.RENEW')}
-                  </Button>
+                  // A child in a family asks the parent: no Renew button
+                  currentUser?.family_id ? undefined : (
+                    <Button
+                      component={Link}
+                      to={
+                        lowPackages > 1
+                          ? '/my_packages?renew=all'
+                          : '/my_packages'
+                      }
+                      color="inherit"
+                      size="small"
+                    >
+                      {t('PAYMENTS.BANNER.RENEW')}
+                    </Button>
+                  )
                 }
                 sx={{ mb: 2, borderRadius: '1.6rem' }}
               >
@@ -597,7 +598,7 @@ const Dashboard: FC = () => {
               <ul className="sd-packages">
                 {packages.slice(0, 4).map((pkg, index) => {
                   const total = Number(pkg.original_hours) || 0;
-                  const remaining = Number(pkg.remaining_hours) || 0;
+                  const remaining = hoursLeft(pkg);
                   const tone = TONES[index % TONES.length];
                   return (
                     <li key={pkg.id} className="sd-package">

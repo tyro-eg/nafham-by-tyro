@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { persistor, useAppDispatch, useAppSelector } from '../redux/store';
 import { setCurrentUser, clearCurrentUser } from '../redux/user/user.slice';
 import { CurrentUser, ApiError, AuthHeaders } from '../assets/types';
+import { clearStaffView, setStaffView } from '../lib/staff-view';
 
 /**
  * Sign in payload
@@ -73,6 +74,8 @@ export function useSignIn() {
 
   return useMutation({
     mutationFn: async (payload: SignInPayload) => {
+      // Someone signing in themselves: no staff banner
+      clearStaffView();
       showSpinner();
       try {
         const {
@@ -122,6 +125,8 @@ export function useSignUp() {
 
   return useMutation({
     mutationFn: async (payload: SignUpPayload) => {
+      // Someone signing in themselves: no staff banner
+      clearStaffView();
       showSpinner();
       try {
         const {
@@ -242,11 +247,16 @@ export function useImpersonate() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (payload: { token: string }) => {
+    mutationFn: async (payload: {
+      token: string;
+      impersonatorEmail?: string | null;
+    }) => {
       showSpinner();
       try {
         // Clear existing user data
         localStorage.clear();
+        // The staff banner stays up while staff act as this person
+        setStaffView(payload.impersonatorEmail ?? null);
         dispatch(clearCurrentUser());
         queryClient.clear();
 
@@ -266,6 +276,7 @@ export function useImpersonate() {
       } catch (error) {
         // Clear token on error
         localStorage.clear();
+        clearStaffView();
         throw error;
       } finally {
         hideSpinner();
@@ -273,7 +284,9 @@ export function useImpersonate() {
     },
     onSuccess: async (userData) => {
       dispatch(setCurrentUser(userData));
-      snackActions.success('Impersonation successful');
+      snackActions.success(
+        `Signed in as ${[userData.first_name, userData.last_name].filter(Boolean).join(' ')}`,
+      );
       // Save the signed-in user to storage before reloading (16 Nov 2026):
       // the reload came too early, the saved user was still empty, and the
       // site opened signed out

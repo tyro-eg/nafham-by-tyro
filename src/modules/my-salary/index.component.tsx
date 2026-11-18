@@ -12,16 +12,13 @@ import {
   TrendingUpRounded,
 } from '@mui/icons-material';
 
-import { useSessions } from '../../hooks/useSessions';
-import { usePackages } from '../../hooks/usePackages';
+import { useSessionHistory } from '../../hooks/useSessions';
+import { useAllPackages } from '../../hooks/usePackages';
 import { useRtlClass } from '../../assets/utils/utils';
 import { formatHours } from '../dashboard/dashboard.utils';
 import { buildSalaryReport } from './my-salary.utils';
 
 import './my-salary.styles.scss';
-
-// Enough history for a few months without paging through the API
-const HISTORY_SIZE = 200;
 
 const MySalary: FC = () => {
   const { t, i18n } = useTranslation();
@@ -37,8 +34,8 @@ const MySalary: FC = () => {
   );
   const isCurrentMonth = offset === 0;
 
-  const sessionsQuery = useSessions(1, HISTORY_SIZE);
-  const packagesQuery = usePackages(1, HISTORY_SIZE);
+  const sessionsQuery = useSessionHistory();
+  const packagesQuery = useAllPackages();
   const loading = sessionsQuery.isLoading || packagesQuery.isLoading;
 
   const report = useMemo(

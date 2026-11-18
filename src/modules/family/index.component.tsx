@@ -537,6 +537,10 @@ const FamilyHome: FC = () => {
         {renewing && (
           <RenewDialog
             packageId={renewing.packageId}
+            hoursLeft={
+              renewing.child.packages?.find((p) => p.id === renewing.packageId)
+                ?.hours_left
+            }
             onClose={() => setRenewing(null)}
             onRequestInstead={() => {
               const { child } = renewing;

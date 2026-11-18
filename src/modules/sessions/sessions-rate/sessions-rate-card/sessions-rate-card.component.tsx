@@ -133,7 +133,7 @@ const SessionsRateCard: React.FC<SessionsRateCardProps> = ({ session }) => {
               </div>
             ) : (
               <Button className="card-img session-rate__instructor-img">
-                <img src={session.tutor?.data?.image || ''} alt="instructor" />
+                <img src={session.tutor?.data?.image || ''} alt="Tutor" />
               </Button>
             )}
             <div className="user-info">
@@ -151,7 +151,7 @@ const SessionsRateCard: React.FC<SessionsRateCardProps> = ({ session }) => {
                   <div className="review">
                     <div className="review-stars">
                       <Rating
-                        name="instructor rating"
+                        name="tutor rating"
                         value={session.tutor?.data?.rating || 0}
                         precision={0.1}
                         size="small"
