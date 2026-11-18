@@ -7,8 +7,7 @@ import {
 } from '@tanstack/react-query';
 import { get, post } from '../assets/utils/api';
 import { queryKeys, SessionFilters } from '../lib/queryKeys';
-import { SessionType, ApiError } from '../assets/types';
-import { snackActions } from '../assets/utils/toaster';
+import { SessionType } from '../assets/types';
 
 /**
  * Trial session booking data (POST /sessions/trial). The backend decides the
@@ -22,16 +21,6 @@ export interface TrialSessionData {
   guardian_phone?: string;
   /** The exam board the student sits, when the course's tutors declare boards */
   exam_board_id?: number;
-}
-
-/**
- * Private session booking data
- */
-export interface PrivateSessionData {
-  tutor_id: number;
-  start_time: string;
-  grade_subject_id: number;
-  package_id: number;
 }
 
 /** How often session lists re-read the server while the tab is visible */
@@ -126,60 +115,10 @@ export function useInfiniteSessions(
   });
 }
 
-/**
- * Cancel a session
- */
-export function useCancelSession() {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async (sessionId: number) => {
-      await get(`/sessions/${sessionId}/cancel`);
-    },
-    onSuccess: () => {
-      // Invalidate all session queries
-      queryClient.invalidateQueries({
-        queryKey: queryKeys.sessions.all,
-      });
-      // Also invalidate calendar since sessions affect availability
-      queryClient.invalidateQueries({
-        queryKey: queryKeys.calendar.all,
-      });
-      snackActions.success('Session cancelled successfully');
-    },
-    onError: (error: ApiError) => {
-      const errorMessage =
-        error.response?.data?.error ||
-        error.message ||
-        'Failed to cancel session';
-      snackActions.error(errorMessage);
-    },
-  });
-}
-
-/**
- * End a session
- */
-export function useEndSession() {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async (sessionId: number) => {
-      await get(`/sessions/${sessionId}/end`);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: queryKeys.sessions.all,
-      });
-      snackActions.success('Session ended successfully');
-    },
-    onError: (error: ApiError) => {
-      const errorMessage =
-        error.response?.data?.error || error.message || 'Failed to end session';
-      snackActions.error(errorMessage);
-    },
-  });
-}
+// Families cannot cancel, move or end sessions, nor book paid ones: they
+// send a session request (useSessionRequests) and the back office does it.
+// The old calls here (/sessions/:id/cancel, /sessions/:id/end and
+// /sessions/private) had no server action behind them (removed 19 Nov 2026).
 
 /**
  * Book a free trial. Students book these themselves; the caller shows the
@@ -220,36 +159,6 @@ export const bookingErrorMessage = (
   }
   return fallback;
 };
-
-/**
- * Book a private session
- */
-export function useBookPrivateSession() {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async (sessionData: PrivateSessionData) => {
-      await post(`/sessions/private`, { private_session: sessionData });
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: queryKeys.sessions.all,
-      });
-      queryClient.invalidateQueries({
-        queryKey: queryKeys.calendar.all,
-      });
-      snackActions.success('Private session booked successfully');
-    },
-    onError: (error: ApiError) => {
-      const errorMessage =
-        error.response?.data?.error ||
-        error.message ||
-        'Failed to book private session';
-      snackActions.error(errorMessage);
-    },
-  });
-}
-
 /** The server hands out at most 100 rows a page */
 const ALL_PAGE_SIZE = 100;
 /** Safety stop: 50 pages is 5,000 sessions */

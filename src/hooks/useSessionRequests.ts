@@ -4,10 +4,11 @@ import { queryKeys } from '../lib/queryKeys';
 import type { ApiError, GradeSubject, Package } from '../assets/types';
 
 /**
- * Students cannot schedule sessions themselves. They send a request and the
- * support team schedules the sessions from the admin panel.
+ * Students and parents cannot schedule, cancel or move sessions themselves
+ * (only book a free trial). They send a request and the back office does it
+ * from the Admin; it closes by itself once done.
  */
-export type SessionRequestKind = 'schedule' | 'more_hours' | 'trial';
+export type SessionRequestKind = 'schedule' | 'more_hours' | 'trial' | 'change';
 export type SessionRequestStatus = 'pending' | 'handled' | 'declined';
 
 export interface SessionRequest {
@@ -31,6 +32,8 @@ export interface SessionRequestPayload {
   tutor_id?: number | null;
   grade_subject_id?: number | null;
   package_id?: number | null;
+  /** The session to cancel or move (kind "change") */
+  session_id?: number | null;
   hours_requested?: number | null;
   preferred_times?: string;
   note?: string;

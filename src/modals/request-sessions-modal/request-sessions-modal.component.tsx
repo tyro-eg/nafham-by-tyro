@@ -45,6 +45,11 @@ interface RequestSessionsModalProps {
   /** Preselect (and lock) an instructor, e.g. from their card or profile */
   instructor?: RequestInstructor;
   defaultKind?: SessionRequestKind;
+  /**
+   * Ask to cancel or move this session (or free trial). Families do not
+   * cancel or move anything themselves: the back office does it (19 Nov 2026).
+   */
+  changeSession?: { id: number; label: string };
 }
 
 const NONE = '';
@@ -60,6 +65,7 @@ const RequestSessionsModal: FC<RequestSessionsModalProps> = ({
   handleClose,
   instructor,
   defaultKind,
+  changeSession,
 }) => {
   const { t } = useTranslation();
   const createRequest = useCreateSessionRequest();
@@ -150,7 +156,7 @@ const RequestSessionsModal: FC<RequestSessionsModalProps> = ({
     [packages, tutorId, courseId],
   );
 
-  const needsTimes = kind !== 'more_hours';
+  const needsTimes = kind !== 'more_hours' && !changeSession;
 
   const submit = async (event: FormEvent) => {
     event.preventDefault();
@@ -161,7 +167,22 @@ const RequestSessionsModal: FC<RequestSessionsModalProps> = ({
       return;
     }
 
+    if (changeSession && !note.trim()) {
+      setError(t('SESSION_REQUEST.CHANGE.REQUIRED'));
+      return;
+    }
+
     try {
+      if (changeSession) {
+        await createRequest.mutateAsync({
+          kind: 'change',
+          session_id: changeSession.id,
+          preferred_times: preferredTimes.trim(),
+          note: note.trim(),
+        });
+        setSent(true);
+        return;
+      }
       await createRequest.mutateAsync({
         kind,
         tutor_id: tutorId ? Number(tutorId) : null,
@@ -182,7 +203,11 @@ const RequestSessionsModal: FC<RequestSessionsModalProps> = ({
       <div className="request-sessions-modal__success">
         <CheckCircleRounded className="request-sessions-modal__success-icon" />
         <h4 className="success-title">{t('SESSION_REQUEST.SUCCESS.TITLE')}</h4>
-        <p className="success-text">{t('SESSION_REQUEST.SUCCESS.TEXT')}</p>
+        <p className="success-text">
+          {changeSession
+            ? t('SESSION_REQUEST.CHANGE.SUCCESS')
+            : t('SESSION_REQUEST.SUCCESS.TEXT')}
+        </p>
         <Button variant="contained" color="primary" onClick={handleClose}>
           {t('SESSION_REQUEST.SUCCESS.BUTTON')}
         </Button>
@@ -198,10 +223,16 @@ const RequestSessionsModal: FC<RequestSessionsModalProps> = ({
         </div>
         <div className="request-sessions-modal__heading">
           <h4 className="request-sessions-modal__title">
-            {t('SESSION_REQUEST.TITLE')}
+            {changeSession
+              ? t('SESSION_REQUEST.CHANGE.TITLE')
+              : t('SESSION_REQUEST.TITLE')}
           </h4>
           <p className="request-sessions-modal__subtitle">
-            {t('SESSION_REQUEST.SUBTITLE')}
+            {changeSession
+              ? t('SESSION_REQUEST.CHANGE.SUBTITLE', {
+                  session: changeSession.label,
+                })
+              : t('SESSION_REQUEST.SUBTITLE')}
           </p>
         </div>
         <IconButton
@@ -214,6 +245,8 @@ const RequestSessionsModal: FC<RequestSessionsModalProps> = ({
       </header>
 
       <div className="request-sessions-modal__body">
+        {!changeSession && (
+          <>
         <FormControl
           component="fieldset"
           className="request-sessions-modal__field"
@@ -309,6 +342,23 @@ const RequestSessionsModal: FC<RequestSessionsModalProps> = ({
           onChange={(e) => setHours(e.target.value)}
           inputProps={{ min: 1, max: 100, step: 1 }}
         />
+          </>
+        )}
+
+        {changeSession && (
+          <TextField
+            className="request-sessions-modal__field"
+            size="small"
+            multiline
+            minRows={2}
+            required
+            label={t('SESSION_REQUEST.CHANGE.WHAT')}
+            placeholder={t('SESSION_REQUEST.CHANGE.WHAT_PLACEHOLDER')}
+            value={note}
+            onChange={(e) => setNote(e.target.value)}
+            inputProps={{ maxLength: 2000 }}
+          />
+        )}
 
         <TextField
           className="request-sessions-modal__field"
@@ -316,13 +366,18 @@ const RequestSessionsModal: FC<RequestSessionsModalProps> = ({
           multiline
           minRows={2}
           required={needsTimes}
-          label={t('SESSION_REQUEST.PREFERRED_TIMES')}
+          label={
+            changeSession
+              ? t('SESSION_REQUEST.CHANGE.TIMES')
+              : t('SESSION_REQUEST.PREFERRED_TIMES')
+          }
           placeholder={t('SESSION_REQUEST.PREFERRED_TIMES_PLACEHOLDER')}
           value={preferredTimes}
           onChange={(e) => setPreferredTimes(e.target.value)}
           inputProps={{ maxLength: 1000 }}
         />
 
+        {!changeSession && (
         <TextField
           className="request-sessions-modal__field"
           size="small"
@@ -334,6 +389,7 @@ const RequestSessionsModal: FC<RequestSessionsModalProps> = ({
           onChange={(e) => setNote(e.target.value)}
           inputProps={{ maxLength: 2000 }}
         />
+        )}
 
         {error && <Alert severity="error">{error}</Alert>}
       </div>

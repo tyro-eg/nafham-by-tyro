@@ -1095,7 +1095,7 @@ export function resolveDemoRequest(
 
   if (method === 'POST') {
     if (cleanPath === '/users/tokens') return ok({});
-    if (cleanPath === '/sessions/trial' || cleanPath === '/sessions/private') {
+    if (cleanPath === '/sessions/trial') {
       return { status: 201, data: { data: { id: 9999 } } };
     }
     if (cleanPath === '/availabilities') return { status: 201, data: {} };

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Avatar, Button } from '@mui/material';
+import { Avatar, Button, Dialog } from '@mui/material';
 import {
   TimerTwoTone,
   CheckCircle,
@@ -11,6 +11,7 @@ import {
   CalendarToday,
   Timer,
   AutoAwesomeRounded,
+  EventRepeatRounded,
 } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
@@ -42,6 +43,7 @@ import {
   useNow,
 } from '../../../session-state';
 
+import RequestSessionsModal from '../../../../../modals/request-sessions-modal/request-sessions-modal.component';
 import Profile from '../../../../../assets/images/videoSession/people/profile.png';
 
 import './sessions-list-card.styles.scss';
@@ -69,6 +71,8 @@ const SessionListCard: React.FC<SessionListCardProps> = ({ session }) => {
   const canMessage = useCanMessage(counterpart?.id);
   const chat = useStartConversation();
   const [sessionDuration, setSessionDuration] = useState(0);
+  // Families ask the back office to cancel or move a session (19 Nov 2026)
+  const [changeOpen, setChangeOpen] = useState(false);
   // const [isWithinTwelveHours, setIsWithinTwelveHours] = useState(false);
   // const [openCancelSessionModal, setOpenCancelSessionModal] = useState(false);
   // const [modalType, setModalType] = useState<'cancel' | 'end'>('cancel');
@@ -135,15 +139,6 @@ const SessionListCard: React.FC<SessionListCardProps> = ({ session }) => {
       window.open(session.session_link, '_blank');
     }
   };
-
-  // const openCancelModal = (type: 'cancel' | 'end') => {
-  //   setModalType(type);
-  //   setOpenCancelSessionModal(true);
-  // };
-
-  // const closeModal = () => {
-  //   setOpenCancelSessionModal(false);
-  // };
 
   const isInstructorAndNotGroup = () =>
     isInstructor && session.session_type !== 'group';
@@ -401,6 +396,40 @@ const SessionListCard: React.FC<SessionListCardProps> = ({ session }) => {
                   : t('ASSISTANT.SESSION.RECORDING')}
             </Button>
           )}
+        {!isInstructor &&
+          session.session_type !== 'group' &&
+          session.status === 'scheduled' &&
+          phase === 'upcoming' && (
+            <Button
+              className="sessions-card__actions-button"
+              variant="text"
+              color="secondary"
+              startIcon={<EventRepeatRounded />}
+              onClick={() => setChangeOpen(true)}
+            >
+              {t('SESSION_REQUEST.CHANGE.BUTTON')}
+            </Button>
+          )}
+        {changeOpen && (
+          <Dialog
+            maxWidth="sm"
+            fullWidth
+            open
+            onClose={() => setChangeOpen(false)}
+          >
+            <RequestSessionsModal
+              changeSession={{
+                id: session.id,
+                label: `${sessionName} · ${format(
+                  parseISO(session.start_time),
+                  'EEE d MMM, h:mm a',
+                  { locale },
+                )}`,
+              }}
+              handleClose={() => setChangeOpen(false)}
+            />
+          </Dialog>
+        )}
         {canMessage && counterpart?.id && (
           <Button
             className="sessions-card__actions-button"

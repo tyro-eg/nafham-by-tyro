@@ -1644,6 +1644,16 @@
       "TITLE": "Request sent!",
       "TEXT": "Our support team will schedule your sessions and get back to you shortly.",
       "BUTTON": "Done"
+    },
+    "CHANGE": {
+      "BUTTON": "Ask to cancel or move",
+      "TITLE": "Cancel or move a session",
+      "SUBTITLE": "{{session}}. Our team will cancel or move it for you and let you know.",
+      "WHAT": "What would you like?",
+      "WHAT_PLACEHOLDER": "e.g. Please cancel it, or move it to the same time on Friday",
+      "TIMES": "If moving: days and times that suit you",
+      "REQUIRED": "Please tell us whether to cancel or move it.",
+      "SUCCESS": "Our team will cancel or move the session and let you know."
     }
   },
   "TRIAL": {
