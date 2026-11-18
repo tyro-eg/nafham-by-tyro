@@ -39,6 +39,10 @@ export interface MySalaryLine {
   amount: number;
   /** False for sessions not paid (yet): missed but unconfirmed, or not closed */
   paid: boolean;
+  /** A session the family cancelled late: the share paid (0.5 or 1) */
+  tutor_paid_fraction?: number;
+  /** How many hours before the start the family cancelled */
+  cancel_notice_hours?: number | null;
   flags: string[];
 }
 

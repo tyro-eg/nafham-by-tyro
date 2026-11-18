@@ -1573,6 +1573,8 @@
     },
     "LINE_CALC": "{{hours}} h × {{rate}}",
     "STUDENT_MISSED": "Student missed",
+    "LATE_CANCEL_HALF": "Paid half: the family cancelled {{hours}} h before",
+    "LATE_CANCEL_FULL": "Paid: the family cancelled {{hours}} h before",
     "EMPTY_MTD": "No paid sessions yet this month. Your earnings will appear here as sessions are completed.",
     "EMPTY_MONTH": "No paid sessions in this month.",
     "NOTE": "You are paid for completed sessions, free trials and sessions your student missed, for their booked length at your hourly rate for each course. Cancelled sessions and sessions you missed aren't paid. Your final payout may differ."

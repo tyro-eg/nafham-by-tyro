@@ -319,6 +319,20 @@ const MySalary: FC = () => {
                             {t('MY_SALARY.STUDENT_MISSED')}
                           </span>
                         )}
+                        {/* Paid although cancelled: the family cancelled late */}
+                        {line.status === 'cancelled' &&
+                          (line.tutor_paid_fraction ?? 0) > 0 && (
+                            <span className="sal-chip sal-chip--missed">
+                              {t(
+                                (line.tutor_paid_fraction ?? 0) < 1
+                                  ? 'MY_SALARY.LATE_CANCEL_HALF'
+                                  : 'MY_SALARY.LATE_CANCEL_FULL',
+                                {
+                                  hours: formatHours(line.cancel_notice_hours ?? 0),
+                                },
+                              )}
+                            </span>
+                          )}
                       </span>
                     </span>
                     <span className="sal-line__calc">
