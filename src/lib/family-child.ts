@@ -44,3 +44,15 @@ export const CHILD_COLORS = [
 ];
 export const childColor = (index: number) =>
   CHILD_COLORS[index % CHILD_COLORS.length];
+
+/** The child a package belongs to, with the package itself */
+export const findChildPackage = <C extends { packages: { id: number }[] }>(
+  children: C[] | undefined,
+  packageId: number,
+): { child: C; pkg: C['packages'][number] } | null => {
+  for (const child of children ?? []) {
+    const pkg = child.packages.find((p) => p.id === packageId);
+    if (pkg) return { child, pkg };
+  }
+  return null;
+};

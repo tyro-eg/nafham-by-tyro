@@ -30,11 +30,16 @@ export interface SavedSlot {
   /** ISO start time, also the slot's key */
   key: string;
   status: SlotStatus;
+  /** Kept for one of the instructor's students while they renew */
+  held?: boolean;
+  heldUntil?: string | null;
+  heldFor?: string | null;
 }
 
 export type CellState =
   | 'past'
   | 'reserved'
+  | 'held'
   | 'available'
   | 'empty'
   | 'adding'
@@ -87,7 +92,7 @@ export const cellState = (
   isPast: boolean,
 ): CellState => {
   if (isPast) return 'past';
-  if (saved?.status === 'reserved') return 'reserved';
+  if (saved?.status === 'reserved') return saved.held ? 'held' : 'reserved';
   if (pending === 'add') return 'adding';
   if (pending === 'remove') return 'removing';
   return saved ? 'available' : 'empty';
@@ -95,11 +100,18 @@ export const cellState = (
 
 /** Whether the instructor is (or will be, after saving) open in this cell */
 export const isOpen = (state: CellState): boolean =>
-  state === 'available' || state === 'adding' || state === 'reserved';
+  state === 'available' ||
+  state === 'adding' ||
+  state === 'reserved' ||
+  state === 'held';
+
+/** Booked and held cells can't be changed from the editor */
+export const isLocked = (state: CellState): boolean =>
+  state === 'past' || state === 'reserved' || state === 'held';
 
 /** The paint mode a drag should use when it starts on a cell */
 export const paintModeFor = (state: CellState): PaintMode | null => {
-  if (state === 'past' || state === 'reserved') return null;
+  if (isLocked(state)) return null;
   return isOpen(state) ? 'remove' : 'add';
 };
 
@@ -182,20 +194,22 @@ export const formatSlotTime = (date: Date, language: string): string =>
     minute: '2-digit',
   }).format(date);
 
-/** Count saved open slots (available or reserved) inside a week */
+/** Count saved slots inside a week: open, booked, and held for a renewing student */
 export const weekSummary = (
   saved: SavedMap,
   weekStart: Date,
-): { open: number; booked: number } => {
+): { open: number; booked: number; held: number } => {
   const start = weekStart.getTime();
   const end = addDays(weekStart, 7).getTime();
   let open = 0;
   let booked = 0;
+  let held = 0;
   saved.forEach((slot) => {
     const time = new Date(slot.key).getTime();
     if (time < start || time >= end) return;
-    if (slot.status === 'reserved') booked += 1;
+    if (slot.status === 'reserved' && slot.held) held += 1;
+    else if (slot.status === 'reserved') booked += 1;
     else open += 1;
   });
-  return { open, booked };
+  return { open, booked, held };
 };

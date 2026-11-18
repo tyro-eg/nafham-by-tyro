@@ -101,6 +101,19 @@ const PaymentsHistory: FC = () => {
                         course: subjectName(line.course_name),
                         student: line.student_first_name,
                       })}
+                      {line.kind !== 'top_up' && (
+                        <Chip
+                          size="small"
+                          variant="outlined"
+                          className="pay-row__kind"
+                          color={
+                            line.kind === 'match_pending'
+                              ? 'warning'
+                              : 'default'
+                          }
+                          label={t(`PAYMENTS.HISTORY.KIND.${line.kind}`)}
+                        />
+                      )}
                     </li>
                   ))}
                 </ul>

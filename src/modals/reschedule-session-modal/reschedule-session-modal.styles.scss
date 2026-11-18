@@ -1,0 +1,215 @@
+@import '../../assets/styles/variables.scss';
+@import '../../assets/styles/mixins.scss';
+@import '../modal-kit';
+
+// Propose new times for a lesson: a strip of days, the times of the day,
+// what was picked, a note.
+.move-modal {
+  @include modal-shell;
+  max-width: 60rem;
+
+  &__header {
+    @include modal-header;
+  }
+
+  &__icon {
+    @include modal-icon-chip;
+  }
+
+  &__heading {
+    @include modal-heading-text;
+  }
+
+  &__title {
+    @include modal-title;
+    font-size: $font-h4;
+  }
+
+  &__subtitle {
+    @include modal-subtitle;
+  }
+
+  &__close {
+    @include modal-close;
+  }
+
+  &__loading {
+    display: flex;
+    justify-content: center;
+    padding: $space-6;
+  }
+
+  &__label {
+    margin: $space-4 0 $space-2;
+    font-size: $font-sm;
+    font-weight: 600;
+    color: $text-strong;
+    text-align: start;
+  }
+
+  &__days {
+    display: flex;
+    gap: $space-2;
+    overflow-x: auto;
+    padding-bottom: $space-1;
+    scrollbar-width: thin;
+  }
+
+  &__day {
+    display: grid;
+    flex-shrink: 0;
+    justify-items: center;
+    min-width: 6.4rem;
+    padding: $space-2 $space-3;
+    border: 1.5px solid $border;
+    border-radius: $radius-md;
+    background: $surface;
+    color: $text-body;
+    font: inherit;
+    line-height: 1.2;
+    cursor: pointer;
+    transition:
+      border-color 0.15s,
+      background-color 0.15s;
+
+    &:hover {
+      border-color: $gray-400;
+    }
+
+    &:focus-visible {
+      @include focus-ring;
+    }
+
+    &.is-selected {
+      border-color: $brand-600;
+      background: $brand-50;
+      color: $brand-700;
+    }
+
+    &.has-picked:not(.is-selected) {
+      border-color: $brand-300;
+    }
+
+    &-weekday {
+      font-size: $font-xs;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    &-number {
+      font-size: 2rem;
+      font-weight: 700;
+      color: $text-strong;
+    }
+
+    &-month {
+      font-size: $font-xs;
+      color: $text-muted;
+    }
+  }
+
+  &__times {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $space-2;
+  }
+
+  &__time {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.6rem 1.4rem;
+    border: 1.5px solid $border;
+    border-radius: $radius-pill;
+    background: $surface;
+    color: $text-body;
+    font: inherit;
+    font-size: $font-sm;
+    font-weight: 600;
+    direction: ltr;
+    cursor: pointer;
+    transition:
+      border-color 0.15s,
+      background-color 0.15s,
+      color 0.15s;
+
+    &:hover:not(:disabled) {
+      border-color: $gray-400;
+    }
+
+    &:focus-visible {
+      @include focus-ring;
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    &.is-selected {
+      border-color: $brand-600;
+      background: $brand-50;
+      color: $brand-700;
+    }
+  }
+
+  &__held {
+    font-size: 1.6rem !important;
+    color: $accent-500;
+  }
+
+  &__picked {
+    margin-bottom: $space-4;
+
+    &-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: $space-2;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+
+      li {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.4rem 0.6rem 0.4rem 1.2rem;
+        border-radius: $radius-pill;
+        background: $brand-600;
+        color: $text-on-dark;
+        font-size: $font-sm;
+        font-weight: 600;
+
+        html[dir='rtl'] & {
+          padding: 0.4rem 1.2rem 0.4rem 0.6rem;
+        }
+      }
+    }
+  }
+
+  &__unpick {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    border: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    color: inherit;
+    font-size: 1.4rem;
+    cursor: pointer;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.35);
+    }
+  }
+
+  &__error {
+    margin-top: $space-4;
+  }
+
+  &__footer {
+    @include modal-footer;
+  }
+}

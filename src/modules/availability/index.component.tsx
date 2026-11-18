@@ -69,6 +69,9 @@ const toSaved = (record: RawAvailability): SavedSlot => ({
   id: record.id,
   key: new Date(record.start_time).toISOString(),
   status: record.status,
+  held: !!record.held,
+  heldUntil: record.held_until ?? null,
+  heldFor: record.held_for ?? null,
 });
 
 const errorText = (error: unknown, fallback: string): string => {
@@ -161,6 +164,8 @@ const AvailabilityPage: FC = () => {
       return {
         state: cellState(slot, pending.get(key), isPast(key)),
         hadSlot: !!slot,
+        heldFor: slot?.heldFor,
+        heldUntil: slot?.heldUntil,
       };
     },
     [saved, pending, isPast],
@@ -477,17 +482,25 @@ const AvailabilityPage: FC = () => {
                   hours: hoursFromSlots(summary.booked),
                 })}
               />
+              {summary.held > 0 && (
+                <Chip
+                  className="av-summary__chip av-summary__chip--held"
+                  label={t('AVAILABILITY.STATS.HELD', {
+                    hours: hoursFromSlots(summary.held),
+                  })}
+                />
+              )}
             </>
           )}
           <ul className="av-legend" aria-label={t('AVAILABILITY.LEGEND.TITLE')}>
-            {(['available', 'reserved', 'adding', 'removing'] as const).map(
-              (state) => (
-                <li key={state} className="av-legend__item">
-                  <span className={`av-legend__swatch av-cell--${state}`} />
-                  {t(`AVAILABILITY.STATE.${state.toUpperCase()}`)}
-                </li>
-              ),
-            )}
+            {(
+              ['available', 'reserved', 'held', 'adding', 'removing'] as const
+            ).map((state) => (
+              <li key={state} className="av-legend__item">
+                <span className={`av-legend__swatch av-cell--${state}`} />
+                {t(`AVAILABILITY.STATE.${state.toUpperCase()}`)}
+              </li>
+            ))}
           </ul>
         </div>
 

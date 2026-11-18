@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, ReactNode, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Button,
@@ -18,6 +18,12 @@ interface CourseStepProps {
   loading: boolean;
   courseId?: number;
   examBoardId?: number;
+  /** The question asked; the trial's by default, the buy wizard asks its own */
+  title?: string;
+  /** Told which course the picks currently resolve to, as they change */
+  onResolve?: (courseId: number | undefined) => void;
+  /** Shown under the resolved course (the buy wizard's "already learning") */
+  notice?: ReactNode;
   onNext: (courseId: number, examBoardId?: number) => void;
 }
 
@@ -87,6 +93,9 @@ const CourseStep: FC<CourseStepProps> = ({
   loading,
   courseId,
   examBoardId,
+  title,
+  onResolve,
+  notice,
   onNext,
 }) => {
   const { t } = useTranslation();
@@ -145,6 +154,11 @@ const CourseStep: FC<CourseStepProps> = ({
       (boardOptions.length === 1 ? Number(boardOptions[0].id) : undefined))
     : undefined;
   const complete = !!resolved && (!hasBoards || board !== undefined);
+
+  const resolvedId = resolved?.id;
+  useEffect(() => {
+    onResolve?.(resolvedId);
+  }, [resolvedId, onResolve]);
 
   const pick = (key: keyof Picks) => (id: Choice['id']) => {
     // Every pick below the changed one starts over
@@ -210,7 +224,7 @@ const CourseStep: FC<CourseStepProps> = ({
 
   return (
     <div className="trial__step">
-      <h2 className="trial__step-title">{t('TRIAL.COURSE.TITLE')}</h2>
+      <h2 className="trial__step-title">{title ?? t('TRIAL.COURSE.TITLE')}</h2>
 
       <div className="trial__fields">
         {field(
@@ -230,6 +244,8 @@ const CourseStep: FC<CourseStepProps> = ({
         {hasBoards &&
           field('board', t('TRIAL.COURSE.EXAM_BOARD'), boardOptions, board)}
       </div>
+
+      {resolved && notice}
 
       {complete && resolved && (
         <p className="trial__resolved">

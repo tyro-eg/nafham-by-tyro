@@ -1,4 +1,4 @@
-import { FC, useMemo, useState } from 'react';
+import { FC, useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import {
@@ -16,6 +16,7 @@ import {
 import {
   AccessTimeRounded,
   AddRounded,
+  AddShoppingCartRounded,
   ArrowForwardRounded,
   AssignmentRounded,
   AutorenewRounded,
@@ -34,15 +35,19 @@ import {
   useFamily,
   useRequestTopUp,
   type FamilyChild,
+  type FamilyPackage,
 } from '../../hooks/useFamily';
 import { useRtlClass } from '../../assets/utils/utils';
 import { snackActions } from '../../assets/utils/toaster';
 import { formatRelative } from '../homework/homework.utils';
 import { subjectName } from '../dashboard/dashboard.utils';
-import { childColor } from '../../lib/family-child';
+import { childColor, findChildPackage } from '../../lib/family-child';
 import RenewDialog from '../payments/renew-dialog.component';
 import RenewAllSheet from '../payments/renew-all-sheet.component';
 import RenewAllBanner from '../payments/renew-all-banner.component';
+import OpenPaymentBanner from '../payments/open-payment-banner.component';
+import TrialFollowUps from '../buy/trial-follow-ups.component';
+import TrialRequestsCard from '../trial/trial-requests-card.component';
 import '../dashboard/dashboard.styles.scss';
 import './family.styles.scss';
 
@@ -169,7 +174,7 @@ const ChildCard: FC<{
   color: string;
   onOpen: (path: string) => void;
   onTopUp: () => void;
-  onRenew: (packageId: number) => void;
+  onRenew: (pkg: FamilyPackage) => void;
 }> = ({ child, color, onOpen, onTopUp, onRenew }) => {
   const { t, i18n } = useTranslation();
   const locale = `${i18n.language}-u-nu-latn`;
@@ -282,7 +287,7 @@ const ChildCard: FC<{
               variant={pkg.hours_left <= LOW_HOURS ? 'contained' : 'text'}
               className="fam-kid__renew"
               startIcon={<AutorenewRounded />}
-              onClick={() => onRenew(pkg.id)}
+              onClick={() => onRenew(pkg)}
             >
               {t('PAYMENTS.RENEW.BUTTON')}
             </Button>
@@ -306,6 +311,15 @@ const ChildCard: FC<{
           onClick={() => onOpen('/calendar')}
         >
           {t('NAVIGATION.CALENDAR')}
+        </Button>
+        <Button
+          variant="outlined"
+          size="small"
+          className="fam-kid__buy"
+          startIcon={<AddShoppingCartRounded />}
+          onClick={() => onOpen(`/buy?child=${child.id}`)}
+        >
+          {t('BUY.ADD_COURSE')}
         </Button>
         <Button
           variant="text"
@@ -342,21 +356,34 @@ const FamilyHome: FC = () => {
   const { choose } = useActiveChild(children);
   const [topUpFor, setTopUpFor] = useState<FamilyChild | null>(null);
   const [renewing, setRenewing] = useState<{
-    packageId: number;
+    pkg: FamilyPackage;
     child: FamilyChild;
   } | null>(null);
-  // `?renew=all` (the nudge's link) opens the renew-all sheet at once
+  // `?renew=all` (the nudge's link) opens the renew-all sheet at once;
+  // `?renew=<package id>` (the app's handoff) opens that package's dialog
+  // once the family has loaded and the child owning it is known
   const [searchParams, setSearchParams] = useSearchParams();
   const [renewingAll, setRenewingAll] = useState(
     () => searchParams.get('renew') === 'all',
   );
-  const closeRenewAll = () => {
-    setRenewingAll(false);
+  const dropRenewParam = () => {
     if (searchParams.has('renew')) {
       searchParams.delete('renew');
       setSearchParams(searchParams, { replace: true });
     }
   };
+  const closeRenewAll = () => {
+    setRenewingAll(false);
+    dropRenewParam();
+  };
+  useEffect(() => {
+    const packageId = Number(searchParams.get('renew'));
+    if (!(packageId > 0) || !children) return;
+    const found = findChildPackage(children, packageId);
+    if (found) setRenewing(found);
+    dropRenewParam();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [children]);
   const loading = family.isLoading;
   const locale = `${i18n.language}-u-nu-latn`;
 
@@ -471,16 +498,16 @@ const FamilyHome: FC = () => {
           </div>
         </section>
 
+        <OpenPaymentBanner />
+        <TrialFollowUps />
         <RenewAllBanner onOpen={() => setRenewingAll(true)} />
         {renewingAll && (
           <RenewAllSheet
             onClose={closeRenewAll}
             onRequestInstead={(packageId) => {
               closeRenewAll();
-              const child = children?.find((c) =>
-                c.packages.some((pkg) => pkg.id === packageId),
-              );
-              if (child) setTopUpFor(child);
+              const found = findChildPackage(children, packageId);
+              if (found) setTopUpFor(found.child);
             }}
           />
         )}
@@ -498,6 +525,11 @@ const FamilyHome: FC = () => {
           </Alert>
         )}
 
+        {/* Free trials waiting for an instructor, for every child */}
+        {children && children.length > 0 && (
+          <TrialRequestsCard allChildren showStudent={children.length > 1} />
+        )}
+
         {loading && (
           <div className="fam-kids">
             <Skeleton variant="rounded" height={320} />
@@ -510,8 +542,16 @@ const FamilyHome: FC = () => {
             <p className="sd-empty__text">{t('FAMILY.EMPTY')}</p>
             <Button
               component={Link}
-              to="/family/settings"
+              to="/buy"
               variant="contained"
+              startIcon={<AddShoppingCartRounded />}
+            >
+              {t('BUY.FIRST_COURSE')}
+            </Button>
+            <Button
+              component={Link}
+              to="/family/settings"
+              variant="text"
               startIcon={<AddRounded />}
             >
               {t('FAMILY.SETTINGS.ADD_CHILD')}
@@ -528,7 +568,7 @@ const FamilyHome: FC = () => {
                 color={childColor(index)}
                 onOpen={(path) => open(child, path)}
                 onTopUp={() => setTopUpFor(child)}
-                onRenew={(packageId) => setRenewing({ packageId, child })}
+                onRenew={(pkg) => setRenewing({ pkg, child })}
               />
             ))}
           </div>
@@ -536,11 +576,9 @@ const FamilyHome: FC = () => {
 
         {renewing && (
           <RenewDialog
-            packageId={renewing.packageId}
-            hoursLeft={
-              renewing.child.packages?.find((p) => p.id === renewing.packageId)
-                ?.hours_left
-            }
+            packageId={renewing.pkg.id}
+            packageType={renewing.pkg.package_type}
+            hoursLeft={renewing.pkg.hours_left}
             onClose={() => setRenewing(null)}
             onRequestInstead={() => {
               const { child } = renewing;

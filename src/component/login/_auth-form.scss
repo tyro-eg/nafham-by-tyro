@@ -134,9 +134,16 @@
       border-radius: 1rem;
       box-shadow: $shadow-lg;
 
+      // The theme pins each flag (25px) to the left, so leave room for it
       .country {
-        padding: 0.8rem 1.2rem;
+        padding: 0.8rem 1.2rem 0.8rem 4.9rem;
         color: $text-strong;
+
+        .flag {
+          left: 1.2rem;
+          top: 50%;
+          margin-top: -1rem;
+        }
 
         &:hover {
           background-color: $gray-50;

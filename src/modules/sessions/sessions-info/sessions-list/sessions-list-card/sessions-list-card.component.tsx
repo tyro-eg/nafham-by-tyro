@@ -12,7 +12,11 @@ import {
   Timer,
   AutoAwesomeRounded,
   EventRepeatRounded,
+  EventBusyRounded,
 } from '@mui/icons-material';
+import CancelSessionModal from '../../../../../modals/cancel-session-modal/cancel-session-modal.component';
+import RescheduleSessionModal from '../../../../../modals/reschedule-session-modal/reschedule-session-modal.component';
+import { formatSlot } from '../../../../trial/trial.types';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
 import {
@@ -44,13 +48,51 @@ import {
 } from '../../../session-state';
 
 import RequestSessionsModal from '../../../../../modals/request-sessions-modal/request-sessions-modal.component';
-import Profile from '../../../../../assets/images/videoSession/people/profile.png';
+import {
+  ReportLinkProblem,
+  TutorMeetingLink,
+} from './meeting-link-panel.component';
 
 import './sessions-list-card.styles.scss';
 
 interface SessionListCardProps {
   session: SessionType;
 }
+
+// Soft background and ink pairs for initials, picked by name so a person
+// keeps the same colour everywhere
+// (tints of the brand sky blue, navy and yellow)
+const AVATAR_TONES = [
+  ['#d6f1fc', '#1d7fa3'],
+  ['#e6ebf1', '#2c3e50'],
+  ['#fff3cc', '#8a6400'],
+  ['#eef9fe', '#2fa3c9'],
+  ['#dfe5ec', '#161c2d'],
+  ['#ecfdf3', '#2f8f2e'],
+];
+
+const PersonAvatar: React.FC<{
+  person?: { first_name?: string; last_name?: string; image?: string | null };
+  alt: string;
+}> = ({ person, alt }) => {
+  if (person?.image) {
+    return <img src={person.image} alt={alt} loading="lazy" />;
+  }
+  const name = `${person?.first_name ?? ''}${person?.last_name ?? ''}`;
+  const hash = [...name].reduce((sum, ch) => sum + ch.charCodeAt(0), 0);
+  const [bg, ink] = AVATAR_TONES[hash % AVATAR_TONES.length];
+  return (
+    <span
+      className="sessions-card__initials"
+      style={{ background: bg, color: ink }}
+      aria-label={alt}
+      role="img"
+    >
+      {person?.first_name?.[0]}
+      {person?.last_name?.[0]}
+    </span>
+  );
+};
 
 const SessionListCard: React.FC<SessionListCardProps> = ({ session }) => {
   const { t, i18n } = useTranslation();
@@ -71,20 +113,19 @@ const SessionListCard: React.FC<SessionListCardProps> = ({ session }) => {
   const canMessage = useCanMessage(counterpart?.id);
   const chat = useStartConversation();
   const [sessionDuration, setSessionDuration] = useState(0);
-  // Families ask the back office to cancel or move a session (19 Nov 2026)
+  // Cancelling and moving: the backend says what this viewer may do; for
+  // anything else the family asks the back office (19 Nov 2026)
+  const [changeModal, setChangeModal] = useState<'cancel' | 'move' | null>(
+    null,
+  );
   const [changeOpen, setChangeOpen] = useState(false);
-  // const [isWithinTwelveHours, setIsWithinTwelveHours] = useState(false);
-  // const [openCancelSessionModal, setOpenCancelSessionModal] = useState(false);
-  // const [modalType, setModalType] = useState<'cancel' | 'end'>('cancel');
+  const proposal = session.pending_reschedule_request;
 
   const locales = { ar: arSA, en: enUS };
 
   useEffect(() => {
     setIsInstructor(session?.tutor?.id === currentUser?.id);
     calculateSessionDetails();
-    // setIsWithinTwelveHours(
-    //   differenceInHours(parseISO(session.start_time!), new Date()) < 12,
-    // );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [session, currentUser]);
 
@@ -146,9 +187,8 @@ const SessionListCard: React.FC<SessionListCardProps> = ({ session }) => {
   const notInstructorOrIsGroup = () =>
     !isInstructor || session.session_type === 'group';
 
-  // const triggerOpenRescheduleModal = () => {};
-
   const locale = locales[i18n.language as 'en' | 'ar'];
+  const intlLocale = `${i18n.language}-u-nu-latn`;
   const startDate = parseISO(session.start_time!);
   // Ticks every 30 s so countdowns and the Join button move on their own
   const now = useNow();
@@ -157,6 +197,10 @@ const SessionListCard: React.FC<SessionListCardProps> = ({ session }) => {
   const isUpcoming =
     isLive || phase === 'upcoming' || phase === 'starting_soon';
   const joinable = canJoin(session, now, isInstructor);
+  const courseParts = (session.grade_subject?.full_course_name ?? '')
+    .split(' - ')
+    .map((part) => part.trim())
+    .filter(Boolean);
   const typeVariant =
     session.session_type === 'group'
       ? 'group'
@@ -166,7 +210,7 @@ const SessionListCard: React.FC<SessionListCardProps> = ({ session }) => {
 
   return (
     <article
-      className={`sessions-card sessions-card--${isUpcoming ? 'upcoming' : 'past'}${isLive ? ' sessions-card--live' : ''}`}
+      className={`sessions-card sessions-card--${isUpcoming ? 'upcoming' : 'past'} sessions-card--phase-${phase}${isLive ? ' sessions-card--live' : ''}`}
     >
       <div className="sessions-card__date">
         <span className="sessions-card__date-month">
@@ -192,8 +236,9 @@ const SessionListCard: React.FC<SessionListCardProps> = ({ session }) => {
           {phase === 'starting_soon' && (
             <span className="sessions-card__status sessions-card__status--soon">
               <Timer aria-hidden="true" />
-              {t('MYSESSIONS.MAIN.CARD.STARTING_SOON')}{' '}
-              {getRelativeSessionDate()}
+              {differenceInMinutes(startDate, now) > 0
+                ? `${t('MYSESSIONS.MAIN.CARD.STARTING_SOON')} ${getRelativeSessionDate()}`
+                : t('MYSESSIONS.MAIN.CARD.STARTING_NOW')}
             </span>
           )}
 
@@ -258,6 +303,55 @@ const SessionListCard: React.FC<SessionListCardProps> = ({ session }) => {
             {t('MYSESSIONS.MAIN.CARD.JOIN_HINT')}
           </p>
         )}
+        {phase === 'cancelled' && session.cancelled_by && (
+          <p className="sessions-card__hint">
+            {t(
+              `SESSION_CHANGES.CANCELLED_BY.${session.cancelled_by.toUpperCase()}`,
+            )}
+            {session.cancellation_reason &&
+              session.cancelled_by !== 'admin' &&
+              ` · ${t(
+                `SESSION_CHANGES.REASONS.${session.cancellation_reason.toUpperCase()}`,
+                {
+                  defaultValue: session.cancellation_reason,
+                },
+              )}`}
+          </p>
+        )}
+        {proposal && isUpcoming && (
+          <div className="sessions-card__proposal">
+            <EventRepeatRounded aria-hidden="true" />
+            <div>
+              <p className="sessions-card__proposal-title">
+                {proposal.mine
+                  ? t('SESSION_CHANGES.PROPOSAL.YOURS', {
+                      count: proposal.options.length,
+                    })
+                  : t('SESSION_CHANGES.PROPOSAL.THEIRS', {
+                      name: proposal.proposed_by_first_name,
+                      count: proposal.options.length,
+                    })}
+              </p>
+              <p className="sessions-card__proposal-times">
+                {proposal.options
+                  .map((option) => formatSlot(option.start_time, intlLocale))
+                  .join(' · ')}
+              </p>
+              <Link to="/requests" className="sessions-card__proposal-link">
+                {proposal.mine
+                  ? t('SESSION_CHANGES.PROPOSAL.OPEN_SENT')
+                  : t('SESSION_CHANGES.PROPOSAL.ANSWER')}
+              </Link>
+            </div>
+          </div>
+        )}
+
+        {/* The tutor's own meeting link; the student says it isn't working */}
+        {isInstructor ? (
+          <TutorMeetingLink session={session} />
+        ) : (
+          <ReportLinkProblem session={session} />
+        )}
 
         <p className="sessions-card__time">
           <span className="sessions-card__time-item">
@@ -278,7 +372,18 @@ const SessionListCard: React.FC<SessionListCardProps> = ({ session }) => {
 
         {session?.grade_subject?.full_course_name && (
           <p className="sessions-card__subject">
-            {session.grade_subject.full_course_name}
+            {courseParts.length > 1 ? (
+              <>
+                <span className="sessions-card__subject-name">
+                  {courseParts[courseParts.length - 1]}
+                </span>
+                <span className="sessions-card__subject-meta">
+                  {courseParts.slice(0, -1).join(' · ')}
+                </span>
+              </>
+            ) : (
+              session.grade_subject.full_course_name
+            )}
           </p>
         )}
 
@@ -323,11 +428,7 @@ const SessionListCard: React.FC<SessionListCardProps> = ({ session }) => {
           <div className="sessions-card__person">
             {isInstructorAndNotGroup() && (
               <div className="sessions-card__avatar">
-                <img
-                  src={session.student?.image || Profile}
-                  alt="student"
-                  loading="lazy"
-                />
+                <PersonAvatar person={session.student} alt="student" />
               </div>
             )}
             {notInstructorOrIsGroup() && (
@@ -335,11 +436,7 @@ const SessionListCard: React.FC<SessionListCardProps> = ({ session }) => {
                 className="sessions-card__avatar sessions-card__instructor-img"
                 onClick={() => navigate(`/profile/${session.tutor?.id}`)}
               >
-                <img
-                  src={session.tutor?.image || Profile}
-                  alt="Tutor"
-                  loading="lazy"
-                />
+                <PersonAvatar person={session.tutor} alt="Tutor" />
               </Button>
             )}
             <div className="sessions-card__person-info">
@@ -396,10 +493,15 @@ const SessionListCard: React.FC<SessionListCardProps> = ({ session }) => {
                   : t('ASSISTANT.SESSION.RECORDING')}
             </Button>
           )}
+        {/* The back office for what the family can't do here themselves
+            (catchup: only the pair's next session can be cancelled or moved
+            from the website; for the others, ask) */}
         {!isInstructor &&
           session.session_type !== 'group' &&
           session.status === 'scheduled' &&
-          phase === 'upcoming' && (
+          phase === 'upcoming' &&
+          !session.can_cancel &&
+          !session.can_propose_move && (
             <Button
               className="sessions-card__actions-button"
               variant="text"
@@ -442,52 +544,52 @@ const SessionListCard: React.FC<SessionListCardProps> = ({ session }) => {
             {t('MESSAGES.MESSAGE_BUTTON')}
           </Button>
         )}
-        {/* {(session.state === 'scheduled' ||
-          session.state === 'rescheduled') &&
-          isWithinTwelveHours && (
-            <div>
-              {session.type !== 'GroupSession' && (
-                <div>
-                  {!isInstructor && (
-                    <Button
-                      className="sessions-card__actions-button"
-                      color="primary"
-                      variant="contained"
-                      onClick={triggerOpenRescheduleModal}
-                    >
-                      {t('MYSESSIONS.MAIN.CARD.RESCHEDULE')}
-                    </Button>
-                  )}
-                  <Button
-                    className="sessions-card__actions-button"
-                    variant="text"
-                    onClick={() => openCancelModal('cancel')}
-                  >
-                    {t('MYSESSIONS.MAIN.CARD.CANCEL')}
-                  </Button>
-                </div>
-              )}
-              {session.type === 'GroupSession' && isInstructor && (
-                <div>
-                  <Button
-                    className="sessions-card__actions-button"
-                    color="primary"
-                    variant="contained"
-                    onClick={triggerOpenRescheduleModal}
-                  >
-                    {t('MYSESSIONS.MAIN.CARD.RESCHEDULE')}
-                  </Button>
-                  <Button
-                    className="sessions-card__actions-button"
-                    variant="outlined"
-                    onClick={() => openCancelModal('cancel')}
-                  >
-                    {t('MYSESSIONS.MAIN.CARD.CANCEL')}
-                  </Button>
-                </div>
-              )}
-            </div>
-          )} */}
+        {/* Moving by proposal and cancelling: what the backend allows this viewer */}
+        {session.can_propose_move && !proposal && (
+          <Button
+            className="sessions-card__actions-button"
+            variant="outlined"
+            color="secondary"
+            startIcon={<EventRepeatRounded />}
+            onClick={() => setChangeModal('move')}
+          >
+            {t('SESSION_CHANGES.MOVE.BUTTON')}
+          </Button>
+        )}
+        {session.can_cancel && (
+          <Button
+            className="sessions-card__actions-button"
+            variant="text"
+            color="inherit"
+            startIcon={<EventBusyRounded />}
+            onClick={() => setChangeModal('cancel')}
+          >
+            {t('MYSESSIONS.MAIN.CARD.CANCEL')}
+          </Button>
+        )}
+        <Dialog
+          open={changeModal === 'cancel'}
+          onClose={() => setChangeModal(null)}
+          maxWidth="sm"
+          fullWidth
+        >
+          <CancelSessionModal
+            session={session}
+            isInstructor={isInstructor}
+            handleClose={() => setChangeModal(null)}
+          />
+        </Dialog>
+        <Dialog
+          open={changeModal === 'move'}
+          onClose={() => setChangeModal(null)}
+          maxWidth="sm"
+          fullWidth
+        >
+          <RescheduleSessionModal
+            session={session}
+            handleClose={() => setChangeModal(null)}
+          />
+        </Dialog>
         {(isLive || phase === 'starting_soon') && (
           <div className="sessions-card__status-wrapper">
             {/* {isInstructor && (

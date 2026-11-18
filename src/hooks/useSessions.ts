@@ -1,26 +1,7 @@
-import {
-  useQuery,
-  useMutation,
-  useInfiniteQuery,
-  useQueryClient,
-} from '@tanstack/react-query';
-import { get, post } from '../assets/utils/api';
+import { useQuery, useInfiniteQuery } from '@tanstack/react-query';
+import { get } from '../assets/utils/api';
 import { queryKeys, SessionFilters } from '../lib/queryKeys';
 import { SessionType } from '../assets/types';
-
-/**
- * Trial session booking data (POST /sessions/trial). The backend decides the
- * length; the student picks the start of an open slot and may leave a
- * parent's phone number.
- */
-export interface TrialSessionData {
-  tutor_id: number;
-  start_time: string;
-  grade_subject_id: number;
-  guardian_phone?: string;
-  /** The exam board the student sits, when the course's tutors declare boards */
-  exam_board_id?: number;
-}
 
 /** How often session lists re-read the server while the tab is visible */
 export const LIVE_REFRESH_MS = 30_000;
@@ -114,33 +95,10 @@ export function useInfiniteSessions(
   });
 }
 
-// Families cannot cancel, move or end sessions, nor book paid ones: they
-// send a session request (useSessionRequests) and the back office does it.
-// The old calls here (/sessions/:id/cancel, /sessions/:id/end and
-// /sessions/private) had no server action behind them (removed 19 Nov 2026).
-
-/**
- * Book a free trial. Students book these themselves; the caller shows the
- * backend's reasons when the booking is refused (bookingErrorMessage).
- */
-export function useBookTrialSession() {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async (sessionData: TrialSessionData) => {
-      const response = await post(`/sessions/trial`, {
-        trial_session: sessionData,
-      });
-      return response.data.data as SessionType;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.sessions.all });
-      // The slot is now reserved, and the tutor's free trial is claimed
-      queryClient.invalidateQueries({ queryKey: queryKeys.calendar.all });
-      queryClient.invalidateQueries({ queryKey: queryKeys.instructors.all });
-    },
-  });
-}
+// Cancelling and moving a session live in useSessionChanges (PATCH
+// /sessions/:id/cancel and the move proposals); for anything those don't
+// allow, families send a session request (useSessionRequests) and the back
+// office does it. Free trials are trial requests (useTrialRequests).
 
 /**
  * The reasons a booking was refused, as the backend states them

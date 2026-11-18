@@ -1,9 +1,10 @@
-import { FC, useState } from 'react';
+import { FC, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Alert, Button, CircularProgress, Rating } from '@mui/material';
 import {
   ArrowBackRounded,
   ArrowForwardRounded,
+  ScheduleSendRounded,
   StarRounded,
   WorkspacePremiumRounded,
 } from '@mui/icons-material';
@@ -12,10 +13,13 @@ import type { GradeSubject } from '../../../assets/types';
 import { getNameInitials } from '../../../assets/utils/utils';
 import {
   useTrialEligibility,
+  type TrialDispatch,
   type TrialSlot,
   type TrialTutor,
 } from '../../../hooks/useTrial';
 import { formatSlot } from '../trial.types';
+import MatchCards from './match-cards.component';
+import RequestTime from './request-time.component';
 
 interface TutorsStepProps {
   course?: GradeSubject;
@@ -25,6 +29,19 @@ interface TutorsStepProps {
   signedIn: boolean;
   onPickTutor: (tutorId: number) => void;
   onPickSlot: (tutorId: number, slot: TrialSlot) => void;
+  /** "Quickest to confirm" or "Best match" at one time */
+  onPickMatch: (
+    dispatch: Exclude<TrialDispatch, 'direct'>,
+    startTime: string,
+  ) => void;
+  /** A tutor who wants students, at a time outside their calendar */
+  onAskTime: (tutorId: number, startTime: string) => void;
+  /** The search, for the time pickers */
+  range: { from: string; to: string };
+  window: { start: number; end: number };
+  examBoardId?: number;
+  /** The time asked for earlier, when coming back */
+  startTime?: string;
   onBack: () => void;
 }
 
@@ -32,8 +49,11 @@ const TOP = 3;
 const BIO_LENGTH = 160;
 
 /**
- * The tutors who can give the trial, best first as our team ranks them for
- * this course. The top three show first; the rest unfold on request.
+ * Two ways to ask for a trial: let us find the instructor at one time
+ * (quickest to confirm, or best match), or pick a tutor, best first as our
+ * team ranks them for this course. A tutor with free times offers them; a
+ * tutor who wants students but has none in the window takes a time asked
+ * for. The top three show first; the rest unfold on request.
  */
 const TutorsStep: FC<TutorsStepProps> = ({
   course,
@@ -43,11 +63,21 @@ const TutorsStep: FC<TutorsStepProps> = ({
   signedIn,
   onPickTutor,
   onPickSlot,
+  onPickMatch,
+  onAskTime,
+  range,
+  window,
+  examBoardId,
+  startTime,
   onBack,
 }) => {
   const { t, i18n } = useTranslation();
   const locale = `${i18n.language}-u-nu-latn`;
   const [showAll, setShowAll] = useState(false);
+  // The tutor whose "Ask for a time" is open, and the time picked there
+  const [asking, setAsking] = useState<number | null>(null);
+  const [askTime, setAskTime] = useState<string | undefined>(startTime);
+  const onAskChange = useCallback((value: string) => setAskTime(value), []);
   // A signed-in student may have used their trial with some of these tutors
   const eligibility = useTrialEligibility(course?.id, signedIn);
 
@@ -83,10 +113,23 @@ const TutorsStep: FC<TutorsStepProps> = ({
     );
   }
 
+  const match = course ? (
+    <MatchCards
+      courseId={course.id}
+      examBoardId={examBoardId}
+      from={range.from}
+      to={range.to}
+      window={window}
+      startTime={startTime}
+      onPick={onPickMatch}
+    />
+  ) : null;
+
   if (!tutors.length) {
     return (
       <div className="trial__step">
         <h2 className="trial__step-title">{t('TRIAL.TUTORS.TITLE')}</h2>
+        {match}
         <div className="trial__empty-box">
           <p className="trial__empty">
             {t('TRIAL.TUTORS.EMPTY', {
@@ -110,12 +153,18 @@ const TutorsStep: FC<TutorsStepProps> = ({
         </p>
       </div>
 
+      {match}
+
+      <p className="trial-choice__label">{t('TRIAL.TUTORS.OR_PICK')}</p>
       <ul className="trial__tutors">
         {visible.map((tutor, index) => {
           const name = `${tutor.first_name} ${tutor.last_name}`.trim();
           const used = eligibility.data?.[tutor.id]?.enabled === false;
           const bio = tutor.bio ?? '';
           const top = index === 0;
+          // No published time in the window, but takes requests
+          const askOnly = tutor.slots.length === 0 && tutor.wants_students;
+          const open = asking === tutor.id;
           return (
             <li
               key={tutor.id}
@@ -175,30 +224,66 @@ const TutorsStep: FC<TutorsStepProps> = ({
                 </div>
               </div>
 
-              <div className="trial-tutor__slots">
-                <span className="trial-choice__label">
-                  {t('TRIAL.TUTORS.NEXT_SLOTS')}
-                </span>
-                <div className="trial-tutor__chips">
-                  {tutor.slots.slice(0, 3).map((slot) => (
-                    <button
-                      key={slot.id}
-                      type="button"
-                      className="trial-slot-chip"
-                      disabled={used}
-                      onClick={() => onPickSlot(tutor.id, slot)}
-                    >
-                      {formatSlot(slot.start_time, locale)}
-                    </button>
-                  ))}
+              {askOnly ? (
+                <div className="trial-tutor__slots">
+                  <span className="trial-tutor__ask-hint">
+                    {t('TRIAL.TUTORS.ASK_HINT', { name: tutor.first_name })}
+                  </span>
+                  {open && !used && (
+                    <RequestTime
+                      from={range.from}
+                      to={range.to}
+                      window={window}
+                      value={askTime}
+                      onChange={onAskChange}
+                    />
+                  )}
                 </div>
-              </div>
+              ) : (
+                <div className="trial-tutor__slots">
+                  <span className="trial-choice__label">
+                    {t('TRIAL.TUTORS.NEXT_SLOTS')}
+                  </span>
+                  <div className="trial-tutor__chips">
+                    {tutor.slots.slice(0, 3).map((slot) => (
+                      <button
+                        key={slot.id}
+                        type="button"
+                        className="trial-slot-chip"
+                        disabled={used}
+                        onClick={() => onPickSlot(tutor.id, slot)}
+                      >
+                        {formatSlot(slot.start_time, locale)}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
 
               <div className="trial-tutor__action">
                 {used ? (
                   <span className="trial-tutor__used">
                     {t('TRIAL.TUTORS.USED')}
                   </span>
+                ) : askOnly && open ? (
+                  <Button
+                    className="trial__cta"
+                    variant="contained"
+                    endIcon={<ArrowForwardRounded />}
+                    disabled={!askTime}
+                    onClick={() => askTime && onAskTime(tutor.id, askTime)}
+                  >
+                    {t('TRIAL.ACTIONS.NEXT')}
+                  </Button>
+                ) : askOnly ? (
+                  <Button
+                    className={top ? 'trial__cta' : 'trial__back'}
+                    variant={top ? 'contained' : 'outlined'}
+                    startIcon={<ScheduleSendRounded />}
+                    onClick={() => setAsking(tutor.id)}
+                  >
+                    {t('TRIAL.TUTORS.ASK')}
+                  </Button>
                 ) : (
                   <Button
                     className={top ? 'trial__cta' : 'trial__back'}

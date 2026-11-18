@@ -1,0 +1,145 @@
+@import '../../assets/styles/variables.scss';
+@import '../../assets/styles/mixins.scss';
+
+// The family's open free-trial requests: one row each, the deadline and
+// the actions beside it.
+
+.trial-reqs {
+  margin-bottom: $space-5;
+  padding: $space-5;
+  border: 1.5px solid rgba($accent-400, 0.5);
+  border-radius: $radius-lg;
+  background:
+    radial-gradient(
+      30rem 14rem at 100% 0%,
+      rgba($accent-400, 0.14),
+      transparent 70%
+    ),
+    $surface;
+  box-shadow: $shadow-xs;
+
+  @include respond(phone) {
+    padding: $space-4;
+  }
+
+  &__title {
+    margin: 0 0 $space-3;
+    font-size: $font-lg;
+    font-weight: 700;
+    color: $text-strong;
+  }
+
+  &__list {
+    display: grid;
+    gap: $space-3;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+}
+
+.trial-req {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: $space-3;
+  align-items: start;
+  padding: $space-3 0;
+
+  & + & {
+    border-top: 1px solid $border;
+  }
+
+  @include respond(phone) {
+    grid-template-columns: auto minmax(0, 1fr);
+
+    .trial-req__actions {
+      grid-column: 1 / -1;
+      justify-content: flex-start;
+    }
+  }
+
+  &__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 4rem;
+    height: 4rem;
+    border-radius: $radius-md;
+    background-color: $warning-50;
+    color: #b07800;
+
+    svg {
+      font-size: 2.2rem;
+    }
+  }
+
+  &--unmatched &__icon {
+    background-color: $gray-100;
+    color: $text-muted;
+  }
+
+  &__body {
+    display: grid;
+    gap: 0.2rem;
+    min-width: 0;
+  }
+
+  &__top {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: $space-2;
+  }
+
+  &__status {
+    @include badge($warning-50, #8a5d00);
+    padding: 0.2rem 1rem;
+    font-size: $font-xs;
+
+    &--unmatched {
+      background-color: $gray-100;
+      color: $text-body;
+    }
+  }
+
+  &__student {
+    font-size: $font-xs;
+    font-weight: 700;
+    color: $brand-700;
+  }
+
+  &__course {
+    margin: 0;
+    font-size: $font-base;
+    font-weight: 600;
+    color: $text-strong;
+  }
+
+  &__meta,
+  &__deadline {
+    margin: 0;
+    font-size: $font-sm;
+    color: $text-muted;
+  }
+
+  &__deadline {
+    color: $text-body;
+  }
+
+  &__error {
+    margin-top: $space-2;
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    gap: $space-2;
+  }
+}
+
+// Pages that space their sections with a gap need no margin of their own
+.dashboard-page__body > .trial-reqs {
+  margin-bottom: 0;
+}

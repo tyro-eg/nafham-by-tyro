@@ -1,0 +1,35 @@
+@import '../../../../assets/styles/variables.scss';
+
+// The tutor's "I want more students" switch on their own profile
+
+.wants-students {
+  display: grid;
+  gap: $space-2;
+  margin-bottom: $space-5;
+  padding: $space-4 $space-5;
+  border-radius: $radius-lg;
+  background-color: $surface;
+  box-shadow: $shadow-xs;
+
+  .MuiFormControlLabel-root {
+    align-items: flex-start;
+    margin: 0;
+    gap: $space-2;
+  }
+
+  &__text {
+    display: grid;
+    gap: 0.2rem;
+    padding-top: 0.6rem;
+  }
+
+  &__label {
+    font-weight: 700;
+    color: $text-strong;
+  }
+
+  &__hint {
+    font-size: $font-sm;
+    color: $text-muted;
+  }
+}

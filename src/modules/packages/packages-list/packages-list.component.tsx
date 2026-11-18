@@ -1,8 +1,8 @@
 import { FC, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useSearchParams } from 'react-router-dom';
-import { Avatar, Skeleton } from '@mui/material';
-import { Inventory } from '@mui/icons-material';
+import { Link, useSearchParams } from 'react-router-dom';
+import { Avatar, Button, Skeleton } from '@mui/material';
+import { AddShoppingCartRounded, Inventory } from '@mui/icons-material';
 
 import { useInfinitePackages } from '../../../hooks/usePackages';
 import { useFamily } from '../../../hooks/useFamily';
@@ -15,6 +15,7 @@ import PackageListCard from './packages-list-card/packages-list-card.component';
 import RenewDialog from '../../payments/renew-dialog.component';
 import RenewAllSheet from '../../payments/renew-all-sheet.component';
 import RenewAllBanner from '../../payments/renew-all-banner.component';
+import OpenPaymentBanner from '../../payments/open-payment-banner.component';
 import RequestSessionsModal from '../../../modals/request-sessions-modal/request-sessions-modal.component';
 
 import './packages-list.styles.scss';
@@ -67,6 +68,7 @@ const PackagesList: FC = () => {
   };
   const sheet = renewal === 'renew' && (
     <>
+      <OpenPaymentBanner />
       <RenewAllBanner onOpen={() => setRenewingAll(true)} />
       {renewingAll && (
         <RenewAllSheet
@@ -110,6 +112,7 @@ const PackagesList: FC = () => {
   const renewingHours = renewingPackage
     ? hoursLeft(renewingPackage)
     : undefined;
+  const renewingType = renewingPackage?.package_type;
 
   // A parent's groups follow the family's order, so the colours match the calendar
   const groups = useMemo(() => {
@@ -171,6 +174,16 @@ const PackagesList: FC = () => {
         <Inventory />
         <p className="title">{t('MYPACKAGES.NO_PACKAGES_TITLE')}</p>
         <p className="subtitle">{t('MYPACKAGES.NO_PACKAGES_SUBTITLE')}</p>
+        {renewal === 'renew' && (
+          <Button
+            component={Link}
+            to="/buy"
+            variant="contained"
+            startIcon={<AddShoppingCartRounded />}
+          >
+            {t('BUY.FIRST_COURSE')}
+          </Button>
+        )}
       </div>
     );
   }
@@ -214,6 +227,7 @@ const PackagesList: FC = () => {
           <RenewDialog
             packageId={renewing}
             hoursLeft={renewingHours}
+            packageType={renewingType}
             onClose={closeRenew}
             onRequestInstead={() => {
               closeRenew();
@@ -249,6 +263,7 @@ const PackagesList: FC = () => {
         <RenewDialog
           packageId={renewing}
           hoursLeft={renewingHours}
+          packageType={renewingType}
           onClose={closeRenew}
           onRequestInstead={() => {
             closeRenew();

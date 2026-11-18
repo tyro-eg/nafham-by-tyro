@@ -1,0 +1,104 @@
+@import '../../assets/styles/variables.scss';
+@import '../../assets/styles/mixins.scss';
+@import '../modal-kit';
+
+.cancelCalendarModal {
+  @include modal-shell;
+
+  &__head {
+    display: flex;
+    align-items: flex-start;
+    gap: $space-4;
+
+    &-icon {
+      @include modal-icon-chip($warning-50, $warning-500);
+      font-size: 2.4rem;
+    }
+
+    &-text {
+      flex: 1;
+      min-width: 0;
+      padding-top: 0.2rem;
+    }
+  }
+
+  &__title {
+    @include modal-title;
+    font-size: $font-h4;
+
+    @include respond(phone) {
+      font-size: $font-lg;
+    }
+  }
+
+  &__body {
+    @include modal-subtitle;
+    margin-top: $space-2;
+    font-size: $font-base;
+  }
+
+  // Why: a row of reason chips, then an optional note
+  &__reasons {
+    margin-top: $space-5;
+  }
+
+  &__label {
+    margin: 0 0 $space-2;
+    font-size: $font-sm;
+    font-weight: 600;
+    color: $text-strong;
+    text-align: start;
+  }
+
+  &__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $space-2;
+  }
+
+  &__chip {
+    padding: 0.6rem 1.4rem;
+    border: 1.5px solid $border;
+    border-radius: $radius-pill;
+    background: $surface;
+    color: $text-body;
+    font: inherit;
+    font-size: $font-sm;
+    font-weight: 600;
+    cursor: pointer;
+    transition:
+      border-color 0.15s,
+      background-color 0.15s,
+      color 0.15s;
+
+    &:hover {
+      border-color: $gray-400;
+    }
+
+    &:focus-visible {
+      @include focus-ring;
+    }
+
+    &.is-selected {
+      border-color: $brand-600;
+      background: $brand-50;
+      color: $brand-700;
+    }
+  }
+
+  &__note {
+    margin-top: $space-4;
+  }
+
+  &__error {
+    margin-top: $space-4;
+  }
+
+  &__actions-container {
+    @include modal-footer;
+
+    &-action {
+      min-width: 10rem;
+    }
+  }
+}

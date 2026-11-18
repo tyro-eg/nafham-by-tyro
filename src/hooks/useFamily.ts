@@ -8,6 +8,7 @@ import {
   setActiveChildId,
   type ActiveChild,
 } from '../lib/family-child';
+import type { PackageType } from './usePayments';
 
 /**
  * The family account: the parent's children with where each stands, the
@@ -34,6 +35,9 @@ export interface FamilyPackage {
   hours_left: number;
   recording_enabled: boolean;
   recording_consented_at: string | null;
+  package_type?: PackageType;
+  /** Whether the package can be renewed online right now */
+  renewable?: boolean;
 }
 
 export interface FamilySessionSummary extends FamilySession {

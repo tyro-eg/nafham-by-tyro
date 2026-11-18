@@ -19,9 +19,11 @@ import { useGradeSubjects } from '../../hooks/useGradeSubjects';
 import { useRtlClass } from '../../assets/utils/utils';
 import type { GradeSubject, Instructor } from '../../assets/types';
 import ChildTabs from '../family/child-tabs.component';
+import TrialRequestsCard from '../trial/trial-requests-card.component';
 
 import SessionsList from './sessions-info/sessions-list/sessions-list.component';
 import SessionsCalendarContainer from './sessions-info/sessions-calendar-container/sessions-calendar-container.component';
+import NextUp from './next-up/next-up.component';
 
 import './dashboard-shell.styles.scss';
 import './index.styles.scss';
@@ -36,8 +38,9 @@ const STATUSES = [
 type Status = (typeof STATUSES)[number];
 
 /**
- * The sessions page: the numbers in one strip, one toolbar (status pills,
- * tutor, course, list or calendar), then the lessons grouped by day.
+ * The sessions page: the numbers beside the title, the live or next lesson
+ * large, one toolbar (status pills, tutor, course, list or calendar), then
+ * the lessons as a timeline grouped by day.
  */
 const Sessions: FC = () => {
   const { t } = useTranslation();
@@ -111,23 +114,27 @@ const Sessions: FC = () => {
               {t('MYSESSIONS.SUBTITLE')}
             </p>
           </div>
+          <ul className="ss-stats" aria-label={t('MYSESSIONS.OVERVIEW.TITLE')}>
+            {stats.map((stat) => (
+              <li key={stat.key} className={`ss-stat ss-stat--${stat.tone}`}>
+                <span className="ss-stat__icon" aria-hidden="true">
+                  {stat.icon}
+                </span>
+                <span className="ss-stat__value">{stat.value}</span>
+                <span className="ss-stat__label">{stat.label}</span>
+              </li>
+            ))}
+          </ul>
         </div>
       </header>
 
       <div className="sessions__container container dashboard-page__body">
         {isParent && <ChildTabs />}
 
-        <ul className="ss-stats" aria-label={t('MYSESSIONS.OVERVIEW.TITLE')}>
-          {stats.map((stat) => (
-            <li key={stat.key} className={`ss-stat ss-stat--${stat.tone}`}>
-              <span className="ss-stat__icon" aria-hidden="true">
-                {stat.icon}
-              </span>
-              <span className="ss-stat__value">{stat.value}</span>
-              <span className="ss-stat__label">{stat.label}</span>
-            </li>
-          ))}
-        </ul>
+        {/* Free trials still waiting for an instructor to confirm */}
+        {!isTutor && <TrialRequestsCard showStudent={isParent} />}
+
+        <NextUp filters={filters} />
 
         <div className="ss-toolbar">
           <div

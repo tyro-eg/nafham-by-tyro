@@ -77,6 +77,48 @@ export const queryKeys = {
       [...queryKeys.sessions.all, 'infinite', filters] as const,
     details: () => [...queryKeys.sessions.all, 'detail'] as const,
     detail: (id: number) => [...queryKeys.sessions.details(), id] as const,
+    /** The times a lesson could move to */
+    moveOptions: (id: number) =>
+      [...queryKeys.sessions.all, 'move-options', id] as const,
+  },
+
+  // Proposals to move one lesson (either side proposes, the other answers)
+  rescheduleRequests: {
+    all: ['reschedule_requests'] as const,
+    list: (box: string, tab: string) =>
+      [...queryKeys.rescheduleRequests.all, 'list', box, tab] as const,
+  },
+
+  // Pauses on packages
+  freezes: {
+    all: ['freezes'] as const,
+    list: () => [...queryKeys.freezes.all, 'list'] as const,
+  },
+
+  // Proposals to change a package's weekly times
+  scheduleChanges: {
+    all: ['schedule_change_requests'] as const,
+    list: (box: string, tab: string) =>
+      [...queryKeys.scheduleChanges.all, 'list', box, tab] as const,
+  },
+
+  // Lesson conversations: what the viewer can do from the chat
+  chat: {
+    all: ['chat'] as const,
+    actions: (channelId: string) =>
+      [...queryKeys.chat.all, 'actions', channelId] as const,
+  },
+
+  // A tutor's recurring open times, for a lesson length
+  tutors: {
+    all: ['tutors'] as const,
+    weeklyOpenings: (tutorId: number, durationMinutes: number) =>
+      [
+        ...queryKeys.tutors.all,
+        'weekly-openings',
+        tutorId,
+        durationMinutes,
+      ] as const,
   },
 
   // Calendar/Availability keys
@@ -105,6 +147,9 @@ export const queryKeys = {
       [...queryKeys.packages.all, 'infinite', params] as const,
     details: () => [...queryKeys.packages.all, 'detail'] as const,
     detail: (id: number) => [...queryKeys.packages.details(), id] as const,
+    /** The limits of a pause and the lessons it would cancel */
+    freezeOptions: (id: number, range: unknown) =>
+      [...queryKeys.packages.all, 'freeze-options', id, range] as const,
   },
 
   // Grade Subject keys
@@ -121,6 +166,16 @@ export const queryKeys = {
     options: (packageId: number) =>
       [...queryKeys.payments.all, 'options', packageId] as const,
     familyOptions: () => [...queryKeys.payments.all, 'family-options'] as const,
+    open: () => [...queryKeys.payments.all, 'open'] as const,
+  },
+
+  // The buy wizard: tutors for a course with prices, and the sizes for one
+  purchases: {
+    all: ['purchases'] as const,
+    tutors: (search: unknown) =>
+      [...queryKeys.purchases.all, 'tutors', search] as const,
+    options: (params: unknown) =>
+      [...queryKeys.purchases.all, 'options', params] as const,
   },
 
   // Session request keys (students asking support to schedule sessions)

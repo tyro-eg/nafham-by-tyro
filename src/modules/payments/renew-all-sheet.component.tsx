@@ -27,6 +27,7 @@ import {
   type RenewalRow,
 } from '../../hooks/usePayments';
 import { formatMoney } from '../../lib/money';
+import { blockedInApp } from '../../lib/from-app';
 import { trackEvent } from '../../lib/analytics';
 import { subjectName } from '../dashboard/dashboard.utils';
 import './payments.styles.scss';
@@ -75,6 +76,10 @@ const dealOf = (row: RenewalRow, hours: number): Deal | null => {
     : null;
 };
 
+/** Renewable here and now: from the app, group courses are left to the team */
+const canRenew = (row: RenewalRow) =>
+  row.renewable && !blockedInApp(row.package_type);
+
 const defaultHours = (row: RenewalRow) =>
   row.same_again?.hours ?? row.options[0]?.hours ?? 0;
 
@@ -109,7 +114,7 @@ const RenewAllSheet: FC<RenewAllSheetProps> = ({
     const initial: Record<number, Pick> = {};
     rows.forEach((row) => {
       initial[row.package.id] = {
-        ticked: row.renewable && row.due,
+        ticked: canRenew(row) && row.due,
         hours: defaultHours(row),
       };
     });
@@ -125,7 +130,7 @@ const RenewAllSheet: FC<RenewAllSheetProps> = ({
   const basket = useMemo(() => {
     const lines = rows.flatMap((row) => {
       const pick = picks[row.package.id];
-      if (!pick?.ticked || !row.renewable) return [];
+      if (!pick?.ticked || !canRenew(row)) return [];
       const deal = dealOf(row, pick.hours);
       return deal ? [{ row, deal }] : [];
     });
@@ -198,7 +203,7 @@ const RenewAllSheet: FC<RenewAllSheetProps> = ({
   const renderRow = (row: RenewalRow) => {
     const id = row.package.id;
     const pick = picks[id] ?? { ticked: false, hours: defaultHours(row) };
-    const deal = row.renewable ? dealOf(row, pick.hours) : null;
+    const deal = canRenew(row) ? dealOf(row, pick.hours) : null;
     const line = basket.lines.find((l) => l.row.package.id === id);
     const sizes = row.options.map((o) => o.hours);
     if (row.same_again && !sizes.includes(row.same_again.hours)) {
@@ -207,12 +212,12 @@ const RenewAllSheet: FC<RenewAllSheetProps> = ({
     return (
       <li
         key={id}
-        className={`ra-row${pick.ticked && deal ? ' ra-row--on' : ''}${row.renewable ? '' : ' ra-row--off'}`}
+        className={`ra-row${pick.ticked && deal ? ' ra-row--on' : ''}${canRenew(row) ? '' : ' ra-row--off'}`}
       >
         <Checkbox
           className="ra-row__tick"
           checked={pick.ticked && !!deal}
-          disabled={!row.renewable}
+          disabled={!canRenew(row)}
           onChange={(e) => setTicked(id, e.target.checked)}
           inputProps={{ 'aria-label': row.package.course_name }}
         />
@@ -234,7 +239,7 @@ const RenewAllSheet: FC<RenewAllSheetProps> = ({
               ` · ${t('PAYMENTS.RENEW_ALL.LAST_LESSON', { date: lessonDay(row.last_session_on) })}`}
           </span>
           <span className="ra-row__tags">
-            {row.due && row.renewable && (
+            {row.due && canRenew(row) && (
               <span className="renew-tag">{t('PAYMENTS.RENEW_ALL.DUE')}</span>
             )}
             {deal?.basis === 'original' && (
@@ -247,15 +252,17 @@ const RenewAllSheet: FC<RenewAllSheetProps> = ({
                 {t('PAYMENTS.RENEW_ALL.TODAYS_PRICE')}
               </span>
             )}
-            {!row.renewable && (
+            {!canRenew(row) && (
               <span className="renew-tag renew-tag--muted">
-                {t('PAYMENTS.RENEW_ALL.NOT_ONLINE')}
+                {row.renewable
+                  ? t('PAYMENTS.GROUP_COURSE_SUPPORT')
+                  : t('PAYMENTS.RENEW_ALL.NOT_ONLINE')}
               </span>
             )}
           </span>
         </div>
         <div className="ra-row__deal">
-          {row.renewable ? (
+          {canRenew(row) ? (
             <>
               <Select
                 size="small"
@@ -286,6 +293,7 @@ const RenewAllSheet: FC<RenewAllSheetProps> = ({
               )}
             </>
           ) : (
+            !row.renewable &&
             onRequestInstead && (
               <Button size="small" onClick={() => onRequestInstead(id)}>
                 {t('PAYMENTS.RENEW_ALL.REQUEST')}

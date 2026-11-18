@@ -77,6 +77,13 @@ const SessionsList: FC<SessionsListProps> = ({ filters, grouped = false }) => {
       }
       map.get(key)!.items.push(session);
     });
+    // The API sorts by distance from now; a timeline reads in clock order
+    map.forEach((group) =>
+      group.items.sort(
+        (a, b) =>
+          new Date(a.start_time).getTime() - new Date(b.start_time).getTime(),
+      ),
+    );
     return [...map.entries()];
   }, [sessions, t, i18n.language]);
 
@@ -133,10 +140,17 @@ const SessionsList: FC<SessionsListProps> = ({ filters, grouped = false }) => {
             <div className="sessions-list sessions-list--grouped">
               {groups.map(([key, group]) => (
                 <section key={key} className="sessions-day">
-                  <h2 className="sessions-day__title">{group.label}</h2>
-                  {group.items.map((session) => (
-                    <SessionListCard key={session.id} session={session} />
-                  ))}
+                  <h2 className="sessions-day__title">
+                    <span>{group.label}</span>
+                    <span className="sessions-day__count">
+                      {group.items.length}
+                    </span>
+                  </h2>
+                  <div className="sessions-day__items">
+                    {group.items.map((session) => (
+                      <SessionListCard key={session.id} session={session} />
+                    ))}
+                  </div>
                 </section>
               ))}
             </div>

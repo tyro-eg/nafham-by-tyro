@@ -1,0 +1,137 @@
+@import '../../assets/styles/variables.scss';
+@import '../../assets/styles/mixins.scss';
+@import '../modal-kit';
+
+// Pause a package: the dates, what they cancel and keep, a reason, a note
+.freeze-modal {
+  @include modal-shell;
+  max-width: 56rem;
+
+  &__header {
+    @include modal-header;
+  }
+
+  &__icon {
+    @include modal-icon-chip($warning-50, $warning-500);
+  }
+
+  &__heading {
+    @include modal-heading-text;
+  }
+
+  &__title {
+    @include modal-title;
+    font-size: $font-h4;
+  }
+
+  &__subtitle {
+    @include modal-subtitle;
+  }
+
+  &__close {
+    @include modal-close;
+  }
+
+  &__loading {
+    display: flex;
+    justify-content: center;
+    padding: $space-6;
+  }
+
+  &__dates {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: $space-3;
+
+    @include respond(phone) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  &__length {
+    min-height: 1.6em;
+    margin: $space-2 0 0;
+    font-size: $font-sm;
+    color: $text-body;
+
+    &.is-wrong {
+      color: $danger-500;
+    }
+  }
+
+  &__preview {
+    margin-top: $space-4;
+    padding: $space-4;
+    border-radius: $radius-md;
+    background: $surface-alt;
+
+    &-title {
+      margin: 0;
+      font-size: $font-sm;
+      font-weight: 600;
+      color: $text-strong;
+    }
+  }
+
+  &__lessons {
+    margin: $space-2 0 0;
+    padding-inline-start: 1.8rem;
+    font-size: $font-sm;
+    color: $text-body;
+  }
+
+  &__kept {
+    margin: $space-3 0 0;
+    font-size: $font-sm;
+    color: $text-body;
+  }
+
+  &__label {
+    margin: $space-4 0 $space-2;
+    font-size: $font-sm;
+    font-weight: 600;
+    color: $text-strong;
+    text-align: start;
+  }
+
+  &__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $space-2;
+    margin-bottom: $space-4;
+  }
+
+  &__chip {
+    padding: 0.6rem 1.4rem;
+    border: 1.5px solid $border;
+    border-radius: $radius-pill;
+    background: $surface;
+    color: $text-body;
+    font: inherit;
+    font-size: $font-sm;
+    font-weight: 600;
+    cursor: pointer;
+
+    &:hover {
+      border-color: $gray-400;
+    }
+
+    &:focus-visible {
+      @include focus-ring;
+    }
+
+    &.is-selected {
+      border-color: $brand-600;
+      background: $brand-50;
+      color: $brand-700;
+    }
+  }
+
+  &__error {
+    margin-top: $space-4;
+  }
+
+  &__footer {
+    @include modal-footer;
+  }
+}

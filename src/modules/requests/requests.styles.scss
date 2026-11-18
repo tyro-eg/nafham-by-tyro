@@ -1,0 +1,278 @@
+@import '../../assets/styles/variables.scss';
+@import '../../assets/styles/mixins.scss';
+
+// Proposals between a family and a tutor: the kind on the start side, the
+// proposal in the middle, the answers last (as the trial requests page)
+
+.requests {
+  &__tabs {
+    display: flex;
+    flex-wrap: wrap;
+    align-self: flex-start;
+    gap: 0.4rem;
+    padding: 0.3rem;
+    border-radius: $radius-pill;
+    background: $surface;
+    box-shadow: $shadow-xs;
+  }
+
+  &__tab {
+    padding: 0.6rem 1.4rem;
+    border: 0;
+    border-radius: $radius-pill;
+    background: transparent;
+    color: $text-body;
+    font: inherit;
+    font-size: 1.3rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition:
+      background-color 0.15s,
+      color 0.15s;
+
+    &:hover {
+      color: $text-strong;
+    }
+
+    &:focus-visible {
+      @include focus-ring;
+    }
+
+    &.is-on {
+      background: $brand-50;
+      color: $brand-700;
+    }
+  }
+
+  &__list {
+    display: grid;
+    gap: $space-4;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  &__empty {
+    display: grid;
+    justify-items: center;
+    gap: $space-3;
+    padding: $space-7 $space-5;
+    border-radius: $radius-lg;
+    background-color: $surface;
+    color: $text-body;
+    text-align: center;
+    box-shadow: $shadow-xs;
+
+    p {
+      max-width: 52rem;
+      margin: 0;
+    }
+  }
+}
+
+.request-card {
+  display: grid;
+  grid-template-columns: 11rem minmax(0, 1fr) auto;
+  gap: $space-4;
+  align-items: start;
+  padding: $space-5;
+  border: 1.5px solid $border;
+  border-radius: $radius-lg;
+  background-color: $surface;
+  box-shadow: $shadow-xs;
+
+  &--pending {
+    border-color: rgba($brand-400, 0.5);
+  }
+
+  @include respond(phone) {
+    grid-template-columns: minmax(0, 1fr);
+    padding: $space-4;
+  }
+
+  &__kind {
+    display: grid;
+    justify-items: center;
+    gap: 0.4rem;
+    padding: $space-3;
+    border-radius: $radius-md;
+    background-color: $brand-50;
+    color: $brand-800;
+    font-size: $font-xs;
+    font-weight: 700;
+    text-align: center;
+
+    svg {
+      font-size: 2.4rem;
+    }
+
+    &--weekly {
+      background-color: #fff6e0;
+      color: #b07800;
+    }
+
+    @include respond(phone) {
+      grid-auto-flow: column;
+      justify-self: start;
+      align-items: center;
+    }
+  }
+
+  &__body {
+    display: grid;
+    gap: $space-2;
+    min-width: 0;
+  }
+
+  &__top {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: $space-2;
+  }
+
+  &__who {
+    margin: 0;
+    font-size: $font-lg;
+    font-weight: 700;
+    color: $text-strong;
+  }
+
+  &__status {
+    @include badge($gray-100, $text-body);
+    padding: 0.2rem 1rem;
+    font-size: $font-xs;
+
+    &--accepted,
+    &--approved {
+      background-color: $success-50;
+      color: #1d7a4f;
+    }
+
+    &--declined,
+    &--expired {
+      background-color: $warning-50;
+      color: #8a5d00;
+    }
+  }
+
+  &__course {
+    margin: 0;
+    font-weight: 600;
+    color: $text-body;
+  }
+
+  &__from,
+  &__result,
+  &__hint {
+    margin: 0;
+    font-size: $font-sm;
+    color: $text-muted;
+  }
+
+  &__result {
+    color: $text-body;
+  }
+
+  &__times {
+    display: grid;
+    gap: 0.2rem;
+    margin: 0;
+    font-size: $font-sm;
+    color: $text-strong;
+  }
+
+  &__old {
+    font-size: $font-xs;
+    color: $text-muted;
+  }
+
+  &__note {
+    display: flex;
+    gap: $space-2;
+    margin: 0;
+    padding: $space-3;
+    border-radius: $radius-md;
+    background-color: $surface-alt;
+    color: $text-body;
+    font-size: $font-sm;
+    white-space: pre-line;
+
+    svg {
+      flex-shrink: 0;
+      font-size: 1.8rem;
+      color: $text-muted;
+    }
+  }
+
+  &__options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $space-2;
+  }
+
+  &__option {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.6rem 1.4rem;
+    border: 1.5px solid $brand-300;
+    border-radius: $radius-pill;
+    background: $surface;
+    color: $brand-700;
+    font: inherit;
+    font-size: $font-sm;
+    font-weight: 600;
+    cursor: pointer;
+    transition:
+      background-color 0.15s,
+      border-color 0.15s;
+
+    svg {
+      font-size: 1.8rem;
+    }
+
+    &:hover:not(:disabled) {
+      border-color: $brand-600;
+      background: $brand-50;
+    }
+
+    &:focus-visible {
+      @include focus-ring;
+    }
+
+    &:disabled {
+      border-color: $border;
+      color: $text-body;
+      cursor: default;
+    }
+  }
+
+  &__deadline {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin: 0;
+    font-size: $font-sm;
+    font-weight: 600;
+    color: $text-strong;
+
+    svg {
+      font-size: 1.8rem;
+      color: $brand-700;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    flex-direction: column;
+    gap: $space-2;
+    min-width: 14rem;
+
+    @include respond(phone) {
+      flex-direction: row;
+      flex-wrap: wrap;
+      min-width: 0;
+    }
+  }
+}

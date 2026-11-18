@@ -1,0 +1,276 @@
+@import '../../assets/styles/variables.scss';
+@import '../../assets/styles/mixins.scss';
+
+// The buy wizard shares the trial wizard's page, rail and cards
+// (trial.styles.scss); these are the parts it adds: the weekly-times
+// chips, the tutor tabs with prices, the "Let Nafham choose" card, the
+// inline add-child form and the basket.
+
+.buy-days .trial-choice__item {
+  min-width: 6.4rem;
+  justify-content: center;
+}
+
+.buy-tabs.MuiTabs-root {
+  margin: 0 0 $space-2;
+  border-bottom: 1px solid $border;
+
+  .MuiTab-root {
+    font-weight: 700;
+    text-transform: none;
+    font-size: 1.5rem;
+  }
+}
+
+.buy-tutor {
+  &__facts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin: 0.8rem 0 0;
+  }
+
+  &__action {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 1.2rem;
+  }
+
+  &__price {
+    font-weight: 800;
+    color: $text-strong;
+  }
+}
+
+.buy-match {
+  display: grid;
+  gap: 1.2rem;
+  padding: 2rem;
+  border: 2px dashed $brand-300;
+  border-radius: 1.8rem;
+  background: rgba($brand-400, 0.06);
+
+  &__icon svg {
+    font-size: 3.2rem;
+    color: $brand-700;
+  }
+
+  &__title {
+    margin: 0;
+    font-size: 2rem;
+    font-weight: 800;
+    color: $text-strong;
+  }
+
+  &__text {
+    margin: 0;
+    color: $text-body;
+    line-height: 1.6;
+  }
+}
+
+.buy-add-child {
+  display: grid;
+  gap: 1.2rem;
+  padding: 1.6rem;
+  border: 1px solid $border;
+  border-radius: 1.6rem;
+  background: $surface-alt;
+
+  &__title {
+    margin: 0;
+    font-weight: 700;
+    color: $text-strong;
+  }
+
+  &__fields {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
+    gap: 1.2rem;
+  }
+
+  &__actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.8rem;
+  }
+}
+
+.buy-rail__basket.MuiButton-root {
+  margin-top: $space-3;
+  width: 100%;
+  text-transform: none;
+  font-weight: 700;
+}
+
+.buy-basket {
+  &__group {
+    display: grid;
+    gap: 0.8rem;
+  }
+
+  &__child {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: $text-muted;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  &__lines {
+    display: grid;
+    gap: 0.8rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  &__another.MuiButton-root {
+    justify-self: start;
+  }
+
+  &__hint {
+    color: $text-muted;
+    font-weight: 500;
+  }
+}
+
+.buy-line {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  align-items: center;
+  gap: 1.2rem;
+  padding: 1.2rem 1.4rem;
+  border: 1px solid $border;
+  border-radius: 1.4rem;
+  background: $surface;
+
+  @include respond(phone) {
+    grid-template-columns: 1fr auto;
+  }
+
+  &__main {
+    display: grid;
+    gap: 0.3rem;
+    min-width: 0;
+  }
+
+  &__course {
+    font-weight: 700;
+    color: $text-strong;
+  }
+
+  &__meta {
+    font-size: $font-sm;
+    color: $text-body;
+  }
+
+  &__price {
+    font-weight: 800;
+    color: $text-strong;
+    white-space: nowrap;
+
+    s {
+      margin-inline-end: 0.5rem;
+      color: $text-muted;
+      font-weight: 500;
+    }
+  }
+}
+
+.pay-open.MuiAlert-root .MuiAlert-action {
+  gap: 0.6rem;
+  align-items: center;
+}
+
+// "Continue with Ms Sara" after a free trial (family home, My packages)
+.buy-follow-ups {
+  display: grid;
+  gap: 1rem;
+  margin: 0 0 $space-4;
+  padding: 0;
+  list-style: none;
+}
+
+.buy-follow-up {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 1.4rem;
+  padding: 1.4rem 1.8rem;
+  border: 2px solid rgba($brand-500, 0.35);
+  border-radius: 1.8rem;
+  background: linear-gradient(135deg, rgba($brand-400, 0.12), $surface);
+
+  @include respond(phone) {
+    grid-template-columns: auto 1fr;
+
+    &__cta {
+      grid-column: 1 / -1;
+    }
+  }
+
+  &__avatar {
+    display: grid;
+    place-items: center;
+    width: 5.2rem;
+    height: 5.2rem;
+    border-radius: 50%;
+    background: $brand-700 center / cover no-repeat;
+    color: #fff;
+    font-weight: 800;
+  }
+
+  &__text {
+    display: grid;
+    gap: 0.3rem;
+    min-width: 0;
+  }
+
+  &__title {
+    font-size: 1.7rem;
+    font-weight: 800;
+    color: $text-strong;
+  }
+
+  &__meta {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: $font-sm;
+    color: $text-body;
+  }
+
+  &__cta.MuiButton-root {
+    border-radius: 999px;
+    text-transform: none;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+}
+
+// The course step's "already learning" notice
+.buy-already.MuiAlert-root {
+  margin-top: $space-3;
+
+  .MuiAlert-action {
+    align-items: center;
+  }
+}
+
+// The buy wizard's tutor cards carry a price and a button, not slot chips:
+// the action sits on its own row under the tutor, at every width
+.buy .trial-tutor {
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas:
+    'main'
+    'action';
+
+  .trial-tutor__action {
+    grid-area: action;
+    justify-self: end;
+  }
+}

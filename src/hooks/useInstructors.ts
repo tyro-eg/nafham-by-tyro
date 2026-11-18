@@ -10,6 +10,10 @@ import { Instructor, ApiError } from '../assets/types';
 import { snackActions } from '../assets/utils/toaster';
 import { useAppDispatch } from '../redux/store';
 import { setCurrentUser } from '../redux/user/user.slice';
+import {
+  instructorListParams,
+  type InstructorFilters,
+} from './useInstructors.utils';
 
 /**
  * Tutor profile update data
@@ -23,6 +27,11 @@ interface TutorProfileUpdateData {
     video_url?: string;
     bio?: string;
     avatar?: File | string;
+    target_students?: number | '';
+    accepting_new_students?: boolean;
+    same_day_trials?: boolean;
+    /** The standing backup room for lessons Zoom cannot host ('' clears it) */
+    backup_meeting_link?: string;
   };
 }
 
@@ -41,12 +50,7 @@ interface UserInfoUpdateData {
     | Record<string, unknown>;
 }
 
-/**
- * Instructor filters
- */
-export interface InstructorFilters {
-  grade_subject_id?: number;
-}
+export type { InstructorFilters } from './useInstructors.utils';
 
 /**
  * Fetch paginated list of instructors
@@ -59,15 +63,7 @@ export function useInstructors(
   return useQuery({
     queryKey: queryKeys.instructors.list({ pageNumber, pageSize, ...filters }),
     queryFn: async () => {
-      const params: Record<string, any> = {
-        per_page: pageSize,
-        page: pageNumber,
-      };
-
-      if (filters?.grade_subject_id) {
-        params.grade_subject_id = filters.grade_subject_id;
-      }
-
+      const params = instructorListParams(pageNumber, pageSize, filters);
       const response = await get(`/tutors`, { params });
       return {
         data: response.data.data as Instructor[],
@@ -108,15 +104,7 @@ export function useInfiniteInstructors(
   return useInfiniteQuery({
     queryKey: [...queryKeys.instructors.all, 'infinite', filters],
     queryFn: async ({ pageParam = 1 }) => {
-      const params: Record<string, any> = {
-        per_page: pageSize,
-        page: pageParam,
-      };
-
-      if (filters?.grade_subject_id) {
-        params.grade_subject_id = filters.grade_subject_id;
-      }
-
+      const params = instructorListParams(pageParam, pageSize, filters);
       const response = await get(`/tutors`, { params });
       return {
         data: response.data.data as Instructor[],
@@ -159,7 +147,7 @@ export function useUpdateTutorProfile() {
 
       Object.entries(info).forEach(([key, value]) => {
         if (value !== undefined) {
-          formData.append(`tutor[${key}]`, value as string);
+          formData.append(`tutor[${key}]`, String(value));
         }
       });
 
@@ -192,6 +180,7 @@ export function useUpdateTutorProfile() {
     onError: (error: ApiError) => {
       const errorMessage =
         error.response?.data?.error ||
+        error.response?.data?.errors?.join(', ') ||
         error.message ||
         'Failed to update profile';
       snackActions.error(errorMessage);
@@ -267,9 +256,42 @@ export function useUpdateUserInfo() {
     onError: (error: ApiError) => {
       const errorMessage =
         error.response?.data?.error ||
+        error.response?.data?.errors?.join(', ') ||
         error.message ||
         'Failed to update information';
       snackActions.error(errorMessage);
     },
+  });
+}
+
+/**
+ * A tutor's "I want more students, even outside my published times"
+ * switch: families can then ask them for a free trial at any time.
+ */
+export function useSetWantsStudents() {
+  const queryClient = useQueryClient();
+  const dispatch = useAppDispatch();
+
+  return useMutation({
+    mutationFn: async ({
+      id,
+      wantsStudents,
+    }: {
+      id: number;
+      wantsStudents: boolean;
+    }) => {
+      const response = await patch(`/tutors/${id}`, {
+        tutor: { wants_students: wantsStudents },
+      });
+      return response?.data?.data;
+    },
+    onSuccess: (data, variables) => {
+      if (data) dispatch(setCurrentUser(data));
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.instructors.detail(variables.id),
+      });
+    },
+    // The switch shows the error beside itself
+    onError: () => undefined,
   });
 }
