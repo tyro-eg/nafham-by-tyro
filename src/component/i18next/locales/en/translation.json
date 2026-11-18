@@ -54,6 +54,7 @@
     "CALENDAR": "Calendar",
     "AVAILABILITY": "Availability",
     "HOMEWORK": "Homework",
+    "ASSISTANT": "AI Teaching Assistant",
     "FREE_TRIAL": "Book a free trial",
     "FAMILY": "My family",
     "NOTES": "Session notes",
@@ -993,6 +994,7 @@
     "LOADING": "Loading more Tutors"
   },
   "LOGIN": {
+    "TITLE": "Sign in",
     "LOGIN_TITLE": "Login to complete the scheduling process",
     "LOGIN_TITLE_1": "Login to complete the joining process",
     "LOGIN_SUBTITLE": "Welcome back",
@@ -1136,6 +1138,7 @@
       "CANCEL": "Cancel"
     },
     "CHANGE_PASSWORD_FORM": {
+      "CURRENT_PASSWORD": "Current password",
       "TITLE": "Change your Password",
       "CURRENT": "Current Password",
       "NEW_PASSWORD": "New Password",

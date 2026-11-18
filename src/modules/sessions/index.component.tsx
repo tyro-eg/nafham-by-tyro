@@ -16,6 +16,7 @@ import { selectCurrentUser } from '../../redux/user/user.selectors';
 import { useChildStats } from '../../hooks/useFamily';
 import { useMyInstructors } from '../../hooks/useInstructors';
 import { useGradeSubjects } from '../../hooks/useGradeSubjects';
+import { useSessionSummary } from '../../hooks/useSessions';
 import { useRtlClass } from '../../assets/utils/utils';
 import type { GradeSubject, Instructor } from '../../assets/types';
 import ChildTabs from '../family/child-tabs.component';
@@ -54,9 +55,13 @@ const Sessions: FC = () => {
   const [course, setCourse] = useState<GradeSubject | null>(null);
   const [view, setView] = useState<'list' | 'calendar'>('list');
 
-  // A parent sees the chosen child's counts; a student their own
+  // A parent sees the chosen child's counts; a student their own. A tutor's
+  // profile has no session totals, so theirs come from the summary (catchup:
+  // My Sessions showed a tutor 0 completed and 0 cancelled)
   const childStats = useChildStats(isParent);
+  const tutorSummary = useSessionSummary(isTutor);
   const stats = useMemo(() => {
+    const totals = isTutor ? tutorSummary.data?.totals : undefined;
     const source = isParent ? childStats.data : currentUser;
     return [
       {
@@ -77,18 +82,18 @@ const Sessions: FC = () => {
         key: 'completed',
         icon: <CheckCircleOutlined />,
         tone: 'mint',
-        value: source?.completed_sessions_count ?? 0,
+        value: totals?.completed ?? source?.completed_sessions_count ?? 0,
         label: t('MYSESSIONS.OVERVIEW.COMPLETED'),
       },
       {
         key: 'cancelled',
         icon: <CancelOutlined />,
         tone: 'neutral',
-        value: source?.cancelled_sessions_count ?? 0,
+        value: totals?.cancelled ?? source?.cancelled_sessions_count ?? 0,
         label: t('MYSESSIONS.OVERVIEW.CANCELLED'),
       },
     ];
-  }, [currentUser, childStats.data, isParent, t]);
+  }, [currentUser, childStats.data, isParent, isTutor, tutorSummary.data, t]);
 
   const instructorsQuery = useMyInstructors({}, { enabled: !isTutor });
   const coursesQuery = useGradeSubjects();
