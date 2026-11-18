@@ -52,6 +52,8 @@ export interface MySalaryResponse {
     hours: number;
     amount: number;
     unpriced: number;
+    /** A rate above any tutor's (imported placeholder): not paid until fixed */
+    rate_looks_wrong?: number;
   };
   groups: {
     grade_subject_id: number;
@@ -129,7 +131,7 @@ export const toSalaryReport = (data?: MySalaryResponse): SalaryReport => {
     hours: data.totals.hours,
     sessions: data.totals.sessions,
     amount: data.totals.amount,
-    unpricedSessions: data.totals.unpriced,
+    unpricedSessions: data.totals.unpriced + (data.totals.rate_looks_wrong ?? 0),
     upcomingAmount: data.upcoming.amount,
     upcomingSessions: data.upcoming.sessions,
     pricedHours: lines
