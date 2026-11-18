@@ -24,7 +24,7 @@ import {
   useLiveSessionToast,
   useNow,
 } from '../sessions/session-state';
-import { useSessionHistory } from '../../hooks/useSessions';
+import { useSessionHistory, useSessionSummary } from '../../hooks/useSessions';
 import { useAllPackages } from '../../hooks/usePackages';
 import { useInstructor } from '../../hooks/useInstructors';
 import { useRtlClass } from '../../assets/utils/utils';
@@ -34,7 +34,6 @@ import heroArt from '../../assets/images/newLanding/start-learning.webp';
 import emptyArt from '../../assets/images/newLanding/rafiki.svg?url';
 import {
   formatHours,
-  sessionHours,
   subjectName,
   upcomingSessions,
   weeklyHours,
@@ -92,6 +91,10 @@ const TutorDashboard: FC = () => {
   const currentUser = useAppSelector(selectCurrentUser);
 
   const sessionsQuery = useSessionHistory();
+  // Totals added up by the server, not from every session in the browser
+  const summaryQuery = useSessionSummary();
+  const summary = summaryQuery.data;
+  const totalsLoading = summaryQuery.isLoading;
   const packagesQuery = useAllPackages();
   const profileQuery = useInstructor(currentUser?.id || 0, !!currentUser);
 
@@ -115,21 +118,16 @@ const TutorDashboard: FC = () => {
     [sessions, now],
   );
   const today = upcoming.filter((s) => isSameDay(new Date(s.start_time), now));
-  const weeks = useMemo(() => weeklyHours(sessions, now), [sessions, now]);
+  const weeks = useMemo(() => weeklyHours(summary), [summary]);
   const students = useMemo(
-    () => buildStudents(packages, sessions, now),
-    [packages, sessions, now],
+    () => buildStudents(packages, summary?.students || []),
+    [packages, summary],
   );
 
-  const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
-  const completed = sessions.filter((s) => s.status === 'completed');
-  const hoursThisMonth = completed
-    .filter((s) => new Date(s.start_time) >= monthStart)
-    .reduce((acc, s) => acc + sessionHours(s), 0);
-  const missed = sessions.filter((s) => s.status === 'missed').length;
-  const canceled = sessions.filter(
-    (s) => s.status === 'cancelled' || s.status === 'canceled',
-  ).length;
+  const hoursThisMonth = summary?.totals.hours_this_month || 0;
+  const completedCount = summary?.totals.completed || 0;
+  const missed = summary?.totals.missed || 0;
+  const canceled = summary?.totals.cancelled || 0;
   const activeStudents = students.filter((s) => s.active).length;
   const maxWeekHours = Math.max(1, ...weeks.map((w) => w.hours));
 
@@ -138,7 +136,7 @@ const TutorDashboard: FC = () => {
     .filter(
       (s) =>
         (s.hoursRemaining > 0 && s.hoursRemaining <= 1) ||
-        (s.hoursRemaining > 0 && !s.nextSession),
+        (s.hoursRemaining > 0 && !s.nextSessionAt),
     )
     .slice(0, 4);
 
@@ -215,14 +213,14 @@ const TutorDashboard: FC = () => {
       key: 'taught',
       tone: 'mint',
       icon: <SchoolRounded />,
-      value: formatHours(hoursThisMonth),
+      value: totalsLoading ? '–' : formatHours(hoursThisMonth),
       label: t('TUTOR_DASHBOARD.STATS.HOURS_MONTH'),
     },
     {
       key: 'students',
       tone: 'sun',
       icon: <GroupsRounded />,
-      value: String(activeStudents),
+      value: totalsLoading ? '–' : String(activeStudents),
       label: t('TUTOR_DASHBOARD.STATS.ACTIVE_STUDENTS'),
     },
     {
@@ -448,7 +446,7 @@ const TutorDashboard: FC = () => {
                 <div>
                   {/* No cheer for 0 hours, nor while every page is still loading */}
                   <p className="sd-cheer__text">
-                    {sessionsQuery.isFetchingAll
+                    {totalsLoading
                       ? t('TUTOR_DASHBOARD.ACTIVITY.LOADING')
                       : hoursThisMonth > 0
                         ? t('TUTOR_DASHBOARD.ACTIVITY.CHEER', {
@@ -457,10 +455,10 @@ const TutorDashboard: FC = () => {
                           })
                         : t('TUTOR_DASHBOARD.ACTIVITY.NONE_YET')}
                   </p>
-                  {!sessionsQuery.isFetchingAll && (
+                  {!totalsLoading && (
                     <p className="sd-cheer__sub">
                       {t('TUTOR_DASHBOARD.ACTIVITY.TOTAL', {
-                        count: completed.length,
+                        count: completedCount,
                       })}
                     </p>
                   )}
@@ -517,7 +515,7 @@ const TutorDashboard: FC = () => {
                   </h3>
                   <div className="sd-attendance">
                     <span className="sd-attendance__item sd-attendance__item--done">
-                      <strong>{completed.length}</strong>
+                      <strong>{completedCount}</strong>
                       {t('DASHBOARD.PROGRESS.COMPLETED')}
                     </span>
                     <span className="sd-attendance__item sd-attendance__item--missed">

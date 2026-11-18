@@ -23,7 +23,7 @@ import {
   useLiveSessionToast,
   useNow,
 } from '../sessions/session-state';
-import { useSessionHistory } from '../../hooks/useSessions';
+import { useSessionHistory, useSessionSummary } from '../../hooks/useSessions';
 import { usePackages } from '../../hooks/usePackages';
 import { useMyInstructors } from '../../hooks/useInstructors';
 import { useRtlClass } from '../../assets/utils/utils';
@@ -124,6 +124,8 @@ const Dashboard: FC = () => {
   const closeRequest = () => setRequestOpen(false);
 
   const sessionsQuery = useSessionHistory();
+  const summaryQuery = useSessionSummary();
+  const summary = summaryQuery.data;
   const packagesQuery = usePackages(1, 50);
   // More than one low package sends the payer to the renew-all sheet
   const lowPackages = (packagesQuery.data?.data ?? []).filter(
@@ -151,11 +153,11 @@ const Dashboard: FC = () => {
     [sessions, now],
   );
   const insights = useMemo(
-    () => studentInsights(sessions, packages, now),
-    [sessions, packages, now],
+    () => studentInsights(summary, packages),
+    [summary, packages],
   );
-  const weeks = useMemo(() => weeklyHours(sessions, now), [sessions, now]);
-  const subjects = useMemo(() => subjectBreakdown(sessions, 5), [sessions]);
+  const weeks = useMemo(() => weeklyHours(summary), [summary]);
+  const subjects = useMemo(() => subjectBreakdown(summary, 5), [summary]);
 
   const loading = sessionsQuery.isLoading;
   useLiveSessionToast(sessionsQuery.data ? sessions : undefined, (session) =>
@@ -237,10 +239,9 @@ const Dashboard: FC = () => {
       key: 'completed',
       tone: 'mint',
       icon: <CheckCircleRounded />,
-      // Counted on the server over every session, not only the page loaded here
-      value: String(
-        currentUser?.completed_sessions_count ?? insights.completed,
-      ),
+      // The server's summary, the same count as the Attendance box below (free
+      // trials included); `completed_sessions_count` left trials out (837 vs 843)
+      value: summary ? String(insights.completed) : '–',
       label: t('DASHBOARD.STATS.COMPLETED'),
     },
     {

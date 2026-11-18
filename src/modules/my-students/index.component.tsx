@@ -19,7 +19,7 @@ import {
   SearchRounded,
 } from '@mui/icons-material';
 
-import { useSessionHistory } from '../../hooks/useSessions';
+import { useSessionSummary } from '../../hooks/useSessions';
 import { useAllPackages } from '../../hooks/usePackages';
 import { useStartConversation } from '../../hooks/useStreamChat';
 import { useRtlClass } from '../../assets/utils/utils';
@@ -44,21 +44,19 @@ const MyStudents: FC = () => {
   const [course, setCourse] = useState('all');
   const [status, setStatus] = useState<StatusFilter>('all');
 
-  const sessionsQuery = useSessionHistory();
+  const summaryQuery = useSessionSummary();
   const packagesQuery = useAllPackages();
-  const loading = sessionsQuery.isLoading || packagesQuery.isLoading;
+  const loading = summaryQuery.isLoading || packagesQuery.isLoading;
 
-  const now = useMemo(() => new Date(), []);
   const locale = `${i18n.language}-u-nu-latn`;
 
   const students = useMemo(
     () =>
       buildStudents(
         packagesQuery.data?.data || [],
-        sessionsQuery.data?.data || [],
-        now,
+        summaryQuery.data?.students || [],
       ),
-    [packagesQuery.data, sessionsQuery.data, now],
+    [packagesQuery.data, summaryQuery.data],
   );
 
   const courses = useMemo(
@@ -319,11 +317,11 @@ const MyStudents: FC = () => {
                     <div>
                       <dt>{t('MY_STUDENTS.CARD.NEXT')}</dt>
                       <dd>
-                        {student.nextSession ? (
+                        {student.nextSessionAt ? (
                           <>
                             <CalendarMonthRounded />
-                            {formatDate(student.nextSession.start_time)} ·{' '}
-                            {formatTime(student.nextSession.start_time)}
+                            {formatDate(student.nextSessionAt)} ·{' '}
+                            {formatTime(student.nextSessionAt)}
                           </>
                         ) : (
                           <span className="ms-muted">
@@ -341,16 +339,13 @@ const MyStudents: FC = () => {
                         })}
                       </dd>
                     </div>
-                    {student.lastSession && (
+                    {student.lastSessionAt && (
                       <div>
                         <dt>{t('MY_STUDENTS.CARD.LAST')}</dt>
                         <dd>
-                          {formatDate(student.lastSession.start_time)} ·{' '}
+                          {formatDate(student.lastSessionAt)} ·{' '}
                           <span dir="auto">
-                            {subjectName(
-                              student.lastSession.grade_subject
-                                ?.full_course_name,
-                            )}
+                            {subjectName(student.lastCourse)}
                           </span>
                         </dd>
                       </div>

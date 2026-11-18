@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import {
   useQuery,
   useMutation,
@@ -160,31 +159,63 @@ export const bookingErrorMessage = (
   return fallback;
 };
 /** The server hands out at most 100 rows a page */
-const ALL_PAGE_SIZE = 100;
-/** Safety stop: 50 pages is 5,000 sessions */
-const ALL_MAX_PAGES = 50;
+const LIVE_PAGE_SIZE = 100;
+
+/** Totals the server adds up for the home pages and My Students */
+export interface SessionSummary {
+  totals: {
+    completed: number;
+    missed: number;
+    cancelled: number;
+    /** Real length of every completed session, in hours */
+    hours_completed: number;
+    hours_this_month: number;
+  };
+  /** Completed hours for the last 8 weeks, Monday first, this week last */
+  weeks: { start: string; hours: number }[];
+  /** Completed hours by course, most first */
+  subjects: { course: string; hours: number }[];
+  /** A tutor's students only */
+  students?: SummaryStudent[];
+}
+
+export interface SummaryStudent {
+  id: number;
+  first_name: string;
+  last_name: string;
+  email?: string;
+  /** Full course names ("IGCSE - G10 - Math") */
+  courses: string[];
+  completed: number;
+  hours: number;
+  next_session_at: string | null;
+  last_session_at: string | null;
+  /** Full course name of the last completed session */
+  last_course: string | null;
+}
+
+const browserZone = () => {
+  try {
+    return Intl.DateTimeFormat().resolvedOptions().timeZone;
+  } catch {
+    return undefined;
+  }
+};
 
 /**
- * Every session of the viewer, all pages. Totals (completed, hours per week,
- * each student's sessions, a month's pay) used to be worked out from the first
- * 100 only: a tutor with 600 completed sessions read "0 completed".
- * Re-read every few minutes; the live first page comes from `useSessionHistory`.
+ * The viewer's totals in one small answer (GET /sessions/summary). These used
+ * to be added up here from every session, 100 a page: slow for a tutor with
+ * thousands, half-counted while loading, and cut at 5,000.
  */
-export function useAllSessions(enabled = true) {
+export function useSessionSummary(enabled = true) {
   return useQuery({
-    queryKey: [...queryKeys.sessions.all, 'all-pages'] as const,
+    queryKey: [...queryKeys.sessions.all, 'summary'] as const,
     enabled,
     queryFn: async () => {
-      const rows: SessionType[] = [];
-      for (let page = 1; page <= ALL_MAX_PAGES; page += 1) {
-        const response = await get(`/sessions`, {
-          params: { per_page: ALL_PAGE_SIZE, page },
-        });
-        rows.push(...((response.data.data || response.data) as SessionType[]));
-        const totalPages = Number(response.headers?.['total-pages']) || 1;
-        if (page >= totalPages) break;
-      }
-      return rows;
+      const response = await get(`/sessions/summary`, {
+        params: { zone: browserZone() },
+      });
+      return response.data as SessionSummary;
     },
     staleTime: 3 * 60 * 1000,
     refetchInterval: 3 * 60 * 1000,
@@ -193,25 +224,10 @@ export function useAllSessions(enabled = true) {
 }
 
 /**
- * All sessions for totals, with the first page kept live (every 30 s) so the
- * schedule, countdowns and Join buttons stay fresh. Same shape as
- * `useSessions`: `{ data: { data: SessionType[] }, isLoading }`.
+ * The first 100 sessions, nearest first, kept live (every 30 s) so the
+ * schedule, countdowns and Join buttons stay fresh. Totals come from
+ * `useSessionSummary`. Same shape as `useSessions`.
  */
 export function useSessionHistory() {
-  const live = useSessions(1, ALL_PAGE_SIZE);
-  const all = useAllSessions();
-  const data = useMemo(() => {
-    if (!live.data && !all.data) return undefined;
-    const byId = new Map<number, SessionType>();
-    (all.data ?? []).forEach((s) => byId.set(s.id, s));
-    (live.data?.data ?? []).forEach((s) => byId.set(s.id, s));
-    return { data: [...byId.values()] };
-  }, [live.data, all.data]);
-  return {
-    data,
-    isLoading: live.isLoading,
-    /** True until every page has arrived (totals may still grow) */
-    isFetchingAll: all.isLoading,
-    isError: live.isError,
-  };
+  return useSessions(1, LIVE_PAGE_SIZE);
 }

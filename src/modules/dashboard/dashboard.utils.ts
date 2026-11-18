@@ -1,8 +1,8 @@
 import type { Package, SessionType } from '../../assets/types';
+import type { SessionSummary } from '../../hooks/useSessions';
 import { hoursLeft } from '../../lib/package-hours';
 
 const HOUR_MS = 60 * 60 * 1000;
-const WEEK_MS = 7 * 24 * HOUR_MS;
 
 export const sessionHours = (session: SessionType): number => {
   const ms =
@@ -40,39 +40,15 @@ export interface WeekBucket {
   hours: number;
 }
 
-const startOfWeek = (date: Date): Date => {
-  const d = new Date(date);
-  d.setHours(0, 0, 0, 0);
-  // Monday as the first day of the week
-  const day = (d.getDay() + 6) % 7;
-  d.setDate(d.getDate() - day);
-  return d;
+/** "2026-11-16" as local midnight (not UTC) */
+const localDay = (iso: string): Date => {
+  const [y, m, d] = iso.split('-').map(Number);
+  return new Date(y, (m || 1) - 1, d || 1);
 };
 
-/** Completed learning hours per week for the last `weeks` weeks. */
-export const weeklyHours = (
-  sessions: SessionType[],
-  now: Date,
-  weeks = 8,
-): WeekBucket[] => {
-  const thisWeek = startOfWeek(now);
-  const buckets: WeekBucket[] = Array.from({ length: weeks }, (_, i) => ({
-    start: new Date(thisWeek.getTime() - (weeks - 1 - i) * WEEK_MS),
-    hours: 0,
-  }));
-  const first = buckets[0].start.getTime();
-
-  sessions
-    .filter((s) => s.status === 'completed')
-    .forEach((s) => {
-      const t = new Date(s.start_time).getTime();
-      if (t < first) return;
-      const index = Math.floor((t - first) / WEEK_MS);
-      if (index >= 0 && index < weeks) buckets[index].hours += sessionHours(s);
-    });
-
-  return buckets;
-};
+/** Completed hours per week for the last 8 weeks, from the server's summary */
+export const weeklyHours = (summary?: SessionSummary): WeekBucket[] =>
+  (summary?.weeks || []).map((w) => ({ start: localDay(w.start), hours: w.hours }));
 
 export interface SubjectShare {
   name: string;
@@ -82,17 +58,15 @@ export interface SubjectShare {
 
 /** Completed hours per subject, largest first. */
 export const subjectBreakdown = (
-  sessions: SessionType[],
+  summary: SessionSummary | undefined,
   limit = 4,
 ): SubjectShare[] => {
+  // Several courses can share a subject name (IGCSE and IB Physics): one row
   const totals = new Map<string, number>();
-  sessions
-    .filter((s) => s.status === 'completed')
-    .forEach((s) => {
-      const name = subjectName(s.grade_subject?.full_course_name);
-      if (!name) return;
-      totals.set(name, (totals.get(name) || 0) + sessionHours(s));
-    });
+  (summary?.subjects || []).forEach(({ course, hours }) => {
+    const name = subjectName(course);
+    if (name) totals.set(name, (totals.get(name) || 0) + hours);
+  });
   const all = [...totals.entries()].sort((a, b) => b[1] - a[1]);
   const sum = all.reduce((acc, [, h]) => acc + h, 0) || 1;
   return all
@@ -114,26 +88,17 @@ export interface StudentInsights {
 }
 
 export const studentInsights = (
-  sessions: SessionType[],
+  summary: SessionSummary | undefined,
   packages: Package[],
-  now: Date,
 ): StudentInsights => {
-  const completedSessions = sessions.filter((s) => s.status === 'completed');
-  const completed = completedSessions.length;
-  const missed = sessions.filter((s) => s.status === 'missed').length;
-  const canceled = sessions.filter(
-    (s) => s.status === 'cancelled' || s.status === 'canceled',
-  ).length;
-  const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
-
+  const totals = summary?.totals;
+  const completed = totals?.completed || 0;
+  const missed = totals?.missed || 0;
   return {
-    hoursLearned: completedSessions.reduce(
-      (acc, s) => acc + sessionHours(s),
-      0,
-    ),
+    hoursLearned: totals?.hours_completed || 0,
     completed,
     missed,
-    canceled,
+    canceled: totals?.cancelled || 0,
     attendanceRate:
       completed + missed > 0 ? completed / (completed + missed) : null,
     hoursRemaining: packages.reduce((acc, p) => acc + hoursLeft(p), 0),
@@ -142,9 +107,7 @@ export const studentInsights = (
       0,
     ),
     activePackages: packages.filter((p) => hoursLeft(p) > 0).length,
-    hoursThisMonth: completedSessions
-      .filter((s) => new Date(s.start_time) >= monthStart)
-      .reduce((acc, s) => acc + sessionHours(s), 0),
+    hoursThisMonth: totals?.hours_this_month || 0,
   };
 };
 
