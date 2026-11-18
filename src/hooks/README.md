@@ -192,43 +192,6 @@ const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
 const allSessions = data?.pages.flatMap((page) => page.data) || [];
 ```
 
-#### `useCancelSession()`
-
-Cancels a scheduled session.
-
-**Returns**: `UseMutationResult<void, Error, number>`
-
-**Mutation Function**: `(sessionId: number) => Promise<void>`
-
-**Features**:
-
-- Invalidates session and calendar queries
-- Success notification
-- Automatic UI update
-
-**Usage**:
-
-```typescript
-const cancelMutation = useCancelSession();
-
-const handleCancel = (sessionId) => {
-  cancelMutation.mutate(sessionId);
-};
-```
-
-#### `useEndSession()`
-
-Marks a session as ended.
-
-**Returns**: `UseMutationResult<void, Error, number>`
-
-**Mutation Function**: `(sessionId: number) => Promise<void>`
-
-**Features**:
-
-- Invalidates session queries
-- Success notification
-
 #### `useBookTrialSession()`
 
 Books a free trial session with a tutor.
@@ -254,20 +217,6 @@ const handleBookTrial = (sessionData) => {
   });
 };
 ```
-
-#### `useBookPrivateSession()`
-
-Books a paid private session.
-
-**Returns**: `UseMutationResult<void, Error, PrivateSessionData>`
-
-**Features**:
-
-- Wraps data in `{ private_session: data }` format
-- Invalidates sessions and calendar
-- Success notification
-
----
 
 ### `/useCalendar.ts` - Calendar & Availability Hooks
 
