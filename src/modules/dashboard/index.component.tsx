@@ -43,7 +43,11 @@ import {
 } from './dashboard.utils';
 
 import './dashboard.styles.scss';
-import { hoursLeft } from '../../lib/package-hours';
+import {
+  hoursBought,
+  hoursLeft,
+  hoursLeftShare,
+} from '../../lib/package-hours';
 
 // Friendly rotating colours for subjects and packages
 const TONES = ['sky', 'mint', 'sun', 'lilac', 'coral'] as const;
@@ -131,7 +135,7 @@ const Dashboard: FC = () => {
   const packagesQuery = usePackages(1, 50);
   // More than one low package sends the payer to the renew-all sheet
   const lowPackages = (packagesQuery.data?.data ?? []).filter(
-    (pkg) => Number(pkg.remaining_hours) <= 2 && Number(pkg.original_hours) > 0,
+    (pkg) => hoursLeft(pkg) <= 2 && hoursBought(pkg) > 0,
   ).length;
   const instructorsQuery = useMyInstructors();
 
@@ -236,6 +240,7 @@ const Dashboard: FC = () => {
       icon: <CalendarMonthRounded />,
       value: String(upcoming.length),
       label: t('DASHBOARD.STATS.UPCOMING'),
+      to: '/my_sessions?status=scheduled',
     },
     {
       key: 'completed',
@@ -245,6 +250,7 @@ const Dashboard: FC = () => {
       // trials included); `completed_sessions_count` left trials out (837 vs 843)
       value: summary ? String(insights.completed) : '–',
       label: t('DASHBOARD.STATS.COMPLETED'),
+      to: '/my_sessions?status=completed',
     },
     {
       key: 'remaining',
@@ -252,6 +258,7 @@ const Dashboard: FC = () => {
       icon: <AccessTimeRounded />,
       value: formatHours(insights.hoursRemaining),
       label: t('DASHBOARD.STATS.HOURS_REMAINING'),
+      to: '/my_packages',
     },
     {
       key: 'attendance',
@@ -262,6 +269,7 @@ const Dashboard: FC = () => {
           ? '–'
           : `${Math.round(insights.attendanceRate * 100)}%`,
       label: t('DASHBOARD.STATS.ATTENDANCE'),
+      to: '/my_sessions?status=completed',
     },
   ];
 
@@ -324,7 +332,11 @@ const Dashboard: FC = () => {
         {/* ---------- Quick stats ---------- */}
         <div className="sd-stats">
           {stats.map((stat) => (
-            <div key={stat.key} className={`sd-stat sd-stat--${stat.tone}`}>
+            <Link
+              key={stat.key}
+              to={stat.to}
+              className={`sd-stat sd-stat--${stat.tone} sd-stat--link`}
+            >
               <span className="sd-stat__icon" aria-hidden="true">
                 {stat.icon}
               </span>
@@ -334,7 +346,7 @@ const Dashboard: FC = () => {
                 <span className="sd-stat__value">{stat.value}</span>
               )}
               <span className="sd-stat__label">{stat.label}</span>
-            </div>
+            </Link>
           ))}
         </div>
 
@@ -552,18 +564,24 @@ const Dashboard: FC = () => {
                     {t('DASHBOARD.PROGRESS.ATTENDANCE')}
                   </h3>
                   <div className="sd-attendance">
-                    <span className="sd-attendance__item sd-attendance__item--done">
+                    <Link
+                      to="/my_sessions?status=completed"
+                      className="sd-attendance__item sd-attendance__item--done sd-attendance__item--link"
+                    >
                       <strong>{insights.completed}</strong>
                       {t('DASHBOARD.PROGRESS.COMPLETED')}
-                    </span>
+                    </Link>
                     <span className="sd-attendance__item sd-attendance__item--missed">
                       <strong>{insights.missed}</strong>
                       {t('DASHBOARD.PROGRESS.MISSED')}
                     </span>
-                    <span className="sd-attendance__item sd-attendance__item--canceled">
+                    <Link
+                      to="/my_sessions?status=cancelled"
+                      className="sd-attendance__item sd-attendance__item--canceled sd-attendance__item--link"
+                    >
                       <strong>{insights.canceled}</strong>
                       {t('DASHBOARD.PROGRESS.CANCELED')}
-                    </span>
+                    </Link>
                   </div>
                 </div>
               </div>
@@ -613,34 +631,40 @@ const Dashboard: FC = () => {
               )}
               <ul className="sd-packages">
                 {packages.slice(0, 4).map((pkg, index) => {
-                  const total = Number(pkg.original_hours) || 0;
+                  // Same rule as every page: left = booked + free to book
+                  const total = hoursBought(pkg);
                   const remaining = hoursLeft(pkg);
                   const tone = TONES[index % TONES.length];
                   return (
-                    <li key={pkg.id} className="sd-package">
-                      <Ring
-                        value={total > 0 ? remaining / total : 0}
-                        label={formatHours(remaining)}
-                        tone={tone}
-                      />
-                      <div className="sd-package__text">
-                        <span className="sd-package__subject" dir="auto">
-                          {subjectName(pkg.grade_subject?.full_course_name)}
-                        </span>
-                        <span className="sd-package__tutor">
-                          {t('DASHBOARD.PACKAGES.WITH', {
-                            tutor: `${pkg.tutor?.first_name || ''} ${
-                              pkg.tutor?.last_name || ''
-                            }`.trim(),
-                          })}
-                        </span>
-                        <span className="sd-package__meta">
-                          {t('DASHBOARD.PACKAGES.LEFT_OF', {
-                            left: formatHours(remaining),
-                            total: formatHours(total),
-                          })}
-                        </span>
-                      </div>
+                    <li key={pkg.id}>
+                      <Link
+                        to="/my_packages"
+                        className="sd-package sd-package--link"
+                      >
+                        <Ring
+                          value={hoursLeftShare(pkg)}
+                          label={formatHours(remaining)}
+                          tone={tone}
+                        />
+                        <div className="sd-package__text">
+                          <span className="sd-package__subject" dir="auto">
+                            {subjectName(pkg.grade_subject?.full_course_name)}
+                          </span>
+                          <span className="sd-package__tutor">
+                            {t('DASHBOARD.PACKAGES.WITH', {
+                              tutor: `${pkg.tutor?.first_name || ''} ${
+                                pkg.tutor?.last_name || ''
+                              }`.trim(),
+                            })}
+                          </span>
+                          <span className="sd-package__meta">
+                            {t('DASHBOARD.PACKAGES.LEFT_OF', {
+                              left: formatHours(remaining),
+                              total: formatHours(total),
+                            })}
+                          </span>
+                        </div>
+                      </Link>
                     </li>
                   );
                 })}

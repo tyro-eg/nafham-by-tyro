@@ -166,7 +166,12 @@ const TutorCard: FC<TutorCardProps> = ({
       <dl className="mi-card__facts">
         <div>
           <dt>{t('MYINSTRUCTORS.CARD.HOURS_LEFT')}</dt>
-          <dd>{hours}</dd>
+          <dd>
+            {/* Same rule as every page; opens the packages behind it */}
+            <Link to="/my_packages" className="mi-card__hours-link">
+              {Math.round(hours * 100) / 100}
+            </Link>
+          </dd>
         </div>
         <div className="mi-card__fact-wide">
           <dt>{t('MYINSTRUCTORS.CARD.NEXT_LESSON')}</dt>

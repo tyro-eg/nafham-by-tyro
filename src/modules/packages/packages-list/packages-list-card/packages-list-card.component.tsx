@@ -22,6 +22,11 @@ import { useAppSelector } from '../../../../redux/store';
 import { selectCurrentUser } from '../../../../redux/user/user.selectors';
 import { subjectName } from '../../../dashboard/dashboard.utils';
 import type { Package } from '../../../../assets/types';
+import {
+  hoursAccounted,
+  hoursLeft as hoursLeftOf,
+  hoursLeftShare,
+} from '../../../../lib/package-hours';
 
 import './packages-list-card.styles.scss';
 
@@ -111,11 +116,12 @@ const PackageListCard: FC<PackageListCardProps> = ({
     unscheduled: remainingHours,
     consistent: true,
   };
-  const active = Math.max(hours.bought - hours.moved_out, 0);
-  // Only taught or missed hours count as gone; a booking is still the student's
-  const hoursLeft = Math.max(active - hours.used, 0);
+  // One rule on every page (lib/package-hours): left = booked + free to book.
+  // The bar splits everything the hours went to, like the Admin's.
+  const hoursLeft = hoursLeftOf(packageData);
+  const accounted = hoursAccounted(packageData);
   const share = (value: number) =>
-    active > 0 ? Math.min(100, Math.max(0, (value / active) * 100)) : 0;
+    accounted > 0 ? Math.min(100, Math.max(0, (value / accounted) * 100)) : 0;
   const purchases = packageData.purchases ?? [];
   const purchaseLabel = (kind: string) =>
     kind === 'top_up'
@@ -151,10 +157,7 @@ const PackageListCard: FC<PackageListCardProps> = ({
           </p>
         </div>
         <div className="pk-card__left">
-          <Ring
-            value={active ? hoursLeft / active : 0}
-            label={`${hoursLeft}h`}
-          />
+          <Ring value={hoursLeftShare(packageData)} label={`${hoursLeft}h`} />
           <span className="pk-card__left-label">
             {t('MYPACKAGES.CARD.REMAINING_HOURS')}
           </span>
@@ -205,7 +208,7 @@ const PackageListCard: FC<PackageListCardProps> = ({
         className="pk-card__bar"
         role="progressbar"
         aria-valuemin={0}
-        aria-valuemax={active}
+        aria-valuemax={accounted}
         aria-valuenow={hoursLeft}
         aria-label={t('MYPACKAGES.CARD.REMAINING_HOURS')}
       >
@@ -221,6 +224,13 @@ const PackageListCard: FC<PackageListCardProps> = ({
           className="pk-card__seg pk-card__seg--free"
           style={{ width: `${share(hours.unscheduled)}%` }}
         />
+        {/* Late-change charges and refunds, so the bar adds up */}
+        <span
+          className="pk-card__seg pk-card__seg--other"
+          style={{
+            width: `${share((hours.charged ?? 0) + (hours.refunded ?? 0))}%`,
+          }}
+        />
       </div>
       <ul className="pk-card__legend">
         <li className="pk-card__legend-item pk-card__legend-item--used">
@@ -234,6 +244,18 @@ const PackageListCard: FC<PackageListCardProps> = ({
           <strong>{hours.unscheduled}</strong>{' '}
           {t('MYPACKAGES.CARD.LEGEND.FREE')}
         </li>
+        {(hours.charged ?? 0) > 0 && (
+          <li className="pk-card__legend-item">
+            <strong>{hours.charged}</strong>{' '}
+            {t('MYPACKAGES.CARD.LEGEND.CHARGED')}
+          </li>
+        )}
+        {(hours.refunded ?? 0) > 0 && (
+          <li className="pk-card__legend-item">
+            <strong>{hours.refunded}</strong>{' '}
+            {t('MYPACKAGES.CARD.LEGEND.REFUNDED')}
+          </li>
+        )}
         {hours.moved_out > 0 && (
           <li className="pk-card__legend-item">
             <strong>{hours.moved_out}</strong>{' '}

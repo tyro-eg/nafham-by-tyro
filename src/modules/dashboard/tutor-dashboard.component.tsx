@@ -213,6 +213,8 @@ const TutorDashboard: FC = () => {
     icon: ReactNode;
     value: string;
     label: string;
+    /** Where the tile leads */
+    to: string;
     progress?: { width: number; text: string };
   }[] = [
     {
@@ -221,6 +223,7 @@ const TutorDashboard: FC = () => {
       icon: <CalendarMonthRounded />,
       value: String(upcoming.length),
       label: t('TUTOR_DASHBOARD.STATS.UPCOMING'),
+      to: '/my_sessions?status=scheduled',
     },
     {
       key: 'taught',
@@ -228,6 +231,7 @@ const TutorDashboard: FC = () => {
       icon: <SchoolRounded />,
       value: totalsLoading ? '–' : formatHours(hoursThisMonth),
       label: t('TUTOR_DASHBOARD.STATS.HOURS_MONTH'),
+      to: '/my_salary',
     },
     {
       key: 'students',
@@ -239,6 +243,7 @@ const TutorDashboard: FC = () => {
           ? `${studentCount} / ${studentTarget}`
           : String(studentCount),
       label: t('TUTOR_DASHBOARD.STATS.ACTIVE_STUDENTS'),
+      to: '/my_students',
       progress: studentProgress
         ? {
             width: studentProgress.width,
@@ -257,6 +262,7 @@ const TutorDashboard: FC = () => {
       label: t('TUTOR_DASHBOARD.STATS.RATING', {
         count: Number(profile?.number_of_reviews) || 0,
       }),
+      to: `/profile/${currentUser?.id ?? ''}`,
     },
   ];
 
@@ -314,7 +320,11 @@ const TutorDashboard: FC = () => {
         {/* ---------- Highlights ---------- */}
         <div className="sd-stats">
           {stats.map((stat) => (
-            <div key={stat.key} className={`sd-stat sd-stat--${stat.tone}`}>
+            <Link
+              key={stat.key}
+              to={stat.to}
+              className={`sd-stat sd-stat--${stat.tone} sd-stat--link`}
+            >
               <span className="sd-stat__icon" aria-hidden="true">
                 {stat.icon}
               </span>
@@ -342,7 +352,7 @@ const TutorDashboard: FC = () => {
                   <span className="sd-stat__note">{stat.progress.text}</span>
                 </>
               )}
-            </div>
+            </Link>
           ))}
         </div>
 
@@ -558,18 +568,24 @@ const TutorDashboard: FC = () => {
                     {t('TUTOR_DASHBOARD.ACTIVITY.SESSIONS')}
                   </h3>
                   <div className="sd-attendance">
-                    <span className="sd-attendance__item sd-attendance__item--done">
+                    <Link
+                      to="/my_sessions?status=completed"
+                      className="sd-attendance__item sd-attendance__item--done sd-attendance__item--link"
+                    >
                       <strong>{completedCount}</strong>
                       {t('DASHBOARD.PROGRESS.COMPLETED')}
-                    </span>
+                    </Link>
                     <span className="sd-attendance__item sd-attendance__item--missed">
                       <strong>{missed}</strong>
                       {t('DASHBOARD.PROGRESS.MISSED')}
                     </span>
-                    <span className="sd-attendance__item sd-attendance__item--canceled">
+                    <Link
+                      to="/my_sessions?status=cancelled"
+                      className="sd-attendance__item sd-attendance__item--canceled sd-attendance__item--link"
+                    >
                       <strong>{canceled}</strong>
                       {t('DASHBOARD.PROGRESS.CANCELED')}
-                    </span>
+                    </Link>
                   </div>
 
                   <h3 className="sd-subheading sd-subheading--spaced">

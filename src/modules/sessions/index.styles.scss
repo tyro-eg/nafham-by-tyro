@@ -222,3 +222,34 @@
   border-radius: 2rem;
   background: $surface;
 }
+
+// The counters double as shortcuts: a status opens the list on it, hours
+// open My Packages (19 Nov 2026)
+.ss-stats > li {
+  display: flex;
+}
+
+.ss-stat--link {
+  flex: 1;
+  border: 0;
+  font: inherit;
+  text-align: start;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    box-shadow 0.15s,
+    transform 0.15s;
+
+  &:hover {
+    box-shadow: 0 0 0 1px var(--tone);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--tone);
+    outline-offset: 2px;
+  }
+}
+
+.ss-stat--on {
+  box-shadow: 0 0 0 2px var(--tone);
+}

@@ -956,9 +956,11 @@
       },
       "LEGEND": {
         "USED": "used",
-        "SCHEDULED": "scheduled",
+        "SCHEDULED": "booked",
         "FREE": "free to book",
-        "MOVED_OUT": "moved to another tutor"
+        "MOVED_OUT": "moved to another tutor",
+        "CHARGED": "charged for late changes",
+        "REFUNDED": "refunded"
       }
     },
     "SUBTITLE": "Hours bought, used and still free to book, per tutor.",

@@ -1,5 +1,6 @@
 import { FC, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Link, useSearchParams } from 'react-router-dom';
 import { Autocomplete, TextField } from '@mui/material';
 import {
   CalendarMonthRounded,
@@ -50,7 +51,12 @@ const Sessions: FC = () => {
   const isParent = currentUser?.type === 'Parent';
   const isTutor = currentUser?.type === 'Tutor';
 
-  const [status, setStatus] = useState<Status>('all');
+  // A dashboard tile can open the page on one status: /my_sessions?status=completed
+  const [searchParams] = useSearchParams();
+  const [status, setStatus] = useState<Status>(() => {
+    const asked = searchParams.get('status');
+    return STATUSES.find((key) => key === asked) ?? 'all';
+  });
   const [tutor, setTutor] = useState<Instructor | null>(null);
   const [course, setCourse] = useState<GradeSubject | null>(null);
   const [view, setView] = useState<'list' | 'calendar'>('list');
@@ -70,6 +76,7 @@ const Sessions: FC = () => {
         tone: 'brand',
         value: source?.upcoming_sessions_count ?? 0,
         label: t('MYSESSIONS.OVERVIEW.UPCOMING'),
+        status: 'scheduled' as Status,
       },
       {
         key: 'unscheduled',
@@ -77,6 +84,7 @@ const Sessions: FC = () => {
         tone: 'accent',
         value: source?.unscheduled_hours ?? 0,
         label: t('MYSESSIONS.OVERVIEW.UNSCHEDULED'),
+        to: '/my_packages',
       },
       {
         key: 'completed',
@@ -84,6 +92,7 @@ const Sessions: FC = () => {
         tone: 'mint',
         value: totals?.completed ?? source?.completed_sessions_count ?? 0,
         label: t('MYSESSIONS.OVERVIEW.COMPLETED'),
+        status: 'completed' as Status,
       },
       {
         key: 'cancelled',
@@ -91,9 +100,22 @@ const Sessions: FC = () => {
         tone: 'neutral',
         value: totals?.cancelled ?? source?.cancelled_sessions_count ?? 0,
         label: t('MYSESSIONS.OVERVIEW.CANCELLED'),
+        status: 'cancelled' as Status,
       },
-    ];
+    ] as {
+      key: string;
+      icon: JSX.Element;
+      tone: string;
+      value: number;
+      label: string;
+      status?: Status;
+      to?: string;
+    }[];
   }, [currentUser, childStats.data, isParent, isTutor, tutorSummary.data, t]);
+
+  const statsLoading = isTutor
+    ? tutorSummary.isLoading
+    : isParent && childStats.isLoading;
 
   const instructorsQuery = useMyInstructors({}, { enabled: !isTutor });
   const coursesQuery = useGradeSubjects();
@@ -120,15 +142,44 @@ const Sessions: FC = () => {
             </p>
           </div>
           <ul className="ss-stats" aria-label={t('MYSESSIONS.OVERVIEW.TITLE')}>
-            {stats.map((stat) => (
-              <li key={stat.key} className={`ss-stat ss-stat--${stat.tone}`}>
-                <span className="ss-stat__icon" aria-hidden="true">
-                  {stat.icon}
-                </span>
-                <span className="ss-stat__value">{stat.value}</span>
-                <span className="ss-stat__label">{stat.label}</span>
-              </li>
-            ))}
+            {stats.map((stat) => {
+              const className = `ss-stat ss-stat--${stat.tone} ss-stat--link${
+                stat.status && stat.status === status ? ' ss-stat--on' : ''
+              }`;
+              // "–" until the numbers arrive, never a misleading 0
+              const body = (
+                <>
+                  <span className="ss-stat__icon" aria-hidden="true">
+                    {stat.icon}
+                  </span>
+                  <span className="ss-stat__value">
+                    {statsLoading ? '–' : stat.value}
+                  </span>
+                  <span className="ss-stat__label">{stat.label}</span>
+                </>
+              );
+              return (
+                <li key={stat.key}>
+                  {stat.to ? (
+                    <Link to={stat.to} className={className}>
+                      {body}
+                    </Link>
+                  ) : (
+                    <button
+                      type="button"
+                      className={className}
+                      aria-pressed={stat.status === status}
+                      onClick={() =>
+                        stat.status &&
+                        setStatus(stat.status === status ? 'all' : stat.status)
+                      }
+                    >
+                      {body}
+                    </button>
+                  )}
+                </li>
+              );
+            })}
           </ul>
         </div>
       </header>

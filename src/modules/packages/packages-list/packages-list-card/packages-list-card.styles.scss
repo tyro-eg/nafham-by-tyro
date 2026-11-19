@@ -227,6 +227,10 @@
     &--free {
       background: #2f9a3a;
     }
+
+    &--other {
+      background: $gray-300;
+    }
   }
 
   &__legend {
