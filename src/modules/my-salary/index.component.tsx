@@ -178,7 +178,8 @@ const MySalary: FC = () => {
             <p>
               {t('MY_SALARY.PROJECTION', {
                 count: report.upcomingSessions,
-                amount: egp(report.upcomingAmount),
+                // An estimate ("worth about"), so whole pounds: 12,700 not 12,700.01
+                amount: egp(report.upcomingAmount, 0),
               })}
             </p>
           </div>
