@@ -2,10 +2,20 @@ import { describe, expect, it } from 'vitest';
 import type { Package } from '../../assets/types';
 import type { SessionSummary } from '../../hooks/useSessions';
 import { buildStudents } from './my-students.utils';
-import { studentInsights, subjectBreakdown, weeklyHours } from '../dashboard/dashboard.utils';
+import {
+  studentInsights,
+  subjectBreakdown,
+  weeklyHours,
+} from '../dashboard/dashboard.utils';
 
 const summary: SessionSummary = {
-  totals: { completed: 361, missed: 4, cancelled: 19, hours_completed: 431.5, hours_this_month: 140 },
+  totals: {
+    completed: 361,
+    missed: 4,
+    cancelled: 19,
+    hours_completed: 431.5,
+    hours_this_month: 140,
+  },
   weeks: [
     { start: '2026-11-09', hours: 25.5 },
     { start: '2026-11-16', hours: 10.5 },
@@ -51,7 +61,12 @@ describe('totals from the server summary', () => {
 
   it('weeks start at local midnight on the Monday the server gives', () => {
     const [first] = weeklyHours(summary);
-    expect([first.start.getFullYear(), first.start.getMonth(), first.start.getDate(), first.start.getHours()]).toEqual([2026, 10, 9, 0]);
+    expect([
+      first.start.getFullYear(),
+      first.start.getMonth(),
+      first.start.getDate(),
+      first.start.getHours(),
+    ]).toEqual([2026, 10, 9, 0]);
   });
 
   it('subjects with the same name join into one row', () => {
@@ -62,12 +77,52 @@ describe('totals from the server summary', () => {
   });
 
   it('students: next and last session, and active with a session to come or hours left', () => {
-    const pkg = { student: { id: 8, first_name: 'Ali', last_name: 'B' }, original_hours: 10, remaining_hours: 0 } as unknown as Package;
+    const pkg = {
+      student: { id: 8, first_name: 'Ali', last_name: 'B' },
+      original_hours: 10,
+      remaining_hours: 0,
+    } as unknown as Package;
     const students = buildStudents([pkg], summary.students || []);
-    expect(students.map((s) => [s.id, s.active, s.nextSessionAt, s.lastCourse])).toEqual([
+    expect(
+      students.map((s) => [s.id, s.active, s.nextSessionAt, s.lastCourse]),
+    ).toEqual([
       [7, true, '2026-11-20T06:00:00Z', 'IB - DP2 - Physics'],
       [8, false, undefined, undefined],
     ]);
     expect(students[0].courses).toEqual(['Physics']);
+  });
+});
+
+describe('buildStudents: active follows the server', () => {
+  it('marks exactly the students the server lists as active', () => {
+    const pkg = (id: number, studentId: number, free: number) =>
+      ({
+        id,
+        remaining_hours: free,
+        original_hours: 10,
+        student: {
+          id: studentId,
+          first_name: 'S',
+          last_name: String(studentId),
+        },
+        tutor: { id: 1 },
+        grade_subject: { full_course_name: 'IGCSE - G10 - Math' },
+      }) as unknown as Package;
+    const students = buildStudents([pkg(1, 11, 5), pkg(2, 12, 0)], [], [12]);
+    const active = Object.fromEntries(students.map((s) => [s.id, s.active]));
+    // 11 has hours but the server says not active (e.g. hours moved away)
+    expect(active).toEqual({ 11: false, 12: true });
+  });
+
+  it('falls back to hours or a coming session when the server sends no list', () => {
+    const pkg = {
+      id: 1,
+      remaining_hours: 5,
+      original_hours: 10,
+      student: { id: 11, first_name: 'S', last_name: 'A' },
+      tutor: { id: 1 },
+      grade_subject: { full_course_name: 'IGCSE - G10 - Math' },
+    } as unknown as Package;
+    expect(buildStudents([pkg], [])[0].active).toBe(true);
   });
 });

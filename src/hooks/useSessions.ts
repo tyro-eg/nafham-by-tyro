@@ -133,6 +133,8 @@ export interface SessionSummary {
   weeks: { start: string; hours: number }[];
   /** Completed hours by course, most first */
   subjects: { course: string; hours: number }[];
+  /** Tutors only: the students the server counts as active */
+  active_student_ids?: number[];
   /** A tutor's students only */
   students?: SummaryStudent[];
 }

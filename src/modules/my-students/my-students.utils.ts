@@ -31,6 +31,8 @@ export interface StudentSummary {
 export const buildStudents = (
   packages: Package[],
   summaryStudents: SummaryStudent[],
+  /** The server's active students (the profile's count); older servers send none */
+  activeIds?: number[],
 ): StudentSummary[] => {
   const byId = new Map<number, StudentSummary>();
 
@@ -92,8 +94,14 @@ export const buildStudents = (
     if (row.last_course) s.lastCourse = row.last_course;
   });
 
+  // One rule with the profile and dashboard: the server's (hours left or a
+  // session coming, or a session in the last 30 days; trial-only students
+  // don't count). 19 Nov 2026: this page counted 66, the profile 57.
+  const serverActive = activeIds ? new Set(activeIds) : null;
   byId.forEach((s) => {
-    s.active = s.hoursRemaining > 0 || !!s.nextSessionAt;
+    s.active = serverActive
+      ? serverActive.has(s.id)
+      : s.hoursRemaining > 0 || !!s.nextSessionAt;
   });
 
   // Active students first, then by soonest session, then by name

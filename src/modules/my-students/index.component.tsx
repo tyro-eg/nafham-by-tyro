@@ -55,6 +55,7 @@ const MyStudents: FC = () => {
       buildStudents(
         packagesQuery.data?.data || [],
         summaryQuery.data?.students || [],
+        summaryQuery.data?.active_student_ids,
       ),
     [packagesQuery.data, summaryQuery.data],
   );

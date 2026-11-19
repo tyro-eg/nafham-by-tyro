@@ -127,7 +127,12 @@ const TutorDashboard: FC = () => {
   const today = upcoming.filter((s) => isSameDay(new Date(s.start_time), now));
   const weeks = useMemo(() => weeklyHours(summary), [summary]);
   const students = useMemo(
-    () => buildStudents(packages, summary?.students || []),
+    () =>
+      buildStudents(
+        packages,
+        summary?.students || [],
+        summary?.active_student_ids,
+      ),
     [packages, summary],
   );
 
