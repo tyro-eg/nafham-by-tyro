@@ -62,7 +62,10 @@
     "EXPAND": "إظهار القائمة",
     "PAYMENTS": "المدفوعات",
     "TRIAL_REQUESTS": "طلبات الحصص التجريبية",
-    "REQUESTS": "الطلبات"
+    "REQUESTS": "الطلبات",
+    "GROUP_LEARNING": "التعلّم",
+    "GROUP_MONEY": "المدفوعات",
+    "GROUP_HELP": "المساعدة"
   },
   "CARDS": {
     "FREE_ASSESMENT": {
@@ -1041,23 +1044,28 @@
     "NO_ACCOUNT": "لا تملك حسابا حتى الآن؟",
     "REGISTER": "إنشاء حساب",
     "OR": "أو تسجيل الدخول باستخدام",
+    "OR_SHORT": "أو",
+    "FREE_TRIAL": "احجز حصة تجريبية مجانية",
+    "SHOW_PASSWORD": "إظهار كلمة المرور",
+    "HIDE_PASSWORD": "إخفاء كلمة المرور",
     "ERROR": "لم يتم تسجيل الدخول ، يرجى التحقق من بريدك الإلكتروني وكلمة المرور والمحاولة مرة أخرى",
     "TERMS": "عن طريق الضغط على تسجيل الدخول فإنك توافقنا على ",
     "TERMS_GREEN": "الشروط والأحكام",
     "MAIN": {
-      "TITLE": "مرحبًا بعودتك !",
-      "SUBTITLE": "أدخل بياناتك بالأسفل"
+      "TITLE": "مرحبًا بعودتك",
+      "SUBTITLE": "سجّل الدخول إلى حسابك في نفهم."
     },
     "TAB": {
       "STUDENT": "طالب",
       "INSTRUCTOR": "مدرس"
     },
     "PANEL": {
-      "EYEBROW": "نفهم",
-      "TITLE": "أكمل من حيث توقفت.",
-      "SUBTITLE": "حصصك وباقاتك ومدرسوك في انتظارك.",
-      "QUOTE": "إنها أفضل مدرِّسة تعاملنا معها. تحسّن أحمد في المدرسة وهي تتابع معه كل أسبوع.",
-      "QUOTE_BY": "ولي أمر أحمد"
+      "TITLE_START": "أكمل",
+      "TITLE_END": "من حيث توقفت",
+      "SUBTITLE": "حصصك وباقاتك ومدرسوك، في مكان واحد هادئ.",
+      "FACT_TUTORS": "حصص فردية مع مدرسين موثوقين",
+      "FACT_NOTES": "ملاحظات بعد كل حصة مسجّلة",
+      "FACT_CHANGES": "احجز أو انقل أو أوقف مؤقتًا بضغطات قليلة"
     }
   },
   "IMPERSONATE": {
@@ -2433,7 +2441,25 @@
       "LIVE": "مباشر الآن",
       "LATEST_NOTE": "آخر ملاحظة",
       "NO_NOTE": "لا شيء بعد",
-      "HOURS_OF": "{{left}} من {{total}} ساعة متبقية"
+      "HOURS_OF": "{{left}} من {{total}} ساعة متبقية",
+      "WITH_HOURS": "باقات بها ساعات متبقية",
+      "LOW": "منخفضة · تجديد",
+      "MORE_LEFT_zero": "",
+      "MORE_LEFT_one": "+ باقة أخرى بها ساعات",
+      "MORE_LEFT_two": "+ باقتان أخريان بهما ساعات",
+      "MORE_LEFT_few": "+ {{count}} باقات أخرى بها ساعات",
+      "MORE_LEFT_many": "+ {{count}} باقة أخرى بها ساعات",
+      "MORE_LEFT_other": "+ {{count}} باقة أخرى بها ساعات",
+      "USED_UP_zero": "",
+      "USED_UP_one": "باقة مستهلكة",
+      "USED_UP_two": "باقتان مستهلكتان",
+      "USED_UP_few": "{{count}} باقات مستهلكة",
+      "USED_UP_many": "{{count}} باقة مستهلكة",
+      "USED_UP_other": "{{count}} باقة مستهلكة",
+      "SHOW_ALL": "عرض الكل",
+      "SHOW_LESS": "عرض أقل",
+      "NONE_LEFT": "لا توجد ساعات متبقية في أي باقة.",
+      "USED_UP_TAG": "مستهلكة"
     },
     "TOP_UP": {
       "BUTTON": "طلب ساعات إضافية",
@@ -2517,7 +2543,17 @@
       "HOMEWORK_two": "واجبان مستحقان",
       "HOMEWORK_few": "{{count}} واجبات مستحقة",
       "HOMEWORK_many": "{{count}} واجبًا مستحقًا",
-      "HOMEWORK_other": "{{count}} واجب مستحق"
+      "HOMEWORK_other": "{{count}} واجب مستحق",
+      "GREET_MORNING": "صباح الخير، {{name}}",
+      "GREET_AFTERNOON": "مساء الخير، {{name}}",
+      "GREET_EVENING": "مساء الخير، {{name}}",
+      "CHILDREN_zero": "لا أطفال",
+      "CHILDREN_one": "طفل واحد",
+      "CHILDREN_two": "طفلان",
+      "CHILDREN_few": "{{count}} أطفال",
+      "CHILDREN_many": "{{count}} طفلًا",
+      "CHILDREN_other": "{{count}} طفل",
+      "REQUEST": "اطلب حصصًا"
     },
     "STATS": {
       "HOURS": "الساعات المتبقية",
@@ -2527,7 +2563,25 @@
     },
     "UPCOMING": {
       "TITLE": "الحصص القادمة",
-      "EMPTY": "لا يوجد حجز بعد."
+      "EMPTY": "لا يوجد حجز بعد.",
+      "NONE": "لا توجد حصص قادمة",
+      "NONE_TEXT": "اضغط «اطلب حصصًا» وسيحجزها فريقنا."
+    },
+    "TILES": {
+      "HOURS_zero": "لا باقات بها ساعات",
+      "HOURS_one": "متبقية في باقة واحدة",
+      "HOURS_two": "متبقية في باقتين",
+      "HOURS_few": "متبقية في {{count}} باقات",
+      "HOURS_many": "متبقية في {{count}} باقة",
+      "HOURS_other": "متبقية في {{count}} باقة",
+      "NONE": "لا شيء",
+      "COMING_UP": "حصص قادمة",
+      "NEXT": "التالية: {{subject}} · {{child}}",
+      "HOMEWORK": "واجبات مستحقة هذا الأسبوع",
+      "HOURS_UNIT": "{{count}} س"
+    },
+    "NOTES_CARD": {
+      "EMPTY": "تظهر الملاحظات هنا بعد حصة مسجّلة. يُضبط التسجيل لكل مادة من إعدادات العائلة."
     }
   },
   "PAYMENTS": {

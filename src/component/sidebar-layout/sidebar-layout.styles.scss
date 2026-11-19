@@ -113,6 +113,15 @@ $topbar-height: 6.4rem;
       height: 3.2rem;
     }
 
+    &--collapsed &__group {
+      height: 1px;
+      margin: $space-2 $space-2;
+      padding: 0;
+      overflow: hidden;
+      color: transparent;
+      background-color: $border;
+    }
+
     &--collapsed &__label,
     &--collapsed &__who,
     &--collapsed &__child-switcher,
@@ -289,6 +298,21 @@ $topbar-height: 6.4rem;
   &__label {
     flex: 1;
     min-width: 0;
+  }
+
+  // Small group headings in the parent's menu (19 Nov 2026)
+  &__group {
+    margin: $space-3 0 0.2rem;
+    padding-inline: $space-3;
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: $gray-400;
+
+    html[dir='rtl'] & {
+      letter-spacing: 0;
+    }
   }
 
   // Unread messages count on the Messages item

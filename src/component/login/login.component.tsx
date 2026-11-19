@@ -5,10 +5,11 @@ import {
   Button,
   Dialog,
   IconButton,
+  InputAdornment,
   InputLabel,
   TextField as MuiTextField,
 } from '@mui/material';
-import { Close } from '@mui/icons-material';
+import { Close, Visibility, VisibilityOff } from '@mui/icons-material';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { loginSchema, type LoginFormData } from '../../schemas/authSchemas';
@@ -26,6 +27,7 @@ const Login = () => {
   // The server has no self-service reset: the window says how to get a new
   // password from support (the Admin's "New password").
   const [openForgetPasswordModal, setOpenForgetPasswordModal] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const signInMutation = useSignIn();
 
@@ -44,8 +46,6 @@ const Login = () => {
   const handleCloseForgetPasswordModal = () => {
     setOpenForgetPasswordModal(false);
   };
-
-  const goToTerms = () => navigate('/terms');
 
   const onSubmit = async (values: LoginFormData) => {
     try {
@@ -110,13 +110,30 @@ const Login = () => {
                 {...field}
                 placeholder={t('LOGIN.LOGIN_PASSWORD_INPUT_PLACEHOLDER')}
                 variant="outlined"
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 className="custom-input-style"
                 id="password"
                 autoComplete="current-password"
                 error={!!errors.password}
                 helperText={errors.password?.message}
                 fullWidth
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        onClick={() => setShowPassword((shown) => !shown)}
+                        edge="end"
+                        aria-label={
+                          showPassword
+                            ? t('LOGIN.HIDE_PASSWORD')
+                            : t('LOGIN.SHOW_PASSWORD')
+                        }
+                      >
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
               />
             )}
           />
@@ -132,6 +149,18 @@ const Login = () => {
         >
           {t('LOGIN.LOGIN_SUBMIT_BTN')}
         </Button>
+        {/* Sign in needs no consent line: the terms are agreed at sign-up */}
+        <p className="login-container__or">{t('LOGIN.OR_SHORT')}</p>
+        <Button
+          component={Link}
+          to="/trial"
+          variant="outlined"
+          size="large"
+          className="login-container__trial"
+          fullWidth
+        >
+          {t('LOGIN.FREE_TRIAL')}
+        </Button>
         <div className="no-account">
           <p className="register-text">
             {t('LOGIN.NO_ACCOUNT')}{' '}
@@ -139,33 +168,6 @@ const Login = () => {
               {t('LOGIN.REGISTER')}
             </Link>
           </p>
-        </div>
-        {/* <div className="social-login">
-              <p className="or-text">{t('LOGIN.OR')}</p>
-              <Button
-                variant="outlined"
-                startIcon={<Facebook />}
-                className="social-btn"
-                fullWidth
-              >
-                Facebook
-              </Button>
-              <Button
-                variant="outlined"
-                startIcon={<Google />}
-                className="social-btn"
-                fullWidth
-              >
-                Google
-              </Button>
-            </div> */}
-        <div className="term-body">
-          <p className="term-first-text">{t('REGISTER.TERMS')}</p>
-          <Button onClick={goToTerms} variant="text">
-            <span className="term-second-text">
-              {t('REGISTER.TERMS_GREEN')}
-            </span>
-          </Button>
         </div>
       </form>
       {openForgetPasswordModal && (

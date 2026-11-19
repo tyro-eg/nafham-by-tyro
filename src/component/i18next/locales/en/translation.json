@@ -62,7 +62,10 @@
     "EXPAND": "Show menu",
     "PAYMENTS": "Payments",
     "TRIAL_REQUESTS": "Trial requests",
-    "REQUESTS": "Requests"
+    "REQUESTS": "Requests",
+    "GROUP_LEARNING": "Learning",
+    "GROUP_MONEY": "Money",
+    "GROUP_HELP": "Help"
   },
   "CARDS": {
     "FREE_ASSESMENT": {
@@ -1001,7 +1004,7 @@
     "LOGIN_TITLE_1": "Login to complete the joining process",
     "LOGIN_SUBTITLE": "Welcome back",
     "FACEBOOK_LOGIN": "Login with facebook",
-    "LOGIN_EMAIL": "Email Address",
+    "LOGIN_EMAIL": "Email",
     "LOGIN_EMAIL_INPUT_PLACEHOLDER": "Enter your email",
     "LOGIN_PASSWORD": "Password",
     "LOGIN_PASSWORD_INPUT_PLACEHOLDER": "Enter your password",
@@ -1012,23 +1015,28 @@
     "NO_ACCOUNT": "Don't have an account yet?",
     "REGISTER": "Create an account",
     "OR": "or Sign In with",
+    "OR_SHORT": "or",
+    "FREE_TRIAL": "Book a free trial",
+    "SHOW_PASSWORD": "Show password",
+    "HIDE_PASSWORD": "Hide password",
     "ERROR": "Unable to login, please check your email and password and try again",
     "TERMS": "By clicking sign in you agree to our ",
     "TERMS_GREEN": "Terms and Conditions",
     "MAIN": {
-      "TITLE": "Welcome Back !",
-      "SUBTITLE": "Enter your details below."
+      "TITLE": "Welcome back",
+      "SUBTITLE": "Sign in to your Nafham account."
     },
     "TAB": {
       "STUDENT": "Student",
       "INSTRUCTOR": "Tutor"
     },
     "PANEL": {
-      "EYEBROW": "Nafham Learning",
-      "TITLE": "Pick up right where you left off.",
-      "SUBTITLE": "Your sessions, packages and tutors are waiting.",
-      "QUOTE": "She is the best tutor we've dealt with. Ahmed got better at school and she follows up with him every week.",
-      "QUOTE_BY": "Ahmed's parent"
+      "TITLE_START": "Pick up right",
+      "TITLE_END": "where you left off",
+      "SUBTITLE": "Your sessions, packages and tutors, in one calm place.",
+      "FACT_TUTORS": "One-to-one sessions with checked tutors",
+      "FACT_NOTES": "Notes after every recorded session",
+      "FACT_CHANGES": "Book, move or pause in a few clicks"
     }
   },
   "IMPERSONATE": {
@@ -2267,7 +2275,17 @@
       "LIVE": "Live now",
       "LATEST_NOTE": "Latest note",
       "NO_NOTE": "None yet",
-      "HOURS_OF": "{{left}} of {{total}} hours left"
+      "HOURS_OF": "{{left}} of {{total}} hours left",
+      "WITH_HOURS": "Packages with hours left",
+      "LOW": "Low · Renew",
+      "MORE_LEFT_one": "+{{count}} more with hours left",
+      "MORE_LEFT_other": "+{{count}} more with hours left",
+      "USED_UP_one": "{{count}} used up",
+      "USED_UP_other": "{{count}} used up",
+      "SHOW_ALL": "Show all",
+      "SHOW_LESS": "Show less",
+      "NONE_LEFT": "No hours left on any package.",
+      "USED_UP_TAG": "Used up"
     },
     "TOP_UP": {
       "BUTTON": "Request more hours",
@@ -2339,7 +2357,13 @@
       "LESSONS_WEEK_one": "{{count}} session this week",
       "LESSONS_WEEK_other": "{{count}} sessions this week",
       "HOMEWORK_one": "{{count}} homework due",
-      "HOMEWORK_other": "{{count}} homework due"
+      "HOMEWORK_other": "{{count}} homework due",
+      "GREET_MORNING": "Good morning, {{name}}",
+      "GREET_AFTERNOON": "Good afternoon, {{name}}",
+      "GREET_EVENING": "Good evening, {{name}}",
+      "CHILDREN_one": "{{count}} child",
+      "CHILDREN_other": "{{count}} children",
+      "REQUEST": "Request sessions"
     },
     "STATS": {
       "HOURS": "Hours left",
@@ -2349,7 +2373,21 @@
     },
     "UPCOMING": {
       "TITLE": "Upcoming sessions",
-      "EMPTY": "Nothing booked yet."
+      "EMPTY": "Nothing booked yet.",
+      "NONE": "No sessions coming up",
+      "NONE_TEXT": "Press Request sessions and our team books them."
+    },
+    "TILES": {
+      "HOURS_one": "left on {{count}} package",
+      "HOURS_other": "left on {{count}} packages",
+      "NONE": "None",
+      "COMING_UP": "sessions coming up",
+      "NEXT": "next: {{subject}} · {{child}}",
+      "HOMEWORK": "homework due this week",
+      "HOURS_UNIT": "{{count}} h"
+    },
+    "NOTES_CARD": {
+      "EMPTY": "Notes appear here after a recorded session. Recording is set per course in Family settings."
     }
   },
   "PAYMENTS": {
