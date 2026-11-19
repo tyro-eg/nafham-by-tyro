@@ -18,8 +18,6 @@ export type SessionPhase =
 
 /** Tutors can open the meeting this long before the start (the host link window) */
 export const TUTOR_EARLY_MINUTES = 15;
-/** After this, a session nobody closed is treated as missed (the server does the same) */
-export const AWAITING_HOURS = 72;
 
 const minutesUntil = (iso: string, now: Date) =>
   (new Date(iso).getTime() - now.getTime()) / 60_000;
@@ -30,15 +28,15 @@ export const sessionPhase = (session: SessionType, now: Date): SessionPhase => {
   if (status === 'completed') return 'completed';
   if (status === 'missed') return 'missed';
 
-  const end = new Date(session.end_time);
-  const over = end <= now;
-  const stale = now.getTime() - end.getTime() > AWAITING_HOURS * 3_600_000;
+  // Only the server says "missed": after the end it marks the session missed
+  // or hands it to support to check. Until then it is awaiting confirmation,
+  // however long ago it ended (19 Nov 2026: sessions nobody had closed were
+  // shown as "Session Missed" after 72 h while the dashboard said 0 missed)
+  const over = new Date(session.end_time) <= now;
   if (status === 'open') {
-    if (!over && !session.awaiting_confirmation) return 'live';
-    return stale ? 'missed' : 'awaiting';
+    return !over && !session.awaiting_confirmation ? 'live' : 'awaiting';
   }
-  // scheduled: the server decides missed/completed after the end, never the app
-  if (over) return stale ? 'missed' : 'awaiting';
+  if (over) return 'awaiting';
   return minutesUntil(session.start_time, now) <= TUTOR_EARLY_MINUTES
     ? 'starting_soon'
     : 'upcoming';
