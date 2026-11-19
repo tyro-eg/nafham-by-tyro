@@ -98,6 +98,12 @@ const TutorDashboard: FC = () => {
   const totalsLoading = summaryQuery.isLoading;
   const packagesQuery = useAllPackages();
   const profileQuery = useInstructor(currentUser?.id || 0, !!currentUser);
+  // "–" until the numbers arrive, never a misleading 0 (19 Nov 2026: the
+  // packages box read 0 / 0 / 0 and "All your students are on track" while
+  // the packages were still loading)
+  const packagesLoading = packagesQuery.isLoading;
+  const dash = (ready: boolean, value: string | number) =>
+    ready ? String(value) : '–';
 
   // Ticks every 30 s so the countdown and the Join button move on their own
   const now = useNow();
@@ -237,11 +243,14 @@ const TutorDashboard: FC = () => {
       key: 'students',
       tone: 'sun',
       icon: <GroupsRounded />,
-      value: totalsLoading
-        ? '–'
-        : studentTarget
-          ? `${studentCount} / ${studentTarget}`
-          : String(studentCount),
+      value:
+        totalsLoading ||
+        profileQuery.isLoading ||
+        (profile?.active_students_count == null && packagesLoading)
+          ? '–'
+          : studentTarget
+            ? `${studentCount} / ${studentTarget}`
+            : String(studentCount),
       label: t('TUTOR_DASHBOARD.STATS.ACTIVE_STUDENTS'),
       to: '/my_students',
       progress: studentProgress
@@ -572,18 +581,18 @@ const TutorDashboard: FC = () => {
                       to="/my_sessions?status=completed"
                       className="sd-attendance__item sd-attendance__item--done sd-attendance__item--link"
                     >
-                      <strong>{completedCount}</strong>
+                      <strong>{dash(!totalsLoading, completedCount)}</strong>
                       {t('DASHBOARD.PROGRESS.COMPLETED')}
                     </Link>
                     <span className="sd-attendance__item sd-attendance__item--missed">
-                      <strong>{missed}</strong>
+                      <strong>{dash(!totalsLoading, missed)}</strong>
                       {t('DASHBOARD.PROGRESS.MISSED')}
                     </span>
                     <Link
                       to="/my_sessions?status=cancelled"
                       className="sd-attendance__item sd-attendance__item--canceled sd-attendance__item--link"
                     >
-                      <strong>{canceled}</strong>
+                      <strong>{dash(!totalsLoading, canceled)}</strong>
                       {t('DASHBOARD.PROGRESS.CANCELED')}
                     </Link>
                   </div>
@@ -593,15 +602,19 @@ const TutorDashboard: FC = () => {
                   </h3>
                   <div className="td-packages">
                     <div>
-                      <strong>{activePackages}</strong>
+                      <strong>{dash(!packagesLoading, activePackages)}</strong>
                       <span>{t('TUTOR_DASHBOARD.PACKAGES.ACTIVE')}</span>
                     </div>
                     <div>
-                      <strong>{formatHours(hoursSold)}</strong>
+                      <strong>
+                        {dash(!packagesLoading, formatHours(hoursSold))}
+                      </strong>
                       <span>{t('TUTOR_DASHBOARD.PACKAGES.SOLD')}</span>
                     </div>
                     <div>
-                      <strong>{formatHours(hoursLeft)}</strong>
+                      <strong>
+                        {dash(!packagesLoading, formatHours(hoursLeft))}
+                      </strong>
                       <span>{t('TUTOR_DASHBOARD.PACKAGES.LEFT')}</span>
                     </div>
                   </div>
@@ -624,7 +637,9 @@ const TutorDashboard: FC = () => {
                 label: t('DASHBOARD.VIEW_ALL'),
               }}
             >
-              {attention.length === 0 ? (
+              {packagesLoading || totalsLoading ? (
+                <Skeleton variant="rounded" height={120} />
+              ) : attention.length === 0 ? (
                 <p className="td-ok">{t('TUTOR_DASHBOARD.ATTENTION.EMPTY')}</p>
               ) : (
                 <ul className="td-attention">
