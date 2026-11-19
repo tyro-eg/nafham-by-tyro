@@ -1556,7 +1556,7 @@
       "EARNED_MTD": "Earned this month so far",
       "EARNED_MONTH": "Earned this month",
       "SESSIONS": "Paid sessions",
-      "HOURS": "Hours taught",
+      "HOURS": "Paid hours",
       "AVG_RATE": "Average rate per hour"
     },
     "PROJECTION_one": "{{count}} more session is booked this month, worth about {{amount}} once completed.",
