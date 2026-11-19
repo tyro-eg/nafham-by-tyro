@@ -85,12 +85,17 @@ const EditProfile: FC = () => {
   // Use TanStack Query hooks
   const { data: instructor } = useInstructor(id!, !!id);
   const canMessage = useCanMessage(instructor?.id);
-  const { data: slots = [] } = useSlots(
+  const { data: slotsData } = useSlots(
     Number(id),
     dateRange.from,
     dateRange.to,
     !!id,
   );
+  // One empty list, not a new one per render: `data: slots = []` gave the
+  // effect below a fresh array every time while the slots were loading, so it
+  // reset the profile on every render ("Maximum update depth exceeded" on the
+  // tutor's My Profile, 19 Nov 2026)
+  const slots = useMemo(() => slotsData ?? [], [slotsData]);
 
   useEffect(() => {
     onBlockingMissingInformation(false);
