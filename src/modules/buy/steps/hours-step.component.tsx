@@ -24,6 +24,7 @@ interface HoursStepProps {
   choice: TutorChoice;
   lessonsPerWeek?: number;
   hours?: number;
+  onPick?: (hours: number | undefined) => void;
   onAdd: (
     option: RenewalOption,
     quote: { currency: string; vatApplies: boolean; vatRatePercent: number },
@@ -43,6 +44,7 @@ const HoursStep: FC<HoursStepProps> = ({
   choice,
   lessonsPerWeek,
   hours,
+  onPick,
   onAdd,
   onBack,
 }) => {
@@ -72,12 +74,19 @@ const HoursStep: FC<HoursStepProps> = ({
   const reasons = data?.reasons ?? [];
   const [picked, setPicked] = useState<number | undefined>(hours);
 
-  // The size the package was bought at, else the first size
+  // The size the package was bought at, else the first size; also when the
+  // size remembered from an earlier course is not sold by this tutor, so a
+  // size is always ticked and Add to basket never sits greyed out
   useEffect(() => {
-    if (picked !== undefined || options.length === 0) return;
+    if (options.length === 0) return;
+    if (options.some((option) => option.hours === picked)) return;
     const current = options.find((option) => option.same_as_current);
     setPicked((current ?? options[0]).hours);
   }, [options, picked]);
+
+  useEffect(() => {
+    onPick?.(picked);
+  }, [onPick, picked]);
 
   const currency = data?.currency ?? 'AED';
   const money = (value: number) => formatMoney(value, currency, i18n.language);
