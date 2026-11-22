@@ -65,7 +65,10 @@
     "REQUESTS": "Requests",
     "GROUP_LEARNING": "Learning",
     "GROUP_MONEY": "Money",
-    "GROUP_HELP": "Help"
+    "GROUP_HELP": "Help",
+    "GROUP_TEACHING": "Teaching",
+    "GROUP_STUDENTS": "Students",
+    "GROUP_ACCOUNT": "Account"
   },
   "CARDS": {
     "FREE_ASSESMENT": {

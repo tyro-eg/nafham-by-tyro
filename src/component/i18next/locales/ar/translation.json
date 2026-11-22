@@ -24,7 +24,7 @@
     },
     "USER": {
       "PROFILE": "الصفحة الشخصية",
-      "SETTINGS": "إعدادت الحساب",
+      "SETTINGS": "إعدادات الحساب",
       "REDEEM": "استخدام كود",
       "LOGOUT": "تسجيل خروج"
     }
@@ -65,7 +65,10 @@
     "REQUESTS": "الطلبات",
     "GROUP_LEARNING": "التعلّم",
     "GROUP_MONEY": "المدفوعات",
-    "GROUP_HELP": "المساعدة"
+    "GROUP_HELP": "المساعدة",
+    "GROUP_TEACHING": "التدريس",
+    "GROUP_STUDENTS": "الطلاب",
+    "GROUP_ACCOUNT": "الحساب"
   },
   "CARDS": {
     "FREE_ASSESMENT": {
@@ -1259,7 +1262,7 @@
     "RESULT_CARD": {
       "TEST_RESULTS": "نتيجة الاختبار",
       "EXPECTED_CALL_QUALITY": "جودة المكالمة المتوقعة",
-      "HARDWARE_SOFTWARE": "إعدادت الأجهزة والبرامج",
+      "HARDWARE_SOFTWARE": "إعدادات الأجهزة والبرامج",
       "CAPTURE_VIDEO": "تم العثور على جهاز التقاط الفيديو بنجاح.",
       "CAPTURE_AUDIO": "تم العثور على جهاز التقاط الصوت بنجاح.",
       "VIDEO_QUALITY": "جودة الفيديو: ",

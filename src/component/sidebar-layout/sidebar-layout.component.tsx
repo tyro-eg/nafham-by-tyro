@@ -167,11 +167,53 @@ const SidebarLayout: FC<SidebarLayoutProps> = ({ children }) => {
       ]
     : [];
 
+  // Tutors: the dashboard first, then four small groups (19 Nov 2026: 13
+  // loose links before), like the parent's menu
+  const teaching = t('NAVIGATION.GROUP_TEACHING');
+  const studentsGroup = t('NAVIGATION.GROUP_STUDENTS');
+  const tutorMoney = t('NAVIGATION.GROUP_MONEY');
+  const account = t('NAVIGATION.GROUP_ACCOUNT');
   const tutorItems: NavItem[] = [
     {
       to: '/dashboard',
       icon: <DashboardRounded />,
       label: t('NAVIGATION.DASHBOARD'),
+    },
+    {
+      to: '/my_sessions',
+      icon: <EventNoteRounded />,
+      label: t('NAVIGATION.SESSIONS'),
+      group: teaching,
+    },
+    {
+      to: '/calendar',
+      icon: <CalendarMonthRounded />,
+      label: t('NAVIGATION.CALENDAR'),
+      group: teaching,
+    },
+    {
+      to: '/availability',
+      icon: <EditCalendarRounded />,
+      label: t('NAVIGATION.AVAILABILITY'),
+      group: teaching,
+    },
+    {
+      to: '/homework',
+      icon: <AssignmentRounded />,
+      label: t('NAVIGATION.HOMEWORK'),
+      group: teaching,
+    },
+    {
+      to: '/assistant',
+      icon: <AutoAwesomeRounded />,
+      label: t('NAVIGATION.ASSISTANT'),
+      group: teaching,
+    },
+    {
+      to: '/my_students',
+      icon: <GroupsRounded />,
+      label: t('NAVIGATION.MY_STUDENTS'),
+      group: studentsGroup,
     },
     {
       to: '/trial_requests',
@@ -181,58 +223,33 @@ const SidebarLayout: FC<SidebarLayoutProps> = ({ children }) => {
       badgeLabel: t('TRIAL_OFFERS.WAITING_COUNT', {
         count: trialOffers.data?.length ?? 0,
       }),
+      group: studentsGroup,
     },
-    requestsItem,
-    {
-      to: '/availability',
-      icon: <EditCalendarRounded />,
-      label: t('NAVIGATION.AVAILABILITY'),
-    },
-    {
-      to: '/my_students',
-      icon: <GroupsRounded />,
-      label: t('NAVIGATION.MY_STUDENTS'),
-    },
-    {
-      to: '/my_sessions',
-      icon: <EventNoteRounded />,
-      label: t('NAVIGATION.SESSIONS'),
-    },
-    {
-      to: '/homework',
-      icon: <AssignmentRounded />,
-      label: t('NAVIGATION.HOMEWORK'),
-    },
-    {
-      to: '/assistant',
-      icon: <AutoAwesomeRounded />,
-      label: t('NAVIGATION.ASSISTANT'),
-    },
-    {
-      to: '/calendar',
-      icon: <CalendarMonthRounded />,
-      label: t('NAVIGATION.CALENDAR'),
-    },
-    ...messagesItem,
+    { ...requestsItem, group: studentsGroup },
+    ...messagesItem.map((item) => ({ ...item, group: studentsGroup })),
     {
       to: '/my_packages',
       icon: <Inventory2Rounded />,
       label: t('NAVIGATION.PACKAGES'),
+      group: tutorMoney,
     },
     {
       to: '/my_salary',
       icon: <PaymentsRounded />,
       label: t('NAVIGATION.MY_SALARY'),
+      group: tutorMoney,
     },
     {
       to: `/profile/${currentUser.id}`,
       icon: <AccountCircleRounded />,
       label: t('HEADER.USER.PROFILE'),
+      group: account,
     },
     {
       to: '/account_settings',
       icon: <SettingsRounded />,
       label: t('HEADER.USER.SETTINGS'),
+      group: account,
     },
   ];
 
