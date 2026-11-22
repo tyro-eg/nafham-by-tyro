@@ -1411,7 +1411,7 @@
       "UPCOMING": "Upcoming sessions",
       "HOURS_LEARNED": "Hours learned",
       "COMPLETED": "Completed sessions",
-      "HOURS_REMAINING": "Hours remaining",
+      "HOURS_REMAINING": "Hours left",
       "ATTENDANCE": "Attendance"
     },
     "NEXT": {
@@ -1464,7 +1464,7 @@
     "STATS": {
       "STUDENTS": "Students",
       "ACTIVE": "Active students",
-      "HOURS_REMAINING": "Hours remaining",
+      "HOURS_REMAINING": "Hours left",
       "HOURS_TAUGHT": "Hours taught"
     },
     "SEARCH": "Search students by name or email",
@@ -1529,7 +1529,7 @@
     "PACKAGES": {
       "TITLE": "Packages",
       "ACTIVE": "Active",
-      "SOLD": "Hours sold",
+      "SOLD": "Hours bought",
       "LEFT": "Hours left",
       "VIEW": "View packages"
     },
