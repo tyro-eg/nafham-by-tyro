@@ -34,6 +34,12 @@ const ChildSettings: FC<{ child: FamilyChild }> = ({ child }) => {
   const removeLogin = useRemoveChildLogin();
   const consent = useChildConsent();
   const [email, setEmail] = useState('');
+  // Recording matters for courses still running: used-up packages wait behind
+  // "Show all" (one family had a switch for each of 24 packages, 19 Nov 2026)
+  const [showAll, setShowAll] = useState(false);
+  const running = child.packages.filter((pkg) => pkg.hours_left > 0);
+  const usedUp = child.packages.length - running.length;
+  const listed = showAll ? child.packages : running;
 
   const sendInvite = async (event: FormEvent) => {
     event.preventDefault();
@@ -128,7 +134,7 @@ const ChildSettings: FC<{ child: FamilyChild }> = ({ child }) => {
         <div>
           <p className="family__muted">{t('FAMILY.SETTINGS.CONSENT_TEXT')}</p>
           <ul className="family__list">
-            {child.packages.map((pkg) => (
+            {listed.map((pkg) => (
               <li key={pkg.id} className="family__row">
                 <Switch
                   checked={!!pkg.recording_consented_at}
@@ -156,6 +162,18 @@ const ChildSettings: FC<{ child: FamilyChild }> = ({ child }) => {
               </li>
             ))}
           </ul>
+          {usedUp > 0 && (
+            <Button
+              size="small"
+              variant="text"
+              aria-expanded={showAll}
+              onClick={() => setShowAll((all) => !all)}
+            >
+              {showAll
+                ? t('FAMILY.CARD.SHOW_LESS')
+                : `${t('FAMILY.CARD.SHOW_ALL')} · ${t('FAMILY.CARD.USED_UP', { count: usedUp })}`}
+            </Button>
+          )}
         </div>
       )}
     </li>
