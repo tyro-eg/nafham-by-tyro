@@ -159,7 +159,10 @@ const PackageListCard: FC<PackageListCardProps> = ({
           </p>
         </div>
         <div className="pk-card__left">
-          <Ring value={hoursLeftShare(packageData)} label={`${hoursLeft}h`} />
+          <Ring
+            value={hoursLeftShare(packageData)}
+            label={t('DASHBOARD.HOURS_SHORT', { hours: hoursLeft })}
+          />
           <span className="pk-card__left-label">
             {t('MYPACKAGES.CARD.REMAINING_HOURS')}
           </span>
