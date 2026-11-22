@@ -55,6 +55,8 @@ const Homework: FC = () => {
   const isTutor = currentUser?.type === 'Tutor';
   const isParent = currentUser?.type === 'Parent';
   const viewer = isTutor ? 'tutor' : 'student';
+  // Wording only: a parent reads about their children's homework, not their own
+  const wording = isParent ? 'parent' : viewer;
 
   const [status, setStatus] = useState<StatusFilter>(ALL);
   const [studentId, setStudentId] = useState(ALL);
@@ -168,9 +170,7 @@ const Homework: FC = () => {
               )}
             </h1>
             <p className="hw-header__subtitle">
-              {isTutor
-                ? t('HOMEWORK.SUBTITLE_TUTOR')
-                : t('HOMEWORK.SUBTITLE_STUDENT')}
+              {t(`HOMEWORK.SUBTITLE_${wording.toUpperCase()}`)}
             </p>
           </div>
           {isTutor && (
@@ -238,12 +238,12 @@ const Homework: FC = () => {
             <h2>
               {filtered
                 ? t('HOMEWORK.NO_MATCH_TITLE')
-                : t(`HOMEWORK.EMPTY_TITLE_${viewer.toUpperCase()}`)}
+                : t(`HOMEWORK.EMPTY_TITLE_${wording.toUpperCase()}`)}
             </h2>
             <p>
               {filtered
                 ? t('HOMEWORK.NO_MATCH_TEXT')
-                : t(`HOMEWORK.EMPTY_TEXT_${viewer.toUpperCase()}`)}
+                : t(`HOMEWORK.EMPTY_TEXT_${wording.toUpperCase()}`)}
             </p>
             {isTutor && !filtered && (
               <Button

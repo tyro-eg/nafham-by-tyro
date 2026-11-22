@@ -2092,7 +2092,10 @@
       "INSTRUCTIONS_MAX": "Keep the instructions under 5000 characters",
       "DUE_INVALID": "Enter a valid date and time",
       "DUE_PAST": "The due date must be in the future"
-    }
+    },
+    "SUBTITLE_PARENT": "Your children's homework, their due dates and their tutors' feedback.",
+    "EMPTY_TITLE_PARENT": "No homework right now",
+    "EMPTY_TEXT_PARENT": "When a tutor sets homework for your child, it will show up here."
   },
   "ASSISTANT": {
     "TITLE": "AI Teaching Assistant",
