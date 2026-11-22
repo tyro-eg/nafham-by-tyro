@@ -41,6 +41,7 @@ import { formatSlot, localTimeZone } from '../trial/trial.types';
 
 import '../sessions/dashboard-shell.styles.scss';
 import './requests.styles.scss';
+import { courseLabel } from '../dashboard/dashboard.utils';
 
 type View = 'inbox' | 'sent' | 'history';
 const VIEWS: View[] = ['inbox', 'sent', 'history'];
@@ -253,7 +254,7 @@ const MoveCard: FC<{ request: RescheduleRequest }> = ({ request }) => {
           )}
         </div>
         <p className="request-card__course" dir="auto">
-          {request.session.grade_subject?.full_course_name}
+          {courseLabel(request.session.grade_subject?.full_course_name)}
         </p>
         <p className="request-card__from">
           {t(
@@ -451,7 +452,7 @@ const WeeklyCard: FC<{ request: ScheduleChangeRequest }> = ({ request }) => {
           )}
         </div>
         <p className="request-card__course" dir="auto">
-          {request.package.grade_subject?.full_course_name}
+          {courseLabel(request.package.grade_subject?.full_course_name)}
         </p>
         <p className="request-card__times">
           <strong>

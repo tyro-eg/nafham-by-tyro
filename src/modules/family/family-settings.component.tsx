@@ -18,6 +18,7 @@ import { useRtlClass } from '../../assets/utils/utils';
 import { snackActions } from '../../assets/utils/toaster';
 import { formatDateTime } from '../homework/homework.utils';
 import './family.styles.scss';
+import { courseLabel } from '../dashboard/dashboard.utils';
 
 const useReport = () => {
   const { t } = useTranslation();
@@ -140,7 +141,7 @@ const ChildSettings: FC<{ child: FamilyChild }> = ({ child }) => {
                   disabled={consent.isPending}
                 />
                 <span>
-                  {pkg.course_name} · {pkg.tutor_name}
+                  {courseLabel(pkg.course_name)} · {pkg.tutor_name}
                 </span>
                 <span className="family__muted">
                   {pkg.recording_consented_at

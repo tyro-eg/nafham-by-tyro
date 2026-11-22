@@ -2938,5 +2938,8 @@
     "REPORT": "The link isn't working",
     "REPORTED": "Thanks, your tutor was told the link isn't working. Press Join again in a few minutes; Nafham Support steps in if it isn't fixed.",
     "REPORT_ERROR": "Couldn't send that, please message your tutor in the chat"
+  },
+  "COURSE": {
+    "SUBJECT_NOT_SET": "Subject not set"
   }
 }

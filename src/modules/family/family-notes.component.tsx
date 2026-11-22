@@ -7,6 +7,7 @@ import { useFamily, useFamilyNotes } from '../../hooks/useFamily';
 import { useRtlClass } from '../../assets/utils/utils';
 import { formatDateTime } from '../homework/homework.utils';
 import './family.styles.scss';
+import { courseLabel } from '../dashboard/dashboard.utils';
 
 const ALL = 0;
 
@@ -64,7 +65,8 @@ const FamilyNotes: FC = () => {
               <li key={note.id} className="family__section">
                 <div className="family__row">
                   <h2 className="family__section-title">
-                    {note.child.first_name} · {note.session.course_name}
+                    {note.child.first_name} ·{' '}
+                    {courseLabel(note.session.course_name)}
                   </h2>
                   <span className="family__muted">
                     {formatDateTime(note.session.start_time, i18n.language)}

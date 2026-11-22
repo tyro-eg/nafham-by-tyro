@@ -31,6 +31,7 @@ import {
 import emptyArt from '../../assets/images/newLanding/rafiki.svg?url';
 
 import './homework.styles.scss';
+import { courseLabel } from '../dashboard/dashboard.utils';
 
 const ALL = 'all';
 
@@ -127,7 +128,9 @@ const Homework: FC = () => {
                 <MenuBookRounded aria-hidden="true" />
                 {t('HOMEWORK.CARD.COURSE')}
               </dt>
-              <dd dir="auto">{assignment.grade_subject.full_course_name}</dd>
+              <dd dir="auto">
+                {courseLabel(assignment.grade_subject.full_course_name)}
+              </dd>
             </div>
             <div>
               <dt>

@@ -32,6 +32,7 @@ import {
 } from '../homework.utils';
 
 import './homework-detail.styles.scss';
+import { courseLabel } from '../../dashboard/dashboard.utils';
 
 /**
  * One assignment at /homework/:slug. Both roles see the title, course,
@@ -148,7 +149,9 @@ const HomeworkDetail: FC = () => {
                 <MenuBookRounded aria-hidden="true" />
                 {t('HOMEWORK.DETAIL.COURSE')}
               </dt>
-              <dd dir="auto">{assignment.grade_subject.full_course_name}</dd>
+              <dd dir="auto">
+                {courseLabel(assignment.grade_subject.full_course_name)}
+              </dd>
             </div>
             <div>
               <dt>

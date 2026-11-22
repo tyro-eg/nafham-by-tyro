@@ -26,6 +26,7 @@ import {
 } from '../session-state';
 
 import './next-up.styles.scss';
+import { courseLabel } from '../../dashboard/dashboard.utils';
 
 const ACTIVE = ['live', 'starting_soon', 'upcoming'];
 
@@ -112,7 +113,7 @@ const NextUp: FC<{ filters?: SessionFilters }> = ({ filters }) => {
           )}
         </p>
         <h2 className="next-up__title">
-          {session.grade_subject?.full_course_name}
+          {courseLabel(session.grade_subject?.full_course_name)}
         </h2>
         <div className="next-up__meta">
           <span className="next-up__person">
@@ -150,7 +151,8 @@ const NextUp: FC<{ filters?: SessionFilters }> = ({ filters }) => {
             endIcon={<ArrowForwardRounded />}
             disabled={!canJoin(session, now, isInstructor)}
             onClick={() =>
-              session.session_link && window.open(session.session_link, '_blank')
+              session.session_link &&
+              window.open(session.session_link, '_blank')
             }
           >
             {t('MYSESSIONS.MAIN.CARD.GOTO')}

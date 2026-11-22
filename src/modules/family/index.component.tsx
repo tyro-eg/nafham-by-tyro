@@ -39,7 +39,7 @@ import {
 import { useRtlClass } from '../../assets/utils/utils';
 import { snackActions } from '../../assets/utils/toaster';
 import { formatRelative } from '../homework/homework.utils';
-import { subjectName } from '../dashboard/dashboard.utils';
+import { subjectName, courseLabel } from '../dashboard/dashboard.utils';
 import { childColor, findChildPackage } from '../../lib/family-child';
 import RenewDialog from '../payments/renew-dialog.component';
 import RenewAllSheet from '../payments/renew-all-sheet.component';
@@ -117,7 +117,7 @@ const TopUpDialog: FC<{ child: FamilyChild; onClose: () => void }> = ({
           >
             {child.packages.map((pkg) => (
               <MenuItem key={pkg.id} value={pkg.id}>
-                {pkg.course_name} · {pkg.tutor_name}
+                {courseLabel(pkg.course_name)} · {pkg.tutor_name}
               </MenuItem>
             ))}
           </TextField>
