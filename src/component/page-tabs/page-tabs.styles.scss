@@ -1,0 +1,35 @@
+@import '../../assets/styles/variables.scss';
+
+.page-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $space-2;
+  margin-bottom: $space-4;
+}
+
+.page-tab {
+  padding: 0.8rem 1.8rem;
+  border: 1px solid $border;
+  border-radius: $radius-pill;
+  background-color: $surface;
+  font: inherit;
+  font-size: $font-sm;
+  font-weight: 700;
+  color: $text-body;
+  cursor: pointer;
+
+  &:hover {
+    border-color: $brand-500;
+  }
+
+  &--on {
+    border-color: $brand-500;
+    background-color: $brand-50;
+    color: $brand-800;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $brand-500;
+    outline-offset: 2px;
+  }
+}

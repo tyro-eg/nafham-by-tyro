@@ -502,11 +502,11 @@ const FamilyHome: FC = () => {
             </Button>
             <Button
               component={Link}
-              to="/family/settings"
+              to="/account"
               variant="outlined"
               startIcon={<SettingsRounded />}
             >
-              {t('FAMILY.SETTINGS.TITLE')}
+              {t('NAVIGATION.ACCOUNT')}
             </Button>
             <Button
               variant="contained"
@@ -524,7 +524,11 @@ const FamilyHome: FC = () => {
             severity="warning"
             className="fam-notice"
             action={
-              <Button component={Link} to="/family/settings" color="inherit">
+              <Button
+                component={Link}
+                to="/account?tab=details"
+                color="inherit"
+              >
                 {t('FAMILY.TERMS.REVIEW')}
               </Button>
             }
@@ -598,7 +602,7 @@ const FamilyHome: FC = () => {
                   </Button>
                   <Button
                     component={Link}
-                    to="/family/settings"
+                    to="/account?tab=children"
                     variant="text"
                     startIcon={<AddRounded />}
                   >

@@ -68,7 +68,8 @@
     "GROUP_HELP": "Help",
     "GROUP_TEACHING": "Teaching",
     "GROUP_STUDENTS": "Students",
-    "GROUP_ACCOUNT": "Account"
+    "GROUP_ACCOUNT": "Account",
+    "ACCOUNT": "Account"
   },
   "CARDS": {
     "FREE_ASSESMENT": {
@@ -627,6 +628,11 @@
       "LABEL": "I want more students, even outside my published times",
       "HINT": "Families can ask you for a free trial at any time; you accept or decline each request.",
       "ERROR": "We couldn't save that. Please try again."
+    },
+    "TABS": {
+      "PROFILE": "Profile",
+      "PREFERENCES": "Preferences",
+      "CONTACT": "Contact details"
     }
   },
   "CALENDAR": {
@@ -2944,5 +2950,14 @@
   },
   "COURSE": {
     "SUBJECT_NOT_SET": "Subject not set"
+  },
+  "ACCOUNT": {
+    "TITLE": "Account",
+    "SUBTITLE": "Your details, your children's logins and recording, and your payments.",
+    "TABS": {
+      "DETAILS": "Details",
+      "CHILDREN": "Children",
+      "PAYMENTS": "Payments"
+    }
   }
 }

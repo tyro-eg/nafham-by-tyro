@@ -22,7 +22,7 @@ import {
   PaymentsRounded,
   PeopleAltRounded,
   PersonSearchRounded,
-  SettingsRounded,
+  ManageAccountsRounded,
   AutoAwesomeRounded,
   FamilyRestroomRounded,
   MenuBookRounded,
@@ -245,12 +245,6 @@ const SidebarLayout: FC<SidebarLayoutProps> = ({ children }) => {
       label: t('HEADER.USER.PROFILE'),
       group: account,
     },
-    {
-      to: '/account_settings',
-      icon: <SettingsRounded />,
-      label: t('HEADER.USER.SETTINGS'),
-      group: account,
-    },
   ];
 
   const studentItems: NavItem[] = [
@@ -351,18 +345,13 @@ const SidebarLayout: FC<SidebarLayoutProps> = ({ children }) => {
       label: t('NAVIGATION.PACKAGES'),
       group: money,
     },
-    {
-      to: '/payments',
-      icon: <ReceiptLongRounded />,
-      label: t('NAVIGATION.PAYMENTS'),
-      group: money,
-    },
     { ...requestsItem, group: help },
     ...messagesItem.map((item) => ({ ...item, group: help })),
+    // Details, children and payments on one page (19 Nov 2026)
     {
-      to: '/family/settings',
-      icon: <SettingsRounded />,
-      label: t('HEADER.USER.SETTINGS'),
+      to: '/account',
+      icon: <ManageAccountsRounded />,
+      label: t('NAVIGATION.ACCOUNT'),
       group: help,
     },
   ];
@@ -383,7 +372,7 @@ const SidebarLayout: FC<SidebarLayoutProps> = ({ children }) => {
   const accountLink = isTutor
     ? `/profile/${currentUser.id}`
     : isParent
-      ? '/family/settings'
+      ? '/account'
       : '/dashboard';
   const roleLabel = isTutor
     ? t('TUTOR_DASHBOARD.ROLE')

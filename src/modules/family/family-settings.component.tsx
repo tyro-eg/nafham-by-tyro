@@ -135,7 +135,7 @@ const ChildSettings: FC<{ child: FamilyChild }> = ({ child }) => {
           <p className="family__muted">{t('FAMILY.SETTINGS.CONSENT_TEXT')}</p>
           <ul className="family__list">
             {listed.map((pkg) => (
-              <li key={pkg.id} className="family__row">
+              <li key={pkg.id} className="family__row family__consent">
                 <Switch
                   checked={!!pkg.recording_consented_at}
                   onChange={(e) => toggleConsent(pkg.id, e.target.checked)}
@@ -146,18 +146,20 @@ const ChildSettings: FC<{ child: FamilyChild }> = ({ child }) => {
                   }}
                   disabled={consent.isPending}
                 />
-                <span>
-                  {courseLabel(pkg.course_name)} · {pkg.tutor_name}
-                </span>
-                <span className="family__muted">
-                  {pkg.recording_consented_at
-                    ? t('FAMILY.SETTINGS.CONSENTED', {
-                        date: formatDateTime(
-                          pkg.recording_consented_at,
-                          i18n.language,
-                        ),
-                      })
-                    : t('FAMILY.SETTINGS.NOT_CONSENTED')}
+                <span className="family__consent-text">
+                  <span>
+                    {courseLabel(pkg.course_name)} · {pkg.tutor_name}
+                  </span>
+                  <span className="family__muted">
+                    {pkg.recording_consented_at
+                      ? t('FAMILY.SETTINGS.CONSENTED', {
+                          date: formatDateTime(
+                            pkg.recording_consented_at,
+                            i18n.language,
+                          ),
+                        })
+                      : t('FAMILY.SETTINGS.NOT_CONSENTED')}
+                  </span>
                 </span>
               </li>
             ))}
@@ -182,9 +184,13 @@ const ChildSettings: FC<{ child: FamilyChild }> = ({ child }) => {
 
 /**
  * Family settings: name and phone, terms, the children with their logins,
- * and recording consent per package.
+ * and recording consent per package. With `section`, one part only, as a tab
+ * of the parent's Account page (19 Nov 2026): "details" (contacts, terms) or
+ * "children" (logins, recording, add a child).
  */
-const FamilySettings: FC = () => {
+const FamilySettings: FC<{ section?: 'details' | 'children' }> = ({
+  section,
+}) => {
   const { t, i18n } = useTranslation();
   const rtlClass = useRtlClass();
   const report = useReport();
@@ -233,94 +239,92 @@ const FamilySettings: FC = () => {
     }
   };
 
-  return (
-    <div className={`family ${rtlClass}`}>
-      <div className="container">
-        <Link to="/family" className="family__back">
-          <ArrowBackRounded aria-hidden="true" />
-          {t('FAMILY.BACK')}
-        </Link>
-        <header className="family__header">
-          <div>
-            <h1 className="family__title">{t('FAMILY.SETTINGS.TITLE')}</h1>
-            <p className="family__subtitle">{t('FAMILY.SETTINGS.SUBTITLE')}</p>
-          </div>
-        </header>
+  const showDetails = !section || section === 'details';
+  const showChildren = !section || section === 'children';
 
-        {data && (
-          <>
-            <form className="family__section" onSubmit={saveContacts}>
-              <h2 className="family__section-title">
-                {t('FAMILY.SETTINGS.CONTACTS')}
-              </h2>
-              <div className="family__row">
-                <TextField
-                  size="small"
-                  label={t('FAMILY.SETTINGS.FAMILY_NAME')}
-                  value={name ?? data.name}
-                  onChange={(e) => setName(e.target.value)}
-                />
-                <TextField
-                  size="small"
-                  label={t('FAMILY.SETTINGS.PHONE')}
-                  value={phone ?? data.phone_number ?? ''}
-                  onChange={(e) => setPhone(e.target.value)}
-                />
-                <TextField
-                  size="small"
-                  label={t('FAMILY.SETTINGS.EMAIL')}
-                  value={data.email ?? ''}
-                  disabled
-                />
-                <Button
-                  type="submit"
-                  variant="contained"
-                  disabled={update.isPending}
-                >
-                  {t('FAMILY.SETTINGS.SAVE')}
-                </Button>
-              </div>
-            </form>
-
-            <section className="family__section">
-              <h2 className="family__section-title">
-                {t('FAMILY.TERMS.TITLE')}
-              </h2>
-              {data.terms.accepted ? (
-                <p className="family__muted">
-                  {t('FAMILY.TERMS.ACCEPTED_ON', {
-                    date: data.terms.accepted_at
-                      ? formatDateTime(data.terms.accepted_at, i18n.language)
-                      : '',
-                  })}
-                </p>
-              ) : (
+  const body = (
+    <>
+      {data && (
+        <>
+          {showDetails && (
+            <div className="family__pair">
+              <form className="family__section" onSubmit={saveContacts}>
+                <h2 className="family__section-title">
+                  {t('FAMILY.SETTINGS.CONTACTS')}
+                </h2>
                 <div className="family__row">
-                  <span>{t('FAMILY.TERMS.TEXT')}</span>
-                  <Button
-                    component={Link}
-                    to="/terms"
-                    variant="text"
+                  <TextField
                     size="small"
-                  >
-                    {t('FAMILY.TERMS.READ')}
-                  </Button>
+                    label={t('FAMILY.SETTINGS.FAMILY_NAME')}
+                    value={name ?? data.name}
+                    onChange={(e) => setName(e.target.value)}
+                  />
+                  <TextField
+                    size="small"
+                    label={t('FAMILY.SETTINGS.PHONE')}
+                    value={phone ?? data.phone_number ?? ''}
+                    onChange={(e) => setPhone(e.target.value)}
+                    // A number reads left to right, also in Arabic
+                    inputProps={{ dir: 'ltr' }}
+                  />
+                  <TextField
+                    size="small"
+                    label={t('FAMILY.SETTINGS.EMAIL')}
+                    value={data.email ?? ''}
+                    disabled
+                  />
                   <Button
+                    type="submit"
                     variant="contained"
-                    size="small"
-                    onClick={accept}
-                    disabled={acceptTerms.isPending}
+                    disabled={update.isPending}
                   >
-                    {t('FAMILY.TERMS.ACCEPT')}
+                    {t('FAMILY.SETTINGS.SAVE')}
                   </Button>
                 </div>
-              )}
-            </section>
+              </form>
 
+              <section className="family__section">
+                <h2 className="family__section-title">
+                  {t('FAMILY.TERMS.TITLE')}
+                </h2>
+                {data.terms.accepted ? (
+                  <p className="family__muted">
+                    {t('FAMILY.TERMS.ACCEPTED_ON', {
+                      date: data.terms.accepted_at
+                        ? formatDateTime(data.terms.accepted_at, i18n.language)
+                        : '',
+                    })}
+                  </p>
+                ) : (
+                  <div className="family__row">
+                    <span>{t('FAMILY.TERMS.TEXT')}</span>
+                    <Button
+                      component={Link}
+                      to="/terms"
+                      variant="text"
+                      size="small"
+                    >
+                      {t('FAMILY.TERMS.READ')}
+                    </Button>
+                    <Button
+                      variant="contained"
+                      size="small"
+                      onClick={accept}
+                      disabled={acceptTerms.isPending}
+                    >
+                      {t('FAMILY.TERMS.ACCEPT')}
+                    </Button>
+                  </div>
+                )}
+              </section>
+            </div>
+          )}
+
+          {showChildren && (
             <section>
               <h2
                 className="family__section-title"
-                style={{ marginBottom: '0.75rem' }}
+                style={{ marginBottom: '1.2rem' }}
               >
                 {t('FAMILY.SETTINGS.CHILDREN')}
               </h2>
@@ -332,7 +336,7 @@ const FamilySettings: FC = () => {
               <form
                 className="family__section"
                 onSubmit={createChild}
-                style={{ marginTop: '0.75rem' }}
+                style={{ marginTop: '1.2rem' }}
               >
                 <h3 className="family__section-title">
                   {t('FAMILY.SETTINGS.ADD_CHILD')}
@@ -368,9 +372,30 @@ const FamilySettings: FC = () => {
                 <p className="family__muted">{t('FAMILY.SETTINGS.ADD_HINT')}</p>
               </form>
             </section>
-          </>
-        )}
-        {family.isError && <Alert severity="error">{t('FAMILY.ERROR')}</Alert>}
+          )}
+        </>
+      )}
+      {family.isError && <Alert severity="error">{t('FAMILY.ERROR')}</Alert>}
+    </>
+  );
+
+  if (section)
+    return <div className={`family family--embedded ${rtlClass}`}>{body}</div>;
+
+  return (
+    <div className={`family ${rtlClass}`}>
+      <div className="container">
+        <Link to="/family" className="family__back">
+          <ArrowBackRounded aria-hidden="true" />
+          {t('FAMILY.BACK')}
+        </Link>
+        <header className="family__header">
+          <div>
+            <h1 className="family__title">{t('FAMILY.SETTINGS.TITLE')}</h1>
+            <p className="family__subtitle">{t('FAMILY.SETTINGS.SUBTITLE')}</p>
+          </div>
+        </header>
+        {body}
       </div>
     </div>
   );

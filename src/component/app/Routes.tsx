@@ -33,9 +33,6 @@ const Impersonate = lazy(
 const Handoff = lazy(
   () => import('../../modules/auth/handoff/handoff.component'),
 );
-const AccountSettings = lazy(
-  () => import('../../modules/user/account-settings/index'),
-);
 const EditProfile = lazy(() => import('../../modules/user/edit-profile'));
 const PrivateSessions = lazy(
   () => import('../../modules/private-sessions/index.component'),
@@ -64,9 +61,7 @@ const RequestsPage = lazy(
 );
 const BuyPage = lazy(() => import('../../modules/buy/index.component'));
 const FamilyHome = lazy(() => import('../../modules/family/index.component'));
-const FamilySettings = lazy(
-  () => import('../../modules/family/family-settings.component'),
-);
+const AccountPage = lazy(() => import('../../modules/account/index.component'));
 const FamilyNotes = lazy(
   () => import('../../modules/family/family-notes.component'),
 );
@@ -121,11 +116,14 @@ const RoutesComponent: React.FC<RoutesProps> = ({ currentUser }) => {
           path="/family"
           element={<GuardedRoute element={<FamilyHome />} auth={isParent} />}
         />
+        {/* One Account page (19 Nov 2026): details, children, payments */}
+        <Route
+          path="/account"
+          element={<GuardedRoute element={<AccountPage />} auth={isParent} />}
+        />
         <Route
           path="/family/settings"
-          element={
-            <GuardedRoute element={<FamilySettings />} auth={isParent} />
-          }
+          element={<Navigate to="/account?tab=details" replace />}
         />
         <Route
           path="/family/notes"
@@ -135,10 +133,14 @@ const RoutesComponent: React.FC<RoutesProps> = ({ currentUser }) => {
         <Route
           path="/payments"
           element={
-            <GuardedRoute
-              element={<PaymentsHistory />}
-              auth={isParent || currentUser?.type === 'Student'}
-            />
+            isParent ? (
+              <Navigate to="/account?tab=payments" replace />
+            ) : (
+              <GuardedRoute
+                element={<PaymentsHistory />}
+                auth={currentUser?.type === 'Student'}
+              />
+            )
           }
         />
         <Route path="/payments/:slug/return" element={<PaymentReturn />} />
@@ -174,10 +176,12 @@ const RoutesComponent: React.FC<RoutesProps> = ({ currentUser }) => {
         <Route
           path="/account_settings"
           element={
-            <GuardedRoute
-              element={<AccountSettings />}
-              auth={!!currentUser && currentUser.type === 'Tutor'}
-            />
+            currentUser?.type === 'Tutor' ? (
+              // Contact details live in My Profile since 19 Nov 2026
+              <Navigate to={`/profile/${currentUser.id}?tab=contact`} replace />
+            ) : (
+              <Navigate to={getHomePath(currentUser)} replace />
+            )
           }
         />
         <Route

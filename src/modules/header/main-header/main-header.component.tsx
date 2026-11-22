@@ -8,7 +8,6 @@ import {
   MailOutline,
   PersonOutline,
   PhoneOutlined,
-  SettingsOutlined,
 } from '@mui/icons-material';
 // TODO: Uncomment when backend is ready
 // import { Info } from '@mui/icons-material';
@@ -207,15 +206,6 @@ const MainHeader: FC<HeaderProps> = ({ openFreeTrail }) => {
                         >
                           <PersonOutline className="item__icon" />
                           {t('HEADER.USER.PROFILE')}
-                        </Link>
-
-                        <Link
-                          onClick={() => setProfileAnchorEl(null)}
-                          to="/account_settings"
-                          className="item"
-                        >
-                          <SettingsOutlined className="item__icon" />
-                          {t('HEADER.USER.SETTINGS')}
                         </Link>
                       </div>
                     )}

@@ -7,7 +7,7 @@ import {
   Edit,
   EventAvailableRounded,
 } from '@mui/icons-material';
-import { useParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 
 import { useAppSelector } from '../../../redux/store';
 import { selectCurrentUser } from '../../../redux/user/user.selectors';
@@ -32,8 +32,16 @@ import RequestSessionsModal from '../../../modals/request-sessions-modal/request
 import type { SessionRequestKind } from '../../../hooks/useSessionRequests';
 import { getYoutubeId } from './edit-profile.utils';
 import WantsStudents from './wants-students/wants-students.component';
+import ContactDetails from '../account-settings/contact-details/contact-details.component';
+import PageTabs from '../../../component/page-tabs/page-tabs.component';
 
 import './index.scss';
+
+// The tutor's own profile has three tabs (19 Nov 2026); visitors see one page
+export const PROFILE_TABS = ['profile', 'preferences', 'contact'] as const;
+export type ProfileTab = (typeof PROFILE_TABS)[number];
+export const profileTab = (value: string | null): ProfileTab =>
+  PROFILE_TABS.find((tab) => tab === value) ?? 'profile';
 
 export type ProfileInfoType = {
   full_name?: string;
@@ -281,12 +289,30 @@ const EditProfile: FC = () => {
 
   const onToggleEditFromCalender = () => setEditMode(true);
 
+  // Tabs only for the tutor on their own profile
+  const [params, setParams] = useSearchParams();
+  const ownTutorProfile = showEditMode && currentUser?.type === 'Tutor';
+  const tab = profileTab(params.get('tab'));
+  const shows = (part: ProfileTab) => !ownTutorProfile || tab === part;
+
   return (
     <>
       <section className="profile">
         {renderProfileInfo()}
         <div className="profile__container container">
-          {showEditMode && renderProfileMissingInfoBanner()}
+          {ownTutorProfile && (
+            <PageTabs
+              label={t('HEADER.USER.PROFILE')}
+              tabs={PROFILE_TABS.map((key) => ({
+                key,
+                label: t(`PROFILE.TABS.${key.toUpperCase()}`),
+              }))}
+              value={tab}
+              onChange={(key) => setParams({ tab: key }, { replace: true })}
+            />
+          )}
+          {ownTutorProfile && tab === 'contact' && <ContactDetails embedded />}
+          {showEditMode && shows('profile') && renderProfileMissingInfoBanner()}
           {!showEditMode && currentUser?.type === 'Student' && !!instructor && (
             <div className="profile__visitor-actions">
               {canMessage && (
@@ -332,7 +358,7 @@ const EditProfile: FC = () => {
               />
             </Dialog>
           )}
-          {showEditMode && (
+          {showEditMode && shows('profile') && (
             <div className="profile__owner-actions">
               <Button
                 onClick={() => {
@@ -351,39 +377,41 @@ const EditProfile: FC = () => {
               </Button>
             </div>
           )}
-          {showEditMode && !!instructor && (
+          {showEditMode && shows('preferences') && !!instructor && (
             <ProfilePreferences instructor={instructor} />
           )}
-          {showEditMode && currentUser?.type === 'Tutor' && !!instructor && (
+          {ownTutorProfile && shows('preferences') && !!instructor && (
             <WantsStudents
               tutorId={instructor.id}
               value={!!instructor.wants_students}
             />
           )}
-          <div className="profile__fieldsTrail">
-            {!!instructor?.grade_subjects?.length && (
-              <div
-                className={`profile__fieldsTrail-fields ${
-                  freeTrailCardFlag() ? 'withTrial' : ''
-                }`}
-              >
-                <ProfileFields fields={instructor.grade_subjects || []} />
+          {shows('profile') && (
+            <>
+              <div className="profile__fieldsTrail">
+                {!!instructor?.grade_subjects?.length && (
+                  <div
+                    className={`profile__fieldsTrail-fields ${
+                      freeTrailCardFlag() ? 'withTrial' : ''
+                    }`}
+                  >
+                    <ProfileFields fields={instructor.grade_subjects || []} />
+                  </div>
+                )}
+                {freeTrailCardFlag() && (
+                  <div className="profile__fieldsTrail-trial">
+                    <AppCard
+                      title={t('CARDS.FREE_TRIAL.TITLE')}
+                      label={t('CARDS.FREE_TRIAL.LABEL')}
+                      type="primary"
+                      onClickButton={openFreeTrialModal}
+                    >
+                      <p>{t('CARDS.FREE_TRIAL.BODY')}.</p>
+                    </AppCard>
+                  </div>
+                )}
               </div>
-            )}
-            {freeTrailCardFlag() && (
-              <div className="profile__fieldsTrail-trial">
-                <AppCard
-                  title={t('CARDS.FREE_TRIAL.TITLE')}
-                  label={t('CARDS.FREE_TRIAL.LABEL')}
-                  type="primary"
-                  onClickButton={openFreeTrialModal}
-                >
-                  <p>{t('CARDS.FREE_TRIAL.BODY')}.</p>
-                </AppCard>
-              </div>
-            )}
-          </div>
-          {/* <div className="profile__available-packages">
+              {/* <div className="profile__available-packages">
               <h4 className="profile__available-packages__title">
                 {t('PROFILE.PACKAGES.TITLE')}
               </h4>
@@ -403,23 +431,25 @@ const EditProfile: FC = () => {
                 </Carousel>
               </div>
             </div> */}
-          <div className="profile__calendar">
-            <h2 className="profile__calendar__title">
-              {t('PROFILE.INSTRUCTOR_AVAILABILITY')}
-            </h2>
-            <div className="profile__calendar__slots">
-              {renderProfileCalender()}
-            </div>
-          </div>
-          {profileReviewsData?.length > 0 && (
-            <div className="profile__reviews">
-              <h2 className="profile__reviews__title">
-                {t('COURSES.COURSE_REVIEWS.REVIEWS')}
-              </h2>
-              <div className="profile__reviews__container">
-                <ProfileReviewsList profileReviews={profileReviewsData} />
+              <div className="profile__calendar">
+                <h2 className="profile__calendar__title">
+                  {t('PROFILE.INSTRUCTOR_AVAILABILITY')}
+                </h2>
+                <div className="profile__calendar__slots">
+                  {renderProfileCalender()}
+                </div>
               </div>
-            </div>
+              {profileReviewsData?.length > 0 && (
+                <div className="profile__reviews">
+                  <h2 className="profile__reviews__title">
+                    {t('COURSES.COURSE_REVIEWS.REVIEWS')}
+                  </h2>
+                  <div className="profile__reviews__container">
+                    <ProfileReviewsList profileReviews={profileReviewsData} />
+                  </div>
+                </div>
+              )}
+            </>
           )}
         </div>
       </section>
