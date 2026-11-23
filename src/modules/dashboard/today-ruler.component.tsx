@@ -8,13 +8,16 @@ import { buildRulerDay } from './today-ruler.utils';
 import './today-ruler.styles.scss';
 
 /**
- * Today on the tutor's dashboard (23 Nov 2026): the sessions on an hour
- * ruler with the gold "now" line; a session opens My Sessions.
+ * Today on the tutor's and the student's dashboard (23 Nov 2026): the
+ * sessions on an hour ruler with the gold "now" line; a session opens My
+ * Sessions.
  */
-const TodayRuler: FC<{ sessions: SessionType[]; now: Date }> = ({
-  sessions,
-  now,
-}) => {
+const TodayRuler: FC<{
+  sessions: SessionType[];
+  now: Date;
+  /** Whose name each session shows: the student (tutor's view) or the tutor */
+  show?: 'student' | 'tutor';
+}> = ({ sessions, now, show = 'student' }) => {
   const { t, i18n } = useTranslation();
   const day = useMemo(() => buildRulerDay(sessions, now), [sessions, now]);
   if (!day) return null;
@@ -72,7 +75,11 @@ const TodayRuler: FC<{ sessions: SessionType[]; now: Date }> = ({
                     ? t('TUTOR_DASHBOARD.TODAY.TRIAL')
                     : subjectName(s.grade_subject?.full_course_name)}
                 </b>
-                <span dir="auto">{s.student?.first_name}</span>
+                <span dir="auto">
+                  {show === 'tutor'
+                    ? `${s.tutor?.first_name ?? ''} ${s.tutor?.last_name ?? ''}`.trim()
+                    : s.student?.first_name}
+                </span>
               </Link>
             );
           })}

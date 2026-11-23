@@ -311,9 +311,12 @@ html[dir='rtl'] .av-flip svg {
     background-color: $surface;
   }
 
+  // New look (23 Nov 2026): a soft blue with a darker edge instead of solid
+  // bright blue, so booked and kept times still stand out
   &--available {
-    background-color: $av-open;
-    border-top-color: rgba($color-white, 0.35);
+    background-color: $brand-100;
+    border-inline-start: 3px solid $lagoon;
+    border-top-color: rgba($lagoon, 0.12);
   }
 
   &--adding {
@@ -385,7 +388,7 @@ html[dir='rtl'] .av-flip svg {
   }
 
   &--past-open {
-    background-color: rgba($av-open, 0.25);
+    background-color: rgba($av-open, 0.12);
   }
 }
 
