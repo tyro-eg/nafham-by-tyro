@@ -94,8 +94,9 @@
   }
 
   &__value {
-    font-size: 1.7rem;
-    font-weight: 800;
+    font-family: $font-display-family;
+    font-size: 1.8rem;
+    font-weight: 600;
     color: $text-strong;
     font-variant-numeric: tabular-nums;
   }
@@ -176,10 +177,10 @@
     color: $text-strong;
   }
 
+  // New look: the chosen one is a navy pill, as in the menu
   &--on {
-    background: $surface;
-    color: $brand-700;
-    box-shadow: 0 1px 3px rgba(15, 27, 45, 0.12);
+    background: $ink;
+    color: #fff;
   }
 }
 
@@ -209,9 +210,8 @@
     }
 
     &--on {
-      background: $surface;
-      color: $brand-800;
-      box-shadow: 0 1px 3px rgba(15, 27, 45, 0.12);
+      background: $ink;
+      color: #fff;
     }
   }
 }

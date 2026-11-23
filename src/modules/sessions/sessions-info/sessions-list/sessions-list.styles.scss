@@ -168,10 +168,9 @@ $tl-dot-phone: 2.6rem;
     }
 
     @include respond(phone) {
-      grid-template-columns: $tl-time-phone $tl-dot-phone 1.4rem minmax(
-          0,
-          1fr
-        ) 1.4rem;
+      grid-template-columns:
+        $tl-time-phone $tl-dot-phone 1.4rem minmax(0, 1fr)
+        1.4rem;
       grid-template-rows: 1.2rem auto auto auto auto auto auto auto 1.2rem;
     }
   }
@@ -280,8 +279,9 @@ $tl-dot-phone: 2.6rem;
       }
 
       &:first-child {
+        font-family: $font-display-family;
         font-size: 1.5rem;
-        font-weight: 800;
+        font-weight: 600;
         color: $text-strong;
         font-variant-numeric: tabular-nums;
         white-space: nowrap;

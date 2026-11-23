@@ -3,48 +3,10 @@
 
 // ---------- the navy band at the top of the family home (23 Nov 2026) ----------
 .fam-hero {
-  position: relative;
-  overflow: hidden;
+  @include ink-band;
   margin-bottom: $space-5;
   padding: $space-5 $space-5 $space-4;
   border-radius: 2.4rem;
-  background-color: $ink;
-  color: #fff;
-
-  // Squared notebook paper, fading out
-  &::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background-image:
-      linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
-    background-size: 2.2rem 2.2rem;
-    mask-image: linear-gradient(180deg, #000 30%, transparent 100%);
-    pointer-events: none;
-  }
-
-  // A soft Nafham-blue glow in the far corner
-  &::after {
-    content: '';
-    position: absolute;
-    inset-inline-end: -12rem;
-    top: -22rem;
-    width: 42rem;
-    height: 42rem;
-    border-radius: 50%;
-    background: radial-gradient(
-      circle,
-      rgba(58, 197, 241, 0.35),
-      transparent 65%
-    );
-    pointer-events: none;
-  }
-
-  > * {
-    position: relative;
-    z-index: 1;
-  }
 
   .fam-head {
     margin-bottom: 0;

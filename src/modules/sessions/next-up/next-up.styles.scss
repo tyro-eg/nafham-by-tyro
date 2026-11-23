@@ -2,7 +2,8 @@
 @import '../../../assets/styles/mixins.scss';
 @import '../session-tokens.scss';
 
-// The hero: brand navy lit with sky blue, the course large, Join on the right
+// The hero: the navy band (as on the family home), the course large, Join on
+// the right
 .next-up {
   position: relative;
   display: flex;
@@ -12,33 +13,8 @@
   gap: 2rem 3.2rem;
   padding: 2.6rem 3rem;
   border-radius: $radius-xl;
-  background:
-    radial-gradient(70% 140% at 100% 0%, rgba($brand-400, 0.55), transparent 60%),
-    radial-gradient(50% 90% at 0% 100%, rgba($brand-400, 0.18), transparent 70%),
-    linear-gradient(135deg, $navy-900 0%, $navy-950 100%);
-  color: $text-on-dark;
+  @include ink-band(32rem);
   box-shadow: 0 16px 36px rgba($navy-950, 0.28);
-  overflow: hidden;
-
-  html[dir='rtl'] & {
-    background:
-      radial-gradient(70% 140% at 0% 0%, rgba($brand-400, 0.55), transparent 60%),
-      radial-gradient(50% 90% at 100% 100%, rgba($brand-400, 0.18), transparent 70%),
-      linear-gradient(225deg, $navy-900 0%, $navy-950 100%);
-  }
-
-  // A faint ring in the corner for depth
-  &::after {
-    content: '';
-    position: absolute;
-    inset-inline-end: -6rem;
-    bottom: -9rem;
-    width: 22rem;
-    height: 22rem;
-    border: 2.4rem solid rgba(255, 255, 255, 0.06);
-    border-radius: 50%;
-    pointer-events: none;
-  }
 
   @include respond(phone) {
     padding: 2rem;
