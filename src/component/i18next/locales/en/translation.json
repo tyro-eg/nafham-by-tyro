@@ -69,7 +69,8 @@
     "GROUP_TEACHING": "Teaching",
     "GROUP_STUDENTS": "Students",
     "GROUP_ACCOUNT": "Account",
-    "ACCOUNT": "Account"
+    "ACCOUNT": "Account",
+    "GROUP_YOU": "You"
   },
   "CARDS": {
     "FREE_ASSESMENT": {
@@ -1531,6 +1532,10 @@
       "EMAIL": "Email",
       "SESSIONS": "Sessions",
       "NO_PACKAGE": "No package yet (trial or single sessions)"
+    },
+    "TABS": {
+      "STUDENTS": "Students",
+      "PACKAGES": "Packages"
     }
   },
   "TUTOR_DASHBOARD": {
@@ -2856,7 +2861,12 @@
       "REASON": "Reason: {{reason}}",
       "WITHDRAW": "Withdraw",
       "WAITING_COUNT_one": "{{count}} request waiting",
-      "WAITING_COUNT_other": "{{count}} requests waiting"
+      "WAITING_COUNT_other": "{{count}} requests waiting",
+      "SECTIONS": {
+        "TRIALS": "Free trials",
+        "CHANGES": "Session changes"
+      },
+      "SUBTITLE_TUTOR": "Free-trial requests and proposals to move a session or change weekly times. Times are in your timezone ({{tz}})."
     },
     "FREEZE": {
       "BUTTON": "Pause sessions",

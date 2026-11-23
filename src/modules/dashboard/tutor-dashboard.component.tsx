@@ -624,7 +624,10 @@ const TutorDashboard: FC = () => {
                       <span>{t('TUTOR_DASHBOARD.PACKAGES.LEFT')}</span>
                     </div>
                   </div>
-                  <Link className="td-packages__link" to="/my_packages">
+                  <Link
+                    className="td-packages__link"
+                    to="/my_students?tab=packages"
+                  >
                     {t('TUTOR_DASHBOARD.PACKAGES.VIEW')}
                     <ArrowForwardRounded className="sd-flip" />
                   </Link>

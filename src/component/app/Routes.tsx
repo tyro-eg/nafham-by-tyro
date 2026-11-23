@@ -18,7 +18,9 @@ const TutorDashboard = lazy(
 );
 const Dashboard = lazy(() => import('../../modules/dashboard/index.component'));
 const SignIn = lazy(() => import('../../modules/auth/signin/signin.component'));
-const Activate = lazy(() => import('../../modules/auth/activate/activate.component'));
+const Activate = lazy(
+  () => import('../../modules/auth/activate/activate.component'),
+);
 const Register = lazy(
   () => import('../../modules/auth/register/register.component'),
 );
@@ -51,9 +53,6 @@ const DeleteAccount = lazy(
   () => import('../../modules/delete-account/index.component'),
 );
 const TrialPage = lazy(() => import('../../modules/trial/index.component'));
-const TrialRequests = lazy(
-  () => import('../../modules/trial-requests/index.component'),
-);
 const RequestsPage = lazy(
   () => import('../../modules/requests/index.component'),
 );
@@ -244,12 +243,8 @@ const RoutesComponent: React.FC<RoutesProps> = ({ currentUser }) => {
         {/* A tutor's free-trial requests; their emails and chat notices link here */}
         <Route
           path="/trial_requests"
-          element={
-            <GuardedRoute
-              element={<TrialRequests />}
-              auth={!!currentUser && currentUser.type === 'Tutor'}
-            />
-          }
+          // Free-trial requests are a tab of Requests since 23 Nov 2026
+          element={<Navigate to="/requests?tab=trials" replace />}
         />
         <Route
           path="/my_sessions"
@@ -264,7 +259,14 @@ const RoutesComponent: React.FC<RoutesProps> = ({ currentUser }) => {
         />
         <Route
           path="/my_packages"
-          element={<GuardedRoute element={<Packages />} auth={!!currentUser} />}
+          element={
+            currentUser?.type === 'Tutor' ? (
+              // A tutor's packages are a tab of My Students (23 Nov 2026)
+              <Navigate to="/my_students?tab=packages" replace />
+            ) : (
+              <GuardedRoute element={<Packages />} auth={!!currentUser} />
+            )
+          }
         />
         <Route
           path="/messages"

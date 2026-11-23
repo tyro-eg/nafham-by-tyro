@@ -69,7 +69,8 @@
     "GROUP_TEACHING": "التدريس",
     "GROUP_STUDENTS": "الطلاب",
     "GROUP_ACCOUNT": "الحساب",
-    "ACCOUNT": "الحساب"
+    "ACCOUNT": "الحساب",
+    "GROUP_YOU": "أنت"
   },
   "CARDS": {
     "FREE_ASSESMENT": {
@@ -1597,6 +1598,10 @@
       "EMAIL": "البريد",
       "SESSIONS": "الحصص",
       "NO_PACKAGE": "لا توجد باقة بعد (حصة تجريبية أو حصص فردية)"
+    },
+    "TABS": {
+      "STUDENTS": "الطلاب",
+      "PACKAGES": "الباقات"
     }
   },
   "TUTOR_DASHBOARD": {
@@ -3109,7 +3114,12 @@
       "WAITING_COUNT_few": "{{count}} طلبات بانتظار ردّك",
       "WAITING_COUNT_many": "{{count}} طلبًا بانتظار ردّك",
       "WAITING_COUNT_one": "طلب واحد بانتظار ردّك",
-      "WAITING_COUNT_other": "{{count}} طلب بانتظار ردّك"
+      "WAITING_COUNT_other": "{{count}} طلب بانتظار ردّك",
+      "SECTIONS": {
+        "TRIALS": "الحصص التجريبية",
+        "CHANGES": "تغييرات الحصص"
+      },
+      "SUBTITLE_TUTOR": "طلبات الحصص التجريبية واقتراحات لنقل حصة أو تغيير المواعيد الأسبوعية. الأوقات بتوقيتك ({{tz}})."
     },
     "FREEZE": {
       "BUTTON": "إيقاف الحصص مؤقتاً",

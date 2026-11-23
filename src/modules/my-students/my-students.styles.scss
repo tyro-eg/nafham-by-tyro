@@ -450,3 +450,10 @@ $ms-radius: 2rem;
     color: $text-body;
   }
 }
+
+// The Packages tab (23 Nov 2026): the packages list without its page spacing
+.my-students .packages--embedded {
+  padding: 0;
+  min-height: 0;
+  background: none;
+}

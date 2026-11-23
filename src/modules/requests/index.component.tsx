@@ -1,6 +1,6 @@
 import { FC, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import {
   Alert,
   Button,
@@ -20,6 +20,9 @@ import {
 import { useAppSelector } from '../../redux/store';
 import { selectCurrentUser } from '../../redux/user/user.selectors';
 import { useRtlClass } from '../../assets/utils/utils';
+import { useTrialOffers } from '../../hooks/useTrial';
+import PageTabs from '../../component/page-tabs/page-tabs.component';
+import { TrialOffersBody } from '../trial-requests/index.component';
 import {
   changeErrorMessage,
   remainingOptions,
@@ -57,9 +60,16 @@ const tabOf = (view: View): RequestTab =>
  * answer" lists what the other side proposed; "Sent" what this side did;
  * "History" what was answered. Emails and chat notices link here.
  */
+type Section = 'trials' | 'changes';
+
 const RequestsPage: FC = () => {
   const { t } = useTranslation();
   const rtlClass = useRtlClass();
+  // A tutor's free-trial requests live here too (23 Nov 2026), as a tab
+  const isTutor = useAppSelector(selectCurrentUser)?.type === 'Tutor';
+  const trialsWaiting = useTrialOffers('pending', isTutor).data?.length ?? 0;
+  const [params, setParams] = useSearchParams();
+  const asked = params.get('tab');
   const [view, setView] = useState<View>('inbox');
   const moves = useRescheduleRequests(boxOf(view), tabOf(view));
   const weekly = useScheduleChangeRequests(boxOf(view), tabOf(view));
@@ -89,6 +99,14 @@ const RequestsPage: FC = () => {
     ...(view === 'history' ? (sentHistory.data ?? []) : []),
   ];
   const empty = !loading && moveList.length === 0 && weeklyList.length === 0;
+  // Opens on whichever has something waiting, free trials first
+  const section: Section = !isTutor
+    ? 'changes'
+    : asked === 'trials' || asked === 'changes'
+      ? asked
+      : trialsWaiting > 0 || waiting === 0
+        ? 'trials'
+        : 'changes';
 
   return (
     <section className={`requests dashboard-page ${rtlClass}`}>
@@ -99,68 +117,98 @@ const RequestsPage: FC = () => {
               {t('SESSION_CHANGES.REQUESTS.TITLE')}
             </h1>
             <p className="dashboard-header__subtitle">
-              {t('SESSION_CHANGES.REQUESTS.SUBTITLE', { tz: localTimeZone() })}
+              {t(
+                isTutor
+                  ? 'SESSION_CHANGES.REQUESTS.SUBTITLE_TUTOR'
+                  : 'SESSION_CHANGES.REQUESTS.SUBTITLE',
+                { tz: localTimeZone() },
+              )}
             </p>
           </div>
         </div>
       </header>
 
       <div className="container dashboard-page__body">
-        <div
-          className="requests__tabs"
-          role="tablist"
-          aria-label={t('SESSION_CHANGES.REQUESTS.TITLE')}
-        >
-          {VIEWS.map((key) => (
-            <button
-              key={key}
-              type="button"
-              role="tab"
-              aria-selected={view === key}
-              className={`requests__tab${view === key ? ' is-on' : ''}`}
-              onClick={() => setView(key)}
+        {isTutor && (
+          <PageTabs
+            label={t('SESSION_CHANGES.REQUESTS.TITLE')}
+            tabs={[
+              {
+                key: 'trials',
+                label: `${t('SESSION_CHANGES.REQUESTS.SECTIONS.TRIALS')}${trialsWaiting > 0 ? ` · ${trialsWaiting}` : ''}`,
+              },
+              {
+                key: 'changes',
+                label: `${t('SESSION_CHANGES.REQUESTS.SECTIONS.CHANGES')}${waiting > 0 ? ` · ${waiting}` : ''}`,
+              },
+            ]}
+            value={section}
+            onChange={(key) => setParams({ tab: key }, { replace: true })}
+          />
+        )}
+        {section === 'trials' ? (
+          <TrialOffersBody />
+        ) : (
+          <>
+            <div
+              className="requests__tabs"
+              role="tablist"
+              aria-label={t('SESSION_CHANGES.REQUESTS.TITLE')}
             >
-              {t(`SESSION_CHANGES.REQUESTS.TABS.${key.toUpperCase()}`)}
-              {key === 'inbox' && waiting > 0 && ` (${waiting})`}
-            </button>
-          ))}
-        </div>
+              {VIEWS.map((key) => (
+                <button
+                  key={key}
+                  type="button"
+                  role="tab"
+                  aria-selected={view === key}
+                  className={`requests__tab${view === key ? ' is-on' : ''}`}
+                  onClick={() => setView(key)}
+                >
+                  {t(`SESSION_CHANGES.REQUESTS.TABS.${key.toUpperCase()}`)}
+                  {key === 'inbox' && waiting > 0 && ` (${waiting})`}
+                </button>
+              ))}
+            </div>
 
-        {loading && (
-          <div className="requests__list">
-            <Skeleton variant="rounded" height={160} />
-            <Skeleton variant="rounded" height={160} />
-          </div>
-        )}
+            {loading && (
+              <div className="requests__list">
+                <Skeleton variant="rounded" height={160} />
+                <Skeleton variant="rounded" height={160} />
+              </div>
+            )}
 
-        {(moves.isError || weekly.isError) && (
-          <Alert severity="error">
-            {t('SESSION_CHANGES.REQUESTS.ERROR_LOADING')}
-          </Alert>
-        )}
+            {(moves.isError || weekly.isError) && (
+              <Alert severity="error">
+                {t('SESSION_CHANGES.REQUESTS.ERROR_LOADING')}
+              </Alert>
+            )}
 
-        {empty && (
-          <div className="requests__empty">
-            <p>{t(`SESSION_CHANGES.REQUESTS.EMPTY.${view.toUpperCase()}`)}</p>
-            <Button component={Link} to="/my_sessions" variant="outlined">
-              {t('TRIAL_OFFERS.OPEN_SESSIONS')}
-            </Button>
-          </div>
-        )}
+            {empty && (
+              <div className="requests__empty">
+                <p>
+                  {t(`SESSION_CHANGES.REQUESTS.EMPTY.${view.toUpperCase()}`)}
+                </p>
+                <Button component={Link} to="/my_sessions" variant="outlined">
+                  {t('TRIAL_OFFERS.OPEN_SESSIONS')}
+                </Button>
+              </div>
+            )}
 
-        {moveList.length > 0 && (
-          <ul className="requests__list">
-            {moveList.map((request) => (
-              <MoveCard key={request.id} request={request} />
-            ))}
-          </ul>
-        )}
-        {weeklyList.length > 0 && (
-          <ul className="requests__list">
-            {weeklyList.map((request) => (
-              <WeeklyCard key={request.id} request={request} />
-            ))}
-          </ul>
+            {moveList.length > 0 && (
+              <ul className="requests__list">
+                {moveList.map((request) => (
+                  <MoveCard key={request.id} request={request} />
+                ))}
+              </ul>
+            )}
+            {weeklyList.length > 0 && (
+              <ul className="requests__list">
+                {weeklyList.map((request) => (
+                  <WeeklyCard key={request.id} request={request} />
+                ))}
+              </ul>
+            )}
+          </>
         )}
       </div>
     </section>

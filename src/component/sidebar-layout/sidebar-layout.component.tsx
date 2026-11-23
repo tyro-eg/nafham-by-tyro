@@ -26,7 +26,6 @@ import {
   FamilyRestroomRounded,
   MenuBookRounded,
   ReceiptLongRounded,
-  ScheduleSendRounded,
   EventRepeatRounded,
 } from '@mui/icons-material';
 
@@ -88,6 +87,7 @@ const SidebarLayout: FC<SidebarLayoutProps> = ({ children }) => {
   );
   const requestsWaiting =
     (inboxMoves.data?.length ?? 0) + (inboxWeekly.data?.length ?? 0);
+  const tutorTrialsWaiting = trialOffers.data?.length ?? 0;
   const requestsItem: NavItem = {
     to: '/requests',
     icon: <EventRepeatRounded />,
@@ -170,8 +170,7 @@ const SidebarLayout: FC<SidebarLayoutProps> = ({ children }) => {
   // loose links before), like the parent's menu
   const teaching = t('NAVIGATION.GROUP_TEACHING');
   const studentsGroup = t('NAVIGATION.GROUP_STUDENTS');
-  const tutorMoney = t('NAVIGATION.GROUP_MONEY');
-  const account = t('NAVIGATION.GROUP_ACCOUNT');
+  const you = t('NAVIGATION.GROUP_YOU');
   const tutorItems: NavItem[] = [
     {
       to: '/dashboard',
@@ -208,35 +207,29 @@ const SidebarLayout: FC<SidebarLayoutProps> = ({ children }) => {
       label: t('NAVIGATION.MY_STUDENTS'),
       group: studentsGroup,
     },
+    // Free trials joined Requests (23 Nov 2026): one count for everything
+    // waiting for the tutor's answer
     {
-      to: '/trial_requests',
-      icon: <ScheduleSendRounded />,
-      label: t('NAVIGATION.TRIAL_REQUESTS'),
-      badge: trialOffers.data?.length ?? 0,
-      badgeLabel: t('TRIAL_OFFERS.WAITING_COUNT', {
-        count: trialOffers.data?.length ?? 0,
+      ...requestsItem,
+      badge: requestsWaiting + tutorTrialsWaiting,
+      badgeLabel: t('SESSION_CHANGES.REQUESTS.WAITING_COUNT', {
+        count: requestsWaiting + tutorTrialsWaiting,
       }),
       group: studentsGroup,
     },
-    { ...requestsItem, group: studentsGroup },
     ...messagesItem.map((item) => ({ ...item, group: studentsGroup })),
-    {
-      to: '/my_packages',
-      icon: <Inventory2Rounded />,
-      label: t('NAVIGATION.PACKAGES'),
-      group: tutorMoney,
-    },
+    // My Packages joined My Students; salary and profile share "You"
     {
       to: '/my_salary',
       icon: <PaymentsRounded />,
       label: t('NAVIGATION.MY_SALARY'),
-      group: tutorMoney,
+      group: you,
     },
     {
       to: `/profile/${currentUser.id}`,
       icon: <AccountCircleRounded />,
       label: t('HEADER.USER.PROFILE'),
-      group: account,
+      group: you,
     },
   ];
 
