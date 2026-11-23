@@ -18,6 +18,7 @@ const TutorDashboard = lazy(
 );
 const Dashboard = lazy(() => import('../../modules/dashboard/index.component'));
 const SignIn = lazy(() => import('../../modules/auth/signin/signin.component'));
+const Activate = lazy(() => import('../../modules/auth/activate/activate.component'));
 const Register = lazy(
   () => import('../../modules/auth/register/register.component'),
 );
@@ -167,6 +168,8 @@ const RoutesComponent: React.FC<RoutesProps> = ({ currentUser }) => {
             <GuardedRoute element={<Registered />} auth={!!currentUser} />
           }
         />
+        {/* An account sales made, activated with a code sent on WhatsApp */}
+        <Route path="/activate/:token" element={<Activate />} />
         <Route path="/impersonate" element={<Impersonate />} />
         {/* The mobile app's way into the website, signed in, to pay */}
         <Route path="/handoff" element={<Handoff />} />

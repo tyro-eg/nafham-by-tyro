@@ -18,8 +18,10 @@ const ROUTES_WITHOUT_HEADER = ['/login'];
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   const location = useLocation();
   const currentUser = useAppSelector(selectCurrentUser);
-  const showFooter = !ROUTES_WITHOUT_FOOTER.includes(location.pathname);
-  const showHeader = !ROUTES_WITHOUT_HEADER.includes(location.pathname);
+  // The activation page (/activate/<token>) looks like sign in
+  const activating = location.pathname.startsWith('/activate/');
+  const showFooter = !activating && !ROUTES_WITHOUT_FOOTER.includes(location.pathname);
+  const showHeader = !activating && !ROUTES_WITHOUT_HEADER.includes(location.pathname);
 
   // Signed-in users navigate with the left sidebar instead of the header
   if (currentUser) {

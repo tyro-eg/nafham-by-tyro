@@ -3003,5 +3003,30 @@
       "CHILDREN": "Children",
       "PAYMENTS": "Payments"
     }
+  },
+  "ACTIVATE": {
+    "PANEL_TITLE": "Welcome to Nafham",
+    "PANEL_SUBTITLE": "Your account was set up for you. Confirm your number to start.",
+    "TITLE": "Hi {{name}}, activate your account",
+    "TITLE_PLAIN": "Activate your account",
+    "SUBTITLE": "We will send a 6-digit code on WhatsApp to {{phone}}.",
+    "LOADING": "Loading…",
+    "BAD_LINK": "This activation link is not valid or has expired. Ask Nafham to send a new one.",
+    "ALREADY_ACTIVE": "This account is active already. Sign in with your email and password.",
+    "GO_SIGN_IN": "Go to sign in",
+    "SEND_CODE": "Send me the code on WhatsApp",
+    "SENDING": "Sending…",
+    "CODE_SENT": "We sent a code on WhatsApp to {{phone}}. It works for {{minutes}} minutes.",
+    "CODE": "Code from WhatsApp",
+    "PASSWORD": "Choose a password",
+    "CONFIRM": "Type the password again",
+    "ACTIVATE": "Activate my account",
+    "ACTIVATING": "Activating…",
+    "NEW_CODE": "Send a new code",
+    "NEW_CODE_IN": "Send a new code in {{seconds}} s",
+    "CODE_FORMAT": "Type the 6 digits from WhatsApp.",
+    "PASSWORD_SHORT": "The password needs at least 6 characters.",
+    "PASSWORD_MISMATCH": "The two passwords are not the same.",
+    "TRY_AGAIN": "Something went wrong. Please try again."
   }
 }
