@@ -504,7 +504,6 @@ const AvailabilityPage: FC = () => {
           </ul>
         </div>
 
-        <p className="av-hint">{t('AVAILABILITY.HINT')}</p>
 
         <AvailabilityGrid
           days={days}
