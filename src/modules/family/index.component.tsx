@@ -464,7 +464,7 @@ const FamilyHome: FC = () => {
             child: next.child.first_name,
           })
         : t('FAMILY.TILES.COMING_UP'),
-      to: '/calendar',
+      to: '/my_sessions?view=calendar',
     },
     {
       key: 'homework',
@@ -632,7 +632,7 @@ const FamilyHome: FC = () => {
                   </h2>
                   <Link
                     className="fam-card__link"
-                    to="/calendar"
+                    to="/my_sessions?view=calendar"
                     onClick={() => choose('all')}
                   >
                     {t('NAVIGATION.CALENDAR')}

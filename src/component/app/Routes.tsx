@@ -6,9 +6,6 @@ import { CurrentUser } from '../../assets/types';
 import { getHomePath } from '../../assets/utils/home-path';
 
 const Home = lazy(() => import('../../modules/home/index'));
-const CalendarPage = lazy(
-  () => import('../../modules/calendar/index.component'),
-);
 const AvailabilityPage = lazy(
   () => import('../../modules/availability/index.component'),
 );
@@ -202,9 +199,8 @@ const RoutesComponent: React.FC<RoutesProps> = ({ currentUser }) => {
         />
         <Route
           path="/calendar"
-          element={
-            <GuardedRoute element={<CalendarPage />} auth={!!currentUser} />
-          }
+          // The calendar is a view of My Sessions since 23 Nov 2026
+          element={<Navigate to="/my_sessions?view=calendar" replace />}
         />
         <Route
           path="/availability"

@@ -6,7 +6,6 @@ import {
   AccountCircleRounded,
   AddShoppingCartRounded,
   AssignmentRounded,
-  CalendarMonthRounded,
   CloseRounded,
   ChevronLeftRounded,
   ChevronRightRounded,
@@ -186,12 +185,6 @@ const SidebarLayout: FC<SidebarLayoutProps> = ({ children }) => {
       group: teaching,
     },
     {
-      to: '/calendar',
-      icon: <CalendarMonthRounded />,
-      label: t('NAVIGATION.CALENDAR'),
-      group: teaching,
-    },
-    {
       to: '/availability',
       icon: <EditCalendarRounded />,
       label: t('NAVIGATION.AVAILABILITY'),
@@ -275,11 +268,6 @@ const SidebarLayout: FC<SidebarLayoutProps> = ({ children }) => {
       icon: <AssignmentRounded />,
       label: t('NAVIGATION.HOMEWORK'),
     },
-    {
-      to: '/calendar',
-      icon: <CalendarMonthRounded />,
-      label: t('NAVIGATION.CALENDAR'),
-    },
     ...messagesItem,
     {
       to: '/my_packages',
@@ -313,12 +301,6 @@ const SidebarLayout: FC<SidebarLayoutProps> = ({ children }) => {
       to: '/my_sessions',
       icon: <EventNoteRounded />,
       label: t('NAVIGATION.SESSIONS'),
-      group: learning,
-    },
-    {
-      to: '/calendar',
-      icon: <CalendarMonthRounded />,
-      label: t('NAVIGATION.CALENDAR'),
       group: learning,
     },
     {
