@@ -102,14 +102,20 @@ $gold-fg: #b07800;
     padding: $space-5;
     border-radius: $trial-radius;
     color: $text-on-dark;
+    // New look (23 Nov 2026): the navy band with squared paper and a blue
+    // glow, as on the family home (set here directly so the panel stays sticky)
     background:
       radial-gradient(
         28rem 20rem at 100% 0%,
-        rgba(255, 255, 255, 0.16),
+        rgba($brand-400, 0.3),
         transparent 70%
       ),
-      linear-gradient(160deg, #0b7ddb 0%, $navy-950 100%);
-    box-shadow: 0 16px 40px rgba(0, 81, 160, 0.25);
+      linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px) 0 0 /
+        2.2rem 2.2rem,
+      linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px) 0
+        0 / 2.2rem 2.2rem,
+      $ink;
+    box-shadow: 0 16px 40px rgba($ink, 0.25);
 
     @include respond(tab-port) {
       position: static;
