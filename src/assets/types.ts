@@ -158,7 +158,10 @@ export type Package = {
 export type PackageHours = {
   bought: number;
   moved_out: number;
+  /** Completed and missed sessions (both are taken from the package) */
   used: number;
+  /** The missed part of `used` (23 Nov 2026) */
+  missed?: number;
   scheduled: number;
   unscheduled: number;
   /** Hours the cancellation policy took for late changes by the family */
@@ -397,4 +400,19 @@ export type SessionType = {
   note_status?: 'ready' | null;
   /** AI Teaching Assistant: the plan for this session */
   plan_status?: 'draft' | 'accepted' | null;
+};
+
+/** Each student's free trials against the limit (GET /sessions/trials_summary) */
+export type TrialsSummary = {
+  max: number;
+  students: Array<{
+    student_id: number;
+    name: string;
+    done: number;
+    missed: number;
+    booked: number;
+    cancelled: number;
+    used: number;
+    left: number;
+  }>;
 };

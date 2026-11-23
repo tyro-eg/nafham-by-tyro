@@ -5,7 +5,7 @@ import {
 } from '@tanstack/react-query';
 import { get } from '../assets/utils/api';
 import { queryKeys, SessionFilters } from '../lib/queryKeys';
-import { SessionType } from '../assets/types';
+import { SessionType, TrialsSummary } from '../assets/types';
 
 /** How often session lists re-read the server while the tab is visible */
 export const LIVE_REFRESH_MS = 30_000;
@@ -188,6 +188,22 @@ export function useSessionSummary(enabled = true) {
     staleTime: 3 * 60 * 1000,
     refetchInterval: 3 * 60 * 1000,
     refetchIntervalInBackground: false,
+  });
+}
+
+/**
+ * Each student's free trials against the limit of 3, for the hours card
+ * (GET /sessions/trials_summary, 23 Nov 2026).
+ */
+export function useTrialsSummary(enabled = true) {
+  return useQuery({
+    queryKey: [...queryKeys.sessions.all, 'trials-summary'] as const,
+    enabled,
+    queryFn: async () => {
+      const response = await get(`/sessions/trials_summary`);
+      return response.data as TrialsSummary;
+    },
+    staleTime: 3 * 60 * 1000,
   });
 }
 

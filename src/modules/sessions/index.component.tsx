@@ -22,6 +22,7 @@ import { useRtlClass } from '../../assets/utils/utils';
 import type { GradeSubject, Instructor } from '../../assets/types';
 import ChildTabs from '../family/child-tabs.component';
 import TrialRequestsCard from '../trial/trial-requests-card.component';
+import HoursCard from './hours-card/hours-card.component';
 
 import SessionsList from './sessions-info/sessions-list/sessions-list.component';
 import SessionsCalendarContainer from './sessions-info/sessions-calendar-container/sessions-calendar-container.component';
@@ -191,6 +192,9 @@ const Sessions: FC = () => {
 
       <div className="sessions__container container dashboard-page__body">
         {isParent && <ChildTabs />}
+
+        {/* Hours done and left, and free trials (23 Nov 2026) */}
+        {!isTutor && <HoursCard isParent={isParent} />}
 
         {/* Free trials still waiting for an instructor to confirm */}
         {!isTutor && <TrialRequestsCard showStudent={isParent} />}

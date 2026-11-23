@@ -3067,5 +3067,29 @@
     "BACK": "Back",
     "TO": "Back to {{place}}",
     "SIGN_UP": "Sign up"
+  },
+  "HOURS_CARD": {
+    "TITLE": "Hours done and left",
+    "ALL_PACKAGES": "All packages",
+    "WITH": "with {{tutor}}",
+    "METER_LABEL": "{{done}} h done, {{missed}} h missed, {{booked}} h booked, {{free}} h free to book, of {{total}} h",
+    "DONE": "{{h}} h done",
+    "MISSED": "{{h}} h missed",
+    "BOOKED": "{{h}} h booked",
+    "FREE": "{{h}} h free to book",
+    "OF": "of {{h}} h",
+    "HOURS": "{{h}} h",
+    "LEFT_IN_ALL": "left in all",
+    "TOTAL_DONE": "done",
+    "TOTAL_MISSED": "missed (counted)",
+    "TOTAL_BOOKED": "booked, to come",
+    "TOTAL_FREE": "left to book",
+    "MORE": "+{{count}} more in My Packages",
+    "TRIALS": "Free trials",
+    "TRIALS_OF": "Free trials · {{name}}",
+    "TRIAL_DONE": "{{count}} done",
+    "TRIAL_BOOKED": "{{count}} booked",
+    "TRIAL_GONE": "{{count}} cancelled or missed",
+    "TRIAL_LEFT": "{{left}} left of {{max}}"
   }
 }

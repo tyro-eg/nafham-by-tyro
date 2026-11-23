@@ -3343,5 +3343,29 @@
     "BACK": "رجوع",
     "TO": "العودة إلى {{place}}",
     "SIGN_UP": "إنشاء حساب"
+  },
+  "HOURS_CARD": {
+    "TITLE": "الساعات المنجزة والمتبقية",
+    "ALL_PACKAGES": "كل الباقات",
+    "WITH": "مع {{tutor}}",
+    "METER_LABEL": "{{done}} س منجزة، {{missed}} س فائتة، {{booked}} س محجوزة، {{free}} س متاحة للحجز، من {{total}} س",
+    "DONE": "{{h}} س منجزة",
+    "MISSED": "{{h}} س فائتة",
+    "BOOKED": "{{h}} س محجوزة",
+    "FREE": "{{h}} س متاحة للحجز",
+    "OF": "من {{h}} س",
+    "HOURS": "{{h}} س",
+    "LEFT_IN_ALL": "متبقية في المجموع",
+    "TOTAL_DONE": "منجزة",
+    "TOTAL_MISSED": "فائتة (محسوبة)",
+    "TOTAL_BOOKED": "محجوزة، قادمة",
+    "TOTAL_FREE": "متبقية للحجز",
+    "MORE": "+{{count}} أخرى في باقاتي",
+    "TRIALS": "الحصص التجريبية المجانية",
+    "TRIALS_OF": "الحصص التجريبية · {{name}}",
+    "TRIAL_DONE": "{{count}} منجزة",
+    "TRIAL_BOOKED": "{{count}} محجوزة",
+    "TRIAL_GONE": "{{count}} ملغاة أو فائتة",
+    "TRIAL_LEFT": "{{left}} متبقية من {{max}}"
   }
 }

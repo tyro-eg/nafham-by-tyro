@@ -1,0 +1,228 @@
+@import '../../../assets/styles/variables.scss';
+
+// Hours done and hours left above My Sessions (23 Nov 2026)
+.hours-card {
+  margin: 0 0 2rem;
+  padding: 1.8rem 2rem;
+  border: 1px solid $border;
+  border-radius: 1.8rem;
+  background: #fff;
+
+  &--loading {
+    min-height: 16rem;
+    background: linear-gradient(90deg, #fff, $mist, #fff);
+  }
+
+  &__head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.2rem;
+
+    h2 {
+      margin: 0;
+      font-family: $font-display-family;
+      font-size: 1.7rem;
+      font-weight: 600;
+      color: $ink;
+    }
+
+    a {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: $lagoon;
+    }
+  }
+}
+
+.hc-totals {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+  margin: 0 0 0.6rem;
+  padding: 0;
+  list-style: none;
+
+  @media (max-width: 640px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.hc-total {
+  padding: 1rem 1.2rem;
+  border-radius: 1.2rem;
+  background: $mist;
+
+  b {
+    display: block;
+    font-family: $font-display-family;
+    font-size: 2rem;
+    font-weight: 600;
+    color: $ink;
+  }
+
+  span {
+    font-size: 1.2rem;
+    color: $text-body;
+  }
+
+  &--missed b {
+    color: #b7791f;
+  }
+}
+
+.hc-lines {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.hc-line {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1.4rem;
+  align-items: end;
+  padding: 1.2rem 0;
+  border-top: 1px solid $border;
+
+  &:first-child {
+    border-top: 0;
+  }
+
+  &__title {
+    margin: 0 0 0.6rem;
+    font-size: 1.3rem;
+    color: $text-body;
+
+    b {
+      margin-inline-end: 0.6rem;
+      font-family: $font-display-family;
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: $ink;
+    }
+  }
+}
+
+.hc-meter {
+  display: flex;
+  height: 1.4rem;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #e6eef5;
+
+  span {
+    height: 100%;
+  }
+}
+
+// The four parts, also used for the little keys under each meter
+.hc-meter__done {
+  background: #1fb59b;
+}
+.hc-meter__missed {
+  background: #ffb72b;
+}
+.hc-meter__booked {
+  background: #3ac5f1;
+}
+.hc-meter__free {
+  background: repeating-linear-gradient(
+    135deg,
+    #d6e6f1 0 6px,
+    #eef6fb 6px 12px
+  );
+}
+
+.hc-nums {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.4rem;
+  margin: 0.6rem 0 0;
+  font-size: 1.2rem;
+  color: $text-body;
+
+  i {
+    display: inline-block;
+    width: 0.9rem;
+    height: 0.9rem;
+    margin-inline-end: 0.5rem;
+    border-radius: 0.3rem;
+    vertical-align: -0.1rem;
+  }
+}
+
+.hc-left {
+  margin: 0;
+  text-align: end;
+
+  b {
+    display: block;
+    font-family: $font-display-family;
+    font-size: 2rem;
+    font-weight: 600;
+    color: $ink;
+  }
+
+  small {
+    font-size: 1.15rem;
+    color: $text-body;
+  }
+
+  &--low b {
+    color: #e5484d;
+  }
+}
+
+.hc-more {
+  display: inline-block;
+  margin-top: 0.4rem;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: $lagoon;
+}
+
+.hc-trials {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.8rem 1rem;
+  margin: 1.2rem 0 0;
+  padding-top: 1.2rem;
+  border-top: 1px dashed $border;
+  font-size: 1.3rem;
+
+  b {
+    font-family: $font-display-family;
+    font-weight: 600;
+    color: $ink;
+  }
+
+  small {
+    color: $text-body;
+  }
+
+  &__dots {
+    display: inline-flex;
+    gap: 0.5rem;
+  }
+}
+
+.hc-dot {
+  width: 1.6rem;
+  height: 1.6rem;
+  border-radius: 50%;
+  border: 2px solid #8b6cf0;
+
+  &--done {
+    background: #8b6cf0;
+  }
+  &--booked {
+    background: rgba(139, 108, 240, 0.3);
+  }
+  &--gone {
+    border-color: #c3cfdb;
+    background: #e6eef5;
+  }
+}
