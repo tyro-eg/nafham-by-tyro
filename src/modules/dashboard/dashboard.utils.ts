@@ -2,6 +2,7 @@ import i18n from '../../component/i18next/i18n';
 import type { Package, SessionType } from '../../assets/types';
 import type { SessionSummary } from '../../hooks/useSessions';
 import { hoursLeft } from '../../lib/package-hours';
+import { localizeCourse, localizeSubject } from '../../lib/subject-names';
 
 const HOUR_MS = 60 * 60 * 1000;
 
@@ -22,11 +23,19 @@ const UNSPECIFIED = /Unspecified \(import\)/i;
  */
 export const courseLabel = (fullCourseName?: string | null): string =>
   fullCourseName
-    ? fullCourseName.replace(UNSPECIFIED, i18n.t('COURSE.SUBJECT_NOT_SET'))
+    ? UNSPECIFIED.test(fullCourseName)
+      ? fullCourseName.replace(UNSPECIFIED, i18n.t('COURSE.SUBJECT_NOT_SET'))
+      : // In Arabic the subject part reads in Arabic (23 Nov 2026)
+        localizeCourse(fullCourseName, i18n.language)
     : '';
 
 export const subjectName = (fullCourseName?: string): string => {
   if (!fullCourseName) return '';
+  if (!UNSPECIFIED.test(fullCourseName)) {
+    // A known subject, whole: "English - Pronounce", not just "Pronounce"
+    const known = localizeSubject(fullCourseName, i18n.language);
+    if (known) return known;
+  }
   const parts = courseLabel(fullCourseName).split(' - ');
   return parts[parts.length - 1].trim();
 };
