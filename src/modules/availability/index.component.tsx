@@ -504,7 +504,6 @@ const AvailabilityPage: FC = () => {
           </ul>
         </div>
 
-
         <AvailabilityGrid
           days={days}
           rows={rows}
