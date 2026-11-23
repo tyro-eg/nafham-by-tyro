@@ -50,6 +50,13 @@ $gold-fg: #b07800;
     text-align: center;
   }
 
+  // Back on the first step (23 Nov 2026): its own line, centred above the eyebrow
+  &__header > .back-link {
+    display: flex;
+    width: fit-content;
+    margin: 0 auto $space-4;
+  }
+
   &__eyebrow {
     @include eyebrow;
     margin-bottom: $space-3;

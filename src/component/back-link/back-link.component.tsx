@@ -1,4 +1,4 @@
-import { FC, MouseEvent, useEffect } from 'react';
+import { FC, MouseEvent } from 'react';
 import {
   Link,
   useLocation,
@@ -7,7 +7,7 @@ import {
 } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { ArrowBackRounded } from '@mui/icons-material';
-import { backTarget, recordPage } from '../../lib/back-trail';
+import { backTarget, previousPage, recordPage } from '../../lib/back-trail';
 import './back-link.styles.scss';
 
 /**
@@ -25,7 +25,11 @@ export const BackLink: FC<{
   const { t } = useTranslation();
   const location = useLocation();
   const navigate = useNavigate();
-  const target = backTarget(location.key !== 'default', fallback);
+  const target = backTarget(
+    location.key !== 'default',
+    fallback,
+    previousPage(location.key),
+  );
   const place = label ?? t(target.labelKey);
   const onClick = (event: MouseEvent) => {
     if (!target.useHistory) return;
@@ -51,13 +55,19 @@ export const BackLink: FC<{
   );
 };
 
-/** Keeps the page before this one, for BackLink's words. Mounted once in Routes. */
+/**
+ * Keeps the page before each visit, for BackLink's words. Mounted once in
+ * Routes, before the pages: it records while drawing (not in an effect), so a
+ * page's Back already knows where it came from. Recording twice is harmless.
+ */
 export const BackTrail: FC = () => {
   const location = useLocation();
   const how = useNavigationType();
-  useEffect(() => {
-    recordPage(`${location.pathname}${location.search}`, how === 'REPLACE');
-  }, [location.pathname, location.search, how]);
+  recordPage(
+    location.key,
+    `${location.pathname}${location.search}`,
+    how === 'REPLACE',
+  );
   return null;
 };
 

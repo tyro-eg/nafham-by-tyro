@@ -5,23 +5,35 @@
  * own list instead, so Back never leaves the website.
  */
 
-/** The page shown before this one in this tab (kept by <BackTrail /> in Routes). */
-let previous: string | null = null;
-let current: string | null = null;
+/**
+ * The page before each visit in this tab, by react-router's key for that
+ * visit (kept by <BackTrail /> in Routes as each page opens, before the page
+ * itself draws, so the words are never one step behind).
+ */
+const before = new Map<string, string | null>();
+let lastKey: string | null = null;
+let lastPath: string | null = null;
 
-/** Called on every page change; a redirect (replace) does not count as a page you were on. */
-export function recordPage(path: string, replaced: boolean) {
-  if (path === current) return;
-  if (!replaced && current) previous = current;
-  current = path;
+/** Called as every page opens; a redirect (replace) keeps the page before the one it replaced. */
+export function recordPage(key: string, path: string, replaced: boolean) {
+  if (!before.has(key)) {
+    before.set(
+      key,
+      replaced ? (lastKey ? (before.get(lastKey) ?? null) : null) : lastPath,
+    );
+  }
+  lastKey = key;
+  lastPath = path;
 }
 
-export const previousPage = () => previous;
+/** The page opened before this visit, or null (first page of the tab, or after a reload). */
+export const previousPage = (key: string) => before.get(key) ?? null;
 
 /** For the tests. */
 export function resetTrail() {
-  previous = null;
-  current = null;
+  before.clear();
+  lastKey = null;
+  lastPath = null;
 }
 
 /** Menu pages a Back can name, by the start of their address (NAVIGATION.* keys). */
@@ -67,7 +79,7 @@ export interface BackTarget {
 export function backTarget(
   canGoBack: boolean,
   fallback: string,
-  prev: string | null = previous,
+  prev: string | null,
 ): BackTarget {
   if (canGoBack && prev)
     return {

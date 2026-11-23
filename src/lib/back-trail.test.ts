@@ -10,16 +10,24 @@ import {
 describe('back trail', () => {
   beforeEach(() => resetTrail());
 
-  it('remembers the page before this one, not redirects', () => {
-    recordPage('/my_instructors', false);
-    recordPage('/profile/12', false);
-    expect(previousPage()).toBe('/my_instructors');
-    // A redirect replaces the page: what you were on before stays.
-    recordPage('/profile/12?tab=reviews', true);
-    expect(previousPage()).toBe('/my_instructors');
-    // The same page again changes nothing.
-    recordPage('/profile/12?tab=reviews', false);
-    expect(previousPage()).toBe('/my_instructors');
+  it('remembers the page before each visit, not redirects', () => {
+    recordPage('default', '/family', false);
+    recordPage('k1', '/my_instructors', false);
+    recordPage('k2', '/profile/12', false);
+    expect(previousPage('k2')).toBe('/my_instructors');
+    // A redirect replaces the page: the page before it carries over.
+    recordPage('k3', '/profile/12?tab=reviews', true);
+    expect(previousPage('k3')).toBe('/my_instructors');
+    // Drawing the same visit again changes nothing.
+    recordPage('k3', '/profile/12?tab=reviews', false);
+    expect(previousPage('k3')).toBe('/my_instructors');
+    // Going back to My Tutors, then opening Buy: Buy came from My Tutors.
+    recordPage('k1', '/my_instructors', false);
+    recordPage('k4', '/buy', false);
+    expect(previousPage('k4')).toBe('/my_instructors');
+    // The first page of the tab, or one unknown after a reload: nothing.
+    expect(previousPage('default')).toBeNull();
+    expect(previousPage('zz')).toBeNull();
   });
 
   it('names the place it goes back to', () => {
