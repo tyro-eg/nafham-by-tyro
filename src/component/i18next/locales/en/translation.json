@@ -1553,6 +1553,11 @@
     "REVIEWS": {
       "TITLE": "Latest reviews",
       "EMPTY": "No reviews yet. They'll appear here after your students rate their sessions."
+    },
+    "TODAY": {
+      "TITLE": "Today's sessions",
+      "NOW": "Now",
+      "TRIAL": "Free trial"
     }
   },
   "MY_SALARY": {

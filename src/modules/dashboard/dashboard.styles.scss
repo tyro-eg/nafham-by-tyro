@@ -956,3 +956,24 @@ $sd-radius: 2rem;
     }
   }
 }
+
+// ---------- the tutor's hero in the new look (23 Nov 2026) ----------
+// The navy band of the family home, with today's ruler under the text
+.sd-hero.sd-hero--ink {
+  @include ink-band(36rem);
+  grid-template-columns: minmax(0, 1fr);
+  background-image: none;
+  box-shadow: 0 16px 40px rgba($ink, 0.25);
+
+  .sd-hero__title {
+    font-weight: 600;
+  }
+
+  .sd-hero__message {
+    color: #a9bdd2;
+  }
+
+  .sd-hero__avatar.MuiAvatar-root {
+    color: $ink;
+  }
+}

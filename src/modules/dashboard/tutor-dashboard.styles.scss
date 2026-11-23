@@ -3,13 +3,10 @@
 
 // Tutor dashboard: builds on the shared .sd-* dashboard styles
 .tutor-dashboard {
-  // Narrower content area next to the sidebar
+  // One column: the text, then today's ruler across the full width (the
+  // picture on the side went with the new look, 23 Nov 2026)
   .sd-hero {
-    grid-template-columns: minmax(0, 1fr) 24rem;
-
-    @include respond(tab-port) {
-      grid-template-columns: minmax(0, 1fr);
-    }
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .sd-grid.td-grid {

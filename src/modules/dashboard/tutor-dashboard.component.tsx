@@ -31,7 +31,7 @@ import { targetProgress } from '../user/edit-profile/edit-profile.utils';
 import { useRtlClass } from '../../assets/utils/utils';
 import RatingSummary from '../../component/rating-summary/rating-summary.component';
 import type { SessionType } from '../../assets/types';
-import heroArt from '../../assets/images/newLanding/start-learning.webp';
+import TodayRuler from './today-ruler.component';
 import emptyArt from '../../assets/images/newLanding/rafiki.svg?url';
 import {
   formatHours,
@@ -284,7 +284,7 @@ const TutorDashboard: FC = () => {
     <div className={`student-dashboard tutor-dashboard ${rtlClass}`}>
       <div className="container sd-container">
         {/* ---------- Welcome ---------- */}
-        <section className="sd-hero">
+        <section className="sd-hero sd-hero--ink">
           <div className="sd-hero__content">
             <div className="sd-hero__identity">
               <Avatar
@@ -328,7 +328,8 @@ const TutorDashboard: FC = () => {
               </Button>
             </div>
           </div>
-          <img src={heroArt} alt="" className="sd-hero__art" />
+          {/* Today's sessions on an hour ruler (23 Nov 2026), in place of the picture */}
+          <TodayRuler sessions={sessions} now={now} />
         </section>
 
         {/* ---------- Highlights ---------- */}
