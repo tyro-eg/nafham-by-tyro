@@ -303,6 +303,11 @@ export type SessionType = {
     updated_at: string;
   };
   session_type: 'regular' | 'trial' | 'group';
+  /** Where it sits: hours of its package up to its end, or which free trial (23 Nov 2026) */
+  place?:
+    | { through: number; of: number }
+    | { trial: number; trial_max: number }
+    | null;
   start_time: string;
   status:
     | 'open'

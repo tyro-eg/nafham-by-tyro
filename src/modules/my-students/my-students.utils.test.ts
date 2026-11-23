@@ -126,3 +126,48 @@ describe('buildStudents: active follows the server', () => {
     expect(buildStudents([pkg], [])[0].active).toBe(true);
   });
 });
+
+describe('buildStudents: one hours meter per course (23 Nov 2026)', () => {
+  it("lists each of the student's packages with this tutor, fewest hours left first", () => {
+    const pkg = (id: number, course: string, hours: Record<string, number>) =>
+      ({
+        id,
+        original_hours: 12,
+        remaining_hours: hours.unscheduled ?? 0,
+        student: { id: 5, first_name: 'Omar', last_name: 'Adel' },
+        tutor: { first_name: 'Mona', last_name: 'F' },
+        grade_subject: { id, full_course_name: course },
+        hours: {
+          bought: 12,
+          moved_out: 0,
+          used: 0,
+          scheduled: 0,
+          unscheduled: 0,
+          consistent: true,
+          ...hours,
+        },
+      }) as unknown as Package;
+    const [student] = buildStudents(
+      [
+        pkg(1, 'IGCSE OL - G10 - Math', { used: 4, unscheduled: 8 }),
+        pkg(2, 'IB - DP2 - Physics', {
+          used: 9,
+          missed: 1,
+          scheduled: 1,
+          unscheduled: 1,
+        }),
+      ],
+      [],
+    );
+    expect(student.lines.map((l) => [l.id, l.left, l.low])).toEqual([
+      [2, 2, true],
+      [1, 8, false],
+    ]);
+    expect(student.lines[0]).toMatchObject({
+      done: 8,
+      missed: 1,
+      booked: 1,
+      free: 1,
+    });
+  });
+});

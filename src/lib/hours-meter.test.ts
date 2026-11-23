@@ -57,6 +57,11 @@ describe('hours meter', () => {
       meterLine(pkg(1, { used: 10, scheduled: 1, unscheduled: 1 }), 'P')!.low,
     ).toBe(true);
     expect(meterLine(pkg(1, { used: 0 }), 'P')).toBeNull();
+    // Used up is not "low": nothing is left to run out of
+    expect(meterLine(pkg(1, { used: 8 }), 'P')).toMatchObject({
+      low: false,
+      usedUp: true,
+    });
     expect(meterLine(pkg(1, undefined), 'P')).toBeNull();
     // An older server without `missed`: all used hours read as done
     expect(meterLine(pkg(1, { used: 4, unscheduled: 4 }), 'P')).toMatchObject({

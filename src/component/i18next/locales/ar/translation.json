@@ -3366,6 +3366,11 @@
     "TRIAL_DONE": "{{count}} منجزة",
     "TRIAL_BOOKED": "{{count}} محجوزة",
     "TRIAL_GONE": "{{count}} ملغاة أو فائتة",
-    "TRIAL_LEFT": "{{left}} متبقية من {{max}}"
+    "TRIAL_LEFT": "{{left}} متبقية من {{max}}",
+    "LEFT_CHIP": "{{h}} س متبقية",
+    "PLACE_HOUR": "الساعة {{through}} من {{of}}",
+    "PLACE_HOURS": "{{through}} من {{of}} س",
+    "PLACE_TRIAL": "حصة تجريبية {{n}} من {{max}}",
+    "USED_UP": "انتهت"
   }
 }

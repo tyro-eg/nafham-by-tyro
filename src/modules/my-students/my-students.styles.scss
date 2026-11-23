@@ -457,3 +457,60 @@ $ms-radius: 2rem;
   min-height: 0;
   background: none;
 }
+
+// One hours meter per course on a student card (23 Nov 2026)
+.ms-meters {
+  display: grid;
+  gap: 0.9rem;
+  margin: 0.8rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ms-meter {
+  display: grid;
+  gap: 0.4rem;
+
+  &__head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.8rem;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: $ink;
+  }
+
+  &__left {
+    flex: none;
+    padding: 0.1rem 0.8rem;
+    border-radius: 999px;
+    background: #e7f8f3;
+    color: #127a67;
+    font-size: 1.15rem;
+
+    &--low {
+      background: #fde2e3;
+      color: #e5484d;
+    }
+
+    &--done {
+      background: #eef2f6;
+      color: $text-body;
+    }
+  }
+
+  &__nums {
+    font-size: 1.15rem;
+    color: $text-body;
+  }
+}
+
+.hc-meter--small {
+  height: 0.8rem;
+}
+
+.ms-trials {
+  margin: 1rem 0 0;
+  padding-top: 1rem;
+}

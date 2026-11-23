@@ -20,7 +20,10 @@ export interface MeterLine {
   total: number;
   /** booked + free: hours still ahead */
   left: number;
+  /** Some hours ahead, but 2 or fewer */
   low: boolean;
+  /** Nothing ahead: every hour taught or missed */
+  usedUp: boolean;
 }
 
 export interface MeterTotals {
@@ -63,7 +66,8 @@ export function meterLine(pkg: Package, course: string): MeterLine | null {
     free: round(free),
     total,
     left,
-    low: left <= LOW_HOURS,
+    low: left > 0 && left <= LOW_HOURS,
+    usedUp: left === 0,
   };
 }
 

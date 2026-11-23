@@ -2,6 +2,7 @@ import type { Package } from '../../assets/types';
 import type { SummaryStudent } from '../../hooks/useSessions';
 import { subjectName } from '../dashboard/dashboard.utils';
 import { hoursLeft } from '../../lib/package-hours';
+import { meterLine, orderLines, type MeterLine } from '../../lib/hours-meter';
 
 export interface StudentSummary {
   id: number;
@@ -14,6 +15,8 @@ export interface StudentSummary {
   hoursPurchased: number;
   completedSessions: number;
   hoursTaught: number;
+  /** One hours meter per course (done, missed, booked, free), 23 Nov 2026 */
+  lines: MeterLine[];
   /** When the next booked session starts (ISO), if any */
   nextSessionAt?: string;
   /** The last completed session: when, and which course */
@@ -56,6 +59,7 @@ export const buildStudents = (
         hoursPurchased: 0,
         completedSessions: 0,
         hoursTaught: 0,
+        lines: [],
         active: false,
       };
       byId.set(id, student);
@@ -82,6 +86,11 @@ export const buildStudents = (
     s.hoursRemaining += hoursLeft(pkg);
     s.hoursPurchased += Number(pkg.original_hours) || 0;
     addCourse(s, pkg.grade_subject?.full_course_name);
+    const line = meterLine(
+      pkg,
+      subjectName(pkg.grade_subject?.full_course_name),
+    );
+    if (line) s.lines = orderLines([...s.lines, line]);
   });
 
   summaryStudents.forEach((row) => {

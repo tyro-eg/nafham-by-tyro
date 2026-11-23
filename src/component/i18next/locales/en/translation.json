@@ -3090,6 +3090,11 @@
     "TRIAL_DONE": "{{count}} done",
     "TRIAL_BOOKED": "{{count}} booked",
     "TRIAL_GONE": "{{count}} cancelled or missed",
-    "TRIAL_LEFT": "{{left}} left of {{max}}"
+    "TRIAL_LEFT": "{{left}} left of {{max}}",
+    "LEFT_CHIP": "{{h}} h left",
+    "PLACE_HOUR": "Hour {{through}} of {{of}}",
+    "PLACE_HOURS": "{{through}} of {{of}} h",
+    "PLACE_TRIAL": "Free trial {{n}} of {{max}}",
+    "USED_UP": "Used up"
   }
 }
