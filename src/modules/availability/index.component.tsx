@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next';
 import { addDays } from 'date-fns';
 import {
   Button,
-  Chip,
   Dialog,
   DialogActions,
   DialogContent,
@@ -49,7 +48,6 @@ import {
   isOpen,
   nextEditableSlot,
   paintModeFor,
-  pendingCounts,
   slotDate,
   slotEnd,
   slotKey,
@@ -63,6 +61,8 @@ import {
   type SavedSlot,
 } from './availability.utils';
 
+import { useInfiniteSessions } from '../../hooks/useSessions';
+import { pendingRanges, rangeHours } from './availability-blocks';
 import './availability.styles.scss';
 
 const toSaved = (record: RawAvailability): SavedSlot => ({
@@ -123,6 +123,15 @@ const AvailabilityPage: FC = () => {
     range.to,
   );
   const save = useSaveAvailability();
+  // The week's sessions name what is booked on the grid
+  const sessionsQuery = useInfiniteSessions(200, {
+    from: weekStart.toISOString(),
+    to: addDays(weekStart, 7).toISOString(),
+  });
+  const weekSessions = useMemo(
+    () => sessionsQuery.data?.pages.flatMap((page) => page.data) ?? [],
+    [sessionsQuery.data],
+  );
 
   // Merge fetched slots into the saved map (slots from other weeks stay known)
   useEffect(() => {
@@ -355,8 +364,23 @@ const AvailabilityPage: FC = () => {
     }
   };
 
-  const counts = pendingCounts(pending);
   const hasPending = pending.size > 0;
+  const changes = useMemo(() => pendingRanges(pending), [pending]);
+  // "Thu 11:30 AM – 2:30 PM": what the save bar lists
+  const rangeText = useCallback(
+    (range: { start: Date; end: Date }) => {
+      const day = new Intl.DateTimeFormat(i18n.language, { weekday: 'short' });
+      const time = (d: Date) =>
+        new Intl.DateTimeFormat(i18n.language, {
+          hour: 'numeric',
+          minute: d.getMinutes() ? '2-digit' : undefined,
+        }).format(d);
+      return `${day.format(range.start)} ${time(range.start)} – ${time(range.end)}`;
+    },
+    [i18n.language],
+  );
+  const hoursText = (hours: number) =>
+    Number.isInteger(hours) ? String(hours) : hours.toFixed(1);
   const summary = weekSummary(saved, weekStart);
   const thisWeek = weekStartFor(today).getTime() === weekStart.getTime();
   const weekLabel = useMemo(() => {
@@ -465,44 +489,37 @@ const AvailabilityPage: FC = () => {
           </div>
         </div>
 
-        <div className="av-summary">
+        <p className="av-totals">
           {isLoading ? (
-            <Skeleton width={220} height={32} />
+            <Skeleton width={260} height={24} />
           ) : (
             <>
-              <Chip
-                className="av-summary__chip av-summary__chip--open"
-                label={t('AVAILABILITY.STATS.OPEN', {
-                  hours: hoursFromSlots(summary.open),
+              <b>
+                {t('AVAILABILITY.TOTALS.OPEN', {
+                  hours: hoursText(
+                    hoursFromSlots(
+                      summary.open + summary.booked + summary.held,
+                    ),
+                  ),
                 })}
-              />
-              <Chip
-                className="av-summary__chip av-summary__chip--booked"
-                label={t('AVAILABILITY.STATS.BOOKED', {
-                  hours: hoursFromSlots(summary.booked),
+              </b>
+              <span>
+                {' · '}
+                {t('AVAILABILITY.TOTALS.BOOKED', {
+                  hours: hoursText(hoursFromSlots(summary.booked)),
                 })}
-              />
-              {summary.held > 0 && (
-                <Chip
-                  className="av-summary__chip av-summary__chip--held"
-                  label={t('AVAILABILITY.STATS.HELD', {
-                    hours: hoursFromSlots(summary.held),
-                  })}
-                />
-              )}
+                {summary.held > 0 &&
+                  ` · ${t('AVAILABILITY.TOTALS.HELD', {
+                    hours: hoursText(hoursFromSlots(summary.held)),
+                  })}`}
+                {' · '}
+                {t('AVAILABILITY.TOTALS.FREE', {
+                  hours: hoursText(hoursFromSlots(summary.open)),
+                })}
+              </span>
             </>
           )}
-          <ul className="av-legend" aria-label={t('AVAILABILITY.LEGEND.TITLE')}>
-            {(
-              ['available', 'reserved', 'held', 'adding', 'removing'] as const
-            ).map((state) => (
-              <li key={state} className="av-legend__item">
-                <span className={`av-legend__swatch av-cell--${state}`} />
-                {t(`AVAILABILITY.STATE.${state.toUpperCase()}`)}
-              </li>
-            ))}
-          </ul>
-        </div>
+        </p>
 
         <AvailabilityGrid
           days={days}
@@ -514,12 +531,46 @@ const AvailabilityPage: FC = () => {
           onDayAction={handleDayAction}
           dayLocked={dayLocked}
           today={today}
+          sessions={weekSessions}
         />
+
+        <ul className="av-legend" aria-label={t('AVAILABILITY.LEGEND.TITLE')}>
+          {(
+            ['open', 'booked', 'trial', 'held', 'adding', 'removing'] as const
+          ).map((key) => (
+            <li key={key} className="av-legend__item">
+              <span className={`av-legend__swatch av-legend__swatch--${key}`} />
+              {t(`AVAILABILITY.LEGEND.${key.toUpperCase()}`)}
+            </li>
+          ))}
+        </ul>
 
         {hasPending && (
           <div className="av-savebar" role="status">
             <span className="av-savebar__text">
-              {t('AVAILABILITY.PENDING', { ...counts })}
+              <b>{t('AVAILABILITY.SAVEBAR.NOT_SAVED')}</b>
+              {changes.remove.length > 0 && (
+                <span className="av-savebar__closing">
+                  {t('AVAILABILITY.SAVEBAR.CLOSING', {
+                    hours: hoursText(rangeHours(changes.remove)),
+                  })}
+                  {' · '}
+                  {changes.remove.slice(0, 2).map(rangeText).join(', ')}
+                  {changes.remove.length > 2 &&
+                    ` ${t('AVAILABILITY.SAVEBAR.MORE', { count: changes.remove.length - 2 })}`}
+                </span>
+              )}
+              {changes.add.length > 0 && (
+                <span className="av-savebar__opening">
+                  {t('AVAILABILITY.SAVEBAR.OPENING', {
+                    hours: hoursText(rangeHours(changes.add)),
+                  })}
+                  {' · '}
+                  {changes.add.slice(0, 2).map(rangeText).join(', ')}
+                  {changes.add.length > 2 &&
+                    ` ${t('AVAILABILITY.SAVEBAR.MORE', { count: changes.add.length - 2 })}`}
+                </span>
+              )}
             </span>
             <div className="av-savebar__actions">
               <Button

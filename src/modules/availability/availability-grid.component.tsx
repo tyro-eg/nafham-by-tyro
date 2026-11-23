@@ -15,6 +15,9 @@ import {
   LockRounded,
 } from '@mui/icons-material';
 
+import type { SessionType } from '../../assets/types';
+import { subjectName } from '../dashboard/dashboard.utils';
+import { dayHours, dayRuns, type Run } from './availability-blocks';
 import {
   formatSlotTime,
   isLocked,
@@ -47,6 +50,8 @@ interface AvailabilityGridProps {
   /** Whole day is in the past: no quick-fill menu */
   dayLocked: (dayIndex: number) => boolean;
   today: Date;
+  /** The tutor's sessions this week, to name what is booked */
+  sessions?: SessionType[];
 }
 
 const DAY_ACTIONS: DayAction[] = [
@@ -72,6 +77,7 @@ const AvailabilityGrid: FC<AvailabilityGridProps> = ({
   onDayAction,
   dayLocked,
   today,
+  sessions = [],
 }) => {
   const { t, i18n } = useTranslation();
   const language = i18n.language;
@@ -99,6 +105,16 @@ const AvailabilityGrid: FC<AvailabilityGridProps> = ({
       ),
     [days, rows],
   );
+
+  const states = days.map((_, d) =>
+    cells[d].map((cell) => cellInfo(cell.key).state),
+  );
+  const pct = (rowsOrMinutes: number) =>
+    `${(rowsOrMinutes / rows.length) * 100}%`;
+  const hoursText = (hours: number) =>
+    Number.isInteger(hours) ? String(hours) : hours.toFixed(1);
+  const timeOf = (d: number, row: number) =>
+    formatSlotTime(slotDate(days[d], rows[0] + row * 30), language);
 
   const weekdayFormat = useMemo(
     () => new Intl.DateTimeFormat(language, { weekday: 'short' }),
@@ -200,13 +216,18 @@ const AvailabilityGrid: FC<AvailabilityGridProps> = ({
         aria-label={t('AVAILABILITY.TITLE')}
       >
         {/* Header row */}
-        <div className="av-grid__corner" aria-hidden="true" />
+        <div
+          className="av-grid__corner"
+          style={{ gridRow: 1, gridColumn: 1 }}
+          aria-hidden="true"
+        />
         {days.map((day, dayIndex) => {
           const locked = dayLocked(dayIndex);
           return (
             <button
               key={day.toISOString()}
               type="button"
+              style={{ gridRow: 1, gridColumn: dayIndex + 2 }}
               className={`av-day${isToday(day) ? ' av-day--today' : ''}${
                 locked ? ' av-day--locked' : ''
               }`}
@@ -220,6 +241,30 @@ const AvailabilityGrid: FC<AvailabilityGridProps> = ({
                 {weekdayFormat.format(day)}
               </span>
               <span className="av-day__date">{dayFormat.format(day)}</span>
+              <span
+                className={`av-day__hours${(() => {
+                  const h = dayHours(states[dayIndex]);
+                  return locked || (h.now === 0 && h.after === 0)
+                    ? ' av-day__hours--none'
+                    : h.now !== h.after
+                      ? ' av-day__hours--change'
+                      : '';
+                })()}`}
+              >
+                {(() => {
+                  const h = dayHours(states[dayIndex]);
+                  if (locked) return t('AVAILABILITY.DAY.PAST');
+                  if (h.now !== h.after)
+                    return t('AVAILABILITY.DAY.CHANGE', {
+                      from: hoursText(h.now),
+                      to: hoursText(h.after),
+                    });
+                  if (h.now === 0) return t('AVAILABILITY.DAY.CLOSED');
+                  return t('AVAILABILITY.DAY.OPEN', {
+                    hours: hoursText(h.now),
+                  });
+                })()}
+              </span>
               {!locked && (
                 <ExpandMoreRounded className="av-day__chevron" aria-hidden />
               )}
@@ -233,6 +278,7 @@ const AvailabilityGrid: FC<AvailabilityGridProps> = ({
           return [
             <div
               key={`label-${minutes}`}
+              style={{ gridRow: rowIndex + 2, gridColumn: 1 }}
               className={`av-time${onHour ? ' av-time--hour' : ''}`}
               aria-hidden="true"
             >
@@ -260,6 +306,7 @@ const AvailabilityGrid: FC<AvailabilityGridProps> = ({
                   key={cell.key}
                   type="button"
                   data-key={cell.key}
+                  style={{ gridRow: rowIndex + 2, gridColumn: dayIndex + 2 }}
                   className={`av-cell av-cell--${info.state}${
                     onHour ? ' av-cell--hour' : ''
                   }${info.state === 'past' && info.hadSlot ? ' av-cell--past-open' : ''}`}
@@ -283,6 +330,146 @@ const AvailabilityGrid: FC<AvailabilityGridProps> = ({
               );
             }),
           ];
+        })}
+
+        {/* What the cells add up to, drawn over them (taps go through) */}
+        {days.map((day, d) => {
+          const runs = dayRuns(states[d]);
+          const covered = new Set<number>();
+          const cards = sessions
+            .filter((session) => {
+              const start = new Date(session.start_time);
+              return (
+                session.status !== 'cancelled' &&
+                start.getFullYear() === day.getFullYear() &&
+                start.getMonth() === day.getMonth() &&
+                start.getDate() === day.getDate()
+              );
+            })
+            .map((session) => {
+              const start = new Date(session.start_time);
+              const end = new Date(session.end_time);
+              const from =
+                (start.getHours() * 60 + start.getMinutes() - rows[0]) / 30;
+              const length = Math.max(
+                1,
+                (end.getTime() - start.getTime()) / (30 * 60 * 1000),
+              );
+              for (let r = Math.floor(from); r < from + length; r += 1)
+                covered.add(r);
+              return { session, from, length };
+            })
+            .filter((card) => card.from >= 0 && card.from < rows.length);
+          const uncoveredBooked = runs.filter(
+            (run) =>
+              run.kind === 'reserved' &&
+              !Array.from({ length: run.length }, (_, i) => run.start + i).some(
+                (r) => covered.has(r),
+              ),
+          );
+          const nowRow =
+            isToday(day) &&
+            (today.getHours() * 60 + today.getMinutes() - rows[0]) / 30;
+          const place = (run: { start: number; length: number }) => ({
+            top: pct(run.start),
+            height: pct(run.length),
+          });
+          const runLabel = (run: Run) =>
+            `${timeOf(d, run.start)} – ${timeOf(d, run.start + run.length)}`;
+          return (
+            <div
+              key={`layer-${day.toISOString()}`}
+              className="av-layer"
+              style={{
+                gridColumn: d + 2,
+                gridRow: `2 / span ${rows.length}`,
+              }}
+              aria-hidden="true"
+            >
+              {runs
+                .filter((run) => run.kind === 'open')
+                .map((run) => (
+                  <div
+                    key={`open-${run.start}`}
+                    className="av-block av-block--open"
+                    style={place(run)}
+                  >
+                    {run.length >= 2 && (
+                      <span className="av-block__label">{runLabel(run)}</span>
+                    )}
+                  </div>
+                ))}
+              {cards.map(({ session, from, length }) => (
+                <div
+                  key={`s-${session.id}`}
+                  className={`av-card${
+                    session.session_type === 'trial' ? ' av-card--trial' : ''
+                  }`}
+                  style={{ top: pct(from), height: pct(length) }}
+                >
+                  <b dir="auto">
+                    {session.session_type === 'trial'
+                      ? t('AVAILABILITY.BLOCK.TRIAL')
+                      : subjectName(session.grade_subject?.full_course_name)}
+                  </b>
+                  <span dir="auto">
+                    {session.student?.first_name}
+                    {length >= 2 &&
+                      ` · ${formatSlotTime(new Date(session.start_time), language)}`}
+                  </span>
+                </div>
+              ))}
+              {uncoveredBooked.map((run) => (
+                <div
+                  key={`r-${run.start}`}
+                  className="av-card"
+                  style={place(run)}
+                >
+                  <b>{t('AVAILABILITY.BLOCK.BOOKED')}</b>
+                </div>
+              ))}
+              {runs
+                .filter((run) => run.kind === 'held')
+                .map((run) => (
+                  <div
+                    key={`h-${run.start}`}
+                    className="av-card av-card--held"
+                    style={place(run)}
+                  >
+                    <span>
+                      {t('AVAILABILITY.BLOCK.KEPT', {
+                        student:
+                          cellInfo(cells[d][run.start].key).heldFor ||
+                          t('AVAILABILITY.HELD_STUDENT'),
+                      })}
+                    </span>
+                  </div>
+                ))}
+              {runs
+                .filter(
+                  (run) => run.kind === 'adding' || run.kind === 'removing',
+                )
+                .map((run) => (
+                  <div
+                    key={`${run.kind}-${run.start}`}
+                    className={`av-block av-block--${run.kind}`}
+                    style={place(run)}
+                  >
+                    <span className="av-block__tag">
+                      {t(
+                        run.kind === 'adding'
+                          ? 'AVAILABILITY.BLOCK.OPENING'
+                          : 'AVAILABILITY.BLOCK.CLOSING',
+                        { hours: hoursText(run.length / 2) },
+                      )}
+                    </span>
+                  </div>
+                ))}
+              {nowRow !== false && nowRow >= 0 && nowRow <= rows.length && (
+                <span className="av-now" style={{ top: pct(nowRow) }} />
+              )}
+            </div>
+          );
         })}
       </div>
 

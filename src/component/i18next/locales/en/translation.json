@@ -1952,13 +1952,14 @@
     "NEXT_WEEK": "Next week",
     "THIS_WEEK": "This week",
     "SHOW_NIGHT": "Show night hours",
-    "STATS": {
-      "OPEN": "{{hours}} open hours this week",
-      "BOOKED": "{{hours}} booked",
-      "HELD": "{{hours}} held"
-    },
     "LEGEND": {
-      "TITLE": "Legend"
+      "TITLE": "Legend",
+      "OPEN": "Open",
+      "BOOKED": "Booked",
+      "TRIAL": "Free trial",
+      "HELD": "Kept for a student",
+      "ADDING": "Opening (not saved)",
+      "REMOVING": "Closing (not saved)"
     },
     "STATE": {
       "EMPTY": "Not available",
@@ -1994,13 +1995,37 @@
       "ALL_EXIST": "Those weeks already have all of these slots.",
       "DONE": "Added {{count}} slots across the next {{weeks}} week(s)."
     },
-    "PENDING": "{{add}} to open · {{remove}} to close",
     "SAVE": "Save changes",
     "DISCARD": "Discard",
     "DISCARD_DIALOG": "Cancel",
     "SAVED": "Availability saved",
     "SAVE_FAILED": "Could not save your availability.",
-    "LOAD_FAILED": "Could not load availability."
+    "LOAD_FAILED": "Could not load availability.",
+    "DAY": {
+      "OPEN": "{{hours}} h open",
+      "CLOSED": "Closed",
+      "PAST": "Past",
+      "CHANGE": "{{from}} h → {{to}} h"
+    },
+    "BLOCK": {
+      "BOOKED": "Booked",
+      "TRIAL": "Free trial",
+      "KEPT": "Kept for {{student}}",
+      "OPENING": "Opening {{hours}} h",
+      "CLOSING": "Closing {{hours}} h"
+    },
+    "TOTALS": {
+      "OPEN": "{{hours}} h open",
+      "BOOKED": "{{hours}} h booked",
+      "HELD": "{{hours}} h kept for students",
+      "FREE": "{{hours}} h free to book"
+    },
+    "SAVEBAR": {
+      "NOT_SAVED": "Not saved yet",
+      "OPENING": "Opening {{hours}} h",
+      "CLOSING": "Closing {{hours}} h",
+      "MORE": "+{{count}} more"
+    }
   },
   "HOMEWORK": {
     "TITLE": "Homework",

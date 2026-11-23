@@ -2082,13 +2082,14 @@
     "NEXT_WEEK": "الأسبوع التالي",
     "THIS_WEEK": "هذا الأسبوع",
     "SHOW_NIGHT": "إظهار ساعات الليل",
-    "STATS": {
-      "OPEN": "{{hours}} ساعة متاحة هذا الأسبوع",
-      "BOOKED": "{{hours}} محجوزة",
-      "HELD": "{{hours}} محجوزة مؤقتاً"
-    },
     "LEGEND": {
-      "TITLE": "مفتاح الألوان"
+      "TITLE": "دليل الألوان",
+      "OPEN": "متاح",
+      "BOOKED": "محجوز",
+      "TRIAL": "حصة تجريبية",
+      "HELD": "محجوز لطالب",
+      "ADDING": "فتح (غير محفوظ)",
+      "REMOVING": "إغلاق (غير محفوظ)"
     },
     "STATE": {
       "EMPTY": "غير متاح",
@@ -2128,13 +2129,37 @@
       "ALL_EXIST": "هذه الأسابيع تحتوي بالفعل على كل هذه الفترات.",
       "DONE": "تمت إضافة {{count}} فترة خلال الأسابيع الـ{{weeks}} القادمة."
     },
-    "PENDING": "{{add}} للفتح · {{remove}} للإغلاق",
     "SAVE": "حفظ التغييرات",
     "DISCARD": "تجاهل",
     "DISCARD_DIALOG": "إلغاء",
     "SAVED": "تم حفظ أوقات التواجد",
     "SAVE_FAILED": "تعذر حفظ أوقات التواجد.",
-    "LOAD_FAILED": "تعذر تحميل أوقات التواجد."
+    "LOAD_FAILED": "تعذر تحميل أوقات التواجد.",
+    "DAY": {
+      "OPEN": "{{hours}} س متاحة",
+      "CLOSED": "مغلق",
+      "PAST": "انتهى",
+      "CHANGE": "{{from}} س ← {{to}} س"
+    },
+    "BLOCK": {
+      "BOOKED": "محجوزة",
+      "TRIAL": "حصة تجريبية",
+      "KEPT": "محجوزة لـ {{student}}",
+      "OPENING": "فتح {{hours}} س",
+      "CLOSING": "إغلاق {{hours}} س"
+    },
+    "TOTALS": {
+      "OPEN": "{{hours}} س متاحة",
+      "BOOKED": "{{hours}} س محجوزة",
+      "HELD": "{{hours}} س محجوزة لطلاب",
+      "FREE": "{{hours}} س متاحة للحجز"
+    },
+    "SAVEBAR": {
+      "NOT_SAVED": "لم يُحفظ بعد",
+      "OPENING": "فتح {{hours}} س",
+      "CLOSING": "إغلاق {{hours}} س",
+      "MORE": "+{{count}} أخرى"
+    }
   },
   "HOMEWORK": {
     "TITLE": "الواجبات",
