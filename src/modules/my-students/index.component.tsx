@@ -19,8 +19,8 @@ import {
   SearchRounded,
 } from '@mui/icons-material';
 
-import { useSessions } from '../../hooks/useSessions';
-import { usePackages } from '../../hooks/usePackages';
+import { useSessionSummary } from '../../hooks/useSessions';
+import { useAllPackages } from '../../hooks/usePackages';
 import { useStartConversation } from '../../hooks/useStreamChat';
 import { useRtlClass } from '../../assets/utils/utils';
 import { formatHours, subjectName } from '../dashboard/dashboard.utils';
@@ -29,8 +29,6 @@ import emptyArt from '../../assets/images/newLanding/rafiki.svg?url';
 
 import './my-students.styles.scss';
 
-// Enough history to list every student without paging through the API
-const HISTORY_SIZE = 100;
 const TONES = ['sky', 'mint', 'sun', 'lilac', 'coral'] as const;
 
 type StatusFilter = 'all' | 'active' | 'inactive';
@@ -46,21 +44,19 @@ const MyStudents: FC = () => {
   const [course, setCourse] = useState('all');
   const [status, setStatus] = useState<StatusFilter>('all');
 
-  const sessionsQuery = useSessions(1, HISTORY_SIZE);
-  const packagesQuery = usePackages(1, HISTORY_SIZE);
-  const loading = sessionsQuery.isLoading || packagesQuery.isLoading;
+  const summaryQuery = useSessionSummary();
+  const packagesQuery = useAllPackages();
+  const loading = summaryQuery.isLoading || packagesQuery.isLoading;
 
-  const now = useMemo(() => new Date(), []);
   const locale = `${i18n.language}-u-nu-latn`;
 
   const students = useMemo(
     () =>
       buildStudents(
         packagesQuery.data?.data || [],
-        sessionsQuery.data?.data || [],
-        now,
+        summaryQuery.data?.students || [],
       ),
-    [packagesQuery.data, sessionsQuery.data, now],
+    [packagesQuery.data, summaryQuery.data],
   );
 
   const courses = useMemo(
@@ -321,11 +317,11 @@ const MyStudents: FC = () => {
                     <div>
                       <dt>{t('MY_STUDENTS.CARD.NEXT')}</dt>
                       <dd>
-                        {student.nextSession ? (
+                        {student.nextSessionAt ? (
                           <>
                             <CalendarMonthRounded />
-                            {formatDate(student.nextSession.start_time)} ·{' '}
-                            {formatTime(student.nextSession.start_time)}
+                            {formatDate(student.nextSessionAt)} ·{' '}
+                            {formatTime(student.nextSessionAt)}
                           </>
                         ) : (
                           <span className="ms-muted">
@@ -343,16 +339,13 @@ const MyStudents: FC = () => {
                         })}
                       </dd>
                     </div>
-                    {student.lastSession && (
+                    {student.lastSessionAt && (
                       <div>
                         <dt>{t('MY_STUDENTS.CARD.LAST')}</dt>
                         <dd>
-                          {formatDate(student.lastSession.start_time)} ·{' '}
+                          {formatDate(student.lastSessionAt)} ·{' '}
                           <span dir="auto">
-                            {subjectName(
-                              student.lastSession.grade_subject
-                                ?.full_course_name,
-                            )}
+                            {subjectName(student.lastCourse)}
                           </span>
                         </dd>
                       </div>

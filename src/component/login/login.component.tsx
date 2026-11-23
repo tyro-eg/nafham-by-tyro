@@ -1,25 +1,22 @@
-// TODO: Uncomment when backend is ready
-// import { useState } from 'react';
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import {
   Button,
-  // TODO: Uncomment when backend is ready
-  // Dialog,
-  // IconButton,
+  Dialog,
+  IconButton,
+  InputAdornment,
   InputLabel,
   TextField as MuiTextField,
 } from '@mui/material';
-// TODO: Uncomment when backend is ready
-// import { Close } from '@mui/icons-material';
+import { Close, Visibility, VisibilityOff } from '@mui/icons-material';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { loginSchema, type LoginFormData } from '../../schemas/authSchemas';
 import { useRtlClass } from '../../assets/utils/utils';
 
 import './login.styles.scss';
-// TODO: Uncomment when backend is ready
-// import ResetPasswordModal from '../../modals/reset-password/reset-password-modal.component';
+import ResetPasswordModal from '../../modals/reset-password/reset-password-modal.component';
 import { useSignIn } from '../../hooks/useAuth';
 import { getHomePath } from '../../assets/utils/home-path';
 
@@ -27,8 +24,10 @@ const Login = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const rtlClass = useRtlClass();
-  // TODO: Uncomment when backend is ready
-  // const [openForgetPasswordModal, setOpenForgetPasswordModal] = useState(false);
+  // The server has no self-service reset: the window says how to get a new
+  // password from support (the Admin's "New password").
+  const [openForgetPasswordModal, setOpenForgetPasswordModal] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const signInMutation = useSignIn();
 
@@ -44,12 +43,9 @@ const Login = () => {
     },
   });
 
-  // TODO: Uncomment when backend is ready
-  // const handleCloseForgetPasswordModal = () => {
-  //   setOpenForgetPasswordModal(false);
-  // };
-
-  const goToTerms = () => navigate('/terms');
+  const handleCloseForgetPasswordModal = () => {
+    setOpenForgetPasswordModal(false);
+  };
 
   const onSubmit = async (values: LoginFormData) => {
     try {
@@ -98,14 +94,13 @@ const Login = () => {
             <InputLabel htmlFor="password">
               {t('LOGIN.LOGIN_PASSWORD')}
             </InputLabel>
-            {/* TODO: Uncomment when backend is ready */}
-            {/* <Button
+            <Button
               variant="text"
               className={`forget-password-btn ${rtlClass}`}
               onClick={() => setOpenForgetPasswordModal(true)}
             >
               <span>{t('LOGIN.FORGET_PASSWORD')}</span>
-            </Button> */}
+            </Button>
           </div>
           <Controller
             name="password"
@@ -115,13 +110,30 @@ const Login = () => {
                 {...field}
                 placeholder={t('LOGIN.LOGIN_PASSWORD_INPUT_PLACEHOLDER')}
                 variant="outlined"
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 className="custom-input-style"
                 id="password"
                 autoComplete="current-password"
                 error={!!errors.password}
                 helperText={errors.password?.message}
                 fullWidth
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        onClick={() => setShowPassword((shown) => !shown)}
+                        edge="end"
+                        aria-label={
+                          showPassword
+                            ? t('LOGIN.HIDE_PASSWORD')
+                            : t('LOGIN.SHOW_PASSWORD')
+                        }
+                      >
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
               />
             )}
           />
@@ -137,6 +149,18 @@ const Login = () => {
         >
           {t('LOGIN.LOGIN_SUBMIT_BTN')}
         </Button>
+        {/* Sign in needs no consent line: the terms are agreed at sign-up */}
+        <p className="login-container__or">{t('LOGIN.OR_SHORT')}</p>
+        <Button
+          component={Link}
+          to="/trial"
+          variant="outlined"
+          size="large"
+          className="login-container__trial"
+          fullWidth
+        >
+          {t('LOGIN.FREE_TRIAL')}
+        </Button>
         <div className="no-account">
           <p className="register-text">
             {t('LOGIN.NO_ACCOUNT')}{' '}
@@ -145,36 +169,8 @@ const Login = () => {
             </Link>
           </p>
         </div>
-        {/* <div className="social-login">
-              <p className="or-text">{t('LOGIN.OR')}</p>
-              <Button
-                variant="outlined"
-                startIcon={<Facebook />}
-                className="social-btn"
-                fullWidth
-              >
-                Facebook
-              </Button>
-              <Button
-                variant="outlined"
-                startIcon={<Google />}
-                className="social-btn"
-                fullWidth
-              >
-                Google
-              </Button>
-            </div> */}
-        <div className="term-body">
-          <p className="term-first-text">{t('REGISTER.TERMS')}</p>
-          <Button onClick={goToTerms} variant="text">
-            <span className="term-second-text">
-              {t('REGISTER.TERMS_GREEN')}
-            </span>
-          </Button>
-        </div>
       </form>
-      {/* TODO: Uncomment when backend is ready */}
-      {/* {openForgetPasswordModal && (
+      {openForgetPasswordModal && (
         <Dialog
           maxWidth="xs"
           fullWidth
@@ -198,7 +194,7 @@ const Login = () => {
           </IconButton>
           <ResetPasswordModal handleClose={handleCloseForgetPasswordModal} />
         </Dialog>
-      )} */}
+      )}
     </div>
   );
 };

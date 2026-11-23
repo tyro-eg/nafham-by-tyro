@@ -1,5 +1,7 @@
-import type { Package, SessionType } from '../../assets/types';
-import { sessionHours, subjectName } from '../dashboard/dashboard.utils';
+import type { Package } from '../../assets/types';
+import type { SummaryStudent } from '../../hooks/useSessions';
+import { subjectName } from '../dashboard/dashboard.utils';
+import { hoursLeft } from '../../lib/package-hours';
 
 export interface StudentSummary {
   id: number;
@@ -12,20 +14,23 @@ export interface StudentSummary {
   hoursPurchased: number;
   completedSessions: number;
   hoursTaught: number;
-  nextSession?: SessionType;
-  lastSession?: SessionType;
+  /** When the next booked session starts (ISO), if any */
+  nextSessionAt?: string;
+  /** The last completed session: when, and which course */
+  lastSessionAt?: string;
+  lastCourse?: string;
   active: boolean;
 }
 
 /**
- * Builds the tutor's student list from their packages and sessions.
+ * Builds the tutor's student list from their packages and the server's
+ * per-student summary (sessions taught, hours, courses, next session).
  * A student counts as enrolled if they have a package or a session with
  * this tutor; "active" means hours left or an upcoming session.
  */
 export const buildStudents = (
   packages: Package[],
-  sessions: SessionType[],
-  now: Date,
+  summaryStudents: SummaryStudent[],
 ): StudentSummary[] => {
   const byId = new Map<number, StudentSummary>();
 
@@ -72,54 +77,33 @@ export const buildStudents = (
       pkg.student.email,
       pkg.student.avatar,
     );
-    s.hoursRemaining += Number(pkg.remaining_hours) || 0;
+    s.hoursRemaining += hoursLeft(pkg);
     s.hoursPurchased += Number(pkg.original_hours) || 0;
     addCourse(s, pkg.grade_subject?.full_course_name);
   });
 
-  sessions.forEach((session) => {
-    if (!session.student) return;
-    const s = ensure(
-      session.student.id,
-      session.student.first_name,
-      session.student.last_name,
-      session.student.email,
-      session.student.image,
-    );
-    addCourse(s, session.grade_subject?.full_course_name);
-    const start = new Date(session.start_time);
-
-    if (session.status === 'completed') {
-      s.completedSessions += 1;
-      s.hoursTaught += sessionHours(session);
-      if (!s.lastSession || start > new Date(s.lastSession.start_time)) {
-        s.lastSession = session;
-      }
-    }
-
-    const upcoming =
-      session.status === 'open' ||
-      (session.status === 'scheduled' && new Date(session.end_time) > now);
-    if (
-      upcoming &&
-      (!s.nextSession || start < new Date(s.nextSession.start_time))
-    ) {
-      s.nextSession = session;
-    }
+  summaryStudents.forEach((row) => {
+    const s = ensure(row.id, row.first_name, row.last_name, row.email);
+    row.courses.forEach((name) => addCourse(s, name));
+    s.completedSessions = row.completed;
+    s.hoursTaught = row.hours;
+    if (row.next_session_at) s.nextSessionAt = row.next_session_at;
+    if (row.last_session_at) s.lastSessionAt = row.last_session_at;
+    if (row.last_course) s.lastCourse = row.last_course;
   });
 
   byId.forEach((s) => {
-    s.active = s.hoursRemaining > 0 || !!s.nextSession;
+    s.active = s.hoursRemaining > 0 || !!s.nextSessionAt;
   });
 
   // Active students first, then by soonest session, then by name
   return [...byId.values()].sort((a, b) => {
     if (a.active !== b.active) return a.active ? -1 : 1;
-    const aNext = a.nextSession
-      ? new Date(a.nextSession.start_time).getTime()
+    const aNext = a.nextSessionAt
+      ? new Date(a.nextSessionAt).getTime()
       : Infinity;
-    const bNext = b.nextSession
-      ? new Date(b.nextSession.start_time).getTime()
+    const bNext = b.nextSessionAt
+      ? new Date(b.nextSessionAt).getTime()
       : Infinity;
     if (aNext !== bNext) return aNext - bNext;
     return `${a.firstName} ${a.lastName}`.localeCompare(

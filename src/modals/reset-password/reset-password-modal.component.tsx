@@ -1,41 +1,24 @@
 import { FC } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useForm, Controller } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Button, InputLabel, TextField } from '@mui/material';
-import { LockReset } from '@mui/icons-material';
+import { Button } from '@mui/material';
+import { LockReset, MailOutline, WhatsApp } from '@mui/icons-material';
 
-import {
-  resetPasswordSchema,
-  type ResetPasswordFormData,
-} from '../../schemas/authSchemas';
 import './reset-password-modal.styles.scss';
 
 interface ResetPasswordModalProps {
   handleClose: () => void;
 }
 
+const SUPPORT_WHATSAPP = 'https://wa.me/971507105394';
+const SUPPORT_EMAIL = 'mailto:learn@nafhambytyro.com';
+
+/**
+ * "Forgot password?": the server has no self-service reset yet, so this says
+ * how to get a new password. Support sends one from the Admin ("New
+ * password"), and the old one stops working at once.
+ */
 const ResetPasswordModal: FC<ResetPasswordModalProps> = ({ handleClose }) => {
   const { t } = useTranslation();
-
-  const {
-    control,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-  } = useForm<ResetPasswordFormData>({
-    resolver: zodResolver(resetPasswordSchema),
-    defaultValues: {
-      email: '',
-    },
-  });
-
-  const onSubmit = async (_values: ResetPasswordFormData) => {
-    // TODO: Implement password reset API call
-    // When backend is ready, use: useRequestPasswordReset hook
-    // Example: resetMutation.mutate(_values.email);
-    // if no error after submit
-    handleClose();
-  };
 
   return (
     <div className="forget-password">
@@ -44,45 +27,32 @@ const ResetPasswordModal: FC<ResetPasswordModalProps> = ({ handleClose }) => {
       </div>
       <h2 className="forget-password__title">{t('FORGET_PASSWORD.TITLE')}</h2>
       <div className="forget-password__description">
-        <p className="title">{t('FORGET_PASSWORD.DESCRIPTION1')}</p>
-        <p className="title">{t('FORGET_PASSWORD.DESCRIPTION2')}</p>
+        <p className="title">{t('FORGET_PASSWORD.ASK_SUPPORT')}</p>
+        <p className="title">{t('FORGET_PASSWORD.OLD_STOPS')}</p>
       </div>
-      <form onSubmit={handleSubmit(onSubmit)} className="forget-password__form">
-        <div className="auth-field">
-          <InputLabel htmlFor="email">
-            {t('FORGET_PASSWORD.FORM.LABEL')}
-          </InputLabel>
-          <Controller
-            name="email"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                placeholder={t('FORGET_PASSWORD.FORM.EMAIL_PLACEHOLDER')}
-                id="email"
-                type="email"
-                variant="outlined"
-                className="custom-input-style"
-                autoComplete="email"
-                error={!!errors.email}
-                helperText={errors.email?.message && t(errors.email.message)}
-                fullWidth
-              />
-            )}
-          />
-        </div>
+      <div className="forget-password__actions">
         <Button
-          type="submit"
           variant="contained"
-          color="primary"
-          size="large"
-          disabled={isSubmitting}
-          className="btn-custom-style"
+          startIcon={<WhatsApp />}
+          href={SUPPORT_WHATSAPP}
+          target="_blank"
+          rel="noopener noreferrer"
           fullWidth
         >
-          {t('FORGET_PASSWORD.FORM.RESET_PASSWORD_BTN')}
+          {t('FORGET_PASSWORD.WHATSAPP')}
         </Button>
-      </form>
+        <Button
+          variant="outlined"
+          startIcon={<MailOutline />}
+          href={SUPPORT_EMAIL}
+          fullWidth
+        >
+          {t('FORGET_PASSWORD.EMAIL')}
+        </Button>
+        <Button variant="text" onClick={handleClose}>
+          {t('FORGET_PASSWORD.CLOSE')}
+        </Button>
+      </div>
     </div>
   );
 };

@@ -60,8 +60,8 @@ const RegisterModal: FC<RegisterModalProps> = ({
     resolver: zodResolver(registerSchema),
     mode: 'onSubmit', // Only validate on submit
     defaultValues: {
-      first_name: 'temp', // Will be extracted from email
-      last_name: 'Student', // Default value
+      first_name: '',
+      last_name: '',
       email: '',
       password: '',
       password_confirmation: '', // Will be set automatically
@@ -101,14 +101,11 @@ const RegisterModal: FC<RegisterModalProps> = ({
 
   const onSubmit = async (values: RegisterFormData) => {
     try {
-      const { phone_number, email, ...submitValues } = values;
-      // Extract name from email (part before @)
-      const emailName = email.split('@')[0];
+      // The name is asked for: it used to be made up from the email
+      // ("trialparent1 Student"), which the Admin then showed.
+      const { phone_number, ...submitValues } = values;
       const userData = await signUpMutation.mutateAsync({
         ...submitValues,
-        email,
-        first_name: emailName,
-        last_name: 'Student',
         phone_number: phone_number.startsWith('+')
           ? phone_number
           : `+${phone_number}`,
@@ -152,6 +149,41 @@ const RegisterModal: FC<RegisterModalProps> = ({
         onSubmit={handleSubmit(onSubmit)}
         className={`register-modal__form ${rtlClass}`}
       >
+        <div className="register-modal__names">
+          {(['first_name', 'last_name'] as const).map((name) => (
+            <div className="auth-field" key={name}>
+              <InputLabel htmlFor={name}>
+                {name === 'first_name'
+                  ? t('REGISTER.REGISTER_FIRST_NAME')
+                  : t('REGISTER.REGISTER_LAST_NAME')}
+              </InputLabel>
+              <Controller
+                name={name}
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    variant="outlined"
+                    placeholder={
+                      name === 'first_name'
+                        ? t('REGISTER.REGISTER_FIRST_NAME_INPUT_PLACEHOLDER')
+                        : t('REGISTER.REGISTER_LAST_NAME_INPUT_PLACEHOLDER')
+                    }
+                    fullWidth
+                    error={!!errors[name]}
+                    helperText={errors[name]?.message}
+                    className="custom-input-style"
+                    id={name}
+                    autoComplete={
+                      name === 'first_name' ? 'given-name' : 'family-name'
+                    }
+                  />
+                )}
+              />
+            </div>
+          ))}
+        </div>
+
         <div className="auth-field">
           <InputLabel htmlFor="email">
             {t('REGISTER.REGISTER_EMAIL')}
@@ -171,15 +203,6 @@ const RegisterModal: FC<RegisterModalProps> = ({
                 className="custom-input-style"
                 id="email"
                 autoComplete="email"
-                onChange={(e) => {
-                  field.onChange(e);
-                  // Auto-extract first_name from email
-                  const emailName = e.target.value.split('@')[0];
-                  if (emailName) {
-                    setValue('first_name', emailName);
-                    setValue('last_name', 'Student');
-                  }
-                }}
               />
             )}
           />

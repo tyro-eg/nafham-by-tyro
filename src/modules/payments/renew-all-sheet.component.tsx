@@ -31,6 +31,7 @@ import { blockedInApp } from '../../lib/from-app';
 import { trackEvent } from '../../lib/analytics';
 import { subjectName } from '../dashboard/dashboard.utils';
 import './payments.styles.scss';
+import { hoursLeft } from '../../lib/package-hours';
 
 const LOCALES = { ar: arSA, en: enUS };
 
@@ -226,7 +227,12 @@ const RenewAllSheet: FC<RenewAllSheetProps> = ({
           </span>
           <span className="ra-row__meta">
             {row.package.tutor_name} ·{' '}
-            {t('PAYMENTS.RENEW.LOW', { count: row.package.remaining_hours })}
+            {t('PAYMENTS.RENEW.LOW', {
+              count: hoursLeft({
+                remaining_hours: row.package.remaining_hours,
+                scheduled_hours: row.scheduled_hours,
+              }),
+            })}
             {row.scheduled_hours > 0 &&
               ` · ${t('PAYMENTS.RENEW_ALL.BOOKED', { count: row.scheduled_hours })}`}
             {row.last_session_on &&

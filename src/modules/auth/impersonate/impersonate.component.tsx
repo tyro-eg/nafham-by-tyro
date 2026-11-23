@@ -45,7 +45,7 @@ const Impersonate = () => {
     // The hook itself moves to the dashboard on success (a remounted copy of
     // this component never sees its own callbacks); failure comes back here.
     impersonateMutation.mutate(
-      { token },
+      { token, impersonatorEmail: searchParams.get('impersonator_email') },
       {
         onError: () => {
           started.delete(token);
