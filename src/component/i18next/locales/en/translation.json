@@ -2313,7 +2313,7 @@
       "TITLE": "Session notes",
       "SUBTITLE": "What each session covered, where your child struggled and what comes next.",
       "ALL_CHILDREN": "All children",
-      "EMPTY": "No session notes yet. Notes come from recorded sessions, and recording is switched on per course in Family settings.",
+      "EMPTY": "No session notes yet. Notes come from recorded sessions, and recording is switched on per course in Account › Children.",
       "COVERED": "Covered",
       "STRUGGLED": "Needs work",
       "NEXT": "Next"
@@ -2399,7 +2399,15 @@
       "HOURS_UNIT": "{{count}} h"
     },
     "NOTES_CARD": {
-      "EMPTY": "Notes appear here after a recorded session. Recording is set per course in Family settings."
+      "EMPTY": "Notes appear here after a recorded session. Recording is set per course in Account › Children."
+    },
+    "WEEK": {
+      "TITLE": "This week",
+      "TODAY": "Today",
+      "LIVE": "Live now",
+      "EMPTY": "No sessions in the next 7 days.",
+      "AHEAD_one": "{{count}} session in the next 7 days",
+      "AHEAD_other": "{{count}} sessions in the next 7 days"
     }
   },
   "PAYMENTS": {

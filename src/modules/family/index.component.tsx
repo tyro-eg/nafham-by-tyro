@@ -54,20 +54,12 @@ import {
   LOW_HOURS,
   splitPackages,
 } from './family-home.utils';
+import { FuelBar, WeekStrip } from './week-strip.component';
+import { buildWeek, sessionsAhead } from './week-strip.utils';
 import '../dashboard/dashboard.styles.scss';
 import './family.styles.scss';
 
 const DAY_MS = 24 * 60 * 60 * 1000;
-const TONES = ['sky', 'mint', 'sun', 'lilac', 'coral'] as const;
-/** One colour per subject, the same on every row (19 Nov 2026) */
-const SUBJECT_TONES: Record<string, (typeof TONES)[number]> = {};
-const subjectTone = (subject: string) => {
-  if (!SUBJECT_TONES[subject]) {
-    SUBJECT_TONES[subject] =
-      TONES[Object.keys(SUBJECT_TONES).length % TONES.length];
-  }
-  return SUBJECT_TONES[subject];
-};
 const UPCOMING_SHOWN = 8;
 
 /** Ask ops for more hours on one of the child's packages */
@@ -151,33 +143,6 @@ const TopUpDialog: FC<{ child: FamilyChild; onClose: () => void }> = ({
   );
 };
 
-/** Circular hours-left ring, as on the student's dashboard */
-const Ring: FC<{ value: number; label: string; tone: string }> = ({
-  value,
-  label,
-  tone,
-}) => {
-  const radius = 26;
-  const circumference = 2 * Math.PI * radius;
-  const clamped = Math.min(1, Math.max(0, value));
-  return (
-    <span className={`sd-ring sd-ring--${tone}`}>
-      <svg viewBox="0 0 64 64" aria-hidden="true">
-        <circle className="sd-ring__track" cx="32" cy="32" r={radius} />
-        <circle
-          className="sd-ring__value"
-          cx="32"
-          cy="32"
-          r={radius}
-          strokeDasharray={circumference}
-          strokeDashoffset={circumference * (1 - clamped)}
-        />
-      </svg>
-      <span className="sd-ring__label">{label}</span>
-    </span>
-  );
-};
-
 /** One package row: ring, subject, tutor and hours, and Renew when low */
 const PackageRow: FC<{
   pkg: FamilyPackage;
@@ -189,11 +154,6 @@ const PackageRow: FC<{
   const low = left > 0 && left <= LOW_HOURS;
   return (
     <li className={`fam-pk${left > 0 ? '' : ' fam-pk--done'}`}>
-      <Ring
-        value={pkg.original_hours ? left / pkg.original_hours : 0}
-        label={hoursText(left)}
-        tone={subjectTone(subject)}
-      />
       <div className="fam-pk__text">
         <span className="fam-pk__course" dir="auto">
           {subject}
@@ -206,6 +166,10 @@ const PackageRow: FC<{
           })}
         </span>
       </div>
+      <FuelBar left={left} total={pkg.original_hours} low={low} />
+      <span className="fam-pk__hours">
+        {t('FAMILY.TILES.HOURS_UNIT', { count: hoursText(left) })}
+      </span>
       {low && (
         <button
           type="button"
@@ -434,10 +398,27 @@ const FamilyHome: FC = () => {
     };
   }, [children]);
 
+  const weekAhead = useMemo(
+    () => sessionsAhead(buildWeek(children ?? [], childColor)),
+    [children],
+  );
+  // Hours left over what those packages started with, for the hours tile
+  const fuel = useMemo(() => {
+    const running = (children ?? []).flatMap((c) =>
+      c.packages.filter((p) => p.hours_left > 0),
+    );
+    return {
+      left: running.reduce((sum, p) => sum + p.hours_left, 0),
+      total: running.reduce((sum, p) => sum + p.original_hours, 0),
+    };
+  }, [children]);
+
   const next = upcoming[0];
   const greeting = t(`FAMILY.HERO.${greetingKey(new Date().getHours())}`, {
     name: currentUser?.first_name ?? '',
   });
+  const firstName = currentUser?.first_name ?? '';
+  const greetingParts = firstName ? greeting.split(firstName) : [greeting];
   const latestNotes = (children ?? []).filter((c) => c.latest_note_at);
 
   const tiles = [
@@ -448,6 +429,7 @@ const FamilyHome: FC = () => {
       value: t('FAMILY.TILES.HOURS_UNIT', { count: hoursText(totals.hours) }),
       label: t('FAMILY.TILES.HOURS', { count: totals.packagesWithHours }),
       to: '/my_packages',
+      fuel: true,
     },
     {
       key: 'next',
@@ -479,45 +461,66 @@ const FamilyHome: FC = () => {
   return (
     <div className={`family-home ${rtlClass}`}>
       <div className="container fam-container">
-        <header className="fam-head">
-          <div>
-            <h1 className="fam-head__title">{greeting}</h1>
-            <p className="fam-head__sub">
-              {family.data?.name
-                ? t('FAMILY.HERO.EYEBROW', { name: family.data.name })
-                : ''}
-              {children && children.length > 0 && (
-                <> · {t('FAMILY.HERO.CHILDREN', { count: children.length })}</>
-              )}
-            </p>
-          </div>
-          <div className="fam-head__actions">
-            <Button
-              component={Link}
-              to="/messages"
-              variant="outlined"
-              startIcon={<SupportAgentRounded />}
-            >
-              {t('FAMILY.SUPPORT')}
-            </Button>
-            <Button
-              component={Link}
-              to="/account"
-              variant="outlined"
-              startIcon={<SettingsRounded />}
-            >
-              {t('NAVIGATION.ACCOUNT')}
-            </Button>
-            <Button
-              variant="contained"
-              startIcon={<EventAvailableRounded />}
-              onClick={() => setRequesting(true)}
-              disabled={!children || children.length === 0}
-            >
-              {t('FAMILY.HERO.REQUEST')}
-            </Button>
-          </div>
-        </header>
+        <section className="fam-hero">
+          <header className="fam-head">
+            <div>
+              <h1 className="fam-head__title">
+                {greetingParts.length === 2 ? (
+                  <>
+                    {greetingParts[0]}
+                    <em>{firstName}</em>
+                    {greetingParts[1]}
+                  </>
+                ) : (
+                  greeting
+                )}
+              </h1>
+              <p className="fam-head__sub">
+                {family.data?.name
+                  ? t('FAMILY.HERO.EYEBROW', { name: family.data.name })
+                  : ''}
+                {children && children.length > 0 && (
+                  <>
+                    {' '}
+                    · {t('FAMILY.HERO.CHILDREN', { count: children.length })}
+                  </>
+                )}
+                {children && children.length > 0 && (
+                  <> · {t('FAMILY.WEEK.AHEAD', { count: weekAhead })}</>
+                )}
+              </p>
+            </div>
+            <div className="fam-head__actions">
+              <Button
+                component={Link}
+                to="/messages"
+                variant="outlined"
+                startIcon={<SupportAgentRounded />}
+              >
+                {t('FAMILY.SUPPORT')}
+              </Button>
+              <Button
+                component={Link}
+                to="/account"
+                variant="outlined"
+                startIcon={<SettingsRounded />}
+              >
+                {t('NAVIGATION.ACCOUNT')}
+              </Button>
+              <Button
+                variant="contained"
+                startIcon={<EventAvailableRounded />}
+                onClick={() => setRequesting(true)}
+                disabled={!children || children.length === 0}
+              >
+                {t('FAMILY.HERO.REQUEST')}
+              </Button>
+            </div>
+          </header>
+          {children && children.length > 0 && (
+            <WeekStrip kids={children} onOpen={(child) => choose(child.id)} />
+          )}
+        </section>
 
         {family.data && !family.data.terms.accepted && (
           <Alert
@@ -570,6 +573,9 @@ const FamilyHome: FC = () => {
                 <span className="fam-tile__label" dir="auto">
                   {loading ? '' : tile.label}
                 </span>
+                {'fuel' in tile && !loading && fuel.total > 0 && (
+                  <FuelBar left={fuel.left} total={fuel.total} />
+                )}
               </span>
               <ArrowForwardRounded
                 className="fam-tile__go sd-flip"

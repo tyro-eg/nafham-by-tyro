@@ -309,6 +309,10 @@ $hw-border: $border;
   }
 }
 
+.fam-tile .fuel {
+  margin-top: 0.8rem;
+}
+
 .fam-tile {
   --tone-bg: #{$brand-50};
   --tone-fg: #{$brand-800};
@@ -580,24 +584,30 @@ $hw-border: $border;
 }
 
 .fam-pk {
+  // Subject and tutor, the fuel bar, hours left, Renew when low (23 Nov 2026)
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
+  // Fixed columns so every row's bar lines up, chip or not
+  grid-template-columns: minmax(0, 1fr) 12rem 6.4rem 11.2rem;
   align-items: center;
   gap: $space-3;
-  padding: $space-2 0;
+  padding: 1.2rem 0;
   border-top: 1px solid $border;
 
-  .sd-ring {
-    width: 4.4rem;
-    height: 4.4rem;
+  &__hours {
+    font-family: $font-display-family;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    text-align: end;
+    color: $text-strong;
   }
 
-  .sd-ring__track {
-    stroke: $gray-100;
-  }
+  @include respond(phone) {
+    grid-template-columns: minmax(0, 1fr) auto auto;
 
-  .sd-ring__label {
-    font-size: 1.2rem;
+    .fuel {
+      grid-column: 1 / -1;
+      grid-row: 2;
+    }
   }
 
   &--done {
@@ -622,6 +632,7 @@ $hw-border: $border;
 
   &__low,
   &__renew {
+    justify-self: end;
     display: inline-flex;
     align-items: center;
     gap: 0.4rem;
