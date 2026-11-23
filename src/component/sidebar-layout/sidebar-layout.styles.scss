@@ -265,19 +265,15 @@ $topbar-height: 6.4rem;
       @include focus-ring;
     }
 
+    // New look (23 Nov 2026): the open page is an ink pill
     &--active,
     &--active:hover {
-      background-color: $brand-50;
-      color: $brand-700;
-      box-shadow: inset 3px 0 0 $brand-400;
+      background-color: $ink;
+      color: #fff;
 
-      .side-layout__icon {
+      .side-layout__icon svg {
         color: $brand-400;
       }
-    }
-
-    .rtl &--active {
-      box-shadow: inset -3px 0 0 $brand-400;
     }
 
     @include respond(tab-land) {

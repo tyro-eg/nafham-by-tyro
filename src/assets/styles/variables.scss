@@ -19,7 +19,7 @@ $brand-800: #2fa3c9;
 
 // Dark brand colours (headings, dark sections, footer)
 $navy-950: #161c2d; // original midnight blue
-$navy-900: #2c3e50; // original title colour
+$navy-900: #13263d; // ink: titles and the dark hero band (new look, 23 Nov 2026)
 $navy-800: #3a4b60; // original secondary
 $navy-700: #4b5d74;
 
@@ -45,18 +45,29 @@ $danger-50: #fef2f2;
 $warning-500: #d97706;
 $warning-50: #fffbeb;
 
+// New look (23 Nov 2026): ink, lagoon, mist, sun
+$ink: $navy-900;
+$lagoon: #0e8fb8; // brand blue dark enough for text and links on white
+$mist: #eef6fb; // page background
+$sun: #ffb72b; // needs attention: renew, due, now
+$sun-bg: #fff4dc;
+$on-brand: $ink; // text on Nafham blue: white on it was too faint
+$font-display-family:
+  'Readex Pro', 'IBM Plex Sans Arabic', system-ui, sans-serif;
+$font-body-family: 'IBM Plex Sans Arabic', 'Readex Pro', system-ui, sans-serif;
+
 // Semantic
 $text-strong: $navy-900;
-$text-body: $gray-600;
+$text-body: #5f7186;
 $text-muted: $gray-500;
 $text-on-dark: #ffffff;
 $text-on-dark-muted: rgba(255, 255, 255, 0.72);
 $surface: #ffffff;
-$surface-alt: $gray-50;
+$surface-alt: $mist;
 $surface-dark: $navy-950;
-$border: $gray-200;
+$border: #dde8f1;
 $border-strong: $gray-300;
-$link: $brand-700;
+$link: $lagoon;
 
 // Radius
 $radius-sm: 0.8rem;

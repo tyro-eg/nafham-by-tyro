@@ -264,7 +264,7 @@ $hw-border: $border;
 
     .MuiButton-contained {
       box-shadow: none;
-      color: $surface;
+      color: $on-brand;
     }
 
     @include respond(phone) {
@@ -693,7 +693,7 @@ $hw-border: $border;
   .MuiButton-root {
     border-radius: 1rem;
     box-shadow: none;
-    color: $surface;
+    color: $on-brand;
     font-weight: 700;
     text-transform: none;
   }

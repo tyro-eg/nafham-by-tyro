@@ -214,7 +214,7 @@ ORDER: Base + typography > general layout + grid > page layout > components
 @mixin button-primary {
   @include button-base;
   background-color: $brand-600;
-  color: $text-on-dark;
+  color: $on-brand;
 
   &:hover {
     background-color: $brand-700;

@@ -546,7 +546,7 @@ $gold-fg: #b07800;
     &.is-selected:hover:not(:disabled) {
       border-color: $brand-600;
       background-color: $brand-600;
-      color: #fff;
+      color: $on-brand;
       box-shadow: 0 8px 18px rgba($brand-600, 0.3);
     }
 
@@ -575,7 +575,7 @@ $gold-fg: #b07800;
 
       .trial-choice__icon {
         background-color: $brand-600;
-        color: #fff;
+        color: $on-brand;
       }
     }
   }
@@ -669,12 +669,12 @@ $gold-fg: #b07800;
   &.is-selected {
     border-color: $brand-600;
     background-color: $brand-600;
-    color: #fff;
+    color: $on-brand;
     box-shadow: 0 8px 18px rgba($brand-600, 0.3);
 
     .trial-day__weekday,
     .trial-day__month {
-      color: rgba(255, 255, 255, 0.8);
+      color: rgba($ink, 0.75);
     }
 
     .trial-day__count {
@@ -701,7 +701,7 @@ $gold-fg: #b07800;
 
   &:hover:not(:disabled) {
     background-color: $brand-600;
-    color: #fff;
+    color: $on-brand;
   }
 
   &:focus-visible {

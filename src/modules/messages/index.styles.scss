@@ -1099,7 +1099,7 @@ $avatar-size: 3.2rem;
 .nf-msg .str-chat__audio_player-play-button,
 .nf-msg .str-chat__voice-recording-widget__audio-player-button {
   background-color: $brand-700;
-  color: $text-on-dark;
+  color: $on-brand;
   border-radius: 50%;
 }
 
@@ -1305,7 +1305,7 @@ $avatar-size: 3.2rem;
 
   .str-chat__jump-to-latest__unread-count {
     background-color: $brand-700;
-    color: $text-on-dark;
+    color: $on-brand;
   }
 }
 
@@ -1730,7 +1730,7 @@ $avatar-size: 3.2rem;
     height: 1.6rem;
     border-radius: $radius-pill;
     background-color: $brand-700;
-    color: $text-on-dark;
+    color: $on-brand;
     font-size: 1rem;
   }
 
@@ -1786,7 +1786,7 @@ $avatar-size: 3.2rem;
     border: 0;
     border-radius: $radius-pill;
     background-color: $brand-700;
-    color: $text-on-dark;
+    color: $on-brand;
     font-size: $font-xs;
     font-weight: 700;
     cursor: pointer;
