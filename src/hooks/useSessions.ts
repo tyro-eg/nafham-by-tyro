@@ -1,4 +1,8 @@
-import { useQuery, useInfiniteQuery } from '@tanstack/react-query';
+import {
+  useQuery,
+  useInfiniteQuery,
+  keepPreviousData,
+} from '@tanstack/react-query';
 import { get } from '../assets/utils/api';
 import { queryKeys, SessionFilters } from '../lib/queryKeys';
 import { SessionType } from '../assets/types';
@@ -73,6 +77,8 @@ export function useInfiniteSessions(
       if (filters?.grade_subject_id) {
         params.grade_subject_id = filters.grade_subject_id;
       }
+      if (filters?.from) params.from = filters.from;
+      if (filters?.to) params.to = filters.to;
 
       const response = await get(`/sessions`, { params });
       return {
@@ -90,6 +96,8 @@ export function useInfiniteSessions(
       return hasMore ? currentPage + 1 : undefined;
     },
     initialPageParam: 1,
+    // Moving to other dates keeps the last ones on screen while they load
+    placeholderData: keepPreviousData,
     refetchInterval: LIVE_REFRESH_MS,
     refetchIntervalInBackground: false,
   });
