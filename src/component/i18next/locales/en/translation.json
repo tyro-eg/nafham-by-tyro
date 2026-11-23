@@ -222,7 +222,9 @@
       "CHAT_1": "Can you show that step again?",
       "CHAT_2": "Sure, watch the board.",
       "CHAT_3": "Got it, thanks!",
-      "MOCK_STUDENT": "Adam · Student"
+      "MOCK_STUDENT": "Adam · Student",
+      "EYEBROW_SYLLABI": "IGCSE · British · American · UAE",
+      "LEAD": "Pick times that suit your family, meet a tutor who teaches your child's exact syllabus, and read notes after every session."
     },
     "PRESS": "As featured in",
     "STATS": {
@@ -278,6 +280,34 @@
       "TITLE": "What parents and students say",
       "SUBTITLE": "Unedited, from families who learn with us.",
       "ROLE": "Parent"
+    },
+    "WEEK": {
+      "TITLE": "A week with Nafham",
+      "SUBTITLE": "A sample family, two children",
+      "SYLLABUS": "Syllabus",
+      "TODAY": "Today",
+      "CHILD_1": "Omar",
+      "CHILD_2": "Lina",
+      "CHILD_AGE": "{{name}}, {{age}}",
+      "SYLLABI": {
+        "IGCSE": "IGCSE",
+        "BRITISH": "British",
+        "AMERICAN": "American",
+        "UAE": "UAE"
+      },
+      "SUBJECTS": {
+        "CHEMISTRY": "Chemistry",
+        "ENGLISH": "English",
+        "MATH": "Math",
+        "MATHS": "Maths",
+        "PHYSICS": "Physics",
+        "SCIENCE": "Science",
+        "SAT_MATH": "SAT Math",
+        "READING": "Reading",
+        "ARABIC": "Arabic"
+      },
+      "NOTE_LEAD": "After yesterday's session:",
+      "NOTE": "Omar balanced all six equations on his own. Next: moles."
     }
   },
   "ENGLISH_COURSE": {
