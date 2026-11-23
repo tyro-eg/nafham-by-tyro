@@ -1,8 +1,7 @@
 import { FC, useState } from 'react';
-import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { BackLink } from '../../component/back-link/back-link.component';
 import { MenuItem, Skeleton, TextField } from '@mui/material';
-import { ArrowBackRounded } from '@mui/icons-material';
 import { useFamily, useFamilyNotes } from '../../hooks/useFamily';
 import { useRtlClass } from '../../assets/utils/utils';
 import { formatDateTime } from '../homework/homework.utils';
@@ -27,10 +26,11 @@ const FamilyNotes: FC = () => {
   return (
     <div className={`family ${rtlClass}`}>
       <div className="container">
-        <Link to="/family" className="family__back">
-          <ArrowBackRounded aria-hidden="true" />
-          {t('FAMILY.BACK')}
-        </Link>
+        <BackLink
+          fallback="/family"
+          label={t('FAMILY.BACK')}
+          testId="family-back"
+        />
         <header className="family__header">
           <div>
             <h1 className="family__title">{t('FAMILY.NOTES.TITLE')}</h1>

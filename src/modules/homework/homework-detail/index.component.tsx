@@ -1,9 +1,9 @@
 import { FC, useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { BackLink } from '../../../component/back-link/back-link.component';
 import { Button, Skeleton } from '@mui/material';
 import {
-  ArrowBackRounded,
   DeleteOutlineRounded,
   EventRounded,
   MenuBookRounded,
@@ -86,11 +86,13 @@ const HomeworkDetail: FC = () => {
     }
   };
 
+  // The website's one Back pill (23 Nov 2026)
   const back = (
-    <Link to="/homework" className="hw-back">
-      <ArrowBackRounded aria-hidden="true" />
-      {t('HOMEWORK.BACK')}
-    </Link>
+    <BackLink
+      fallback="/homework"
+      label={t('HOMEWORK.BACK')}
+      testId="homework-back"
+    />
   );
 
   if (query.isLoading) {

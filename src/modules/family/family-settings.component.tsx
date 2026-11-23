@@ -1,8 +1,9 @@
 import { FC, FormEvent, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { BackLink } from '../../component/back-link/back-link.component';
 import { Alert, Button, Chip, Switch, TextField } from '@mui/material';
-import { ArrowBackRounded, PersonAddRounded } from '@mui/icons-material';
+import { PersonAddRounded } from '@mui/icons-material';
 import {
   familyErrorMessage,
   useAcceptTerms,
@@ -385,10 +386,11 @@ const FamilySettings: FC<{ section?: 'details' | 'children' }> = ({
   return (
     <div className={`family ${rtlClass}`}>
       <div className="container">
-        <Link to="/family" className="family__back">
-          <ArrowBackRounded aria-hidden="true" />
-          {t('FAMILY.BACK')}
-        </Link>
+        <BackLink
+          fallback="/family"
+          label={t('FAMILY.BACK')}
+          testId="family-back"
+        />
         <header className="family__header">
           <div>
             <h1 className="family__title">{t('FAMILY.SETTINGS.TITLE')}</h1>

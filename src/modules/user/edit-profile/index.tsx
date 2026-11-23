@@ -8,6 +8,7 @@ import {
   EventAvailableRounded,
 } from '@mui/icons-material';
 import { useParams, useSearchParams } from 'react-router-dom';
+import { BackLink } from '../../../component/back-link/back-link.component';
 
 import { useAppSelector } from '../../../redux/store';
 import { selectCurrentUser } from '../../../redux/user/user.selectors';
@@ -298,6 +299,19 @@ const EditProfile: FC = () => {
   return (
     <>
       <section className="profile">
+        {/* Someone else's profile: back to the list it was opened from (23 Nov 2026) */}
+        {!showEditMode && currentUser && (
+          <div className="profile__container container profile__back">
+            <BackLink
+              fallback={
+                currentUser.type === 'Tutor'
+                  ? '/my_students'
+                  : '/my_instructors'
+              }
+              testId="profile-back"
+            />
+          </div>
+        )}
         {renderProfileInfo()}
         <div className="profile__container container">
           {ownTutorProfile && (

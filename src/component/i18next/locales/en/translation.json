@@ -3062,5 +3062,10 @@
     "PASSWORD_SHORT": "The password needs at least 6 characters.",
     "PASSWORD_MISMATCH": "The two passwords are not the same.",
     "TRY_AGAIN": "Something went wrong. Please try again."
+  },
+  "BACK_LINK": {
+    "BACK": "Back",
+    "TO": "Back to {{place}}",
+    "SIGN_UP": "Sign up"
   }
 }

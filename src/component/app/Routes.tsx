@@ -4,6 +4,7 @@ import GuardedRoute from '../guarded-route/guarded-route.component';
 import Loader from './Loader';
 import { CurrentUser } from '../../assets/types';
 import { getHomePath } from '../../assets/utils/home-path';
+import { BackTrail } from '../back-link/back-link.component';
 
 const Home = lazy(() => import('../../modules/home/index'));
 const AvailabilityPage = lazy(
@@ -78,6 +79,7 @@ const RoutesComponent: React.FC<RoutesProps> = ({ currentUser }) => {
   const isParent = currentUser?.type === 'Parent';
   return (
     <Suspense fallback={<Loader />}>
+      <BackTrail />
       <Routes>
         <Route
           path="/"

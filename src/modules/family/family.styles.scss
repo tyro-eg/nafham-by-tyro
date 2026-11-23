@@ -155,23 +155,6 @@ $hw-border: $border;
     color: $hw-muted;
   }
 
-  &__back {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.6rem;
-    margin-bottom: 1.6rem;
-    font-weight: 600;
-    color: $text-body;
-
-    .rtl & svg {
-      transform: scaleX(-1);
-    }
-
-    &:hover {
-      color: $brand-700;
-    }
-  }
-
   &__prose {
     margin: 0;
     white-space: pre-wrap;
