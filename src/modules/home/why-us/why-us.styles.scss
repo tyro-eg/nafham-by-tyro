@@ -99,7 +99,7 @@
       width: 4.8rem;
       height: 4.8rem;
       border-radius: 50%;
-      background-color: $navy-900;
+      background-color: $brand-800;
       color: $surface;
       font-size: $font-sm;
       font-weight: 700;
@@ -251,7 +251,7 @@
 
     &__used {
       width: 40%;
-      background-color: $navy-800;
+      background-color: $brand-800;
     }
 
     &__booked {
@@ -282,7 +282,7 @@
       }
 
       &--used::before {
-        background-color: $navy-800;
+        background-color: $brand-800;
       }
 
       &--booked::before {

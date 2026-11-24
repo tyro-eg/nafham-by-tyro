@@ -1,7 +1,8 @@
 @import '../../../assets/styles/variables.scss';
 @import '../../../assets/styles/mixins.scss';
 
-// Sign in (19 Nov 2026): navy brand panel with soft rings, no photo; the
+// Sign in: a light baby blue panel with soft rings (24 Nov 2026: no navy
+// before sign-in), no photo; the
 // form side has its own small top row instead of the site header.
 .signin {
   display: grid;
@@ -21,8 +22,10 @@
     flex-direction: column;
     padding: $space-7 $space-8;
     overflow: hidden;
-    color: $text-on-dark;
-    background-color: $navy-950;
+    color: $ink;
+    background:
+      radial-gradient(circle at 20% 0%, rgba(#fff, 0.85), transparent 55%),
+      linear-gradient(160deg, $brand-100 0%, $brand-200 100%);
 
     @include respond(tab-land) {
       padding: $space-6;
@@ -58,7 +61,7 @@
       height: 64rem;
       bottom: -40rem;
       inset-inline-start: -32rem;
-      border-color: rgba($accent-400, 0.16);
+      border-color: rgba(#fff, 0.7);
     }
 
     @include respond(tab-port) {
@@ -103,11 +106,11 @@
     font-weight: 800;
     line-height: 1.12;
     letter-spacing: -0.02em;
-    color: $surface;
+    color: $ink;
 
     em {
       font-style: normal;
-      color: $brand-500;
+      color: $brand-800;
     }
 
     html[dir='rtl'] & {
@@ -128,7 +131,7 @@
     margin: 0 0 $space-5;
     font-size: $font-lg;
     line-height: 1.6;
-    color: $text-on-dark-muted;
+    color: $ink;
 
     @include respond(tab-port) {
       margin: 0;
@@ -148,7 +151,7 @@
       align-items: center;
       gap: $space-3;
       font-size: $font-base;
-      color: rgba(255, 255, 255, 0.9);
+      color: $ink;
     }
 
     @include respond(tab-port) {
@@ -163,8 +166,8 @@
     width: 3.6rem;
     height: 3.6rem;
     border-radius: 1rem;
-    background-color: rgba($brand-500, 0.16);
-    color: $brand-500;
+    background-color: #fff;
+    color: $brand-800;
 
     .MuiSvgIcon-root {
       font-size: 2rem;

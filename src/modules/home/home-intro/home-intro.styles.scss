@@ -134,11 +134,15 @@
 }
 
 // ---------- the sample week ----------
+// White and baby blue before sign-in (24 Nov 2026): no navy on these pages
 .hero-week {
-  @include ink-band(38rem);
+  position: relative;
   padding: $space-5;
+  border: 1px solid $brand-100;
   border-radius: 2.6rem;
-  box-shadow: 0 30px 60px -24px rgba($ink, 0.55);
+  background-color: #fff;
+  color: $ink;
+  box-shadow: 0 30px 60px -30px rgba($brand-500, 0.75);
 
   @include respond(phone) {
     padding: $space-4;
@@ -150,13 +154,13 @@
       margin: 0;
       font-size: $font-lg;
       font-weight: 600;
-      color: #fff;
+      color: $ink;
     }
 
     p {
       margin: 0.2rem 0 0;
       font-size: 1.3rem;
-      color: #a9bdd2;
+      color: $text-body;
     }
   }
 
@@ -169,10 +173,10 @@
 
   &__chip {
     padding: 0.6rem 1.4rem;
-    border: 1px solid rgba(255, 255, 255, 0.14);
+    border: 1px solid $brand-100;
     border-radius: $radius-pill;
-    background-color: rgba(255, 255, 255, 0.07);
-    color: #cfe0ef;
+    background-color: $brand-50;
+    color: $brand-800;
     font-family: $font-display-family;
     font-size: 1.3rem;
     font-weight: 600;
@@ -182,7 +186,7 @@
       color $transition;
 
     &:hover {
-      background-color: rgba(255, 255, 255, 0.14);
+      background-color: $brand-100;
     }
 
     &:focus-visible {
@@ -194,7 +198,7 @@
     &--on:hover {
       border-color: $brand-400;
       background-color: $brand-400;
-      color: $ink;
+      color: #fff;
     }
   }
 
@@ -211,6 +215,30 @@
   .wk__day {
     min-height: 15rem;
     padding: 0.8rem 0.6rem 1rem;
+    border-color: transparent;
+    background-color: $brand-50;
+
+    &--today {
+      border-color: $brand-400;
+      background-color: $brand-100;
+    }
+  }
+
+  .wk__date {
+    color: $text-body;
+
+    b {
+      color: $ink;
+    }
+  }
+
+  .wk__pill {
+    box-shadow: 0 4px 10px -8px rgba($ink, 0.5);
+  }
+
+  .wk__key,
+  .wk__empty {
+    color: $text-body;
   }
 
   .wk__pill {
@@ -232,12 +260,125 @@
     margin: $space-3 0 0;
     padding: 1.2rem 1.4rem;
     border-radius: 1.4rem;
-    background-color: rgba(255, 255, 255, 0.07);
+    background-color: $brand-50;
     font-size: 1.3rem;
-    color: #cfe0ef;
+    color: $text-body;
 
     b {
+      color: $ink;
+    }
+  }
+}
+
+// ---------- 24 Nov 2026: who the page speaks to, soft shapes, a wave ----------
+.hero {
+  position: relative;
+  overflow: hidden;
+
+  &__inner {
+    position: relative;
+    z-index: 1;
+  }
+
+  // Round shapes that drift slowly, echoing the logo's curves
+  &__blob {
+    position: absolute;
+    border-radius: 50%;
+    background-color: $brand-200;
+    opacity: 0.5;
+    animation: hero-float 9s ease-in-out infinite;
+    pointer-events: none;
+
+    &--a {
+      top: -9rem;
+      inset-inline-end: -6rem;
+      width: 26rem;
+      height: 26rem;
+    }
+
+    &--b {
+      top: 24rem;
+      inset-inline-end: 46%;
+      width: 11rem;
+      height: 11rem;
+      background-color: $brand-100;
+      animation-delay: -3s;
+    }
+
+    &--c {
+      bottom: 11rem;
+      inset-inline-start: 4%;
+      width: 7rem;
+      height: 7rem;
+      background-color: $brand-300;
+      animation-delay: -6s;
+    }
+  }
+
+  &__who {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-bottom: $space-4;
+    padding: 0.5rem;
+    border: 1px solid $brand-100;
+    border-radius: $radius-pill;
+    background-color: #fff;
+  }
+
+  &__who-tab {
+    padding: 0.8rem 1.8rem;
+    border: 0;
+    border-radius: $radius-pill;
+    background: transparent;
+    color: $text-body;
+    font: inherit;
+    font-size: 1.4rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition:
+      background-color $transition,
+      color $transition;
+
+    &:hover {
+      color: $brand-800;
+    }
+
+    &:focus-visible {
+      outline: 2px solid $brand-400;
+      outline-offset: 2px;
+    }
+
+    &.is-on {
+      background-color: $brand-500;
       color: #fff;
     }
+  }
+
+  &__wave {
+    position: absolute;
+    inset-inline: 0;
+    bottom: -1px;
+    display: block;
+    width: 100%;
+    height: 6rem;
+    fill: $brand-500;
+    pointer-events: none;
+
+    @include respond(phone) {
+      height: 3.6rem;
+    }
+  }
+}
+
+@keyframes hero-float {
+  50% {
+    transform: translateY(-1.6rem) scale(1.04);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__blob {
+    animation: none;
   }
 }

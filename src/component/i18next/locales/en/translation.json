@@ -225,7 +225,26 @@
       "CHAT_3": "Got it, thanks!",
       "MOCK_STUDENT": "Adam · Student",
       "EYEBROW_SYLLABI": "IGCSE · British · American · UAE",
-      "LEAD": "Pick times that suit your family, meet a tutor who teaches your child's exact syllabus, and read notes after every session."
+      "LEAD": "Pick times that suit your family, meet a tutor who teaches your child's exact syllabus, and read notes after every session.",
+      "VISITOR": {
+        "LABEL": "Who are you?",
+        "PARENT": {
+          "TAB": "I'm a parent"
+        },
+        "STUDENT": {
+          "TAB": "I'm a student",
+          "TITLE_1": "Get it,",
+          "TITLE_2": "one session at a time.",
+          "LEAD": "A tutor who knows your syllabus, at a time that fits your school day. Join in one tap and keep your homework in one place."
+        },
+        "TUTOR": {
+          "TAB": "I'm a tutor",
+          "TITLE_1": "Teach the hours",
+          "TITLE_2": "you choose.",
+          "LEAD": "Open the times you want, get matched to students in your subjects, and see your hours and salary clearly every month.",
+          "ACTION": "Teach with Nafham"
+        }
+      }
     },
     "PRESS": "As featured in",
     "STATS": {

@@ -13,19 +13,19 @@
     gap: $space-4;
     padding: $space-9 $space-6;
     border-radius: $radius-xl;
-    background-color: $navy-950;
+    background-color: $brand-500;
     background-image:
       radial-gradient(
         50rem 30rem at 15% 0%,
-        rgba($brand-500, 0.35),
+        rgba(255, 255, 255, 0.3),
         transparent 70%
       ),
       radial-gradient(
         40rem 26rem at 90% 100%,
-        rgba($accent-400, 0.22),
+        rgba(255, 255, 255, 0.22),
         transparent 70%
       );
-    color: $text-on-dark;
+    color: #fff;
     text-align: center;
 
     @include respond(tab-port) {
@@ -39,7 +39,7 @@
 
     &__eyebrow {
       @include eyebrow;
-      color: $brand-300;
+      color: #fff;
     }
 
     &.rtl &__eyebrow {
@@ -52,7 +52,7 @@
       font-weight: 700;
       line-height: 1.1;
       letter-spacing: -0.03em;
-      color: $text-on-dark;
+      color: #fff;
 
       .rtl & {
         letter-spacing: 0;
@@ -68,7 +68,7 @@
       max-width: 56rem;
       font-size: $font-lg;
       line-height: 1.6;
-      color: $text-on-dark-muted;
+      color: rgba(255, 255, 255, 0.92);
 
       @include respond(phone) {
         font-size: $font-base;
@@ -81,7 +81,7 @@
 
     &__note {
       font-size: $font-xs;
-      color: rgba(255, 255, 255, 0.55);
+      color: rgba(255, 255, 255, 0.85);
     }
   }
 }

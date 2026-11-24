@@ -16,7 +16,7 @@ import { useAppSelector } from '../../../redux/store';
 import { selectCurrentUser } from '../../../redux/user/user.selectors';
 import { useSignOut } from '../../../hooks/useAuth';
 import LanguageSelector from '../../../component/i18next/LanguageSelector';
-import logo from '../../../assets/images/logo.png';
+import NafhamMark from '../../../component/nafham-mark/nafham-mark.component';
 import Profile from '../../../assets/images/videoSession/people/profile.png';
 
 import './main-header.styles.scss';
@@ -95,7 +95,7 @@ const MainHeader: FC<HeaderProps> = ({ openFreeTrail }) => {
       <div className="app-header__bar">
         <div className="app-header__inner">
           <Link to="/" className="app-header__logo">
-            <img src={logo} alt="tyro logo" loading="lazy" />
+            <NafhamMark size="sm" />
           </Link>
 
           <nav className="app-header__nav">

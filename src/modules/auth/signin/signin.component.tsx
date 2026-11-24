@@ -9,7 +9,7 @@ import {
 
 import Login from '../../../component/login/login.component';
 import LanguageSelector from '../../../component/i18next/LanguageSelector';
-import logo from '../../../assets/images/logo.png';
+import NafhamMark from '../../../component/nafham-mark/nafham-mark.component';
 
 import './signin.styles.scss';
 
@@ -36,7 +36,7 @@ const SignIn: FC = () => {
         <span className="signin__ring signin__ring--b" aria-hidden="true" />
         <span className="signin__ring signin__ring--c" aria-hidden="true" />
         <Link to="/" className="signin__logo" aria-label="Nafham">
-          <img src={logo} alt="" />
+          <NafhamMark size="md" tile />
         </Link>
         <div className="signin__panel-copy">
           <h2 className="signin__headline">
