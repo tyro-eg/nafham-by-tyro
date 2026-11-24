@@ -309,15 +309,24 @@ const MyStudents: FC = () => {
                         </span>
                       </div>
 
-                      {student.courses.length > 0 && (
+                      {/* Subject, then grade and curriculum (24 Nov 2026) */}
+                      {student.courseDetails.length > 0 && (
                         <div className="ms-card__courses">
-                          {student.courses.map((name) => (
+                          {student.courseDetails.map((course) => (
                             <span
-                              key={name}
+                              key={`${course.subject}|${course.grade}|${course.curriculum}`}
                               className="ms-card__course"
                               dir="auto"
+                              data-testid="ms-course"
                             >
-                              {name}
+                              <strong>{course.subject}</strong>
+                              {(course.grade || course.curriculum) && (
+                                <span className="ms-card__course-more">
+                                  {[course.grade, course.curriculum]
+                                    .filter(Boolean)
+                                    .join(' · ')}
+                                </span>
+                              )}
                             </span>
                           ))}
                         </div>

@@ -1,8 +1,41 @@
 import type { Package } from '../../assets/types';
 import type { SummaryStudent } from '../../hooks/useSessions';
-import { subjectName } from '../dashboard/dashboard.utils';
+import { courseLabel, subjectName } from '../dashboard/dashboard.utils';
 import { hoursLeft } from '../../lib/package-hours';
 import { meterLine, orderLines, type MeterLine } from '../../lib/hours-meter';
+
+/** One course a student takes with the tutor: what, which grade, which curriculum */
+export interface CourseInfo {
+  subject: string;
+  grade: string;
+  curriculum: string;
+}
+
+/**
+ * "IGCSE - G10 - Accounting" as its three parts (24 Nov 2026: the tutor
+ * sees subject, grade and curriculum on each student). The server's own
+ * grade and curriculum names win when the package carries them; a name
+ * without all three parts keeps only its subject.
+ */
+export const courseInfo = (
+  fullCourseName?: string,
+  known?: { grade?: { name: string }; curriculum?: { name: string } } | null,
+): CourseInfo | null => {
+  const subject = subjectName(fullCourseName);
+  if (!subject) return null;
+  const parts = courseLabel(fullCourseName)
+    .split(' - ')
+    .map((part) => part.trim());
+  const named = parts.length >= 3;
+  // Imported courses can carry "Unspecified" for a part: say nothing instead
+  const set = (value?: string) =>
+    value && !/^unspecified/i.test(value.trim()) ? value.trim() : '';
+  return {
+    subject,
+    grade: set(known?.grade?.name) || set(named ? parts[1] : ''),
+    curriculum: set(known?.curriculum?.name) || set(named ? parts[0] : ''),
+  };
+};
 
 export interface StudentSummary {
   id: number;
@@ -11,6 +44,8 @@ export interface StudentSummary {
   email?: string;
   avatar?: string;
   courses: string[];
+  /** Each course with its grade and curriculum, for the card */
+  courseDetails: CourseInfo[];
   hoursRemaining: number;
   hoursPurchased: number;
   completedSessions: number;
@@ -55,6 +90,7 @@ export const buildStudents = (
         email,
         avatar,
         courses: [],
+        courseDetails: [],
         hoursRemaining: 0,
         hoursPurchased: 0,
         completedSessions: 0,
@@ -69,9 +105,26 @@ export const buildStudents = (
     return student;
   };
 
-  const addCourse = (student: StudentSummary, fullCourseName?: string) => {
-    const name = subjectName(fullCourseName);
-    if (name && !student.courses.includes(name)) student.courses.push(name);
+  const addCourse = (
+    student: StudentSummary,
+    fullCourseName?: string,
+    known?: Parameters<typeof courseInfo>[1],
+  ) => {
+    const info = courseInfo(fullCourseName, known);
+    if (!info) return;
+    if (!student.courses.includes(info.subject))
+      student.courses.push(info.subject);
+    const same = student.courseDetails.find(
+      (c) =>
+        c.subject === info.subject &&
+        (!c.grade || !info.grade || c.grade === info.grade) &&
+        (!c.curriculum || !info.curriculum || c.curriculum === info.curriculum),
+    );
+    // The same course seen twice: keep whichever knows more
+    if (same) {
+      same.grade ||= info.grade;
+      same.curriculum ||= info.curriculum;
+    } else student.courseDetails.push(info);
   };
 
   packages.forEach((pkg) => {
@@ -85,7 +138,7 @@ export const buildStudents = (
     );
     s.hoursRemaining += hoursLeft(pkg);
     s.hoursPurchased += Number(pkg.original_hours) || 0;
-    addCourse(s, pkg.grade_subject?.full_course_name);
+    addCourse(s, pkg.grade_subject?.full_course_name, pkg.grade_subject);
     const line = meterLine(
       pkg,
       subjectName(pkg.grade_subject?.full_course_name),

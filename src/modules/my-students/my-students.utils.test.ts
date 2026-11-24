@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import type { Package } from '../../assets/types';
 import type { SessionSummary } from '../../hooks/useSessions';
-import { buildStudents } from './my-students.utils';
+import { buildStudents, courseInfo } from './my-students.utils';
 import {
   studentInsights,
   subjectBreakdown,
@@ -168,6 +168,34 @@ describe('buildStudents: one hours meter per course (23 Nov 2026)', () => {
       missed: 1,
       booked: 1,
       free: 1,
+    });
+  });
+
+  it('gives each course its grade and curriculum, from the package or the name', () => {
+    expect(courseInfo('IGCSE - G10 - Accounting')).toEqual({
+      subject: 'Accounting',
+      grade: 'G10',
+      curriculum: 'IGCSE',
+    });
+    // The server's own names win over the parts of the course name
+    expect(
+      courseInfo('IB - DP2 - Physics', {
+        grade: { name: 'DP 2' },
+        curriculum: { name: 'IB Diploma' },
+      }),
+    ).toEqual({ subject: 'Physics', grade: 'DP 2', curriculum: 'IB Diploma' });
+    // A bare subject keeps only itself; no name at all is no course
+    expect(courseInfo('Physics')).toEqual({
+      subject: 'Physics',
+      grade: '',
+      curriculum: '',
+    });
+    expect(courseInfo(undefined)).toBeNull();
+    // An imported course with no grade set: the word "Unspecified" is not shown
+    expect(courseInfo('American Diploma ACT - Unspecified - Physics')).toEqual({
+      subject: 'Physics',
+      grade: '',
+      curriculum: 'American Diploma ACT',
     });
   });
 });
