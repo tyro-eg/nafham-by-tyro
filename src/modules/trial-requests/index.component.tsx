@@ -14,7 +14,6 @@ import {
   EventAvailableRounded,
   EventBusyRounded,
   FormatQuoteRounded,
-  TimerOutlined,
 } from '@mui/icons-material';
 
 import { useAppSelector } from '../../redux/store';
@@ -27,7 +26,9 @@ import {
   type TrialOfferTab,
 } from '../../hooks/useTrial';
 import { bookingErrorMessage } from '../../hooks/useSessions';
-import { formatSlot, formatTime } from '../trial/trial.types';
+import { formatTime } from '../trial/trial.types';
+import { offerWait } from '../../lib/request-wait';
+import WaitLine from '../requests/wait-line.component';
 
 import '../sessions/dashboard-shell.styles.scss';
 import './trial-requests.styles.scss';
@@ -117,7 +118,7 @@ export const TrialOffersBody: FC = () => {
   );
 };
 
-const OfferCard: FC<{ offer: TrialOffer }> = ({ offer }) => {
+export const OfferCard: FC<{ offer: TrialOffer }> = ({ offer }) => {
   const { t, i18n } = useTranslation();
   const locale = `${i18n.language}-u-nu-latn`;
   const accept = useAcceptTrialOffer();
@@ -194,14 +195,7 @@ const OfferCard: FC<{ offer: TrialOffer }> = ({ offer }) => {
             {offer.note}
           </blockquote>
         )}
-        {pending && (
-          <p className="trial-offer__deadline">
-            <TimerOutlined />
-            {t('TRIAL_OFFERS.ANSWER_BY', {
-              time: formatSlot(offer.expires_at, locale),
-            })}
-          </p>
-        )}
+        {pending && <WaitLine wait={offerWait(offer)} />}
         {!pending && offer.reason && (
           <p className="trial-offer__reason" dir="auto">
             {offer.status === 'declined'
@@ -280,9 +274,9 @@ const OfferCard: FC<{ offer: TrialOffer }> = ({ offer }) => {
           </>
         )}
         {offer.status === 'accepted' && (
-          <Button component={Link} to="/my_sessions" variant="outlined">
-            {t('TRIAL_OFFERS.OPEN_SESSIONS')}
-          </Button>
+          <p className="trial-offer__booked">
+            {t('REQUEST_WAIT.TRIAL_BOOKED')}
+          </p>
         )}
       </div>
     </li>

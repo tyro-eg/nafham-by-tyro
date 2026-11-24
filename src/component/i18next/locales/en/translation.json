@@ -2864,17 +2864,17 @@
     },
     "REQUESTS": {
       "TITLE": "Requests",
-      "SUBTITLE": "Proposals to move a session or change weekly times. Times are in your timezone ({{tz}}).",
+      "SUBTITLE": "Every request in one place: who it is waiting for, and your answer right on the card. Times are in your timezone ({{tz}}).",
       "TABS": {
-        "INBOX": "Needs your answer",
-        "SENT": "Sent",
-        "HISTORY": "History"
+        "INBOX": "Needs you",
+        "SENT": "Waiting on others",
+        "HISTORY": "Finished"
       },
       "ERROR_LOADING": "We couldn't load the requests. Please try again.",
       "EMPTY": {
-        "INBOX": "Nothing to answer right now. We message you in the chat and by email when the other side proposes a change.",
-        "SENT": "You have no open proposals. Move a session from My sessions, or change the weekly times from My packages.",
-        "HISTORY": "Answered proposals will show here."
+        "INBOX": "Nothing needs you right now. We message you in the chat and by email when something does.",
+        "SENT": "Nothing is waiting on anyone else.",
+        "HISTORY": "Finished requests will show here."
       },
       "KIND": {
         "MOVE": "Move a session",
@@ -2890,7 +2890,7 @@
         "TRIALS": "Free trials",
         "CHANGES": "Session changes"
       },
-      "SUBTITLE_TUTOR": "Free-trial requests and proposals to move a session or change weekly times. Times are in your timezone ({{tz}})."
+      "SUBTITLE_TUTOR": "Every request in one place: who it is waiting for, and your answer right on the card. Times are in your timezone ({{tz}})."
     },
     "FREEZE": {
       "BUTTON": "Pause sessions",
@@ -3098,5 +3098,40 @@
     "PLACE_HOURS": "{{through}} of {{of}} h",
     "PLACE_TRIAL": "Free trial {{n}} of {{max}}",
     "USED_UP": "Used up"
+  },
+  "REQUEST_WAIT": {
+    "FOR": "Waiting for: {{who}}",
+    "WHO": {
+      "YOU": "you",
+      "NAME": "{{name}}",
+      "OTHER": "the other side",
+      "TUTOR": "a tutor",
+      "OFFICE": "the Nafham office"
+    },
+    "BY_YOU": "Answer by {{time}}",
+    "UNTIL": "Until {{time}}",
+    "NOTE": {
+      "MOVE": "No answer: the session stays where it is",
+      "WEEKLY": "No answer: the weekly times stay as they are",
+      "OFFER": "No answer: it goes to another tutor",
+      "TRIAL": "We tell you here and by email as soon as a tutor accepts",
+      "TRIAL_UNMATCHED": "Pick another time, or cancel the request",
+      "OFFICE": "The office answers from its side; you will see it here"
+    },
+    "OFFICE_KIND": {
+      "SCHEDULE": "Schedule sessions",
+      "MORE_HOURS": "More hours",
+      "TRIAL": "Free trial",
+      "CHANGE": "Cancel or move"
+    },
+    "OFFICE_STATUS": {
+      "HANDLED": "Done",
+      "DECLINED": "Declined"
+    },
+    "YOU_ASKED_OFFICE": "You asked the Nafham office",
+    "ASKED_ON": "Asked {{when}}",
+    "HOURS_one": "{{count}} hour",
+    "HOURS_other": "{{count}} hours",
+    "TRIAL_BOOKED": "Booked. It is on your sessions now."
   }
 }
