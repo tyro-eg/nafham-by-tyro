@@ -247,101 +247,107 @@ const RequestSessionsModal: FC<RequestSessionsModalProps> = ({
       <div className="request-sessions-modal__body">
         {!changeSession && (
           <>
-        <FormControl
-          component="fieldset"
-          className="request-sessions-modal__field"
-        >
-          <span className="request-sessions-modal__label">
-            {t('SESSION_REQUEST.KIND.LABEL')}
-          </span>
-          <RadioGroup
-            value={kind}
-            onChange={(e) => setKind(e.target.value as SessionRequestKind)}
-          >
-            {hasHours && (
-              <FormControlLabel
-                value="schedule"
-                control={<Radio size="small" />}
-                label={t('SESSION_REQUEST.KIND.SCHEDULE')}
-              />
+            <FormControl
+              component="fieldset"
+              className="request-sessions-modal__field"
+            >
+              <span className="request-sessions-modal__label">
+                {t('SESSION_REQUEST.KIND.LABEL')}
+              </span>
+              <RadioGroup
+                value={kind}
+                onChange={(e) => setKind(e.target.value as SessionRequestKind)}
+              >
+                {hasHours && (
+                  <FormControlLabel
+                    value="schedule"
+                    control={<Radio size="small" />}
+                    label={t('SESSION_REQUEST.KIND.SCHEDULE')}
+                  />
+                )}
+                <FormControlLabel
+                  value="more_hours"
+                  control={<Radio size="small" />}
+                  label={t('SESSION_REQUEST.KIND.MORE_HOURS')}
+                />
+                <FormControlLabel
+                  value="trial"
+                  control={<Radio size="small" />}
+                  label={t('SESSION_REQUEST.KIND.TRIAL')}
+                />
+              </RadioGroup>
+            </FormControl>
+
+            <div className="request-sessions-modal__row">
+              <FormControl
+                className="request-sessions-modal__field"
+                size="small"
+              >
+                <InputLabel id="request-instructor-label">
+                  {t('SESSION_REQUEST.INSTRUCTOR')}
+                </InputLabel>
+                <Select
+                  labelId="request-instructor-label"
+                  label={t('SESSION_REQUEST.INSTRUCTOR')}
+                  value={tutorId}
+                  disabled={!!instructor}
+                  onChange={(e) => setTutorId(e.target.value)}
+                >
+                  <MenuItem value={NONE}>
+                    {t('SESSION_REQUEST.ANY_INSTRUCTOR')}
+                  </MenuItem>
+                  {instructorOptions.map((ins) => (
+                    <MenuItem key={ins.id} value={String(ins.id)}>
+                      {fullName(ins)}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+
+              <FormControl
+                className="request-sessions-modal__field"
+                size="small"
+              >
+                <InputLabel id="request-course-label">
+                  {t('SESSION_REQUEST.COURSE')}
+                </InputLabel>
+                <Select
+                  labelId="request-course-label"
+                  label={t('SESSION_REQUEST.COURSE')}
+                  value={courseId}
+                  onChange={(e) => setCourseId(e.target.value)}
+                >
+                  <MenuItem value={NONE}>
+                    {t('SESSION_REQUEST.ANY_COURSE')}
+                  </MenuItem>
+                  {courseOptions.map((course) => (
+                    <MenuItem key={course.id} value={String(course.id)}>
+                      {course.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </div>
+
+            {kind === 'schedule' && matchedPackage && (
+              <p className="request-sessions-modal__hint">
+                {t('SESSION_REQUEST.HOURS_LEFT', {
+                  hours: formatHours(hoursFree(matchedPackage)),
+                  course: matchedPackage.grade_subject.full_course_name,
+                })}
+              </p>
             )}
-            <FormControlLabel
-              value="more_hours"
-              control={<Radio size="small" />}
-              label={t('SESSION_REQUEST.KIND.MORE_HOURS')}
+
+            <TextField
+              className="request-sessions-modal__field"
+              size="small"
+              type="number"
+              label={t('SESSION_REQUEST.HOURS')}
+              helperText={t('SESSION_REQUEST.HOURS_HINT')}
+              value={hours}
+              onChange={(e) => setHours(e.target.value)}
+              inputProps={{ min: 1, max: 100, step: 1 }}
             />
-            <FormControlLabel
-              value="trial"
-              control={<Radio size="small" />}
-              label={t('SESSION_REQUEST.KIND.TRIAL')}
-            />
-          </RadioGroup>
-        </FormControl>
-
-        <div className="request-sessions-modal__row">
-          <FormControl className="request-sessions-modal__field" size="small">
-            <InputLabel id="request-instructor-label">
-              {t('SESSION_REQUEST.INSTRUCTOR')}
-            </InputLabel>
-            <Select
-              labelId="request-instructor-label"
-              label={t('SESSION_REQUEST.INSTRUCTOR')}
-              value={tutorId}
-              disabled={!!instructor}
-              onChange={(e) => setTutorId(e.target.value)}
-            >
-              <MenuItem value={NONE}>
-                {t('SESSION_REQUEST.ANY_INSTRUCTOR')}
-              </MenuItem>
-              {instructorOptions.map((ins) => (
-                <MenuItem key={ins.id} value={String(ins.id)}>
-                  {fullName(ins)}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-
-          <FormControl className="request-sessions-modal__field" size="small">
-            <InputLabel id="request-course-label">
-              {t('SESSION_REQUEST.COURSE')}
-            </InputLabel>
-            <Select
-              labelId="request-course-label"
-              label={t('SESSION_REQUEST.COURSE')}
-              value={courseId}
-              onChange={(e) => setCourseId(e.target.value)}
-            >
-              <MenuItem value={NONE}>
-                {t('SESSION_REQUEST.ANY_COURSE')}
-              </MenuItem>
-              {courseOptions.map((course) => (
-                <MenuItem key={course.id} value={String(course.id)}>
-                  {course.name}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </div>
-
-        {kind === 'schedule' && matchedPackage && (
-          <p className="request-sessions-modal__hint">
-            {t('SESSION_REQUEST.HOURS_LEFT', {
-              hours: formatHours(hoursFree(matchedPackage)),
-              course: matchedPackage.grade_subject.full_course_name,
-            })}
-          </p>
-        )}
-
-        <TextField
-          className="request-sessions-modal__field"
-          size="small"
-          type="number"
-          label={t('SESSION_REQUEST.HOURS')}
-          helperText={t('SESSION_REQUEST.HOURS_HINT')}
-          value={hours}
-          onChange={(e) => setHours(e.target.value)}
-          inputProps={{ min: 1, max: 100, step: 1 }}
-        />
           </>
         )}
 
@@ -378,17 +384,17 @@ const RequestSessionsModal: FC<RequestSessionsModalProps> = ({
         />
 
         {!changeSession && (
-        <TextField
-          className="request-sessions-modal__field"
-          size="small"
-          multiline
-          minRows={2}
-          label={t('SESSION_REQUEST.NOTE')}
-          placeholder={t('SESSION_REQUEST.NOTE_PLACEHOLDER')}
-          value={note}
-          onChange={(e) => setNote(e.target.value)}
-          inputProps={{ maxLength: 2000 }}
-        />
+          <TextField
+            className="request-sessions-modal__field"
+            size="small"
+            multiline
+            minRows={2}
+            label={t('SESSION_REQUEST.NOTE')}
+            placeholder={t('SESSION_REQUEST.NOTE_PLACEHOLDER')}
+            value={note}
+            onChange={(e) => setNote(e.target.value)}
+            inputProps={{ maxLength: 2000 }}
+          />
         )}
 
         {error && <Alert severity="error">{error}</Alert>}

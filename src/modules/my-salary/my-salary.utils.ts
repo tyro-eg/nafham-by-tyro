@@ -135,7 +135,8 @@ export const toSalaryReport = (data?: MySalaryResponse): SalaryReport => {
     hours: data.totals.hours,
     sessions: data.totals.sessions,
     amount: data.totals.amount,
-    unpricedSessions: data.totals.unpriced + (data.totals.rate_looks_wrong ?? 0),
+    unpricedSessions:
+      data.totals.unpriced + (data.totals.rate_looks_wrong ?? 0),
     upcomingAmount: data.upcoming.amount,
     upcomingSessions: data.upcoming.sessions,
     pricedHours: lines

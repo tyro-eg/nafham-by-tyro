@@ -329,7 +329,9 @@ const MySalary: FC = () => {
                                   ? 'MY_SALARY.LATE_CANCEL_HALF'
                                   : 'MY_SALARY.LATE_CANCEL_FULL',
                                 {
-                                  hours: formatHours(line.cancel_notice_hours ?? 0),
+                                  hours: formatHours(
+                                    line.cancel_notice_hours ?? 0,
+                                  ),
                                 },
                               )}
                             </span>
