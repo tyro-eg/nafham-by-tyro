@@ -388,7 +388,7 @@ $modal-padding-phone: $space-5 2rem;
     &:not(:disabled):active {
       background-color: $brand-600;
       border-color: $brand-600;
-      color: $text-on-dark;
+      color: $on-brand;
     }
   }
 }

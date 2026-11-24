@@ -12,6 +12,8 @@ import {
 } from '@mui/icons-material';
 
 import { useAppSelector } from '../../redux/store';
+import { BackLink } from '../../component/back-link/back-link.component';
+import { getHomePath } from '../../assets/utils/home-path';
 import { selectCurrentUser } from '../../redux/user/user.selectors';
 import { useRtlClass } from '../../assets/utils/utils';
 import { useFamily } from '../../hooks/useFamily';
@@ -280,6 +282,13 @@ const BuyPage: FC = () => {
     <div className={`trial buy ${rtlClass}`}>
       <div className="trial__container container">
         <header className="trial__header">
+          {/* The first step had no way out (23 Nov 2026); later steps go back a step */}
+          {stepIndex <= 0 && (
+            <BackLink
+              fallback={getHomePath(currentUser)}
+              testId="wizard-back"
+            />
+          )}
           <span className="trial__eyebrow">{t('BUY.EYEBROW')}</span>
           <h1 className="trial__title">{t('BUY.TITLE')}</h1>
           <p className="trial__subtitle">{t('BUY.SUBTITLE')}</p>

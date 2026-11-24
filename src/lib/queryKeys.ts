@@ -19,6 +19,9 @@ export interface SessionFilters {
   status?: string;
   tutor_id?: number;
   grade_subject_id?: number;
+  /** Only sessions starting in [from, to) (ISO times): the calendar's dates */
+  from?: string;
+  to?: string;
   pageNumber?: number;
   pageSize?: number;
 }

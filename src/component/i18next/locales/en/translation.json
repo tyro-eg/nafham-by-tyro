@@ -65,7 +65,12 @@
     "REQUESTS": "Requests",
     "GROUP_LEARNING": "Learning",
     "GROUP_MONEY": "Money",
-    "GROUP_HELP": "Help"
+    "GROUP_HELP": "Help",
+    "GROUP_TEACHING": "Teaching",
+    "GROUP_STUDENTS": "Students",
+    "GROUP_ACCOUNT": "Account",
+    "ACCOUNT": "Account",
+    "GROUP_YOU": "You"
   },
   "CARDS": {
     "FREE_ASSESMENT": {
@@ -218,7 +223,9 @@
       "CHAT_1": "Can you show that step again?",
       "CHAT_2": "Sure, watch the board.",
       "CHAT_3": "Got it, thanks!",
-      "MOCK_STUDENT": "Adam · Student"
+      "MOCK_STUDENT": "Adam · Student",
+      "EYEBROW_SYLLABI": "IGCSE · British · American · UAE",
+      "LEAD": "Pick times that suit your family, meet a tutor who teaches your child's exact syllabus, and read notes after every session."
     },
     "PRESS": "As featured in",
     "STATS": {
@@ -274,6 +281,34 @@
       "TITLE": "What parents and students say",
       "SUBTITLE": "Unedited, from families who learn with us.",
       "ROLE": "Parent"
+    },
+    "WEEK": {
+      "TITLE": "A week with Nafham",
+      "SUBTITLE": "A sample family, two children",
+      "SYLLABUS": "Syllabus",
+      "TODAY": "Today",
+      "CHILD_1": "Omar",
+      "CHILD_2": "Lina",
+      "CHILD_AGE": "{{name}}, {{age}}",
+      "SYLLABI": {
+        "IGCSE": "IGCSE",
+        "BRITISH": "British",
+        "AMERICAN": "American",
+        "UAE": "UAE"
+      },
+      "SUBJECTS": {
+        "CHEMISTRY": "Chemistry",
+        "ENGLISH": "English",
+        "MATH": "Math",
+        "MATHS": "Maths",
+        "PHYSICS": "Physics",
+        "SCIENCE": "Science",
+        "SAT_MATH": "SAT Math",
+        "READING": "Reading",
+        "ARABIC": "Arabic"
+      },
+      "NOTE_LEAD": "After yesterday's session:",
+      "NOTE": "Omar balanced all six equations on his own. Next: moles."
     }
   },
   "ENGLISH_COURSE": {
@@ -624,6 +659,11 @@
       "LABEL": "I want more students, even outside my published times",
       "HINT": "Families can ask you for a free trial at any time; you accept or decline each request.",
       "ERROR": "We couldn't save that. Please try again."
+    },
+    "TABS": {
+      "PROFILE": "Profile",
+      "PREFERENCES": "Preferences",
+      "CONTACT": "Contact details"
     }
   },
   "CALENDAR": {
@@ -1098,11 +1138,12 @@
       "LAST_NAME": "Child's last name"
     },
     "PANEL": {
-      "EYEBROW": "Nafham Learning",
-      "TITLE": "Learning that fits around your family.",
+      "TITLE_START": "Learning that fits",
+      "TITLE_END": "around your family",
       "SUBTITLE": "Create the account, add your child, and book a free trial with a tutor who teaches their syllabus.",
-      "QUOTE": "We tried three platforms before Nafham. This is the first one where I actually know what my daughter did in each session.",
-      "QUOTE_BY": "Salma's parent"
+      "FACT_CHILDREN": "Every child under one parent account",
+      "FACT_TRIAL": "A free first session with a matching tutor",
+      "FACT_NOTES": "Hours, sessions and notes in one place"
     }
   },
   "REGISTERED": {
@@ -1411,7 +1452,7 @@
       "UPCOMING": "Upcoming sessions",
       "HOURS_LEARNED": "Hours learned",
       "COMPLETED": "Completed sessions",
-      "HOURS_REMAINING": "Hours remaining",
+      "HOURS_REMAINING": "Hours left",
       "ATTENDANCE": "Attendance"
     },
     "NEXT": {
@@ -1464,7 +1505,7 @@
     "STATS": {
       "STUDENTS": "Students",
       "ACTIVE": "Active students",
-      "HOURS_REMAINING": "Hours remaining",
+      "HOURS_REMAINING": "Hours left",
       "HOURS_TAUGHT": "Hours taught"
     },
     "SEARCH": "Search students by name or email",
@@ -1491,6 +1532,10 @@
       "EMAIL": "Email",
       "SESSIONS": "Sessions",
       "NO_PACKAGE": "No package yet (trial or single sessions)"
+    },
+    "TABS": {
+      "STUDENTS": "Students",
+      "PACKAGES": "Packages"
     }
   },
   "TUTOR_DASHBOARD": {
@@ -1529,7 +1574,7 @@
     "PACKAGES": {
       "TITLE": "Packages",
       "ACTIVE": "Active",
-      "SOLD": "Hours sold",
+      "SOLD": "Hours bought",
       "LEFT": "Hours left",
       "VIEW": "View packages"
     },
@@ -1544,6 +1589,11 @@
     "REVIEWS": {
       "TITLE": "Latest reviews",
       "EMPTY": "No reviews yet. They'll appear here after your students rate their sessions."
+    },
+    "TODAY": {
+      "TITLE": "Today's sessions",
+      "NOW": "Now",
+      "TRIAL": "Free trial"
     }
   },
   "MY_SALARY": {
@@ -1556,7 +1606,7 @@
       "EARNED_MTD": "Earned this month so far",
       "EARNED_MONTH": "Earned this month",
       "SESSIONS": "Paid sessions",
-      "HOURS": "Hours taught",
+      "HOURS": "Paid hours",
       "AVG_RATE": "Average rate per hour"
     },
     "PROJECTION_one": "{{count}} more session is booked this month, worth about {{amount}} once completed.",
@@ -1735,7 +1785,7 @@
   },
   "TRIAL": {
     "TITLE": "Book your free trial",
-    "SUBTITLE": "A free session with one of our tutors, in five quick steps.",
+    "SUBTITLE": "A free session with one of our tutors, in a few quick steps.",
     "STEPS": {
       "COURSE": "Course",
       "WHEN": "When",
@@ -1896,20 +1946,20 @@
     "TITLE": "My availability",
     "HELD_NOTE": "Held for {{student}} until {{date}} while they renew. Contact support to free this time.",
     "HELD_STUDENT": "a student",
-    "SUBTITLE": "Mark the 30-minute slots you can teach. Click a slot or drag across several; use a day name for quick presets. Students and support can only book inside these slots.",
+    "SUBTITLE": "Tap or drag over the times you can teach. Students book only inside them.",
     "TIMEZONE": "Times are in your local time zone ({{tz}})",
     "PREV_WEEK": "Previous week",
     "NEXT_WEEK": "Next week",
     "THIS_WEEK": "This week",
     "SHOW_NIGHT": "Show night hours",
-    "HINT": "Tip: drag with the mouse to fill or clear many slots at once. Booked slots are locked.",
-    "STATS": {
-      "OPEN": "{{hours}} open hours this week",
-      "BOOKED": "{{hours}} booked",
-      "HELD": "{{hours}} held"
-    },
     "LEGEND": {
-      "TITLE": "Legend"
+      "TITLE": "Legend",
+      "OPEN": "Open",
+      "BOOKED": "Booked",
+      "TRIAL": "Free trial",
+      "HELD": "Kept for a student",
+      "ADDING": "Opening (not saved)",
+      "REMOVING": "Closing (not saved)"
     },
     "STATE": {
       "EMPTY": "Not available",
@@ -1945,13 +1995,37 @@
       "ALL_EXIST": "Those weeks already have all of these slots.",
       "DONE": "Added {{count}} slots across the next {{weeks}} week(s)."
     },
-    "PENDING": "{{add}} to open · {{remove}} to close",
     "SAVE": "Save changes",
     "DISCARD": "Discard",
     "DISCARD_DIALOG": "Cancel",
     "SAVED": "Availability saved",
     "SAVE_FAILED": "Could not save your availability.",
-    "LOAD_FAILED": "Could not load availability."
+    "LOAD_FAILED": "Could not load availability.",
+    "DAY": {
+      "OPEN": "{{hours}} h open",
+      "CLOSED": "Closed",
+      "PAST": "Past",
+      "CHANGE": "{{from}} h → {{to}} h"
+    },
+    "BLOCK": {
+      "BOOKED": "Booked",
+      "TRIAL": "Free trial",
+      "KEPT": "Kept for {{student}}",
+      "OPENING": "Opening {{hours}} h",
+      "CLOSING": "Closing {{hours}} h"
+    },
+    "TOTALS": {
+      "OPEN": "{{hours}} h open",
+      "BOOKED": "{{hours}} h booked",
+      "HELD": "{{hours}} h kept for students",
+      "FREE": "{{hours}} h free to book"
+    },
+    "SAVEBAR": {
+      "NOT_SAVED": "Not saved yet",
+      "OPENING": "Opening {{hours}} h",
+      "CLOSING": "Closing {{hours}} h",
+      "MORE": "+{{count}} more"
+    }
   },
   "HOMEWORK": {
     "TITLE": "Homework",
@@ -2092,7 +2166,10 @@
       "INSTRUCTIONS_MAX": "Keep the instructions under 5000 characters",
       "DUE_INVALID": "Enter a valid date and time",
       "DUE_PAST": "The due date must be in the future"
-    }
+    },
+    "SUBTITLE_PARENT": "Your children's homework, their due dates and their tutors' feedback.",
+    "EMPTY_TITLE_PARENT": "No homework right now",
+    "EMPTY_TEXT_PARENT": "When a tutor sets homework for your child, it will show up here."
   },
   "ASSISTANT": {
     "TITLE": "AI Teaching Assistant",
@@ -2301,7 +2378,7 @@
       "TITLE": "Session notes",
       "SUBTITLE": "What each session covered, where your child struggled and what comes next.",
       "ALL_CHILDREN": "All children",
-      "EMPTY": "No session notes yet. They appear after the first recorded session.",
+      "EMPTY": "No session notes yet. Notes come from recorded sessions, and recording is switched on per course in Account › Children.",
       "COVERED": "Covered",
       "STRUGGLED": "Needs work",
       "NEXT": "Next"
@@ -2387,7 +2464,15 @@
       "HOURS_UNIT": "{{count}} h"
     },
     "NOTES_CARD": {
-      "EMPTY": "Notes appear here after a recorded session. Recording is set per course in Family settings."
+      "EMPTY": "Notes appear here after a recorded session. Recording is set per course in Account › Children."
+    },
+    "WEEK": {
+      "TITLE": "This week",
+      "TODAY": "Today",
+      "LIVE": "Live now",
+      "EMPTY": "No sessions in the next 7 days.",
+      "AHEAD_one": "{{count}} session in the next 7 days",
+      "AHEAD_other": "{{count}} sessions in the next 7 days"
     }
   },
   "PAYMENTS": {
@@ -2800,7 +2885,12 @@
       "REASON": "Reason: {{reason}}",
       "WITHDRAW": "Withdraw",
       "WAITING_COUNT_one": "{{count}} request waiting",
-      "WAITING_COUNT_other": "{{count}} requests waiting"
+      "WAITING_COUNT_other": "{{count}} requests waiting",
+      "SECTIONS": {
+        "TRIALS": "Free trials",
+        "CHANGES": "Session changes"
+      },
+      "SUBTITLE_TUTOR": "Free-trial requests and proposals to move a session or change weekly times. Times are in your timezone ({{tz}})."
     },
     "FREEZE": {
       "BUTTON": "Pause sessions",
@@ -2936,6 +3026,18 @@
     "REPORTED": "Thanks, your tutor was told the link isn't working. Press Join again in a few minutes; Nafham Support steps in if it isn't fixed.",
     "REPORT_ERROR": "Couldn't send that, please message your tutor in the chat"
   },
+  "COURSE": {
+    "SUBJECT_NOT_SET": "Subject not set"
+  },
+  "ACCOUNT": {
+    "TITLE": "Account",
+    "SUBTITLE": "Your details, your children's logins and recording, and your payments.",
+    "TABS": {
+      "DETAILS": "Details",
+      "CHILDREN": "Children",
+      "PAYMENTS": "Payments"
+    }
+  },
   "ACTIVATE": {
     "PANEL_TITLE": "Welcome to Nafham",
     "PANEL_SUBTITLE": "Your account was set up for you. Confirm your number to start.",
@@ -2962,5 +3064,39 @@
     "TRY_AGAIN": "Something went wrong. Please try again.",
     "SUBTITLE_EMAIL": "Choose a password for {{email}}, then sign in to see your lessons.",
     "SET_PASSWORD": "Set my password"
+  },
+  "BACK_LINK": {
+    "BACK": "Back",
+    "TO": "Back to {{place}}",
+    "SIGN_UP": "Sign up"
+  },
+  "HOURS_CARD": {
+    "TITLE": "Hours done and left",
+    "ALL_PACKAGES": "All packages",
+    "WITH": "with {{tutor}}",
+    "METER_LABEL": "{{done}} h done, {{missed}} h missed, {{booked}} h booked, {{free}} h free to book, of {{total}} h",
+    "DONE": "{{h}} h done",
+    "MISSED": "{{h}} h missed",
+    "BOOKED": "{{h}} h booked",
+    "FREE": "{{h}} h free to book",
+    "OF": "of {{h}} h",
+    "HOURS": "{{h}} h",
+    "LEFT_IN_ALL": "left in all",
+    "TOTAL_DONE": "done",
+    "TOTAL_MISSED": "missed (counted)",
+    "TOTAL_BOOKED": "booked, to come",
+    "TOTAL_FREE": "left to book",
+    "MORE": "+{{count}} more in My Packages",
+    "TRIALS": "Free trials",
+    "TRIALS_OF": "Free trials · {{name}}",
+    "TRIAL_DONE": "{{count}} done",
+    "TRIAL_BOOKED": "{{count}} booked",
+    "TRIAL_GONE": "{{count}} cancelled or missed",
+    "TRIAL_LEFT": "{{left}} left of {{max}}",
+    "LEFT_CHIP": "{{h}} h left",
+    "PLACE_HOUR": "Hour {{through}} of {{of}}",
+    "PLACE_HOURS": "{{through}} of {{of}} h",
+    "PLACE_TRIAL": "Free trial {{n}} of {{max}}",
+    "USED_UP": "Used up"
   }
 }

@@ -206,14 +206,6 @@ const MobileHeader: FC<HeaderProps> = ({ openFreeTrail }) => {
               >
                 {t('HEADER.USER.PROFILE')}
               </Link>
-
-              <Link
-                to="/account_settings"
-                className="item"
-                onClick={closeMobileHeader}
-              >
-                {t('HEADER.USER.SETTINGS')}
-              </Link>
             </div>
           )}
 

@@ -1,4 +1,4 @@
-import { FC, useState, useEffect, useRef } from 'react';
+import { FC, useState, useEffect, useMemo, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
@@ -113,12 +113,16 @@ const ProfileCalendar: FC<ProfileCalendarProps> = ({
   }));
 
   // Fetch slots using TanStack Query
-  const { data: slots = [] } = useSlots(
+  const { data: slotsData } = useSlots(
     +instructorId,
     dateRange.from,
     dateRange.to,
     !!instructorId,
   );
+  // One empty list, not a new one per render: `data: slots = []` re-ran the
+  // effects below on every render, and through getProfileInfo the whole
+  // profile page ("Maximum update depth exceeded", 19 Nov 2026)
+  const slots = useMemo(() => slotsData ?? [], [slotsData]);
 
   // Mutations for create and delete
   const createSlotsMutation = useCreateSlots();

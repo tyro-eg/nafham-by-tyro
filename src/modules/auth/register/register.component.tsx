@@ -27,9 +27,12 @@ import {
   getNationalities,
   PREFERRED_COUNTRIES,
 } from '../../../assets/utils/countries';
-import { FormatQuote, Star } from '@mui/icons-material';
+import {
+  ChildCareRounded,
+  EventAvailableRounded,
+  MenuBookRounded,
+} from '@mui/icons-material';
 import logo from '../../../assets/images/logo.png';
-import tutor from '../../../assets/images/newLanding/instructor1-cutout.webp';
 
 import '../signin/signin.styles.scss';
 
@@ -101,30 +104,44 @@ const Register: FC = () => {
 
   return (
     <div className="signin register">
-      <aside className="signin__panel" aria-hidden="true">
-        <Link to="/" className="signin__logo">
+      {/* The same calm navy panel as sign-in (23 Nov 2026): no cut-out photo,
+          no quote that isn't from a real family */}
+      <aside className="signin__panel">
+        <span className="signin__ring signin__ring--a" aria-hidden="true" />
+        <span className="signin__ring signin__ring--b" aria-hidden="true" />
+        <span className="signin__ring signin__ring--c" aria-hidden="true" />
+        <Link to="/" className="signin__logo" aria-label="Nafham">
           <img src={logo} alt="" />
         </Link>
         <div className="signin__panel-copy">
-          <p className="signin__eyebrow">{t('REGISTER.PANEL.EYEBROW')}</p>
-          <h2 className="signin__headline">{t('REGISTER.PANEL.TITLE')}</h2>
+          <h2 className="signin__headline">
+            {t('REGISTER.PANEL.TITLE_START')}{' '}
+            <em>{t('REGISTER.PANEL.TITLE_END')}</em>
+          </h2>
           <p className="signin__sub">{t('REGISTER.PANEL.SUBTITLE')}</p>
-        </div>
-        <figure className="signin__quote">
-          <FormatQuote className="signin__quote-mark" />
-          <blockquote>{t('REGISTER.PANEL.QUOTE')}</blockquote>
-          <figcaption>
-            <span className="signin__stars">
-              {[0, 1, 2, 3, 4].map((i) => (
-                <Star key={i} />
-              ))}
-            </span>
-            {t('REGISTER.PANEL.QUOTE_BY')}
-          </figcaption>
-        </figure>
-        <div className="signin__tutor">
-          <span className="signin__ring" />
-          <img src={tutor} alt="" />
+          <ul className="signin__facts">
+            {[
+              {
+                icon: <ChildCareRounded />,
+                text: t('REGISTER.PANEL.FACT_CHILDREN'),
+              },
+              {
+                icon: <EventAvailableRounded />,
+                text: t('REGISTER.PANEL.FACT_TRIAL'),
+              },
+              {
+                icon: <MenuBookRounded />,
+                text: t('REGISTER.PANEL.FACT_NOTES'),
+              },
+            ].map((fact) => (
+              <li key={fact.text}>
+                <span className="signin__fact-icon" aria-hidden="true">
+                  {fact.icon}
+                </span>
+                {fact.text}
+              </li>
+            ))}
+          </ul>
         </div>
       </aside>
 

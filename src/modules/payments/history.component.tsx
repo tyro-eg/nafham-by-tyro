@@ -35,8 +35,12 @@ const CHIP_COLOR: Record<
   disputed: 'error',
 };
 
-/** The payer's receipts: what was paid, when, and anything still open */
-const PaymentsHistory: FC = () => {
+/**
+ * The payer's receipts: what was paid, when, and anything still open.
+ * `embedded`: shown as the Payments tab of a parent's Account page, which
+ * has its own title (19 Nov 2026).
+ */
+const PaymentsHistory: FC<{ embedded?: boolean }> = ({ embedded = false }) => {
   const { t, i18n } = useTranslation();
   const locale = LOCALES[i18n.language as 'en' | 'ar'] ?? enUS;
   const payments = usePayments();
@@ -58,11 +62,13 @@ const PaymentsHistory: FC = () => {
   };
 
   return (
-    <main className="pay-history">
-      <header className="pay-history__head">
-        <h1>{t('PAYMENTS.TITLE')}</h1>
-        <p>{t('PAYMENTS.SUBTITLE')}</p>
-      </header>
+    <main className={`pay-history${embedded ? ' pay-history--embedded' : ''}`}>
+      {!embedded && (
+        <header className="pay-history__head">
+          <h1>{t('PAYMENTS.TITLE')}</h1>
+          <p>{t('PAYMENTS.SUBTITLE')}</p>
+        </header>
+      )}
 
       {payments.isLoading && (
         <div className="pay-history__list">

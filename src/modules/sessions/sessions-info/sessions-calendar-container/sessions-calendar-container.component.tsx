@@ -5,7 +5,7 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import arLocale from '../../../../assets/utils/calendar-locale';
 import { useTranslation } from 'react-i18next';
 import { Popover } from '@mui/material';
-import type { EventClickArg } from '@fullcalendar/core';
+import type { DatesSetArg, EventClickArg } from '@fullcalendar/core';
 import { useInfiniteSessions } from '../../../../hooks/useSessions';
 import type { EventInput } from '@fullcalendar/core';
 import { SessionType } from '../../../../assets/types';
@@ -58,16 +58,35 @@ const SessionsCalendarContainer: React.FC<SessionsCalendarContainerProps> = ({
   );
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
-  // Fetch ALL sessions using infinite query
+  // Only the dates on screen (23 Nov 2026): the calendar used to fetch every
+  // page of sessions, ~1,500 for one family, again every 30 seconds. It
+  // starts with a guess around today and follows the calendar's own dates.
+  const [range, setRange] = useState(() => {
+    const day = 24 * 60 * 60 * 1000;
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return {
+      from: new Date(today.getTime() - 7 * day).toISOString(),
+      to: new Date(today.getTime() + 42 * day).toISOString(),
+    };
+  });
+  const onDatesSet = (arg: DatesSetArg) => {
+    const from = arg.start.toISOString();
+    const to = arg.end.toISOString();
+    setRange((prev) =>
+      prev.from === from && prev.to === to ? prev : { from, to },
+    );
+  };
+
   const {
     data: infiniteData,
     isLoading,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = useInfiniteSessions(100, filters);
+  } = useInfiniteSessions(200, { ...filters, ...range });
 
-  // Fetch all pages on mount
+  // A busy tutor's range can run past one page: fetch the rest of that range
   useEffect(() => {
     if (hasNextPage && !isFetchingNextPage) {
       fetchNextPage();
@@ -211,6 +230,7 @@ const SessionsCalendarContainer: React.FC<SessionsCalendarContainerProps> = ({
           direction={i18n.dir()}
           locale={i18n.language === 'ar' ? arLocale : undefined}
           events={calendarEvents}
+          datesSet={onDatesSet}
           eventContent={renderEventContent}
           eventClick={handleEventClick}
           editable={false}

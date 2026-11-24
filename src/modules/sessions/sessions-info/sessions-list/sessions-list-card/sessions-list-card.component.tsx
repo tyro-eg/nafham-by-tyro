@@ -16,6 +16,7 @@ import {
 } from '@mui/icons-material';
 import CancelSessionModal from '../../../../../modals/cancel-session-modal/cancel-session-modal.component';
 import RescheduleSessionModal from '../../../../../modals/reschedule-session-modal/reschedule-session-modal.component';
+import { hoursText } from '../../../../../lib/hours-meter';
 import { formatSlot } from '../../../../trial/trial.types';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
@@ -285,8 +286,32 @@ const SessionListCard: React.FC<SessionListCardProps> = ({ session }) => {
             className={`sessions-card__badge sessions-card__badge--${typeVariant}`}
           >
             {session.session_type === 'group' ? <Group /> : <Person />}
-            {sessionName}
+            {/* "Free trial 2 of 3" when the server says which one (23 Nov 2026) */}
+            {session.place && 'trial' in session.place
+              ? t('HOURS_CARD.PLACE_TRIAL', {
+                  n: session.place.trial,
+                  max: session.place.trial_max,
+                })
+              : sessionName}
           </span>
+
+          {/* "Hour 7 of 12": where this session sits in its package (23 Nov 2026) */}
+          {session.place && 'through' in session.place && (
+            <span
+              className="sessions-card__badge sessions-card__badge--place"
+              data-testid={`place-${session.id}`}
+            >
+              {Number.isInteger(session.place.through)
+                ? t('HOURS_CARD.PLACE_HOUR', {
+                    through: session.place.through,
+                    of: hoursText(session.place.of),
+                  })
+                : t('HOURS_CARD.PLACE_HOURS', {
+                    through: hoursText(session.place.through),
+                    of: hoursText(session.place.of),
+                  })}
+            </span>
+          )}
         </div>
 
         {phase === 'awaiting' && (

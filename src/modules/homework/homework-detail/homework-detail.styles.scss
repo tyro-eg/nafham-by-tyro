@@ -39,28 +39,6 @@
   text-align: start;
 }
 
-.hw-back {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  align-self: flex-start;
-  font-size: $font-sm;
-  font-weight: 600;
-  color: $text-body;
-
-  svg {
-    font-size: 1.8rem;
-  }
-
-  .rtl & svg {
-    transform: scaleX(-1);
-  }
-
-  &:hover {
-    color: $brand-700;
-  }
-}
-
 // ---------- Panels ----------
 .hw-section {
   @include hw-panel;

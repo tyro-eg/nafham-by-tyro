@@ -50,6 +50,13 @@ $gold-fg: #b07800;
     text-align: center;
   }
 
+  // Back on the first step (23 Nov 2026): its own line, centred above the eyebrow
+  &__header > .back-link {
+    display: flex;
+    width: fit-content;
+    margin: 0 auto $space-4;
+  }
+
   &__eyebrow {
     @include eyebrow;
     margin-bottom: $space-3;
@@ -102,14 +109,20 @@ $gold-fg: #b07800;
     padding: $space-5;
     border-radius: $trial-radius;
     color: $text-on-dark;
+    // New look (23 Nov 2026): the navy band with squared paper and a blue
+    // glow, as on the family home (set here directly so the panel stays sticky)
     background:
       radial-gradient(
         28rem 20rem at 100% 0%,
-        rgba(255, 255, 255, 0.16),
+        rgba($brand-400, 0.3),
         transparent 70%
       ),
-      linear-gradient(160deg, #0b7ddb 0%, $navy-950 100%);
-    box-shadow: 0 16px 40px rgba(0, 81, 160, 0.25);
+      linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px) 0 0 /
+        2.2rem 2.2rem,
+      linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px) 0
+        0 / 2.2rem 2.2rem,
+      $ink;
+    box-shadow: 0 16px 40px rgba($ink, 0.25);
 
     @include respond(tab-port) {
       position: static;
@@ -546,7 +559,7 @@ $gold-fg: #b07800;
     &.is-selected:hover:not(:disabled) {
       border-color: $brand-600;
       background-color: $brand-600;
-      color: #fff;
+      color: $on-brand;
       box-shadow: 0 8px 18px rgba($brand-600, 0.3);
     }
 
@@ -575,7 +588,7 @@ $gold-fg: #b07800;
 
       .trial-choice__icon {
         background-color: $brand-600;
-        color: #fff;
+        color: $on-brand;
       }
     }
   }
@@ -669,12 +682,12 @@ $gold-fg: #b07800;
   &.is-selected {
     border-color: $brand-600;
     background-color: $brand-600;
-    color: #fff;
+    color: $on-brand;
     box-shadow: 0 8px 18px rgba($brand-600, 0.3);
 
     .trial-day__weekday,
     .trial-day__month {
-      color: rgba(255, 255, 255, 0.8);
+      color: rgba($ink, 0.75);
     }
 
     .trial-day__count {
@@ -701,7 +714,7 @@ $gold-fg: #b07800;
 
   &:hover:not(:disabled) {
     background-color: $brand-600;
-    color: #fff;
+    color: $on-brand;
   }
 
   &:focus-visible {

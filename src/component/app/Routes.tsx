@@ -4,11 +4,9 @@ import GuardedRoute from '../guarded-route/guarded-route.component';
 import Loader from './Loader';
 import { CurrentUser } from '../../assets/types';
 import { getHomePath } from '../../assets/utils/home-path';
+import { BackTrail } from '../back-link/back-link.component';
 
 const Home = lazy(() => import('../../modules/home/index'));
-const CalendarPage = lazy(
-  () => import('../../modules/calendar/index.component'),
-);
 const AvailabilityPage = lazy(
   () => import('../../modules/availability/index.component'),
 );
@@ -21,7 +19,9 @@ const TutorDashboard = lazy(
 );
 const Dashboard = lazy(() => import('../../modules/dashboard/index.component'));
 const SignIn = lazy(() => import('../../modules/auth/signin/signin.component'));
-const Activate = lazy(() => import('../../modules/auth/activate/activate.component'));
+const Activate = lazy(
+  () => import('../../modules/auth/activate/activate.component'),
+);
 const Register = lazy(
   () => import('../../modules/auth/register/register.component'),
 );
@@ -33,9 +33,6 @@ const Impersonate = lazy(
 );
 const Handoff = lazy(
   () => import('../../modules/auth/handoff/handoff.component'),
-);
-const AccountSettings = lazy(
-  () => import('../../modules/user/account-settings/index'),
 );
 const EditProfile = lazy(() => import('../../modules/user/edit-profile'));
 const PrivateSessions = lazy(
@@ -57,17 +54,12 @@ const DeleteAccount = lazy(
   () => import('../../modules/delete-account/index.component'),
 );
 const TrialPage = lazy(() => import('../../modules/trial/index.component'));
-const TrialRequests = lazy(
-  () => import('../../modules/trial-requests/index.component'),
-);
 const RequestsPage = lazy(
   () => import('../../modules/requests/index.component'),
 );
 const BuyPage = lazy(() => import('../../modules/buy/index.component'));
 const FamilyHome = lazy(() => import('../../modules/family/index.component'));
-const FamilySettings = lazy(
-  () => import('../../modules/family/family-settings.component'),
-);
+const AccountPage = lazy(() => import('../../modules/account/index.component'));
 const FamilyNotes = lazy(
   () => import('../../modules/family/family-notes.component'),
 );
@@ -87,6 +79,7 @@ const RoutesComponent: React.FC<RoutesProps> = ({ currentUser }) => {
   const isParent = currentUser?.type === 'Parent';
   return (
     <Suspense fallback={<Loader />}>
+      <BackTrail />
       <Routes>
         <Route
           path="/"
@@ -122,11 +115,14 @@ const RoutesComponent: React.FC<RoutesProps> = ({ currentUser }) => {
           path="/family"
           element={<GuardedRoute element={<FamilyHome />} auth={isParent} />}
         />
+        {/* One Account page (19 Nov 2026): details, children, payments */}
+        <Route
+          path="/account"
+          element={<GuardedRoute element={<AccountPage />} auth={isParent} />}
+        />
         <Route
           path="/family/settings"
-          element={
-            <GuardedRoute element={<FamilySettings />} auth={isParent} />
-          }
+          element={<Navigate to="/account?tab=details" replace />}
         />
         <Route
           path="/family/notes"
@@ -136,10 +132,14 @@ const RoutesComponent: React.FC<RoutesProps> = ({ currentUser }) => {
         <Route
           path="/payments"
           element={
-            <GuardedRoute
-              element={<PaymentsHistory />}
-              auth={isParent || currentUser?.type === 'Student'}
-            />
+            isParent ? (
+              <Navigate to="/account?tab=payments" replace />
+            ) : (
+              <GuardedRoute
+                element={<PaymentsHistory />}
+                auth={currentUser?.type === 'Student'}
+              />
+            )
           }
         />
         <Route path="/payments/:slug/return" element={<PaymentReturn />} />
@@ -177,10 +177,12 @@ const RoutesComponent: React.FC<RoutesProps> = ({ currentUser }) => {
         <Route
           path="/account_settings"
           element={
-            <GuardedRoute
-              element={<AccountSettings />}
-              auth={!!currentUser && currentUser.type === 'Tutor'}
-            />
+            currentUser?.type === 'Tutor' ? (
+              // Contact details live in My Profile since 19 Nov 2026
+              <Navigate to={`/profile/${currentUser.id}?tab=contact`} replace />
+            ) : (
+              <Navigate to={getHomePath(currentUser)} replace />
+            )
           }
         />
         <Route
@@ -201,9 +203,8 @@ const RoutesComponent: React.FC<RoutesProps> = ({ currentUser }) => {
         />
         <Route
           path="/calendar"
-          element={
-            <GuardedRoute element={<CalendarPage />} auth={!!currentUser} />
-          }
+          // The calendar is a view of My Sessions since 23 Nov 2026
+          element={<Navigate to="/my_sessions?view=calendar" replace />}
         />
         <Route
           path="/availability"
@@ -244,12 +245,8 @@ const RoutesComponent: React.FC<RoutesProps> = ({ currentUser }) => {
         {/* A tutor's free-trial requests; their emails and chat notices link here */}
         <Route
           path="/trial_requests"
-          element={
-            <GuardedRoute
-              element={<TrialRequests />}
-              auth={!!currentUser && currentUser.type === 'Tutor'}
-            />
-          }
+          // Free-trial requests are a tab of Requests since 23 Nov 2026
+          element={<Navigate to="/requests?tab=trials" replace />}
         />
         <Route
           path="/my_sessions"
@@ -264,7 +261,14 @@ const RoutesComponent: React.FC<RoutesProps> = ({ currentUser }) => {
         />
         <Route
           path="/my_packages"
-          element={<GuardedRoute element={<Packages />} auth={!!currentUser} />}
+          element={
+            currentUser?.type === 'Tutor' ? (
+              // A tutor's packages are a tab of My Students (23 Nov 2026)
+              <Navigate to="/my_students?tab=packages" replace />
+            ) : (
+              <GuardedRoute element={<Packages />} auth={!!currentUser} />
+            )
+          }
         />
         <Route
           path="/messages"

@@ -1,5 +1,5 @@
 body {
-  font-family: 'Inter', Arial, Helvetica, sans-serif;
+  font-family: $font-body-family;
   font-weight: 400;
   font-size: $font-base;
   line-height: 1.6;
@@ -17,9 +17,10 @@ h5,
 h6 {
   margin: 0;
   color: $text-strong;
-  font-weight: 700;
+  font-family: $font-display-family;
+  font-weight: 600;
   line-height: 1.2;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.015em;
   backface-visibility: hidden;
 }
 

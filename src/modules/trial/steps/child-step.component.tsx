@@ -43,7 +43,7 @@ const ChildStep: FC<ChildStepProps> = ({ childId, onNext }) => {
           <p>{t('TRIAL.CHILD.NONE')}</p>
           <Button
             component={Link}
-            to="/family/settings"
+            to="/account?tab=children"
             variant="contained"
             startIcon={<PersonAddRounded />}
           >
@@ -72,7 +72,7 @@ const ChildStep: FC<ChildStepProps> = ({ childId, onNext }) => {
             </button>
           ))}
           <Link
-            to="/family/settings"
+            to="/account?tab=children"
             className="trial__child trial__child--add"
           >
             <PersonAddRounded aria-hidden="true" />

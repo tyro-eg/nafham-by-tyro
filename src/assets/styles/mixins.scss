@@ -214,7 +214,7 @@ ORDER: Base + typography > general layout + grid > page layout > components
 @mixin button-primary {
   @include button-base;
   background-color: $brand-600;
-  color: $text-on-dark;
+  color: $on-brand;
 
   &:hover {
     background-color: $brand-700;
@@ -295,4 +295,46 @@ ORDER: Base + typography > general layout + grid > page layout > components
   line-height: 2rem;
   background-color: $bg;
   color: $color;
+}
+
+// The new look's navy band (23 Nov 2026): ink with faint squared paper and a
+// soft Nafham-blue glow in the far corner. Children sit above both layers.
+@mixin ink-band($glow-size: 42rem) {
+  position: relative;
+  overflow: hidden;
+  background-color: $ink;
+  color: #fff;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    background-size: 2.2rem 2.2rem;
+    mask-image: linear-gradient(180deg, #000 30%, transparent 100%);
+    pointer-events: none;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset-inline-end: -$glow-size * 0.3;
+    top: -$glow-size * 0.52;
+    width: $glow-size;
+    height: $glow-size;
+    border-radius: 50%;
+    background: radial-gradient(
+      circle,
+      rgba(58, 197, 241, 0.35),
+      transparent 65%
+    );
+    pointer-events: none;
+  }
+
+  > * {
+    position: relative;
+    z-index: 1;
+  }
 }

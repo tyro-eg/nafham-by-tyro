@@ -54,6 +54,8 @@ export interface FamilyChild {
   active: boolean;
   next_session: FamilySession | null;
   upcoming: FamilySessionSummary[];
+  /** Sessions from a day back to eight days ahead, for the week timetable */
+  week?: FamilySessionSummary[];
   hours_left: number;
   homework_due: number;
   latest_note_at: string | null;

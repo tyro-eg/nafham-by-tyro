@@ -27,7 +27,7 @@ Application routing configuration using React Router v6.
 - `/login` - Sign in (redirects if authenticated)
 - `/register` - Registration (redirects to `/registered` if authenticated)
 - `/registered` - Post-registration page (protected)
-- `/account_settings` - Account settings (protected, Tutor only)
+- `/account_settings` - Old address: opens the Contact details tab of the tutor's My Profile
 - `/home` - Private sessions listing (protected)
 - `/my_sessions` - User sessions (protected)
 - `/profile/:id` - Profile edit page (protected)

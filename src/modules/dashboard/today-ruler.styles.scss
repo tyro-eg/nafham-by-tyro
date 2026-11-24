@@ -1,0 +1,135 @@
+@import '../../assets/styles/variables.scss';
+@import '../../assets/styles/mixins.scss';
+
+// The tutor's day on an hour ruler (23 Nov 2026). On a phone it keeps a
+// readable width and scrolls sideways, like the family week.
+.ruler-scroll {
+  margin-top: $space-5;
+  overflow-x: auto;
+}
+
+.ruler {
+  position: relative;
+  // One row of 5.4rem per lane (overlapping sessions), plus the hour labels
+  height: calc(3.8rem + var(--lanes, 1) * 5.4rem);
+
+  @include respond(phone) {
+    min-width: 64rem;
+  }
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 1.4rem;
+  background-color: rgba(255, 255, 255, 0.05);
+
+  // Marks and sessions sit inside this, so the edge labels have room
+  &__track {
+    position: absolute;
+    inset: 0 2.4rem;
+  }
+
+  &__mark {
+    position: absolute;
+    top: 2.6rem;
+    bottom: 0.8rem;
+    width: 1px;
+    background-color: rgba(255, 255, 255, 0.08);
+  }
+
+  &__hour {
+    position: absolute;
+    top: -1.9rem;
+    inset-inline-start: 0;
+    transform: translateX(-50%);
+    font-size: 1.1rem;
+    white-space: nowrap;
+    color: #7f97b0;
+
+    .rtl & {
+      transform: translateX(50%);
+    }
+  }
+
+  &__now {
+    position: absolute;
+    top: 2.2rem;
+    bottom: 0.4rem;
+    z-index: 2;
+    width: 2px;
+    border-radius: 2px;
+    background-color: $sun;
+
+    span {
+      position: absolute;
+      bottom: 0;
+      inset-inline-start: 0.6rem;
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: $sun;
+    }
+  }
+
+  &__block {
+    position: absolute;
+    top: 3rem;
+    height: 4.8rem;
+    display: grid;
+    align-content: center;
+    padding: 0.4rem 0.9rem;
+    overflow: hidden;
+    border-radius: 1rem;
+    border-inline-start: 4px solid $brand-400;
+    background-color: #fff;
+    color: $ink;
+    font-size: 1.2rem;
+    line-height: 1.3;
+    white-space: nowrap;
+    text-decoration: none;
+    animation: ruler-in 0.5s both;
+
+    b {
+      font-family: $font-display-family;
+      font-weight: 600;
+      @include ellipsis;
+    }
+
+    span {
+      color: $text-body;
+      @include ellipsis;
+    }
+
+    &:hover {
+      transform: translateY(-1px);
+    }
+
+    &:focus-visible {
+      outline: 2px solid $brand-400;
+      outline-offset: 2px;
+    }
+
+    &--past {
+      opacity: 0.55;
+    }
+
+    &--live {
+      border-color: $mint;
+    }
+
+    &--trial {
+      border-color: #7b61ff;
+    }
+  }
+}
+
+@keyframes ruler-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.8rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ruler__block {
+    animation: none;
+  }
+}
