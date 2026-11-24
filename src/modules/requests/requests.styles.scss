@@ -276,3 +276,66 @@
     }
   }
 }
+
+// The count on a tab, and the "Waiting for" line every open request carries
+// (24 Nov 2026): sky while it waits on someone else, amber when it needs you.
+.requests__count {
+  display: inline-block;
+  min-width: 2rem;
+  margin-inline-start: 0.6rem;
+  padding: 0 0.6rem;
+  border-radius: $radius-pill;
+  background: $brand-500;
+  color: #fff;
+  font-size: 1.1rem;
+  line-height: 1.8rem;
+  text-align: center;
+}
+
+.wait-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem 1.4rem;
+  margin: $space-3 0 0;
+  padding: 0.8rem 1.2rem;
+  border: 1px dashed $brand-100;
+  border-radius: $radius-md;
+  background: $brand-50;
+  color: $text-body;
+  font-size: 1.3rem;
+
+  &__who {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    color: $brand-700;
+    font-weight: 700;
+  }
+
+  &__dot {
+    width: 0.8rem;
+    height: 0.8rem;
+    border-radius: 50%;
+    background: $brand-500;
+  }
+
+  &--you {
+    border-color: rgba($warning-500, 0.35);
+    background: $warning-50;
+
+    .wait-line__who {
+      color: $warning-500;
+    }
+
+    .wait-line__dot {
+      background: $warning-500;
+    }
+  }
+}
+
+.trial-offer__booked {
+  margin: 0;
+  color: $success-500;
+  font-weight: 600;
+}

@@ -13,7 +13,7 @@ import {
 import { useAppSelector } from '../../redux/store';
 import { selectCurrentUser } from '../../redux/user/user.selectors';
 import { useRtlClass } from '../../assets/utils/utils';
-import logo from '../../assets/images/logo.png';
+import NafhamMark from '../../component/nafham-mark/nafham-mark.component';
 
 import './footer.styles.scss';
 
@@ -31,7 +31,7 @@ const Footer = () => {
         <div className="app-footer__top">
           <div className="app-footer__brand">
             <Link to="/" className="logo">
-              <img src={logo} alt="tyro logo" />
+              <NafhamMark size="md" byline />
             </Link>
             <p className="app-footer__tagline">{t('LANDING.BLOCK1.TITLE')}</p>
           </div>

@@ -68,9 +68,9 @@
       }
 
       &--navy {
-        --tone-50: #{$gray-50};
-        --tone-200: #{$gray-200};
-        --tone-600: #{$navy-800};
+        --tone-50: #{$brand-50};
+        --tone-200: #{$brand-200};
+        --tone-600: #{$brand-800};
       }
     }
 

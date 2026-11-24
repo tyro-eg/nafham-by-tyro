@@ -19,6 +19,9 @@ import { selectCurrentUser } from '../../redux/user/user.selectors';
 import { setActiveChildId } from '../../lib/family-child';
 import { emptyDraft, formatSlot, saveDraft } from './trial.types';
 
+import { trialRequestWait } from '../../lib/request-wait';
+import WaitLine from '../requests/wait-line.component';
+
 import './trial-requests-card.styles.scss';
 
 interface TrialRequestsCardProps {
@@ -56,7 +59,7 @@ const TrialRequestsCard: FC<TrialRequestsCardProps> = ({
       </header>
       <ul className="trial-reqs__list">
         {open.map((request) => (
-          <RequestRow
+          <TrialRequestRow
             key={request.id}
             request={request}
             showStudent={showStudent}
@@ -67,10 +70,10 @@ const TrialRequestsCard: FC<TrialRequestsCardProps> = ({
   );
 };
 
-const RequestRow: FC<{ request: TrialRequest; showStudent: boolean }> = ({
-  request,
-  showStudent,
-}) => {
+export const TrialRequestRow: FC<{
+  request: TrialRequest;
+  showStudent: boolean;
+}> = ({ request, showStudent }) => {
   const { t, i18n } = useTranslation();
   const locale = `${i18n.language}-u-nu-latn`;
   const cancel = useCancelTrialRequest();
@@ -132,20 +135,14 @@ const RequestRow: FC<{ request: TrialRequest; showStudent: boolean }> = ({
         <p className="trial-req__meta">
           {formatSlot(request.start_time, locale)} · {asked}
         </p>
-        {pending && request.pending_until && (
-          <p className="trial-req__deadline">
-            {t('TRIAL.SENT.BY', {
-              time: formatSlot(request.pending_until, locale),
-            })}
-          </p>
-        )}
-        {!pending && (
+        {request.status === 'unmatched' && (
           <p className="trial-req__deadline">
             {t(
               `TRIAL.REQUESTS.REASON.${(request.unmatched_reason ?? 'no_candidates').toUpperCase()}`,
             )}
           </p>
         )}
+        {request.actionable && <WaitLine wait={trialRequestWait(request)} />}
         {error && (
           <Alert severity="error" className="trial-req__error">
             {error}
@@ -153,7 +150,7 @@ const RequestRow: FC<{ request: TrialRequest; showStudent: boolean }> = ({
         )}
       </div>
       <div className="trial-req__actions">
-        {!pending && (
+        {request.status === 'unmatched' && request.actionable && (
           <Button
             component={Link}
             to="/trial"
@@ -165,36 +162,37 @@ const RequestRow: FC<{ request: TrialRequest; showStudent: boolean }> = ({
             {t('TRIAL.REQUESTS.PICK_AGAIN')}
           </Button>
         )}
-        {confirming ? (
-          <>
-            <Button
-              size="small"
-              color="error"
-              variant="outlined"
-              disabled={cancel.isPending}
-              onClick={doCancel}
-            >
-              {t('TRIAL.REQUESTS.CANCEL_CONFIRM')}
-            </Button>
+        {request.actionable &&
+          (confirming ? (
+            <>
+              <Button
+                size="small"
+                color="error"
+                variant="outlined"
+                disabled={cancel.isPending}
+                onClick={doCancel}
+              >
+                {t('TRIAL.REQUESTS.CANCEL_CONFIRM')}
+              </Button>
+              <Button
+                size="small"
+                variant="text"
+                disabled={cancel.isPending}
+                onClick={() => setConfirming(false)}
+              >
+                {t('TRIAL.REQUESTS.KEEP')}
+              </Button>
+            </>
+          ) : (
             <Button
               size="small"
               variant="text"
-              disabled={cancel.isPending}
-              onClick={() => setConfirming(false)}
+              color="inherit"
+              onClick={() => setConfirming(true)}
             >
-              {t('TRIAL.REQUESTS.KEEP')}
+              {t('TRIAL.REQUESTS.CANCEL')}
             </Button>
-          </>
-        ) : (
-          <Button
-            size="small"
-            variant="text"
-            color="inherit"
-            onClick={() => setConfirming(true)}
-          >
-            {t('TRIAL.REQUESTS.CANCEL')}
-          </Button>
-        )}
+          ))}
       </div>
     </li>
   );

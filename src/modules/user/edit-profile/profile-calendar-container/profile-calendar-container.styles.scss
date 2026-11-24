@@ -209,7 +209,7 @@
           .fc-button-active {
             background-color: $brand-600 !important;
             border-color: $brand-600 !important;
-            color: $text-on-dark !important;
+            color: $on-brand !important;
 
             &:focus {
               box-shadow: none;
@@ -235,7 +235,7 @@
         .fc-duplicateWeek-button {
           background-color: $brand-600;
           border-color: $brand-600;
-          color: $text-on-dark;
+          color: $on-brand;
           font-weight: 600;
           margin-right: 0.75rem;
           padding: 0.4rem 1rem;

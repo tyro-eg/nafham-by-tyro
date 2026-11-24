@@ -6,7 +6,6 @@ import {
   AccountCircleRounded,
   AddShoppingCartRounded,
   AssignmentRounded,
-  CalendarMonthRounded,
   CloseRounded,
   ChevronLeftRounded,
   ChevronRightRounded,
@@ -22,12 +21,11 @@ import {
   PaymentsRounded,
   PeopleAltRounded,
   PersonSearchRounded,
-  SettingsRounded,
+  ManageAccountsRounded,
   AutoAwesomeRounded,
   FamilyRestroomRounded,
   MenuBookRounded,
   ReceiptLongRounded,
-  ScheduleSendRounded,
   EventRepeatRounded,
 } from '@mui/icons-material';
 
@@ -89,6 +87,7 @@ const SidebarLayout: FC<SidebarLayoutProps> = ({ children }) => {
   );
   const requestsWaiting =
     (inboxMoves.data?.length ?? 0) + (inboxWeekly.data?.length ?? 0);
+  const tutorTrialsWaiting = trialOffers.data?.length ?? 0;
   const requestsItem: NavItem = {
     to: '/requests',
     icon: <EventRepeatRounded />,
@@ -167,6 +166,11 @@ const SidebarLayout: FC<SidebarLayoutProps> = ({ children }) => {
       ]
     : [];
 
+  // Tutors: the dashboard first, then four small groups (19 Nov 2026: 13
+  // loose links before), like the parent's menu
+  const teaching = t('NAVIGATION.GROUP_TEACHING');
+  const studentsGroup = t('NAVIGATION.GROUP_STUDENTS');
+  const you = t('NAVIGATION.GROUP_YOU');
   const tutorItems: NavItem[] = [
     {
       to: '/dashboard',
@@ -174,65 +178,58 @@ const SidebarLayout: FC<SidebarLayoutProps> = ({ children }) => {
       label: t('NAVIGATION.DASHBOARD'),
     },
     {
-      to: '/trial_requests',
-      icon: <ScheduleSendRounded />,
-      label: t('NAVIGATION.TRIAL_REQUESTS'),
-      badge: trialOffers.data?.length ?? 0,
-      badgeLabel: t('TRIAL_OFFERS.WAITING_COUNT', {
-        count: trialOffers.data?.length ?? 0,
-      }),
+      to: '/my_sessions',
+      icon: <EventNoteRounded />,
+      label: t('NAVIGATION.SESSIONS'),
+      group: teaching,
     },
-    requestsItem,
     {
       to: '/availability',
       icon: <EditCalendarRounded />,
       label: t('NAVIGATION.AVAILABILITY'),
-    },
-    {
-      to: '/my_students',
-      icon: <GroupsRounded />,
-      label: t('NAVIGATION.MY_STUDENTS'),
-    },
-    {
-      to: '/my_sessions',
-      icon: <EventNoteRounded />,
-      label: t('NAVIGATION.SESSIONS'),
+      group: teaching,
     },
     {
       to: '/homework',
       icon: <AssignmentRounded />,
       label: t('NAVIGATION.HOMEWORK'),
+      group: teaching,
     },
     {
       to: '/assistant',
       icon: <AutoAwesomeRounded />,
       label: t('NAVIGATION.ASSISTANT'),
+      group: teaching,
     },
     {
-      to: '/calendar',
-      icon: <CalendarMonthRounded />,
-      label: t('NAVIGATION.CALENDAR'),
+      to: '/my_students',
+      icon: <GroupsRounded />,
+      label: t('NAVIGATION.MY_STUDENTS'),
+      group: studentsGroup,
     },
-    ...messagesItem,
+    // Free trials joined Requests (23 Nov 2026): one count for everything
+    // waiting for the tutor's answer
     {
-      to: '/my_packages',
-      icon: <Inventory2Rounded />,
-      label: t('NAVIGATION.PACKAGES'),
+      ...requestsItem,
+      badge: requestsWaiting + tutorTrialsWaiting,
+      badgeLabel: t('SESSION_CHANGES.REQUESTS.WAITING_COUNT', {
+        count: requestsWaiting + tutorTrialsWaiting,
+      }),
+      group: studentsGroup,
     },
+    ...messagesItem.map((item) => ({ ...item, group: studentsGroup })),
+    // My Packages joined My Students; salary and profile share "You"
     {
       to: '/my_salary',
       icon: <PaymentsRounded />,
       label: t('NAVIGATION.MY_SALARY'),
+      group: you,
     },
     {
       to: `/profile/${currentUser.id}`,
       icon: <AccountCircleRounded />,
       label: t('HEADER.USER.PROFILE'),
-    },
-    {
-      to: '/account_settings',
-      icon: <SettingsRounded />,
-      label: t('HEADER.USER.SETTINGS'),
+      group: you,
     },
   ];
 
@@ -263,11 +260,6 @@ const SidebarLayout: FC<SidebarLayoutProps> = ({ children }) => {
       to: '/homework',
       icon: <AssignmentRounded />,
       label: t('NAVIGATION.HOMEWORK'),
-    },
-    {
-      to: '/calendar',
-      icon: <CalendarMonthRounded />,
-      label: t('NAVIGATION.CALENDAR'),
     },
     ...messagesItem,
     {
@@ -305,12 +297,6 @@ const SidebarLayout: FC<SidebarLayoutProps> = ({ children }) => {
       group: learning,
     },
     {
-      to: '/calendar',
-      icon: <CalendarMonthRounded />,
-      label: t('NAVIGATION.CALENDAR'),
-      group: learning,
-    },
-    {
       to: '/homework',
       icon: <AssignmentRounded />,
       label: t('NAVIGATION.HOMEWORK'),
@@ -334,18 +320,13 @@ const SidebarLayout: FC<SidebarLayoutProps> = ({ children }) => {
       label: t('NAVIGATION.PACKAGES'),
       group: money,
     },
-    {
-      to: '/payments',
-      icon: <ReceiptLongRounded />,
-      label: t('NAVIGATION.PAYMENTS'),
-      group: money,
-    },
     { ...requestsItem, group: help },
     ...messagesItem.map((item) => ({ ...item, group: help })),
+    // Details, children and payments on one page (19 Nov 2026)
     {
-      to: '/family/settings',
-      icon: <SettingsRounded />,
-      label: t('HEADER.USER.SETTINGS'),
+      to: '/account',
+      icon: <ManageAccountsRounded />,
+      label: t('NAVIGATION.ACCOUNT'),
       group: help,
     },
   ];
@@ -366,7 +347,7 @@ const SidebarLayout: FC<SidebarLayoutProps> = ({ children }) => {
   const accountLink = isTutor
     ? `/profile/${currentUser.id}`
     : isParent
-      ? '/family/settings'
+      ? '/account'
       : '/dashboard';
   const roleLabel = isTutor
     ? t('TUTOR_DASHBOARD.ROLE')

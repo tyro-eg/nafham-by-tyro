@@ -144,3 +144,13 @@ html[dir='rtl'] .profile {
     letter-spacing: 0;
   }
 }
+
+// Back to the list this profile was opened from (23 Nov 2026)
+.profile__back {
+  padding-top: 1.6rem;
+  padding-bottom: 0;
+
+  .back-link {
+    margin-bottom: 0;
+  }
+}

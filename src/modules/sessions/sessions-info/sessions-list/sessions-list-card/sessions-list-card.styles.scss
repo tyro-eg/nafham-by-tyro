@@ -167,6 +167,12 @@
       @include session-type-badge(private);
     }
 
+    // Where the session sits in its package: "Hour 7 of 12" (23 Nov 2026)
+    &--place {
+      background: #e7f8f3;
+      color: #127a67;
+    }
+
     &--trial {
       @include session-type-badge(trial);
     }

@@ -32,7 +32,7 @@ import type {
   SessionType,
 } from '../../assets/types';
 import { useRtlClass } from '../../assets/utils/utils';
-import { subjectName } from '../dashboard/dashboard.utils';
+import { courseLabel, subjectName } from '../dashboard/dashboard.utils';
 import { formatRelative } from '../homework/homework.utils';
 import ChildTabs from '../family/child-tabs.component';
 import RequestSessionsModal from '../../modals/request-sessions-modal/request-sessions-modal.component';
@@ -72,20 +72,25 @@ const TutorCard: FC<TutorCardProps> = ({
 
   const name = `${tutor.first_name} ${tutor.last_name}`.trim();
   const hours = packages.reduce((sum, pkg) => sum + hoursLeft(pkg), 0);
-  // The courses we take with this tutor, and for a parent whose they are
+  // The subjects we take with this tutor, each once (and for a parent, per
+  // child): two grades of Math used to show "Math" twice (19 Nov 2026)
   const courses = Array.from(
-    new Map(
-      packages.map((pkg) => [
-        `${pkg.grade_subject?.id}-${pkg.student?.id}`,
-        {
-          course: subjectName(pkg.grade_subject?.full_course_name),
-          full: pkg.grade_subject?.full_course_name ?? '',
-          child: pkg.student?.first_name,
-        },
-      ]),
-    ).values(),
+    packages
+      .reduce((map, pkg) => {
+        const course = subjectName(pkg.grade_subject?.full_course_name);
+        const child = pkg.student?.first_name;
+        const key = `${course}-${isParent ? child : ''}`;
+        const full = courseLabel(pkg.grade_subject?.full_course_name);
+        const seen = map.get(key);
+        if (seen) {
+          if (full && !seen.full.includes(full)) seen.full.push(full);
+        } else {
+          map.set(key, { course, child, full: full ? [full] : [] });
+        }
+        return map;
+      }, new Map<string, { course: string; child?: string; full: string[] }>())
+      .values(),
   );
-  const taught = tutor.grade_subjects?.length ?? 0;
 
   return (
     <article className="mi-card">
@@ -111,11 +116,6 @@ const TutorCard: FC<TutorCardProps> = ({
                 )}
               </span>
             )}
-            {taught > 0 && (
-              <span className="mi-card__muted">
-                {t('MYINSTRUCTORS.CARD.TEACHES_COUNT', { count: taught })}
-              </span>
-            )}
           </div>
         </div>
         {tutor.video_url && (
@@ -131,12 +131,8 @@ const TutorCard: FC<TutorCardProps> = ({
         )}
       </header>
 
-      {tutor.bio && (
-        <p className="mi-card__bio" dir="auto">
-          {tutor.bio}
-        </p>
-      )}
-
+      {/* No bio here: imported bios hold internal notes ("Age: 52 YOE: 30");
+          the profile page shows it */}
       <div className="mi-card__with">
         <span className="mi-card__label">
           {t('MYINSTRUCTORS.CARD.WITH_US')}
@@ -144,9 +140,9 @@ const TutorCard: FC<TutorCardProps> = ({
         <ul className="mi-card__courses">
           {courses.map((item) => (
             <li
-              key={`${item.full}-${item.child}`}
+              key={`${item.course}-${item.child}`}
               className="mi-card__course"
-              title={item.full}
+              title={item.full.join('\n')}
               dir="auto"
             >
               {item.course}
@@ -217,7 +213,12 @@ const TutorCard: FC<TutorCardProps> = ({
             size="small"
             startIcon={<ChatBubbleOutlineRounded />}
             disabled={isStarting}
-            onClick={() => startConversation(tutor.id, courses[0]?.full)}
+            onClick={() =>
+              startConversation(
+                tutor.id,
+                packages[0]?.grade_subject?.full_course_name ?? '',
+              )
+            }
           >
             {t('MESSAGES.MESSAGE_BUTTON')}
           </Button>

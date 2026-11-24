@@ -1,6 +1,8 @@
+import i18n from '../../component/i18next/i18n';
 import type { Package, SessionType } from '../../assets/types';
 import type { SessionSummary } from '../../hooks/useSessions';
 import { hoursLeft } from '../../lib/package-hours';
+import { localizeCourse, localizeSubject } from '../../lib/subject-names';
 
 const HOUR_MS = 60 * 60 * 1000;
 
@@ -12,9 +14,29 @@ export const sessionHours = (session: SessionType): number => {
 };
 
 /** "IGCSE - Grade 10 - Mathematics" -> "Mathematics" */
+/** The importer's placeholder subject for courses it could not name */
+const UNSPECIFIED = /Unspecified \(import\)/i;
+
+/**
+ * A course name as families should read it: the importer's placeholder
+ * subject "Unspecified (import)" reads "Subject not set" (19 Nov 2026).
+ */
+export const courseLabel = (fullCourseName?: string | null): string =>
+  fullCourseName
+    ? UNSPECIFIED.test(fullCourseName)
+      ? fullCourseName.replace(UNSPECIFIED, i18n.t('COURSE.SUBJECT_NOT_SET'))
+      : // In Arabic the subject part reads in Arabic (23 Nov 2026)
+        localizeCourse(fullCourseName, i18n.language)
+    : '';
+
 export const subjectName = (fullCourseName?: string): string => {
   if (!fullCourseName) return '';
-  const parts = fullCourseName.split(' - ');
+  if (!UNSPECIFIED.test(fullCourseName)) {
+    // A known subject, whole: "English - Pronounce", not just "Pronounce"
+    const known = localizeSubject(fullCourseName, i18n.language);
+    if (known) return known;
+  }
+  const parts = courseLabel(fullCourseName).split(' - ');
   return parts[parts.length - 1].trim();
 };
 
@@ -48,7 +70,10 @@ const localDay = (iso: string): Date => {
 
 /** Completed hours per week for the last 8 weeks, from the server's summary */
 export const weeklyHours = (summary?: SessionSummary): WeekBucket[] =>
-  (summary?.weeks || []).map((w) => ({ start: localDay(w.start), hours: w.hours }));
+  (summary?.weeks || []).map((w) => ({
+    start: localDay(w.start),
+    hours: w.hours,
+  }));
 
 export interface SubjectShare {
   name: string;

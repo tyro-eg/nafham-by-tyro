@@ -1,6 +1,6 @@
 import { FC, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import {
   Alert,
   Button,
@@ -13,21 +13,26 @@ import {
   CloseRounded,
   EventRepeatRounded,
   FormatQuoteRounded,
-  TimerOutlined,
+  SupportAgentRounded,
   UndoRounded,
 } from '@mui/icons-material';
 
 import { useAppSelector } from '../../redux/store';
 import { selectCurrentUser } from '../../redux/user/user.selectors';
 import { useRtlClass } from '../../assets/utils/utils';
+import { useTrialOffers, useTrialRequests } from '../../hooks/useTrial';
+import {
+  useSessionRequests,
+  type SessionRequest,
+} from '../../hooks/useSessionRequests';
+import { OfferCard } from '../trial-requests/index.component';
+import { TrialRequestRow } from '../trial/trial-requests-card.component';
 import {
   changeErrorMessage,
   remainingOptions,
   useAnswerMove,
   useRescheduleRequests,
   useWithdrawMove,
-  type RequestBox,
-  type RequestTab,
   type RescheduleRequest,
 } from '../../hooks/useSessionChanges';
 import {
@@ -37,57 +42,99 @@ import {
   weeklyPatternLabel,
   type ScheduleChangeRequest,
 } from '../../hooks/useScheduleChanges';
+import {
+  OFFICE_WAIT,
+  proposalWait,
+  viewOfOfficeRequest,
+  viewOfProposal,
+  viewOfTrialRequest,
+  type RequestView,
+} from '../../lib/request-wait';
 import { formatSlot, localTimeZone } from '../trial/trial.types';
+import WaitLine from './wait-line.component';
 
 import '../sessions/dashboard-shell.styles.scss';
+import '../trial-requests/trial-requests.styles.scss';
 import './requests.styles.scss';
+import { courseLabel } from '../dashboard/dashboard.utils';
 
-type View = 'inbox' | 'sent' | 'history';
-const VIEWS: View[] = ['inbox', 'sent', 'history'];
+const VIEWS: RequestView[] = ['inbox', 'sent', 'history'];
 const REASON_LENGTH = 500;
 
-const boxOf = (view: View): RequestBox => (view === 'sent' ? 'sent' : 'inbox');
-const tabOf = (view: View): RequestTab =>
-  view === 'history' ? 'answered' : 'pending';
-
 /**
- * Proposals between a family and a tutor: to move one lesson to one of up
- * to three times, or to change a package's weekly times. "Needs your
- * answer" lists what the other side proposed; "Sent" what this side did;
- * "History" what was answered. Emails and chat notices link here.
+ * Every request in one place, the same for a family and a tutor (24 Nov
+ * 2026): proposals to move a session or change weekly times, free-trial
+ * requests, and a family's requests to the Nafham office. Three tabs:
+ * "Needs you", "Waiting on others", "Finished". Each open card says who it
+ * is waiting for and is answered inside the card. Emails and chat notices
+ * link here.
  */
 const RequestsPage: FC = () => {
   const { t } = useTranslation();
   const rtlClass = useRtlClass();
-  const [view, setView] = useState<View>('inbox');
-  const moves = useRescheduleRequests(boxOf(view), tabOf(view));
-  const weekly = useScheduleChangeRequests(boxOf(view), tabOf(view));
-  const inboxMoves = useRescheduleRequests('inbox', 'pending');
-  const inboxWeekly = useScheduleChangeRequests('inbox', 'pending');
-  const waiting =
-    (inboxMoves.data?.length ?? 0) + (inboxWeekly.data?.length ?? 0);
-  // History also shows the proposals this side made
-  const sentHistory = useScheduleChangeRequests(
-    'sent',
-    'answered',
-    view === 'history',
-  );
-  const sentMoveHistory = useRescheduleRequests(
-    'sent',
-    'answered',
-    view === 'history',
-  );
+  const currentUser = useAppSelector(selectCurrentUser);
+  const isTutor = currentUser?.type === 'Tutor';
+  const isParent = currentUser?.type === 'Parent';
+  const [params, setParams] = useSearchParams();
+  // Old links (?tab=trials, ?tab=changes) open on what needs an answer
+  const asked = params.get('tab') as RequestView | null;
+  const view: RequestView = asked && VIEWS.includes(asked) ? asked : 'inbox';
+  const finished = view === 'history';
 
-  const loading = moves.isLoading || weekly.isLoading;
-  const moveList = [
-    ...(moves.data ?? []),
-    ...(view === 'history' ? (sentMoveHistory.data ?? []) : []),
+  const movesIn = useRescheduleRequests('inbox', 'pending');
+  const movesOut = useRescheduleRequests('sent', 'pending');
+  const weeklyIn = useScheduleChangeRequests('inbox', 'pending');
+  const weeklyOut = useScheduleChangeRequests('sent', 'pending');
+  const movesInDone = useRescheduleRequests('inbox', 'answered', finished);
+  const movesOutDone = useRescheduleRequests('sent', 'answered', finished);
+  const weeklyInDone = useScheduleChangeRequests('inbox', 'answered', finished);
+  const weeklyOutDone = useScheduleChangeRequests('sent', 'answered', finished);
+  // A tutor's free-trial requests; a family's own, and what it asked the office
+  const offers = useTrialOffers('pending', isTutor);
+  const offersDone = useTrialOffers('answered', isTutor && finished);
+  const trials = useTrialRequests({
+    allChildren: isParent,
+    enabled: !!currentUser && !isTutor,
+  });
+  const office = useSessionRequests(undefined, !!currentUser && !isTutor);
+
+  const moves = [
+    ...(movesIn.data ?? []),
+    ...(movesOut.data ?? []),
+    ...(movesInDone.data ?? []),
+    ...(movesOutDone.data ?? []),
   ];
-  const weeklyList = [
-    ...(weekly.data ?? []),
-    ...(view === 'history' ? (sentHistory.data ?? []) : []),
+  const weekly = [
+    ...(weeklyIn.data ?? []),
+    ...(weeklyOut.data ?? []),
+    ...(weeklyInDone.data ?? []),
+    ...(weeklyOutDone.data ?? []),
   ];
-  const empty = !loading && moveList.length === 0 && weeklyList.length === 0;
+  const offerList = [...(offers.data ?? []), ...(offersDone.data ?? [])];
+  const trialList = trials.data ?? [];
+  const officeList = office.data?.data ?? [];
+
+  const inView = (which: RequestView) => ({
+    moves: moves.filter((r) => viewOfProposal(r) === which),
+    weekly: weekly.filter((r) => viewOfProposal(r) === which),
+    offers: offerList.filter(
+      (o) => (o.status === 'pending' ? 'inbox' : 'history') === which,
+    ),
+    trials: trialList.filter((r) => viewOfTrialRequest(r) === which),
+    office: officeList.filter((r) => viewOfOfficeRequest(r) === which),
+  });
+  const countOf = (which: RequestView) =>
+    Object.values(inView(which)).reduce((sum, list) => sum + list.length, 0);
+  const shown = inView(view);
+  const total = Object.values(shown).reduce((sum, l) => sum + l.length, 0);
+
+  const loading =
+    movesIn.isLoading ||
+    weeklyIn.isLoading ||
+    movesOut.isLoading ||
+    weeklyOut.isLoading ||
+    (finished && (movesInDone.isLoading || weeklyInDone.isLoading));
+  const failed = movesIn.isError || weeklyIn.isError;
 
   return (
     <section className={`requests dashboard-page ${rtlClass}`}>
@@ -98,7 +145,12 @@ const RequestsPage: FC = () => {
               {t('SESSION_CHANGES.REQUESTS.TITLE')}
             </h1>
             <p className="dashboard-header__subtitle">
-              {t('SESSION_CHANGES.REQUESTS.SUBTITLE', { tz: localTimeZone() })}
+              {t(
+                isTutor
+                  ? 'SESSION_CHANGES.REQUESTS.SUBTITLE_TUTOR'
+                  : 'SESSION_CHANGES.REQUESTS.SUBTITLE',
+                { tz: localTimeZone() },
+              )}
             </p>
           </div>
         </div>
@@ -110,19 +162,22 @@ const RequestsPage: FC = () => {
           role="tablist"
           aria-label={t('SESSION_CHANGES.REQUESTS.TITLE')}
         >
-          {VIEWS.map((key) => (
-            <button
-              key={key}
-              type="button"
-              role="tab"
-              aria-selected={view === key}
-              className={`requests__tab${view === key ? ' is-on' : ''}`}
-              onClick={() => setView(key)}
-            >
-              {t(`SESSION_CHANGES.REQUESTS.TABS.${key.toUpperCase()}`)}
-              {key === 'inbox' && waiting > 0 && ` (${waiting})`}
-            </button>
-          ))}
+          {VIEWS.map((key) => {
+            const count = key === 'history' ? 0 : countOf(key);
+            return (
+              <button
+                key={key}
+                type="button"
+                role="tab"
+                aria-selected={view === key}
+                className={`requests__tab${view === key ? ' is-on' : ''}`}
+                onClick={() => setParams({ tab: key }, { replace: true })}
+              >
+                {t(`SESSION_CHANGES.REQUESTS.TABS.${key.toUpperCase()}`)}
+                {count > 0 && <span className="requests__count">{count}</span>}
+              </button>
+            );
+          })}
         </div>
 
         {loading && (
@@ -132,37 +187,118 @@ const RequestsPage: FC = () => {
           </div>
         )}
 
-        {(moves.isError || weekly.isError) && (
+        {failed && (
           <Alert severity="error">
             {t('SESSION_CHANGES.REQUESTS.ERROR_LOADING')}
           </Alert>
         )}
 
-        {empty && (
+        {!loading && !failed && total === 0 && (
           <div className="requests__empty">
             <p>{t(`SESSION_CHANGES.REQUESTS.EMPTY.${view.toUpperCase()}`)}</p>
-            <Button component={Link} to="/my_sessions" variant="outlined">
-              {t('TRIAL_OFFERS.OPEN_SESSIONS')}
-            </Button>
           </div>
         )}
 
-        {moveList.length > 0 && (
+        {shown.offers.length > 0 && (
+          <ul className="trial-offers__list">
+            {shown.offers.map((offer) => (
+              <OfferCard key={offer.id} offer={offer} />
+            ))}
+          </ul>
+        )}
+        {shown.moves.length > 0 && (
           <ul className="requests__list">
-            {moveList.map((request) => (
+            {shown.moves.map((request) => (
               <MoveCard key={request.id} request={request} />
             ))}
           </ul>
         )}
-        {weeklyList.length > 0 && (
+        {shown.weekly.length > 0 && (
           <ul className="requests__list">
-            {weeklyList.map((request) => (
+            {shown.weekly.map((request) => (
               <WeeklyCard key={request.id} request={request} />
+            ))}
+          </ul>
+        )}
+        {shown.trials.length > 0 && (
+          <ul className="trial-reqs__list requests__list">
+            {shown.trials.map((request) => (
+              <TrialRequestRow
+                key={request.id}
+                request={request}
+                showStudent={isParent}
+              />
+            ))}
+          </ul>
+        )}
+        {shown.office.length > 0 && (
+          <ul className="requests__list">
+            {shown.office.map((request) => (
+              <OfficeCard key={request.id} request={request} />
             ))}
           </ul>
         )}
       </div>
     </section>
+  );
+};
+
+/** What a family asked the Nafham office: it answers from the Admin */
+const OfficeCard: FC<{ request: SessionRequest }> = ({ request }) => {
+  const { t, i18n } = useTranslation();
+  const locale = `${i18n.language}-u-nu-latn`;
+  const pending = request.status === 'pending';
+  const tutor = request.tutor
+    ? `${request.tutor.first_name} ${request.tutor.last_name}`.trim()
+    : '';
+
+  return (
+    <li className={`request-card request-card--${request.status}`}>
+      <div className="request-card__kind request-card__kind--office">
+        <SupportAgentRounded />
+        <span>
+          {t(`REQUEST_WAIT.OFFICE_KIND.${request.kind.toUpperCase()}`)}
+        </span>
+      </div>
+      <div className="request-card__body">
+        <div className="request-card__top">
+          <h2 className="request-card__who">
+            {t('REQUEST_WAIT.YOU_ASKED_OFFICE')}
+          </h2>
+          {!pending && (
+            <span
+              className={`request-card__status request-card__status--${request.status === 'handled' ? 'accepted' : 'declined'}`}
+            >
+              {t(`REQUEST_WAIT.OFFICE_STATUS.${request.status.toUpperCase()}`)}
+            </span>
+          )}
+        </div>
+        {(request.grade_subject?.full_course_name || tutor) && (
+          <p className="request-card__course" dir="auto">
+            {[courseLabel(request.grade_subject?.full_course_name), tutor]
+              .filter(Boolean)
+              .join(' · ')}
+          </p>
+        )}
+        <p className="request-card__from">
+          {t('REQUEST_WAIT.ASKED_ON', {
+            when: formatSlot(request.created_at, locale),
+          })}
+          {request.hours_requested
+            ? ` · ${t('REQUEST_WAIT.HOURS', { count: request.hours_requested })}`
+            : ''}
+        </p>
+        {(request.preferred_times || request.note) && (
+          <blockquote className="request-card__note" dir="auto">
+            <FormatQuoteRounded aria-hidden="true" />
+            {[request.preferred_times, request.note]
+              .filter(Boolean)
+              .join(' · ')}
+          </blockquote>
+        )}
+        {pending && <WaitLine wait={OFFICE_WAIT} />}
+      </div>
+    </li>
   );
 };
 
@@ -253,7 +389,7 @@ const MoveCard: FC<{ request: RescheduleRequest }> = ({ request }) => {
           )}
         </div>
         <p className="request-card__course" dir="auto">
-          {request.session.grade_subject?.full_course_name}
+          {courseLabel(request.session.grade_subject?.full_course_name)}
         </p>
         <p className="request-card__from">
           {t(
@@ -303,12 +439,10 @@ const MoveCard: FC<{ request: RescheduleRequest }> = ({ request }) => {
           </p>
         )}
         {pending && (
-          <p className="request-card__deadline">
-            <TimerOutlined />
-            {t('TRIAL_OFFERS.ANSWER_BY', {
-              time: formatSlot(request.expires_at, locale),
-            })}
-          </p>
+          <WaitLine
+            wait={proposalWait(request, 'MOVE')}
+            name={counterpart(request.session)}
+          />
         )}
         {pending && request.can_answer && (
           <p className="request-card__hint">
@@ -384,11 +518,6 @@ const MoveCard: FC<{ request: RescheduleRequest }> = ({ request }) => {
             {t('SESSION_CHANGES.REQUESTS.WITHDRAW')}
           </Button>
         )}
-        {request.status === 'accepted' && (
-          <Button component={Link} to="/my_sessions" variant="outlined">
-            {t('TRIAL_OFFERS.OPEN_SESSIONS')}
-          </Button>
-        )}
       </div>
     </li>
   );
@@ -451,7 +580,7 @@ const WeeklyCard: FC<{ request: ScheduleChangeRequest }> = ({ request }) => {
           )}
         </div>
         <p className="request-card__course" dir="auto">
-          {request.package.grade_subject?.full_course_name}
+          {courseLabel(request.package.grade_subject?.full_course_name)}
         </p>
         <p className="request-card__times">
           <strong>
@@ -497,12 +626,10 @@ const WeeklyCard: FC<{ request: ScheduleChangeRequest }> = ({ request }) => {
           </p>
         )}
         {pending && (
-          <p className="request-card__deadline">
-            <TimerOutlined />
-            {t('TRIAL_OFFERS.ANSWER_BY', {
-              time: formatSlot(request.expires_at, locale),
-            })}
-          </p>
+          <WaitLine
+            wait={proposalWait(request, 'WEEKLY')}
+            name={counterpart(request.package)}
+          />
         )}
         {pending && request.can_answer && (
           <p className="request-card__hint">
@@ -586,11 +713,6 @@ const WeeklyCard: FC<{ request: ScheduleChangeRequest }> = ({ request }) => {
             onClick={() => act('withdraw')}
           >
             {t('SESSION_CHANGES.REQUESTS.WITHDRAW')}
-          </Button>
-        )}
-        {request.status === 'approved' && (
-          <Button component={Link} to="/my_sessions" variant="outlined">
-            {t('TRIAL_OFFERS.OPEN_SESSIONS')}
           </Button>
         )}
       </div>

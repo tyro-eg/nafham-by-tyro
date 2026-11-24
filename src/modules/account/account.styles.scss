@@ -1,0 +1,21 @@
+@import '../../assets/styles/variables.scss';
+
+// Contacts and terms side by side on wide screens
+.family__pair {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 32rem), 1fr));
+  gap: 0 $space-4;
+  align-items: start;
+}
+
+// The payments list fills the tab instead of its own narrow page
+.pay-history--embedded {
+  max-width: none;
+  margin: 0;
+  padding: 0;
+}
+
+// Contact fields share the row, so a long email shows in full
+.family__pair .family__row .MuiTextField-root {
+  flex: 1 1 22rem;
+}

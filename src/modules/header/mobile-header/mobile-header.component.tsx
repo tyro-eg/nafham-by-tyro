@@ -16,7 +16,7 @@ import { useAppSelector } from '../../../redux/store';
 import { selectCurrentUser } from '../../../redux/user/user.selectors';
 import { useSignOut } from '../../../hooks/useAuth';
 import LanguageSelector from '../../../component/i18next/LanguageSelector';
-import logo from '../../../assets/images/logo.png';
+import NafhamMark from '../../../component/nafham-mark/nafham-mark.component';
 import Profile from '../../../assets/images/videoSession/people/profile.png';
 import { HeaderProps } from '../main-header/main-header.component';
 
@@ -75,7 +75,7 @@ const MobileHeader: FC<HeaderProps> = ({ openFreeTrail }) => {
             onClick={closeMobileHeader}
             className="app-header-mobile__logo"
           >
-            <img src={logo} alt="tyro logo" />
+            <NafhamMark size="sm" />
           </Link>
           <div className="app-header-mobile__top-actions">
             {!currentUser && !mobileHeader && (
@@ -205,14 +205,6 @@ const MobileHeader: FC<HeaderProps> = ({ openFreeTrail }) => {
                 onClick={closeMobileHeader}
               >
                 {t('HEADER.USER.PROFILE')}
-              </Link>
-
-              <Link
-                to="/account_settings"
-                className="item"
-                onClick={closeMobileHeader}
-              >
-                {t('HEADER.USER.SETTINGS')}
               </Link>
             </div>
           )}

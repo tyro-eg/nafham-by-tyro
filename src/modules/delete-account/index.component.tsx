@@ -5,6 +5,10 @@ import { Alert, Button, TextField } from '@mui/material';
 
 import { post } from '@/assets/utils/api';
 
+import { BackLink } from '../../component/back-link/back-link.component';
+import { getHomePath } from '../../assets/utils/home-path';
+import { useAppSelector } from '../../redux/store';
+import { selectCurrentUser } from '../../redux/user/user.selectors';
 import './index.styles.scss';
 
 /**
@@ -14,6 +18,8 @@ import './index.styles.scss';
  */
 const DeleteAccount: FC = () => {
   const { t } = useTranslation();
+  // Parents go back to Account; tutors and students, who have no Account page, to their home
+  const user = useAppSelector(selectCurrentUser);
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
   // Hidden from people; form-filling bots fill it and are dropped
@@ -35,6 +41,10 @@ const DeleteAccount: FC = () => {
   return (
     <div className="delete-account-page">
       <article className="delete-account-container">
+        <BackLink
+          fallback={user?.type === 'Parent' ? '/account' : getHomePath(user)}
+          testId="delete-account-back"
+        />
         <h1 className="delete-account-title">{s('TITLE')}</h1>
         <p>{s('INTRO')}</p>
 

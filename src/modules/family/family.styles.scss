@@ -5,39 +5,45 @@ $hw-muted: $text-muted;
 $hw-surface: $surface;
 $hw-border: $border;
 
+// Sizes scaled to the site's 10px rem (they were written for 16px)
 .family {
-  padding-block: 1.5rem 3rem;
+  padding-block: 2.4rem 4.8rem;
+
+  // A tab of the Account page: the page sets the spacing
+  &--embedded {
+    padding-block: 0;
+  }
 
   &__header {
     display: flex;
     flex-wrap: wrap;
     align-items: flex-start;
     justify-content: space-between;
-    gap: 1rem;
-    margin-bottom: 1.25rem;
+    gap: 1.6rem;
+    margin-bottom: 2rem;
   }
 
   &__title {
     margin: 0;
-    font-size: 1.75rem;
+    font-size: 2.8rem;
     font-weight: 700;
   }
 
   &__subtitle {
-    margin: 0.25rem 0 0;
+    margin: 0.4rem 0 0;
     color: $hw-muted;
   }
 
   &__actions {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.5rem;
+    gap: 0.8rem;
   }
 
   &__grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
-    gap: 1rem;
+    gap: 1.6rem;
     list-style: none;
     padding: 0;
     margin: 0;
@@ -47,38 +53,38 @@ $hw-border: $border;
     background: $hw-surface;
     border: 1px solid $hw-border;
     border-radius: 16px;
-    padding: 1.25rem;
+    padding: 2rem;
     display: grid;
-    gap: 0.75rem;
+    gap: 1.2rem;
   }
 
   &__card-head {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 0.5rem;
+    gap: 0.8rem;
   }
 
   &__name {
     margin: 0;
-    font-size: 1.2rem;
+    font-size: 1.9rem;
     font-weight: 700;
   }
 
   &__facts {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 0.5rem 1rem;
+    gap: 0.8rem 1.6rem;
     margin: 0;
 
     div {
       display: grid;
-      gap: 0.1rem;
+      gap: 0.2rem;
     }
 
     dt {
       color: $hw-muted;
-      font-size: 0.8rem;
+      font-size: 1.3rem;
     }
 
     dd {
@@ -90,23 +96,23 @@ $hw-border: $border;
   &__card-actions {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.5rem;
-    margin-top: 0.25rem;
+    gap: 0.8rem;
+    margin-top: 0.4rem;
   }
 
   &__section {
     background: $hw-surface;
     border: 1px solid $hw-border;
     border-radius: 16px;
-    padding: 1.25rem;
-    margin-bottom: 1rem;
+    padding: 2rem;
+    margin-bottom: 1.6rem;
     display: grid;
-    gap: 0.75rem;
+    gap: 1.2rem;
   }
 
   &__section-title {
     margin: 0;
-    font-size: 1.1rem;
+    font-size: 1.8rem;
     font-weight: 700;
   }
 
@@ -114,7 +120,20 @@ $hw-border: $border;
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: 0.75rem;
+    gap: 1.2rem;
+  }
+
+  // A recording switch next to its course, the status under it
+  &__consent {
+    flex-wrap: nowrap;
+    align-items: flex-start;
+  }
+
+  &__consent-text {
+    display: grid;
+    gap: 0.2rem;
+    min-width: 0;
+    padding-top: 0.8rem;
   }
 
   &__muted {
@@ -127,30 +146,13 @@ $hw-border: $border;
     padding: 0;
     margin: 0;
     display: grid;
-    gap: 0.75rem;
+    gap: 1.2rem;
   }
 
   &__empty {
     text-align: center;
-    padding: 2rem 1rem;
+    padding: 3.2rem 1.6rem;
     color: $hw-muted;
-  }
-
-  &__back {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    margin-bottom: 1rem;
-    font-weight: 600;
-    color: $text-body;
-
-    .rtl & svg {
-      transform: scaleX(-1);
-    }
-
-    &:hover {
-      color: $brand-700;
-    }
   }
 
   &__prose {
@@ -245,7 +247,7 @@ $hw-border: $border;
 
     .MuiButton-contained {
       box-shadow: none;
-      color: $surface;
+      color: $on-brand;
     }
 
     @include respond(phone) {
@@ -288,6 +290,10 @@ $hw-border: $border;
     grid-template-columns: minmax(0, 1fr);
     gap: $space-2;
   }
+}
+
+.fam-tile .fuel {
+  margin-top: 0.8rem;
 }
 
 .fam-tile {
@@ -561,24 +567,30 @@ $hw-border: $border;
 }
 
 .fam-pk {
+  // Subject and tutor, the fuel bar, hours left, Renew when low (23 Nov 2026)
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
+  // Fixed columns so every row's bar lines up, chip or not
+  grid-template-columns: minmax(0, 1fr) 12rem 6.4rem 11.2rem;
   align-items: center;
   gap: $space-3;
-  padding: $space-2 0;
+  padding: 1.2rem 0;
   border-top: 1px solid $border;
 
-  .sd-ring {
-    width: 4.4rem;
-    height: 4.4rem;
+  &__hours {
+    font-family: $font-display-family;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    text-align: end;
+    color: $text-strong;
   }
 
-  .sd-ring__track {
-    stroke: $gray-100;
-  }
+  @include respond(phone) {
+    grid-template-columns: minmax(0, 1fr) auto auto;
 
-  .sd-ring__label {
-    font-size: 1.2rem;
+    .fuel {
+      grid-column: 1 / -1;
+      grid-row: 2;
+    }
   }
 
   &--done {
@@ -603,6 +615,7 @@ $hw-border: $border;
 
   &__low,
   &__renew {
+    justify-self: end;
     display: inline-flex;
     align-items: center;
     gap: 0.4rem;
@@ -674,7 +687,7 @@ $hw-border: $border;
   .MuiButton-root {
     border-radius: 1rem;
     box-shadow: none;
-    color: $surface;
+    color: $on-brand;
     font-weight: 700;
     text-transform: none;
   }

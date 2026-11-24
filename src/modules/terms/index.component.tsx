@@ -1,10 +1,12 @@
 import { FC } from 'react';
+import { BackLink } from '../../component/back-link/back-link.component';
 
 import './index.styles.scss';
 
 const Terms: FC = () => (
   <div className="terms-page">
     <article className="terms-container">
+      <BackLink fallback="/" testId="terms-back" />
       <h1 className="terms-title">Terms and Conditions</h1>
       <p>Welcome to Tyro!</p>
       <p>

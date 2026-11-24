@@ -3,8 +3,10 @@
 
 .app-footer {
   width: 100%;
-  background-color: $navy-950;
-  color: $text-on-dark-muted;
+  // White and baby blue, like the pages above it (24 Nov 2026)
+  border-top: 1px solid $brand-100;
+  background-color: $brand-50;
+  color: $text-body;
 
   &__container {
     @include container;
@@ -59,7 +61,7 @@
     max-width: 32rem;
     font-size: $font-base;
     line-height: 1.6;
-    color: $text-on-dark-muted;
+    color: $text-body;
   }
 
   &__heading {
@@ -68,7 +70,7 @@
     font-weight: 600;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: $text-on-dark;
+    color: $ink;
 
     html[dir='rtl'] & {
       letter-spacing: 0;
@@ -87,16 +89,16 @@
       min-height: 3.6rem;
       font-size: $font-sm + 0.1rem;
       font-weight: 400;
-      color: $text-on-dark-muted;
+      color: $text-body;
       text-decoration: none;
       transition: color $transition;
 
       &:hover {
-        color: $text-on-dark;
+        color: $ink;
       }
 
       &.active {
-        color: $brand-300;
+        color: $brand-800;
         font-weight: 500;
       }
     }
@@ -114,17 +116,17 @@
       gap: $space-2;
       min-height: 3.6rem;
       font-size: $font-sm + 0.1rem;
-      color: $text-on-dark-muted;
+      color: $text-body;
       text-decoration: none;
       transition: color $transition;
 
       &:hover {
-        color: $text-on-dark;
+        color: $ink;
       }
 
       &__icon {
         font-size: 1.8rem;
-        color: $brand-300;
+        color: $brand-800;
       }
 
       span {
@@ -140,7 +142,7 @@
     align-items: center;
     gap: $space-4;
     padding: $space-4 0;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-top: 1px solid $brand-100;
 
     @include respond(phone) {
       flex-direction: column-reverse;
@@ -153,7 +155,7 @@
   &__rights {
     font-size: $font-sm;
     line-height: 1.5;
-    color: rgba(255, 255, 255, 0.56);
+    color: $text-body;
 
     @include respond(phone) {
       font-size: $font-xs;
@@ -172,14 +174,14 @@
     .MuiIconButton-root {
       width: 4.4rem;
       height: 4.4rem;
-      color: $text-on-dark-muted;
+      color: $text-body;
       transition:
         color $transition,
         background-color $transition;
 
       &:hover {
-        color: $text-on-dark;
-        background-color: rgba(255, 255, 255, 0.08);
+        color: $ink;
+        background-color: $brand-100;
       }
 
       .MuiSvgIcon-root {

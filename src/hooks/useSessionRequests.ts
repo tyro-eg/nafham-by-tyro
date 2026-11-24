@@ -46,8 +46,12 @@ interface SessionRequestsResponse {
 /**
  * The current student's session requests, newest first
  */
-export function useSessionRequests(status?: SessionRequestStatus) {
+export function useSessionRequests(
+  status?: SessionRequestStatus,
+  enabled = true,
+) {
   return useQuery({
+    enabled,
     queryKey: queryKeys.sessionRequests.list(status),
     queryFn: async () => {
       const response = await get('/session_requests', {

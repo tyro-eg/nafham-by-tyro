@@ -14,12 +14,10 @@ import {
   EventAvailableRounded,
   EventBusyRounded,
   FormatQuoteRounded,
-  TimerOutlined,
 } from '@mui/icons-material';
 
 import { useAppSelector } from '../../redux/store';
 import { selectCurrentUser } from '../../redux/user/user.selectors';
-import { useRtlClass } from '../../assets/utils/utils';
 import {
   useAcceptTrialOffer,
   useDeclineTrialOffer,
@@ -28,7 +26,9 @@ import {
   type TrialOfferTab,
 } from '../../hooks/useTrial';
 import { bookingErrorMessage } from '../../hooks/useSessions';
-import { formatSlot, formatTime, localTimeZone } from '../trial/trial.types';
+import { formatTime } from '../trial/trial.types';
+import { offerWait } from '../../lib/request-wait';
+import WaitLine from '../requests/wait-line.component';
 
 import '../sessions/dashboard-shell.styles.scss';
 import './trial-requests.styles.scss';
@@ -43,93 +43,82 @@ const REASON_LENGTH = 500;
  * family's note and the deadline, with Accept and Decline. Emails and the
  * support chat link here (/trial_requests).
  */
-const TrialRequestsPage: FC = () => {
+/**
+ * The list of free-trial requests with its Waiting / Answered tabs. Its own
+ * page for no one now: a tutor finds it as the "Free trials" tab of
+ * Requests (23 Nov 2026).
+ */
+export const TrialOffersBody: FC = () => {
   const { t } = useTranslation();
-  const rtlClass = useRtlClass();
   const [tab, setTab] = useState<TrialOfferTab>('pending');
   const offers = useTrialOffers(tab);
   const pendingCount = useTrialOffers('pending').data?.length ?? 0;
   const currentUser = useAppSelector(selectCurrentUser);
 
   return (
-    <section className={`trial-offers dashboard-page ${rtlClass}`}>
-      <header className="dashboard-header">
-        <div className="container dashboard-header__inner">
-          <div className="dashboard-header__text">
-            <h1 className="dashboard-header__title">
-              {t('TRIAL_OFFERS.TITLE')}
-            </h1>
-            <p className="dashboard-header__subtitle">
-              {t('TRIAL_OFFERS.SUBTITLE', { tz: localTimeZone() })}
-            </p>
-          </div>
-        </div>
-      </header>
-
-      <div className="container dashboard-page__body">
-        <div
-          className="trial-offers__tabs"
-          role="tablist"
-          aria-label={t('TRIAL_OFFERS.TITLE')}
-        >
-          {TABS.map((key) => (
-            <button
-              key={key}
-              type="button"
-              role="tab"
-              aria-selected={tab === key}
-              className={`trial-offers__tab${tab === key ? ' is-on' : ''}`}
-              onClick={() => setTab(key)}
-            >
-              {t(`TRIAL_OFFERS.TABS.${key.toUpperCase()}`)}
-              {key === 'pending' && pendingCount > 0 && ` (${pendingCount})`}
-            </button>
-          ))}
-        </div>
-
-        {offers.isLoading && (
-          <div className="trial-offers__list">
-            <Skeleton variant="rounded" height={180} />
-            <Skeleton variant="rounded" height={180} />
-          </div>
-        )}
-
-        {offers.isError && (
-          <Alert severity="error">{t('TRIAL_OFFERS.ERROR_LOADING')}</Alert>
-        )}
-
-        {offers.data && offers.data.length === 0 && (
-          <div className="trial-offers__empty">
-            <p>
-              {tab === 'pending'
-                ? t('TRIAL_OFFERS.EMPTY')
-                : t('TRIAL_OFFERS.EMPTY_ANSWERED')}
-            </p>
-            {tab === 'pending' && currentUser && (
-              <Button
-                component={Link}
-                to={`/profile/${currentUser.id}`}
-                variant="outlined"
-              >
-                {t('TRIAL_OFFERS.MORE_STUDENTS')}
-              </Button>
-            )}
-          </div>
-        )}
-
-        {offers.data && offers.data.length > 0 && (
-          <ul className="trial-offers__list">
-            {offers.data.map((offer) => (
-              <OfferCard key={offer.id} offer={offer} />
-            ))}
-          </ul>
-        )}
+    <>
+      <div
+        className="trial-offers__tabs"
+        role="tablist"
+        aria-label={t('TRIAL_OFFERS.TITLE')}
+      >
+        {TABS.map((key) => (
+          <button
+            key={key}
+            type="button"
+            role="tab"
+            aria-selected={tab === key}
+            className={`trial-offers__tab${tab === key ? ' is-on' : ''}`}
+            onClick={() => setTab(key)}
+          >
+            {t(`TRIAL_OFFERS.TABS.${key.toUpperCase()}`)}
+            {key === 'pending' && pendingCount > 0 && ` (${pendingCount})`}
+          </button>
+        ))}
       </div>
-    </section>
+
+      {offers.isLoading && (
+        <div className="trial-offers__list">
+          <Skeleton variant="rounded" height={180} />
+          <Skeleton variant="rounded" height={180} />
+        </div>
+      )}
+
+      {offers.isError && (
+        <Alert severity="error">{t('TRIAL_OFFERS.ERROR_LOADING')}</Alert>
+      )}
+
+      {offers.data && offers.data.length === 0 && (
+        <div className="trial-offers__empty">
+          <p>
+            {tab === 'pending'
+              ? t('TRIAL_OFFERS.EMPTY')
+              : t('TRIAL_OFFERS.EMPTY_ANSWERED')}
+          </p>
+          {tab === 'pending' && currentUser && (
+            <Button
+              component={Link}
+              to={`/profile/${currentUser.id}`}
+              variant="outlined"
+            >
+              {t('TRIAL_OFFERS.MORE_STUDENTS')}
+            </Button>
+          )}
+        </div>
+      )}
+
+      {offers.data && offers.data.length > 0 && (
+        <ul className="trial-offers__list">
+          {offers.data.map((offer) => (
+            <OfferCard key={offer.id} offer={offer} />
+          ))}
+        </ul>
+      )}
+    </>
   );
 };
 
-const OfferCard: FC<{ offer: TrialOffer }> = ({ offer }) => {
+export const OfferCard: FC<{ offer: TrialOffer }> = ({ offer }) => {
   const { t, i18n } = useTranslation();
   const locale = `${i18n.language}-u-nu-latn`;
   const accept = useAcceptTrialOffer();
@@ -206,14 +195,7 @@ const OfferCard: FC<{ offer: TrialOffer }> = ({ offer }) => {
             {offer.note}
           </blockquote>
         )}
-        {pending && (
-          <p className="trial-offer__deadline">
-            <TimerOutlined />
-            {t('TRIAL_OFFERS.ANSWER_BY', {
-              time: formatSlot(offer.expires_at, locale),
-            })}
-          </p>
-        )}
+        {pending && <WaitLine wait={offerWait(offer)} />}
         {!pending && offer.reason && (
           <p className="trial-offer__reason" dir="auto">
             {offer.status === 'declined'
@@ -292,13 +274,11 @@ const OfferCard: FC<{ offer: TrialOffer }> = ({ offer }) => {
           </>
         )}
         {offer.status === 'accepted' && (
-          <Button component={Link} to="/my_sessions" variant="outlined">
-            {t('TRIAL_OFFERS.OPEN_SESSIONS')}
-          </Button>
+          <p className="trial-offer__booked">
+            {t('REQUEST_WAIT.TRIAL_BOOKED')}
+          </p>
         )}
       </div>
     </li>
   );
 };
-
-export default TrialRequestsPage;

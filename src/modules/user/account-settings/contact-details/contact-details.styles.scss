@@ -32,6 +32,11 @@
     max-width: 88rem !important;
   }
 
+  // Inside My Profile: the profile column sets the width
+  &--embedded .form-container {
+    max-width: 72rem !important;
+  }
+
   // Section card
   &__form-container {
     @include card(0);

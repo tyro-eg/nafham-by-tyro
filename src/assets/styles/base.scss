@@ -12,8 +12,9 @@ body {
   }
 }
 
+// Both fonts are made for Arabic and English (23 Nov 2026)
 html[dir='rtl'] body {
-  font-family: 'Tajawal', Arial, Helvetica, sans-serif;
+  font-family: $font-body-family;
 }
 
 html[dir='rtl'] .slick-track {

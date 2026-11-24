@@ -1,9 +1,9 @@
 import { FC, useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { BackLink } from '../../../component/back-link/back-link.component';
 import { Button, Skeleton } from '@mui/material';
 import {
-  ArrowBackRounded,
   DeleteOutlineRounded,
   EventRounded,
   MenuBookRounded,
@@ -32,6 +32,7 @@ import {
 } from '../homework.utils';
 
 import './homework-detail.styles.scss';
+import { courseLabel } from '../../dashboard/dashboard.utils';
 
 /**
  * One assignment at /homework/:slug. Both roles see the title, course,
@@ -85,11 +86,13 @@ const HomeworkDetail: FC = () => {
     }
   };
 
+  // The website's one Back pill (23 Nov 2026)
   const back = (
-    <Link to="/homework" className="hw-back">
-      <ArrowBackRounded aria-hidden="true" />
-      {t('HOMEWORK.BACK')}
-    </Link>
+    <BackLink
+      fallback="/homework"
+      label={t('HOMEWORK.BACK')}
+      testId="homework-back"
+    />
   );
 
   if (query.isLoading) {
@@ -148,7 +151,9 @@ const HomeworkDetail: FC = () => {
                 <MenuBookRounded aria-hidden="true" />
                 {t('HOMEWORK.DETAIL.COURSE')}
               </dt>
-              <dd dir="auto">{assignment.grade_subject.full_course_name}</dd>
+              <dd dir="auto">
+                {courseLabel(assignment.grade_subject.full_course_name)}
+              </dd>
             </div>
             <div>
               <dt>

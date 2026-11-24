@@ -22,11 +22,18 @@ import '../../../component/login/login.styles.scss';
  * (channel "email"): the link proves the email, so there is no code, only
  * a password of their own.
  */
-type Info = { first_name: string; phone: string; state: 'pending' | 'active'; email: string | null; channel?: 'whatsapp' | 'email' };
+type Info = {
+  first_name: string;
+  phone: string;
+  state: 'pending' | 'active';
+  email: string | null;
+  channel?: 'whatsapp' | 'email';
+};
 
 /** The backend's own words, else a general one. */
 function errorText(err: unknown, fallback: string): string {
-  const data = (err as { response?: { data?: { errors?: string[] } } })?.response?.data;
+  const data = (err as { response?: { data?: { errors?: string[] } } })
+    ?.response?.data;
   return data?.errors?.[0] || fallback;
 }
 
@@ -64,8 +71,16 @@ const Activate: FC = () => {
     setBusy(true);
     setProblem('');
     try {
-      const res = await post(`/activations/${encodeURIComponent(token)}/code`, {});
-      setMessage(t('ACTIVATE.CODE_SENT', { phone: res.data.data.sent_to, minutes: res.data.data.expires_in_minutes }));
+      const res = await post(
+        `/activations/${encodeURIComponent(token)}/code`,
+        {},
+      );
+      setMessage(
+        t('ACTIVATE.CODE_SENT', {
+          phone: res.data.data.sent_to,
+          minutes: res.data.data.expires_in_minutes,
+        }),
+      );
       setStep('code');
       setWait(60);
     } catch (err) {
@@ -79,9 +94,11 @@ const Activate: FC = () => {
 
   const activate = async () => {
     setProblem('');
-    if (!byEmail && !/^\d{6}$/.test(code.replace(/\D/g, ''))) return setProblem(t('ACTIVATE.CODE_FORMAT'));
+    if (!byEmail && !/^\d{6}$/.test(code.replace(/\D/g, '')))
+      return setProblem(t('ACTIVATE.CODE_FORMAT'));
     if (password.length < 6) return setProblem(t('ACTIVATE.PASSWORD_SHORT'));
-    if (password !== confirm) return setProblem(t('ACTIVATE.PASSWORD_MISMATCH'));
+    if (password !== confirm)
+      return setProblem(t('ACTIVATE.PASSWORD_MISMATCH'));
     setBusy(true);
     try {
       const res = await post(`/activations/${encodeURIComponent(token)}`, {
@@ -89,7 +106,10 @@ const Activate: FC = () => {
         password,
         password_confirmation: confirm,
       });
-      const user = await signIn.mutateAsync({ email: res.data.data.email, password });
+      const user = await signIn.mutateAsync({
+        email: res.data.data.email,
+        password,
+      });
       navigate(getHomePath(user));
     } catch (err) {
       setProblem(errorText(err, t('ACTIVATE.TRY_AGAIN')));
@@ -121,21 +141,32 @@ const Activate: FC = () => {
           <div className="login-container">
             <div className="login-container__header">
               <h1 className="title">
-                {info ? t('ACTIVATE.TITLE', { name: info.first_name }) : t('ACTIVATE.TITLE_PLAIN')}
+                {info
+                  ? t('ACTIVATE.TITLE', { name: info.first_name })
+                  : t('ACTIVATE.TITLE_PLAIN')}
               </h1>
               {info?.state === 'pending' && (
                 <p className="sub-title">
-                  {byEmail ? t('ACTIVATE.SUBTITLE_EMAIL', { email: info.email || '' }) : t('ACTIVATE.SUBTITLE', { phone: info.phone })}
+                  {byEmail
+                    ? t('ACTIVATE.SUBTITLE_EMAIL', { email: info.email || '' })
+                    : t('ACTIVATE.SUBTITLE', { phone: info.phone })}
                 </p>
               )}
             </div>
 
-            {!info && !problem && <p className="sub-title">{t('ACTIVATE.LOADING')}</p>}
+            {!info && !problem && (
+              <p className="sub-title">{t('ACTIVATE.LOADING')}</p>
+            )}
 
             {info?.state === 'active' && (
               <div className={`login-container__form ${rtlClass}`}>
                 <p className="sub-title">{t('ACTIVATE.ALREADY_ACTIVE')}</p>
-                <Button variant="contained" className="btn-custom-style" onClick={() => navigate('/login')} data-testid="button-go-sign-in">
+                <Button
+                  variant="contained"
+                  className="btn-custom-style"
+                  onClick={() => navigate('/login')}
+                  data-testid="button-go-sign-in"
+                >
                   {t('ACTIVATE.GO_SIGN_IN')}
                 </Button>
               </div>
@@ -143,45 +174,118 @@ const Activate: FC = () => {
 
             {info?.state === 'pending' && !byEmail && step === 'intro' && (
               <div className={`login-container__form ${rtlClass}`}>
-                <Button variant="contained" className="btn-custom-style" onClick={sendCode} disabled={busy} startIcon={<WhatsApp />} data-testid="button-send-code">
+                <Button
+                  variant="contained"
+                  className="btn-custom-style"
+                  onClick={sendCode}
+                  disabled={busy}
+                  startIcon={<WhatsApp />}
+                  data-testid="button-send-code"
+                >
                   {busy ? t('ACTIVATE.SENDING') : t('ACTIVATE.SEND_CODE')}
                 </Button>
               </div>
             )}
 
             {info?.state === 'pending' && (byEmail || step === 'code') && (
-              <form className={`login-container__form ${rtlClass}`} onSubmit={(e) => { e.preventDefault(); activate(); }}>
+              <form
+                className={`login-container__form ${rtlClass}`}
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  activate();
+                }}
+              >
                 {message && <p className="sub-title">{message}</p>}
                 {!byEmail && (
                   <div className="auth-field">
                     <InputLabel htmlFor="code">{t('ACTIVATE.CODE')}</InputLabel>
-                    <MuiTextField id="code" value={code} onChange={(e) => setCode(e.target.value)} placeholder="123456"
-                      inputProps={{ inputMode: 'numeric', autoComplete: 'one-time-code', maxLength: 7 }}
-                      variant="outlined" className="custom-input-style" fullWidth data-testid="input-activation-code" />
+                    <MuiTextField
+                      id="code"
+                      value={code}
+                      onChange={(e) => setCode(e.target.value)}
+                      placeholder="123456"
+                      inputProps={{
+                        inputMode: 'numeric',
+                        autoComplete: 'one-time-code',
+                        maxLength: 7,
+                      }}
+                      variant="outlined"
+                      className="custom-input-style"
+                      fullWidth
+                      data-testid="input-activation-code"
+                    />
                   </div>
                 )}
                 <div className="auth-field">
-                  <InputLabel htmlFor="new-password">{t('ACTIVATE.PASSWORD')}</InputLabel>
-                  <MuiTextField id="new-password" type="password" value={password} onChange={(e) => setPassword(e.target.value)}
-                    inputProps={{ autoComplete: 'new-password' }} variant="outlined" className="custom-input-style" fullWidth data-testid="input-activation-password" />
+                  <InputLabel htmlFor="new-password">
+                    {t('ACTIVATE.PASSWORD')}
+                  </InputLabel>
+                  <MuiTextField
+                    id="new-password"
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    inputProps={{ autoComplete: 'new-password' }}
+                    variant="outlined"
+                    className="custom-input-style"
+                    fullWidth
+                    data-testid="input-activation-password"
+                  />
                 </div>
                 <div className="auth-field">
-                  <InputLabel htmlFor="confirm-password">{t('ACTIVATE.CONFIRM')}</InputLabel>
-                  <MuiTextField id="confirm-password" type="password" value={confirm} onChange={(e) => setConfirm(e.target.value)}
-                    inputProps={{ autoComplete: 'new-password' }} variant="outlined" className="custom-input-style" fullWidth data-testid="input-activation-confirm" />
+                  <InputLabel htmlFor="confirm-password">
+                    {t('ACTIVATE.CONFIRM')}
+                  </InputLabel>
+                  <MuiTextField
+                    id="confirm-password"
+                    type="password"
+                    value={confirm}
+                    onChange={(e) => setConfirm(e.target.value)}
+                    inputProps={{ autoComplete: 'new-password' }}
+                    variant="outlined"
+                    className="custom-input-style"
+                    fullWidth
+                    data-testid="input-activation-confirm"
+                  />
                 </div>
-                <Button type="submit" variant="contained" className="btn-custom-style" disabled={busy} data-testid="button-activate">
-                  {busy ? t('ACTIVATE.ACTIVATING') : byEmail ? t('ACTIVATE.SET_PASSWORD') : t('ACTIVATE.ACTIVATE')}
+                <Button
+                  type="submit"
+                  variant="contained"
+                  className="btn-custom-style"
+                  disabled={busy}
+                  data-testid="button-activate"
+                >
+                  {busy
+                    ? t('ACTIVATE.ACTIVATING')
+                    : byEmail
+                      ? t('ACTIVATE.SET_PASSWORD')
+                      : t('ACTIVATE.ACTIVATE')}
                 </Button>
                 {!byEmail && (
-                  <Button variant="text" onClick={sendCode} disabled={busy || wait > 0} data-testid="button-new-code">
-                    {wait > 0 ? t('ACTIVATE.NEW_CODE_IN', { seconds: wait }) : t('ACTIVATE.NEW_CODE')}
+                  <Button
+                    variant="text"
+                    onClick={sendCode}
+                    disabled={busy || wait > 0}
+                    data-testid="button-new-code"
+                  >
+                    {wait > 0
+                      ? t('ACTIVATE.NEW_CODE_IN', { seconds: wait })
+                      : t('ACTIVATE.NEW_CODE')}
                   </Button>
                 )}
               </form>
             )}
 
-            {problem && <p className="sub-title" role="alert" style={{ color: '#c62828' }} data-testid="text-activation-problem">{problem}</p>}
+            {problem && (
+              <p
+                className="sub-title"
+                role="alert"
+                style={{ color: '#c62828' }}
+                data-testid="text-activation-problem"
+              >
+                {problem}
+              </p>
+            )}
           </div>
         </div>
       </main>

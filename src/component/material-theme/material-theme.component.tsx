@@ -13,7 +13,9 @@ const tokens = {
   brand600: '#3ac5f1',
   brand700: '#41b7dc',
   brand50: '#eef9fe',
-  navy900: '#2c3e50',
+  mist: '#eef6fb',
+  navy900: '#13263d',
+  lagoon: '#0e8fb8',
   navy800: '#3a4b60',
   navy700: '#4b5d74',
   gray50: '#f6f9fc',
@@ -22,13 +24,19 @@ const tokens = {
   gray300: '#cfd8e3',
   gray400: '#9aa8b8',
   gray500: '#6b7a8d',
-  gray600: '#778699',
+  gray600: '#5f7186',
   accent400: '#ffc94a',
   accent500: '#f5b301',
   success: '#54c853',
   danger: '#dc3545',
   warning: '#d97706',
 };
+
+// New look (23 Nov 2026): one body font and one display font, both made for
+// Arabic and English
+const bodyFont = '"IBM Plex Sans Arabic", "Readex Pro", system-ui, sans-serif';
+const displayFont =
+  '"Readex Pro", "IBM Plex Sans Arabic", system-ui, sans-serif';
 
 const shadowSm =
   '0 1px 3px rgba(15, 27, 45, 0.08), 0 1px 2px rgba(15, 27, 45, 0.04)';
@@ -42,7 +50,6 @@ const focusRing = `0 0 0 3px ${alpha(tokens.brand500, 0.35)}`;
 const MaterialTheme: React.FC<MaterialThemeProps> = ({ children }) => {
   const { i18n } = useTranslation();
   const direction = i18n.dir();
-  const isRtl = direction === 'rtl';
 
   const theme = useMemo(
     () =>
@@ -52,8 +59,9 @@ const MaterialTheme: React.FC<MaterialThemeProps> = ({ children }) => {
           primary: {
             light: '#5bd1f6',
             main: tokens.brand600,
-            dark: tokens.brand700,
-            contrastText: '#fff',
+            dark: tokens.lagoon,
+            // Ink on Nafham blue reads clearly; white on it was too faint
+            contrastText: tokens.navy900,
           },
           secondary: {
             light: tokens.navy700,
@@ -77,11 +85,10 @@ const MaterialTheme: React.FC<MaterialThemeProps> = ({ children }) => {
         typography: {
           // html font-size is 62.5% (1rem = 10px)
           htmlFontSize: 10,
-          fontFamily: isRtl
-            ? '"Tajawal", Arial, Helvetica, sans-serif'
-            : '"Inter", Arial, Helvetica, sans-serif',
+          fontFamily: bodyFont,
           fontSize: 15,
           button: {
+            fontFamily: displayFont,
             textTransform: 'none',
             fontSize: '1.5rem',
             fontWeight: 600,
@@ -90,19 +97,19 @@ const MaterialTheme: React.FC<MaterialThemeProps> = ({ children }) => {
           body1: { fontSize: '1.6rem', lineHeight: 1.6 },
           body2: { fontSize: '1.4rem', lineHeight: 1.6 },
           caption: { fontSize: '1.2rem' },
-          h1: { fontSize: '4.4rem', fontWeight: 700 },
-          h2: { fontSize: '3.6rem', fontWeight: 700 },
-          h3: { fontSize: '2.4rem', fontWeight: 700 },
-          h4: { fontSize: '2rem', fontWeight: 700 },
-          h5: { fontSize: '1.8rem', fontWeight: 600 },
-          h6: { fontSize: '1.6rem', fontWeight: 600 },
+          h1: { fontFamily: displayFont, fontSize: '4.4rem', fontWeight: 600 },
+          h2: { fontFamily: displayFont, fontSize: '3.6rem', fontWeight: 600 },
+          h3: { fontFamily: displayFont, fontSize: '2.4rem', fontWeight: 600 },
+          h4: { fontFamily: displayFont, fontSize: '2rem', fontWeight: 600 },
+          h5: { fontFamily: displayFont, fontSize: '1.8rem', fontWeight: 600 },
+          h6: { fontFamily: displayFont, fontSize: '1.6rem', fontWeight: 600 },
         },
         components: {
           MuiButton: {
             defaultProps: { disableElevation: true },
             styleOverrides: {
               root: {
-                borderRadius: 8,
+                borderRadius: 12,
                 padding: '0.9rem 2rem',
                 minHeight: '4.2rem',
                 transition:
@@ -129,7 +136,7 @@ const MaterialTheme: React.FC<MaterialThemeProps> = ({ children }) => {
               },
               outlinedPrimary: {
                 borderColor: alpha(tokens.brand600, 0.5),
-                color: tokens.brand700,
+                color: tokens.lagoon,
                 '&:hover': {
                   borderColor: tokens.brand600,
                   backgroundColor: tokens.brand50,
@@ -146,7 +153,7 @@ const MaterialTheme: React.FC<MaterialThemeProps> = ({ children }) => {
           MuiOutlinedInput: {
             styleOverrides: {
               root: {
-                borderRadius: 8,
+                borderRadius: 12,
                 backgroundColor: '#fff',
                 fontSize: '1.5rem',
                 '& .MuiOutlinedInput-notchedOutline': {
@@ -323,7 +330,7 @@ const MaterialTheme: React.FC<MaterialThemeProps> = ({ children }) => {
           },
         },
       }),
-    [direction, isRtl],
+    [direction],
   );
 
   return <ThemeProvider theme={theme}>{children}</ThemeProvider>;

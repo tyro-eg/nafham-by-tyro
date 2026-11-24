@@ -22,10 +22,12 @@ import { useRtlClass } from '../../assets/utils/utils';
 import type { GradeSubject, Instructor } from '../../assets/types';
 import ChildTabs from '../family/child-tabs.component';
 import TrialRequestsCard from '../trial/trial-requests-card.component';
+import HoursCard from './hours-card/hours-card.component';
 
 import SessionsList from './sessions-info/sessions-list/sessions-list.component';
 import SessionsCalendarContainer from './sessions-info/sessions-calendar-container/sessions-calendar-container.component';
 import NextUp from './next-up/next-up.component';
+import CalendarLegend, { useChildColors } from './calendar-legend.component';
 
 import './dashboard-shell.styles.scss';
 import './index.styles.scss';
@@ -59,7 +61,11 @@ const Sessions: FC = () => {
   });
   const [tutor, setTutor] = useState<Instructor | null>(null);
   const [course, setCourse] = useState<GradeSubject | null>(null);
-  const [view, setView] = useState<'list' | 'calendar'>('list');
+  // The menu's old Calendar item opens /my_sessions?view=calendar
+  const [view, setView] = useState<'list' | 'calendar'>(() =>
+    searchParams.get('view') === 'calendar' ? 'calendar' : 'list',
+  );
+  const childColors = useChildColors(isParent);
 
   // A parent sees the chosen child's counts; a student their own. A tutor's
   // profile has no session totals, so theirs come from the summary (catchup:
@@ -187,6 +193,9 @@ const Sessions: FC = () => {
       <div className="sessions__container container dashboard-page__body">
         {isParent && <ChildTabs />}
 
+        {/* Hours done and left, and free trials (23 Nov 2026) */}
+        {!isTutor && <HoursCard isParent={isParent} />}
+
         {/* Free trials still waiting for an instructor to confirm */}
         {!isTutor && <TrialRequestsCard showStudent={isParent} />}
 
@@ -278,7 +287,12 @@ const Sessions: FC = () => {
           <SessionsList filters={filters} grouped />
         ) : (
           <div className="ss-calendar">
-            <SessionsCalendarContainer filters={filters} enableWeekView />
+            <CalendarLegend kids={childColors.children} />
+            <SessionsCalendarContainer
+              filters={filters}
+              enableWeekView
+              colorByStudent={childColors.colorByStudent}
+            />
           </div>
         )}
       </div>

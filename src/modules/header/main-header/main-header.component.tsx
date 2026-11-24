@@ -8,7 +8,6 @@ import {
   MailOutline,
   PersonOutline,
   PhoneOutlined,
-  SettingsOutlined,
 } from '@mui/icons-material';
 // TODO: Uncomment when backend is ready
 // import { Info } from '@mui/icons-material';
@@ -17,7 +16,7 @@ import { useAppSelector } from '../../../redux/store';
 import { selectCurrentUser } from '../../../redux/user/user.selectors';
 import { useSignOut } from '../../../hooks/useAuth';
 import LanguageSelector from '../../../component/i18next/LanguageSelector';
-import logo from '../../../assets/images/logo.png';
+import NafhamMark from '../../../component/nafham-mark/nafham-mark.component';
 import Profile from '../../../assets/images/videoSession/people/profile.png';
 
 import './main-header.styles.scss';
@@ -96,7 +95,7 @@ const MainHeader: FC<HeaderProps> = ({ openFreeTrail }) => {
       <div className="app-header__bar">
         <div className="app-header__inner">
           <Link to="/" className="app-header__logo">
-            <img src={logo} alt="tyro logo" loading="lazy" />
+            <NafhamMark size="sm" />
           </Link>
 
           <nav className="app-header__nav">
@@ -207,15 +206,6 @@ const MainHeader: FC<HeaderProps> = ({ openFreeTrail }) => {
                         >
                           <PersonOutline className="item__icon" />
                           {t('HEADER.USER.PROFILE')}
-                        </Link>
-
-                        <Link
-                          onClick={() => setProfileAnchorEl(null)}
-                          to="/account_settings"
-                          className="item"
-                        >
-                          <SettingsOutlined className="item__icon" />
-                          {t('HEADER.USER.SETTINGS')}
                         </Link>
                       </div>
                     )}

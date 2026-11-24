@@ -18,7 +18,11 @@ import { useRtlClass } from '../../../../assets/utils/utils';
 
 import './contact-details.styles.scss';
 
-const ContactDetails: FC = () => {
+/**
+ * A tutor's name, email and phone. Since 19 Nov 2026 it is the "Contact
+ * details" tab of My Profile (`embedded`: no page title of its own).
+ */
+const ContactDetails: FC<{ embedded?: boolean }> = ({ embedded = false }) => {
   const { t } = useTranslation();
   const rtlClass = useRtlClass();
   const updateTutorProfileMutation = useUpdateTutorProfile();
@@ -75,13 +79,17 @@ const ContactDetails: FC = () => {
   };
 
   return (
-    <div className="contact-details">
-      <div className="title-container">
-        <div className="container">
-          <h1 className="title">{t('ACCOUNT_SETTINGS.TITLE')}</h1>
+    <div
+      className={`contact-details${embedded ? ' contact-details--embedded' : ''}`}
+    >
+      {!embedded && (
+        <div className="title-container">
+          <div className="container">
+            <h1 className="title">{t('ACCOUNT_SETTINGS.TITLE')}</h1>
+          </div>
         </div>
-      </div>
-      <div className="form-container container">
+      )}
+      <div className={`form-container${embedded ? '' : ' container'}`}>
         <section className="contact-details__form-container">
           <header className="contact-details__header">
             <h2 className="sub-title">

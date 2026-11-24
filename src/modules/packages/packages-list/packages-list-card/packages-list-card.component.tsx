@@ -20,7 +20,7 @@ import { arSA } from 'date-fns/locale/ar-SA';
 import { enUS } from 'date-fns/locale/en-US';
 import { useAppSelector } from '../../../../redux/store';
 import { selectCurrentUser } from '../../../../redux/user/user.selectors';
-import { subjectName } from '../../../dashboard/dashboard.utils';
+import { subjectName, courseLabel } from '../../../dashboard/dashboard.utils';
 import type { Package } from '../../../../assets/types';
 import {
   hoursAccounted,
@@ -104,7 +104,9 @@ const PackageListCard: FC<PackageListCardProps> = ({
     return (method && map[method]) || t('MYPACKAGES.CARD.OTHER');
   }, [packageData.payment_method, t]);
 
-  const fullCourse = packageData.grade_subject?.full_course_name?.trim() || '';
+  const fullCourse = courseLabel(
+    packageData.grade_subject?.full_course_name?.trim(),
+  );
   const remainingHours = packageData.remaining_hours ?? 0;
   const originalHours = packageData.original_hours ?? 0;
   // Older API responses carry only the balance: then everything not free is "used"
@@ -157,7 +159,10 @@ const PackageListCard: FC<PackageListCardProps> = ({
           </p>
         </div>
         <div className="pk-card__left">
-          <Ring value={hoursLeftShare(packageData)} label={`${hoursLeft}h`} />
+          <Ring
+            value={hoursLeftShare(packageData)}
+            label={t('DASHBOARD.HOURS_SHORT', { hours: hoursLeft })}
+          />
           <span className="pk-card__left-label">
             {t('MYPACKAGES.CARD.REMAINING_HOURS')}
           </span>

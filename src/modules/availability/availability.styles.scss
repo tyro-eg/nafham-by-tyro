@@ -224,7 +224,7 @@ html[dir='rtl'] .av-flip svg {
   &--today {
     .av-day__date {
       background-color: $brand-500;
-      color: $color-white;
+      color: $on-brand;
     }
   }
 
@@ -311,9 +311,12 @@ html[dir='rtl'] .av-flip svg {
     background-color: $surface;
   }
 
+  // New look (23 Nov 2026): a soft blue with a darker edge instead of solid
+  // bright blue, so booked and kept times still stand out
   &--available {
-    background-color: $av-open;
-    border-top-color: rgba($color-white, 0.35);
+    background-color: $brand-100;
+    border-inline-start: 3px solid $lagoon;
+    border-top-color: rgba($lagoon, 0.12);
   }
 
   &--adding {
@@ -385,7 +388,7 @@ html[dir='rtl'] .av-flip svg {
   }
 
   &--past-open {
-    background-color: rgba($av-open, 0.25);
+    background-color: rgba($av-open, 0.12);
   }
 }
 
@@ -451,4 +454,311 @@ html[dir='rtl'] .av-flip svg {
   margin: 0 0 $space-4;
   font-size: $font-base;
   color: $text-body;
+}
+
+// ============================================================
+// New look (23 Nov 2026): the half-hour cells stay for tapping and
+// dragging but are see-through; open time, bookings, kept times and
+// changes are drawn over them as blocks (.av-layer, taps pass through).
+// ============================================================
+.av-grid__corner,
+.av-day {
+  height: 7.2rem;
+}
+
+.av-day {
+  &__date {
+    font-family: $font-display-family;
+    font-weight: 600;
+  }
+
+  &--today .av-day__date {
+    background-color: $ink;
+    color: #fff;
+  }
+
+  &__hours {
+    padding: 0.1rem 0.8rem;
+    border-radius: $radius-pill;
+    background-color: #e7f6fc;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: $lagoon;
+    white-space: nowrap;
+
+    &--none {
+      background-color: $gray-100;
+      color: $text-muted;
+    }
+
+    &--change {
+      background-color: $sun-bg;
+      color: #8a5d00;
+    }
+  }
+
+  &__chevron {
+    display: none;
+  }
+}
+
+.av-cell {
+  border-top: 0;
+
+  &--hour {
+    border-top: 1px solid $border;
+  }
+
+  &--empty,
+  &--available,
+  &--adding,
+  &--removing,
+  &--reserved,
+  &--held,
+  &--past-open {
+    background-color: transparent;
+    background-image: none;
+  }
+
+  &--past {
+    background-color: $gray-50;
+    background-image: none;
+  }
+
+  &__lock {
+    display: none;
+  }
+
+  // The open block draws the edge now
+  &--available,
+  &--removing,
+  &--reserved,
+  &--held,
+  &--adding {
+    border-inline-start: 1px solid $border;
+    border-top-color: transparent;
+  }
+
+  &--hour#{&}--available,
+  &--hour#{&}--removing,
+  &--hour#{&}--reserved,
+  &--hour#{&}--held,
+  &--hour#{&}--adding {
+    border-top-color: $border;
+  }
+}
+
+// One layer per day, the height of the day's rows
+.av-layer {
+  position: relative;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.av-block {
+  position: absolute;
+  inset-inline: 0.5rem;
+  border-radius: 1.1rem;
+
+  &--open {
+    border: 1.5px solid #9edcf2;
+    background-color: #e3f6fd;
+  }
+
+  &--adding {
+    border: 1.5px solid #8fd6b0;
+    background: repeating-linear-gradient(
+      -45deg,
+      #e3f7ec 0 0.8rem,
+      #c9efd9 0.8rem 1.6rem
+    );
+  }
+
+  &--removing {
+    border: 1.5px solid #f2a7a7;
+    background: repeating-linear-gradient(
+      -45deg,
+      #fde8e8 0 0.8rem,
+      #f9cfcf 0.8rem 1.6rem
+    );
+  }
+
+  &__label {
+    position: absolute;
+    top: 0.4rem;
+    inset-inline-start: 0.8rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: $lagoon;
+    white-space: nowrap;
+  }
+
+  &__tag {
+    position: absolute;
+    bottom: 0.4rem;
+    inset-inline-start: 0.8rem;
+    font-size: 1.1rem;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  &--adding &__tag {
+    color: #0f7d69;
+  }
+
+  &--removing &__tag {
+    color: #b42318;
+  }
+}
+
+.av-card {
+  position: absolute;
+  inset-inline: 0.9rem;
+  display: grid;
+  align-content: start;
+  overflow: hidden;
+  padding: 0.3rem 0.8rem;
+  border-radius: 0.9rem;
+  background-color: $ink;
+  color: #fff;
+  font-size: 1.1rem;
+  line-height: 1.25;
+
+  b {
+    font-family: $font-display-family;
+    font-weight: 600;
+    @include ellipsis;
+  }
+
+  span {
+    color: #a9bdd2;
+    @include ellipsis;
+  }
+
+  &--trial {
+    border-inline-start: 3px solid #7b61ff;
+    background-color: #ece8ff;
+    color: $ink;
+
+    span {
+      color: $text-body;
+    }
+  }
+
+  &--held {
+    border: 1px dashed #e6b24a;
+    background-color: $sun-bg;
+
+    span {
+      color: #8a5d00;
+      white-space: normal;
+    }
+  }
+}
+
+.av-now {
+  position: absolute;
+  inset-inline: 0;
+  height: 2px;
+  background-color: $sun;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset-inline-start: -0.4rem;
+    top: -0.3rem;
+    width: 0.8rem;
+    height: 0.8rem;
+    border-radius: 50%;
+    background-color: $sun;
+  }
+}
+
+// ---------- the week's totals, the key, the save bar ----------
+.av-totals {
+  margin: 0 0 $space-3;
+  font-size: $font-sm;
+  color: $text-muted;
+
+  b {
+    font-family: $font-display-family;
+    font-weight: 600;
+    font-size: $font-base;
+    color: $text-strong;
+  }
+}
+
+.av-legend {
+  margin-top: $space-3;
+}
+
+.av-legend__swatch {
+  &--open {
+    border: 1.5px solid #9edcf2;
+    background-color: #e3f6fd;
+  }
+
+  &--booked {
+    background-color: $ink;
+  }
+
+  &--trial {
+    background-color: #ece8ff;
+    border-inline-start: 3px solid #7b61ff;
+  }
+
+  &--held {
+    border: 1px dashed #e6b24a;
+    background-color: $sun-bg;
+  }
+
+  &--adding {
+    border: 1px solid #8fd6b0;
+    background: repeating-linear-gradient(
+      -45deg,
+      #e3f7ec 0 3px,
+      #c9efd9 3px 6px
+    );
+  }
+
+  &--removing {
+    border: 1px solid #f2a7a7;
+    background: repeating-linear-gradient(
+      -45deg,
+      #fde8e8 0 3px,
+      #f9cfcf 3px 6px
+    );
+  }
+}
+
+.av-savebar {
+  border-color: $ink;
+  background-color: $ink;
+  color: #fff;
+
+  &__text {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem $space-4;
+    color: #fff;
+    font-weight: 500;
+
+    b {
+      font-family: $font-display-family;
+      font-weight: 600;
+    }
+  }
+
+  &__closing {
+    color: #fbc4c4;
+  }
+
+  &__opening {
+    color: #a7ebc8;
+  }
+
+  .MuiButton-outlined {
+    border-color: rgba(255, 255, 255, 0.3);
+    color: #fff;
+  }
 }

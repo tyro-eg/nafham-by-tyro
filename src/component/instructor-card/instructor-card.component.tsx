@@ -22,6 +22,7 @@ import { useRtlClass } from '../../assets/utils/utils';
 import './instructor-card.styles.scss';
 import { Instructor } from '../../assets/types';
 import RequestSessionsModal from '../../modals/request-sessions-modal/request-sessions-modal.component';
+import { courseLabel } from '../../modules/dashboard/dashboard.utils';
 
 /**
  * InstructorCard Component
@@ -114,7 +115,7 @@ const InstructorCard: React.FC<{ instructor: Instructor }> = memo(
                 <div className="instructor-card__fields">
                   {instructor.grade_subjects.map((subject) => (
                     <div key={subject.id} className="instructor-card__field">
-                      {subject.full_course_name}
+                      {courseLabel(subject.full_course_name)}
                     </div>
                   ))}
                 </div>
