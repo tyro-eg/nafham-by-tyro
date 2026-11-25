@@ -1032,6 +1032,14 @@ $gold-fg: #b07800;
 
 .trial-select__menu .MuiPaper-root {
   margin-top: $space-1;
+  // The menu scrolls as a whole when it must; the site-wide 17rem cap on
+  // menu lists (base.scss) made long lists scroll in a small box
+  max-height: min(70vh, 48rem);
+
+  .MuiMenu-list {
+    max-height: none;
+  }
+
   border: 1px solid $border;
   border-radius: $radius-md;
   box-shadow: $shadow-lg;
@@ -1063,8 +1071,6 @@ $gold-fg: #b07800;
 // Grades: a compact grid under each stage, so the whole list fits without
 // scrolling (Primary: G1 G2 G3 G4 / G5 G6 …)
 .trial-select__menu--grid .MuiPaper-root {
-  max-height: min(70vh, 48rem);
-
   .MuiList-root {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
