@@ -7,8 +7,15 @@ vi.mock('../assets/utils/api', () => ({
 }));
 
 // Imported after the mock, so the module under test uses it
-const { MAX_BATCH, flushFunnel, newVisitorId, trackFunnel, visitorId } =
-  await import('./funnel');
+const {
+  MAX_BATCH,
+  flushFunnel,
+  newVisitorId,
+  resetFunnelOnce,
+  trackFunnel,
+  trackFunnelOnce,
+  visitorId,
+} = await import('./funnel');
 
 describe('the visitor id', () => {
   afterEach(() => vi.unstubAllGlobals());
@@ -98,5 +105,40 @@ describe('reporting steps', () => {
   it('has nothing to send when nothing happened', async () => {
     await flushFunnel();
     expect(post).not.toHaveBeenCalled();
+  });
+});
+
+describe('a step that counts once per run', () => {
+  beforeEach(() => {
+    post.mockReset();
+    post.mockResolvedValue({});
+    vi.stubGlobal('localStorage', memoryStorage());
+    vi.stubGlobal('sessionStorage', memoryStorage());
+  });
+  afterEach(async () => {
+    await flushFunnel();
+    vi.unstubAllGlobals();
+  });
+
+  it('is reported once, however often the page is mounted', async () => {
+    trackFunnelOnce('trial', 'trial_started');
+    trackFunnelOnce('trial', 'trial_started');
+    await flushFunnel();
+    expect(post.mock.calls[0][1].events).toHaveLength(1);
+  });
+
+  it('counts again after the run ended', async () => {
+    trackFunnelOnce('trial', 'trial_started');
+    resetFunnelOnce('trial');
+    trackFunnelOnce('trial', 'trial_started');
+    await flushFunnel();
+    expect(post.mock.calls[0][1].events).toHaveLength(2);
+  });
+
+  it('still reports when storage is blocked', async () => {
+    vi.stubGlobal('sessionStorage', blockedStorage());
+    trackFunnelOnce('trial', 'trial_started');
+    await flushFunnel();
+    expect(post).toHaveBeenCalledTimes(1);
   });
 });

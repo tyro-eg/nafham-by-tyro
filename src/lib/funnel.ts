@@ -119,6 +119,36 @@ export const trackFunnel = (
   }, FLUSH_MS);
 };
 
+const ONCE_PREFIX = 'tyro.funnelOnce.';
+
+/**
+ * Reports a step once per run of a flow in this tab. The trial page is
+ * mounted again when a visitor signs in half-way (the layout changes), and
+ * that must not count as starting a second trial. `resetFunnelOnce` ends
+ * the run (the trial was sent), so the next one counts again.
+ */
+export const trackFunnelOnce = (
+  key: string,
+  name: FunnelStep,
+  properties: FunnelProperties = {},
+): void => {
+  try {
+    if (sessionStorage.getItem(ONCE_PREFIX + key)) return;
+    sessionStorage.setItem(ONCE_PREFIX + key, '1');
+  } catch {
+    // No storage: counting it twice beats not counting it
+  }
+  trackFunnel(name, properties);
+};
+
+export const resetFunnelOnce = (key: string): void => {
+  try {
+    sessionStorage.removeItem(ONCE_PREFIX + key);
+  } catch {
+    // Nothing to reset
+  }
+};
+
 // A step taken just before leaving (to Nomod's page, or closing the tab)
 if (typeof document !== 'undefined') {
   document.addEventListener('visibilitychange', () => {
