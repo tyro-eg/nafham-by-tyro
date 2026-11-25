@@ -2,6 +2,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   clearReturnTo,
   isSafePath,
+  justSignedOut,
+  noteSignOut,
   peekReturnTo,
   rememberReturnTo,
 } from './return-to';
@@ -61,6 +63,24 @@ describe('the remembered destination', () => {
     expect(() => rememberReturnTo('/buy', 0)).not.toThrow();
     expect(peekReturnTo(0)).toBeNull();
     expect(() => clearReturnTo()).not.toThrow();
+  });
+});
+
+describe('signing out', () => {
+  beforeEach(() => vi.stubGlobal('sessionStorage', memoryStorage()));
+  afterEach(() => vi.unstubAllGlobals());
+
+  it('forgets the remembered page, so the next person is not sent there', () => {
+    rememberReturnTo('/messages/abc', 0);
+    noteSignOut(1000);
+    expect(peekReturnTo(1000)).toBeNull();
+  });
+
+  it('counts as "just signed out" for a few seconds only', () => {
+    noteSignOut(10_000);
+    expect(justSignedOut(10_500)).toBe(true);
+    expect(justSignedOut(14_999)).toBe(true);
+    expect(justSignedOut(15_000)).toBe(false);
   });
 });
 

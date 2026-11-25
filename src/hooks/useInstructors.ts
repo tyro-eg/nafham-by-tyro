@@ -30,6 +30,8 @@ interface TutorProfileUpdateData {
     target_students?: number | '';
     accepting_new_students?: boolean;
     same_day_trials?: boolean;
+    /** The standing backup room for lessons Zoom cannot host ('' clears it) */
+    backup_meeting_link?: string;
   };
 }
 

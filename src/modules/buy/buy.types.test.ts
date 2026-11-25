@@ -7,6 +7,7 @@ import {
   draftFrom,
   emptyDraft,
   loadDraft,
+  openDraftAfterCheckout,
   saveDraft,
   settleCheckout,
   toCheckoutLine,
@@ -232,6 +233,45 @@ describe('draftAfterCheckout', () => {
     const draft = sent();
     expect(draftAfterCheckout(draft, 'pending')).toBe(draft);
     expect(draftAfterCheckout(draft, 'created')).toBe(draft);
+  });
+});
+
+describe('openDraftAfterCheckout', () => {
+  const sent = (overrides: Partial<BuyDraft> = {}): BuyDraft => ({
+    ...emptyDraft(),
+    step: 'basket',
+    childId: 3,
+    basket: [line()],
+    checkoutSlug: 'pay1',
+    pricing: { currency: 'AED', vatApplies: true, vatRatePercent: 5 },
+    ...overrides,
+  });
+
+  it('sends a parent looking at a paid basket back to "who", not to a step with no child', () => {
+    const next = openDraftAfterCheckout(sent(), 'fulfilled', true);
+    expect(next.basket).toHaveLength(0);
+    expect(next.step).toBe('who');
+    expect(next.checkoutSlug).toBeUndefined();
+    expect(next.pricing).toBeUndefined();
+  });
+
+  it('sends an adult learner back to the course step', () => {
+    expect(openDraftAfterCheckout(sent(), 'paid', false).step).toBe('what');
+  });
+
+  it('keeps what a link just picked while emptying the paid basket', () => {
+    const fromLink = sent({ step: 'tutors', childId: 3, courseId: 10 });
+    const next = openDraftAfterCheckout(fromLink, 'fulfilled', true);
+    expect(next).toMatchObject({ step: 'tutors', childId: 3, courseId: 10 });
+    expect(next.basket).toHaveLength(0);
+  });
+
+  it('treats an unpaid checkout like draftAfterCheckout does', () => {
+    const draft = sent();
+    expect(openDraftAfterCheckout(draft, 'pending', true)).toBe(draft);
+    expect(
+      openDraftAfterCheckout(draft, 'cancelled', true).basket,
+    ).toHaveLength(1);
   });
 });
 

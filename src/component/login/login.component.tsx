@@ -53,10 +53,13 @@ const Login = () => {
   const goToTerms = () => navigate('/terms');
 
   const onSubmit = async (values: LoginFormData) => {
+    // Read now: once the user is signed in the route itself moves on and
+    // forgets the remembered page
+    const returnTo = peekReturnTo();
     try {
       const userData = await signInMutation.mutateAsync(values);
       if (userData?.id) {
-        navigate(peekReturnTo() ?? getHomePath(userData));
+        navigate(returnTo ?? getHomePath(userData), { replace: true });
       }
     } catch (error) {
       console.error('Login error:', error);

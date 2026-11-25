@@ -78,6 +78,9 @@ const Register: FC = () => {
   }, []);
 
   const onSubmit = async (values: RegisterFormData) => {
+    // Read now: once the account exists the route itself moves on and
+    // forgets the remembered page
+    const returnTo = peekReturnTo();
     try {
       const { phone_number, ...submitValues } = values;
       if (childMissing) return;
@@ -98,9 +101,9 @@ const Register: FC = () => {
       });
 
       if (userData?.id) {
-        navigate(
-          peekReturnTo() ?? (role === 'Parent' ? '/family' : '/dashboard'),
-        );
+        navigate(returnTo ?? (role === 'Parent' ? '/family' : '/dashboard'), {
+          replace: true,
+        });
       }
     } catch (error) {
       console.error('Registration error:', error);

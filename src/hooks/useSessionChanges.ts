@@ -236,3 +236,41 @@ export function useWithdrawMove() {
     onSuccess: () => invalidateSessions(queryClient),
   });
 }
+
+/**
+ * PATCH /sessions/:id/meeting_link: the lesson's tutor adds or replaces its
+ * meeting link (Google Meet, Zoom, Teams) from 30 minutes before the start
+ * until the end. Both Join buttons then lead there and the student is told
+ * in the lesson chat (Sessions::MeetingLink).
+ */
+export function useSetMeetingLink() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (input: { sessionId: number; link: string }) => {
+      const response = await patch(
+        `/sessions/${input.sessionId}/meeting_link`,
+        {
+          meeting_link: input.link.trim(),
+        },
+      );
+      return response.data.data as SessionType;
+    },
+    onSuccess: () => invalidateSessions(queryClient),
+  });
+}
+
+/**
+ * POST /sessions/:id/link_problem: the student says the lesson link isn't
+ * working. The tutor is asked in the lesson chat to replace it; support
+ * steps in if it has not changed 5 minutes later.
+ */
+export function useReportLinkProblem() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (sessionId: number) => {
+      const response = await post(`/sessions/${sessionId}/link_problem`, {});
+      return response.data.data as SessionType;
+    },
+    onSuccess: () => invalidateSessions(queryClient),
+  });
+}

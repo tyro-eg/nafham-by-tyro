@@ -167,8 +167,8 @@ const Dashboard: FC = () => {
   // Someone who has not had a lesson or a package yet starts with the free
   // trial; everyone else asks support for more sessions as before
   const newcomer =
-    !loading &&
-    !packagesQuery.isLoading &&
+    sessionsQuery.isSuccess &&
+    packagesQuery.isSuccess &&
     sessions.length === 0 &&
     packages.length === 0;
   useLiveSessionToast(sessionsQuery.data ? sessions : undefined, (session) =>

@@ -39,10 +39,25 @@ export const peekReturnTo = (now: number = Date.now()): string | null => {
   }
 };
 
-export const clearReturnTo = () => {
+// Signing out swaps the whole layout, so every guarded page is mounted
+// afresh as "signed out" for a moment: without this it would send the person
+// to /login and remember the page they just left for whoever signs in next.
+let signedOutAt = 0;
+const SIGN_OUT_GRACE_MS = 5000;
+
+/** Called as a session ends (sign-out, or one that expired) */
+export const noteSignOut = (now: number = Date.now()) => {
+  signedOutAt = now;
+  clearReturnTo();
+};
+
+export const justSignedOut = (now: number = Date.now()) =>
+  now - signedOutAt < SIGN_OUT_GRACE_MS;
+
+export function clearReturnTo() {
   try {
     sessionStorage.removeItem(KEY);
   } catch {
     // Nothing to clear
   }
-};
+}

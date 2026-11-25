@@ -95,12 +95,18 @@ const BasketStep: FC<BasketStepProps> = ({
   const needTerms = termsPending || termsAsked;
   // Country names in the reader's language, the usual ones first
   const countries = useMemo(() => {
-    const names = new Intl.DisplayNames([i18n.language], { type: 'region' });
+    if (!needCountry) return [];
+    let names: Intl.DisplayNames | null = null;
+    try {
+      names = new Intl.DisplayNames([i18n.language], { type: 'region' });
+    } catch {
+      // An older browser: the English names will do
+    }
     return getCountries().map((item) => ({
       code: item.code,
-      name: names.of(item.code) ?? item.name,
+      name: names?.of(item.code) ?? item.name,
     }));
-  }, [i18n.language]);
+  }, [i18n.language, needCountry]);
   const [error, setError] = useState<string | null>(null);
   const [newTotal, setNewTotal] = useState<number | null>(null);
   const [pending, setPending] = useState<{

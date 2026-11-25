@@ -227,6 +227,15 @@ export const markAutoSend = (now: number = Date.now()) => {
   }
 };
 
+/** They closed the form without signing in, or the session ended: forget it */
+export const clearAutoSend = () => {
+  try {
+    sessionStorage.removeItem(AUTO_SEND_KEY);
+  } catch {
+    // Nothing to clear
+  }
+};
+
 /** Whether the request should go out now; asked once, then forgotten */
 export const takeAutoSend = (now: number = Date.now()): boolean => {
   try {

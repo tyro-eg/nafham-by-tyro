@@ -12,6 +12,8 @@ import { setActiveChildId } from '../lib/family-child';
 import { markFromApp, safeNextPath } from '../lib/from-app';
 import { AUTH_KEYS, clearAuthStorage, saveTokens } from '../lib/auth-storage';
 import i18n from '../component/i18next/i18n';
+import { noteSignOut } from '../lib/return-to';
+import { clearLocalSession } from '../lib/session-storage';
 
 /**
  * Sign in payload
@@ -193,12 +195,14 @@ export function useSignOut() {
         }
 
         // Always clear local storage regardless of API call result
-        localStorage.clear();
+        clearLocalSession();
       } finally {
         hideSpinner();
       }
     },
     onSuccess: () => {
+      // Before the user leaves the store: guarded pages re-render at once
+      noteSignOut();
       dispatch(clearCurrentUser());
       queryClient.clear(); // Clear all cached queries
       navigate('/');
