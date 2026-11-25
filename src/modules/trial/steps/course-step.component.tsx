@@ -259,7 +259,11 @@ const CourseStep: FC<CourseStepProps> = ({
               options.find((option) => String(option.id) === selected)?.label
             )
           }
-          MenuProps={{ className: 'trial-select__menu' }}
+          MenuProps={{
+            className: options.some((option) => option.group)
+              ? 'trial-select__menu trial-select__menu--grid'
+              : 'trial-select__menu',
+          }}
         >
           {options.flatMap((option, index) => {
             const item = (
