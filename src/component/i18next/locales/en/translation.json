@@ -1794,6 +1794,12 @@
       "NEXT": "Continue"
     },
     "TUTOR_ACCOUNT": "Free trials are for students. You are signed in as a tutor.",
+    "NO_TRIALS": {
+      "TITLE": "You have used all your free trials",
+      "TEXT": "Each student gets {{count}} free trials, and you have had them all. Buy a course to keep learning with a tutor.",
+      "PARENT": "Each child gets {{count}} free trials, and your children have had them all. Buy a course to keep learning with a tutor.",
+      "BUY": "Buy a course"
+    },
     "ERROR": "We couldn't send your request. Please pick another time.",
     "ERROR_LOADING": "We couldn't load the tutors. Please try again.",
     "EYEBROW": "Free trial",
@@ -1804,7 +1810,8 @@
       "TITLE": "Who is the trial for?",
       "TEXT": "Pick the child; the tutors and times are matched to them.",
       "ADD": "Add a child",
-      "NONE": "No children yet. Add your first child, then come back to book the trial."
+      "NONE": "No children yet. Add your first child, then come back to book the trial.",
+      "NO_TRIALS": "No free trials left"
     },
     "MATCH": {
       "TITLE": "Let us find your instructor",

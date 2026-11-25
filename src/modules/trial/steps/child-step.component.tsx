@@ -9,6 +9,8 @@ import { getActiveChildId, setActiveChildId } from '../../../lib/family-child';
 
 interface ChildStepProps {
   childId?: number;
+  /** Free trials left per child id; a child with none cannot be picked */
+  trialsLeft?: Record<number, number>;
   onNext: (childId: number) => void;
 }
 
@@ -16,13 +18,15 @@ interface ChildStepProps {
  * A parent's first step: which child the trial is for. The pick becomes the
  * child the rest of the wizard, and every request, is about.
  */
-const ChildStep: FC<ChildStepProps> = ({ childId, onNext }) => {
+const ChildStep: FC<ChildStepProps> = ({ childId, trialsLeft, onNext }) => {
   const { t } = useTranslation();
   const family = useFamily();
   const children = family.data?.children ?? [];
   const active = getActiveChildId();
+  const usedUp = (id?: number) => id !== undefined && trialsLeft?.[id] === 0;
+  const first = childId ?? (typeof active === 'number' ? active : undefined);
   const [picked, setPicked] = useState<number | undefined>(
-    childId ?? (typeof active === 'number' ? active : undefined),
+    usedUp(first) ? undefined : first,
   );
 
   const next = () => {
@@ -60,14 +64,22 @@ const ChildStep: FC<ChildStepProps> = ({ childId, onNext }) => {
               type="button"
               role="radio"
               aria-checked={picked === child.id}
-              className={`trial__child${picked === child.id ? ' trial__child--on' : ''}`}
+              disabled={usedUp(child.id)}
+              className={`trial__child${picked === child.id ? ' trial__child--on' : ''}${usedUp(child.id) ? ' trial__child--out' : ''}`}
               onClick={() => setPicked(child.id)}
             >
               <Avatar className="trial__child-avatar">
                 {child.first_name[0]}
               </Avatar>
-              <span className="trial__child-name">
-                {child.first_name} {child.last_name}
+              <span className="trial__child-text">
+                <span className="trial__child-name">
+                  {child.first_name} {child.last_name}
+                </span>
+                {usedUp(child.id) && (
+                  <span className="trial__child-note">
+                    {t('TRIAL.CHILD.NO_TRIALS')}
+                  </span>
+                )}
               </span>
             </button>
           ))}

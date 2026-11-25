@@ -1315,3 +1315,47 @@ $gold-fg: #b07800;
   font-size: $font-sm;
   color: $text-body;
 }
+
+// ---------- free trials used up: said on opening the page ----------
+.trial__out {
+  max-width: 64rem;
+  margin: 0 auto;
+  text-align: center;
+
+  .trial__actions {
+    justify-content: center;
+    gap: 1rem;
+  }
+}
+
+// Several refusals at once, one per line
+.trial__errors {
+  margin: 0;
+  padding-inline-start: 1.8rem;
+
+  li + li {
+    margin-top: 0.4rem;
+  }
+}
+
+// A child with no free trials left cannot be picked
+.trial__child--out {
+  cursor: not-allowed;
+  opacity: 0.55;
+
+  &:hover {
+    border-color: $border;
+  }
+}
+
+.trial__child-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.trial__child-note {
+  font-size: $font-xs;
+  font-weight: 600;
+  color: $text-body;
+}

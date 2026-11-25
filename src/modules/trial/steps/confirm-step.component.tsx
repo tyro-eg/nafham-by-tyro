@@ -23,7 +23,7 @@ import {
   type TrialRequest,
   type TrialTutor,
 } from '../../../hooks/useTrial';
-import { bookingErrorMessage } from '../../../hooks/useSessions';
+import { bookingErrorList } from '../../../hooks/useSessions';
 import RegisterModal from '../../../modals/register-modal/register-modal.component';
 import LoginModal from '../../../modals/login-modal/login-modal.component';
 import { formatSlot, localTimeZone } from '../trial.types';
@@ -78,7 +78,7 @@ const ConfirmStep: FC<ConfirmStepProps> = ({
   const { t, i18n } = useTranslation();
   const locale = `${i18n.language}-u-nu-latn`;
   const createRequest = useCreateTrialRequest();
-  const [error, setError] = useState<string | null>(null);
+  const [errors, setErrors] = useState<string[]>([]);
   const [auth, setAuth] = useState<'register' | 'login' | null>(null);
 
   if (loading) {
@@ -109,7 +109,7 @@ const ConfirmStep: FC<ConfirmStepProps> = ({
   }
 
   const send = async () => {
-    setError(null);
+    setErrors([]);
     try {
       const request = await createRequest.mutateAsync({
         grade_subject_id: course.id,
@@ -124,7 +124,8 @@ const ConfirmStep: FC<ConfirmStepProps> = ({
       });
       onSent(request);
     } catch (err) {
-      setError(bookingErrorMessage(err, t('TRIAL.ERROR')));
+      const reasons = bookingErrorList(err);
+      setErrors(reasons.length ? reasons : [t('TRIAL.ERROR')]);
     }
   };
 
@@ -209,7 +210,19 @@ const ConfirmStep: FC<ConfirmStepProps> = ({
         inputProps={{ maxLength: 20, dir: 'ltr' }}
       />
 
-      {error && <Alert severity="error">{error}</Alert>}
+      {errors.length > 0 && (
+        <Alert severity="error">
+          {errors.length === 1 ? (
+            errors[0]
+          ) : (
+            <ul className="trial__errors">
+              {errors.map((reason) => (
+                <li key={reason}>{reason}</li>
+              ))}
+            </ul>
+          )}
+        </Alert>
+      )}
 
       {!signedIn && (
         <p className="trial__notice">
