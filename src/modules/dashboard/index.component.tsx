@@ -7,6 +7,7 @@ import {
   AddShoppingCartRounded,
   ArrowForwardRounded,
   AutorenewRounded,
+  CardGiftcardRounded,
   CheckCircleRounded,
   CalendarMonthRounded,
   EmojiEventsRounded,
@@ -31,6 +32,7 @@ import { useRtlClass } from '../../assets/utils/utils';
 import type { SessionType } from '../../assets/types';
 import RequestSessionsModal from '../../modals/request-sessions-modal/request-sessions-modal.component';
 import TrialRequestsCard from '../trial/trial-requests-card.component';
+import TrialFollowUps from '../buy/trial-follow-ups.component';
 import heroArt from '../../assets/images/newLanding/start-learning.webp';
 import emptyArt from '../../assets/images/newLanding/rafiki.svg?url';
 import {
@@ -162,6 +164,13 @@ const Dashboard: FC = () => {
   const subjects = useMemo(() => subjectBreakdown(sessions, 5), [sessions]);
 
   const loading = sessionsQuery.isLoading;
+  // Someone who has not had a lesson or a package yet starts with the free
+  // trial; everyone else asks support for more sessions as before
+  const newcomer =
+    sessionsQuery.isSuccess &&
+    packagesQuery.isSuccess &&
+    sessions.length === 0 &&
+    packages.length === 0;
   useLiveSessionToast(sessionsQuery.data ? sessions : undefined, (session) =>
     t('MYSESSIONS.MAIN.CARD.LIVE_TOAST', {
       name: counterpartName(session, currentUser?.id),
@@ -293,13 +302,24 @@ const Dashboard: FC = () => {
               <p className="sd-hero__message">{heroMessage}</p>
             )}
             <div className="sd-hero__actions">
-              <Button
-                onClick={openRequest}
-                className="sd-hero__primary"
-                startIcon={<EventAvailableRounded />}
-              >
-                {t('DASHBOARD.BOOK_SESSION')}
-              </Button>
+              {newcomer ? (
+                <Button
+                  component={Link}
+                  to="/trial"
+                  className="sd-hero__primary"
+                  startIcon={<CardGiftcardRounded />}
+                >
+                  {t('DASHBOARD.BOOK_TRIAL')}
+                </Button>
+              ) : (
+                <Button
+                  onClick={openRequest}
+                  className="sd-hero__primary"
+                  startIcon={<EventAvailableRounded />}
+                >
+                  {t('DASHBOARD.BOOK_SESSION')}
+                </Button>
+              )}
               <Button
                 component={Link}
                 to="/my_sessions"
@@ -342,6 +362,9 @@ const Dashboard: FC = () => {
         {/* ---------- Free trials waiting for an instructor ---------- */}
         <TrialRequestsCard />
 
+        {/* ---------- "Continue with your tutor" after a free trial ---------- */}
+        <TrialFollowUps enabled={!currentUser?.family_id} />
+
         <div className="sd-grid">
           <div className="sd-col">
             {/* ---------- Up next ---------- */}
@@ -353,10 +376,14 @@ const Dashboard: FC = () => {
               {!loading && !nextSession && (
                 <Empty
                   text={t('DASHBOARD.NEXT.EMPTY')}
-                  cta={{
-                    onClick: openRequest,
-                    label: t('DASHBOARD.BOOK_SESSION'),
-                  }}
+                  cta={
+                    newcomer
+                      ? { to: '/trial', label: t('DASHBOARD.BOOK_TRIAL') }
+                      : {
+                          onClick: openRequest,
+                          label: t('DASHBOARD.BOOK_SESSION'),
+                        }
+                  }
                 />
               )}
               {nextSession && (

@@ -55,6 +55,8 @@ export interface BuyDraft {
   basket: BasketLine[];
   /** The currency and VAT rule of the lines in the basket, from their quotes */
   pricing?: { currency: string; vatApplies: boolean; vatRatePercent: number };
+  /** The payment this basket was sent to pay; the basket stays until it is paid */
+  checkoutSlug?: string;
 }
 
 export const MAX_LINES = 12;
@@ -67,12 +69,29 @@ export const emptyDraft = (): BuyDraft => ({
   basket: [],
 });
 
-/** The draft survives a reload and the trip to Nomod's page, per payer */
-export const loadDraft = (userId: number): BuyDraft => {
+/** A draft older than this starts again: its prices and offers have moved */
+export const DRAFT_TTL_MS = 7 * 24 * 60 * 60 * 1000;
+
+/** What is stored: the draft and when it was last saved */
+type StoredDraft = Partial<BuyDraft> & { savedAt?: number };
+
+/**
+ * The draft survives a reload, a new tab, a few days away and the trip to
+ * Nomod's page, per payer. It is only emptied once its payment went
+ * through (settleCheckout), so a cancelled or declined payment comes back
+ * to the same basket.
+ */
+export const loadDraft = (
+  userId: number,
+  now: number = Date.now(),
+): BuyDraft => {
   try {
-    const raw = sessionStorage.getItem(`${DRAFT_KEY}.${userId}`);
+    const raw = localStorage.getItem(`${DRAFT_KEY}.${userId}`);
     if (!raw) return emptyDraft();
-    const saved = JSON.parse(raw) as Partial<BuyDraft>;
+    const { savedAt, ...saved } = JSON.parse(raw) as StoredDraft;
+    if (typeof savedAt !== 'number' || now - savedAt > DRAFT_TTL_MS) {
+      return emptyDraft();
+    }
     const draft = { ...emptyDraft(), ...saved };
     if (!STEPS.includes(draft.step)) draft.step = 'what';
     if (!Array.isArray(draft.basket)) draft.basket = [];
@@ -82,9 +101,14 @@ export const loadDraft = (userId: number): BuyDraft => {
   }
 };
 
-export const saveDraft = (userId: number, draft: BuyDraft) => {
+export const saveDraft = (
+  userId: number,
+  draft: BuyDraft,
+  now: number = Date.now(),
+) => {
   try {
-    sessionStorage.setItem(`${DRAFT_KEY}.${userId}`, JSON.stringify(draft));
+    const stored: StoredDraft = { ...draft, savedAt: now };
+    localStorage.setItem(`${DRAFT_KEY}.${userId}`, JSON.stringify(stored));
   } catch {
     // Private mode or storage full: the wizard still works for this page
   }
@@ -92,9 +116,77 @@ export const saveDraft = (userId: number, draft: BuyDraft) => {
 
 export const clearDraft = (userId: number) => {
   try {
-    sessionStorage.removeItem(`${DRAFT_KEY}.${userId}`);
+    localStorage.removeItem(`${DRAFT_KEY}.${userId}`);
   } catch {
     // Nothing to clear
+  }
+};
+
+/** Payment statuses where the money was taken: the basket is bought */
+const MONEY_TAKEN = [
+  'paid',
+  'fulfilled',
+  'needs_review',
+  'refunded',
+  'partially_refunded',
+  'disputed',
+];
+/** Still on Nomod's page (or abandoned there): nothing decided yet */
+const STILL_OPEN = ['created', 'pending'];
+
+/**
+ * The draft once its checkout has this status: emptied when the money was
+ * taken, kept (without the finished checkout) when the payment failed, was
+ * cancelled or ran out, and untouched while it is still open.
+ */
+export const draftAfterCheckout = (
+  draft: BuyDraft,
+  status: string,
+): BuyDraft => {
+  if (MONEY_TAKEN.includes(status)) return emptyDraft();
+  if (STILL_OPEN.includes(status)) return draft;
+  const { checkoutSlug: _done, ...rest } = draft;
+  return rest;
+};
+
+/**
+ * The same, for a draft open in the wizard: a paid basket is emptied, but
+ * the child and course being picked right now (from a link, say) are kept,
+ * and someone who was looking at that basket goes back to the first step.
+ */
+export const openDraftAfterCheckout = (
+  draft: BuyDraft,
+  status: string,
+  parent: boolean,
+): BuyDraft => {
+  if (!MONEY_TAKEN.includes(status)) return draftAfterCheckout(draft, status);
+  const { checkoutSlug: _done, pricing: _old, ...rest } = draft;
+  const first: Step = parent ? 'who' : 'what';
+  return {
+    ...rest,
+    basket: [],
+    step: draft.step === 'basket' ? first : draft.step,
+  };
+};
+
+/**
+ * The payment page reports how a checkout ended. Only the draft that was
+ * sent to that very payment is touched: paying a renewal leaves a basket
+ * of new courses alone.
+ */
+export const settleCheckout = (
+  userId: number,
+  slug: string,
+  status: string,
+) => {
+  const draft = loadDraft(userId);
+  if (draft.checkoutSlug !== slug) return;
+  const next = draftAfterCheckout(draft, status);
+  if (next === draft) return;
+  if (next.basket.length === 0 && !next.checkoutSlug && next.step === 'what') {
+    clearDraft(userId);
+  } else {
+    saveDraft(userId, next);
   }
 };
 

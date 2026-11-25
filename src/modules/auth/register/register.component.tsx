@@ -22,6 +22,7 @@ import {
   type RegisterFormData,
 } from '../../../schemas/authSchemas';
 import { useRtlClass } from '../../../assets/utils/utils';
+import { peekReturnTo } from '../../../lib/return-to';
 import {
   getCountries,
   getNationalities,
@@ -72,6 +73,9 @@ const Register: FC = () => {
   const goToTerms = () => navigate('/terms');
 
   const onSubmit = async (values: RegisterFormData) => {
+    // Read now: once the account exists the route itself moves on and
+    // forgets the remembered page
+    const returnTo = peekReturnTo();
     try {
       const { phone_number, ...submitValues } = values;
       if (childMissing) return;
@@ -92,7 +96,9 @@ const Register: FC = () => {
       });
 
       if (userData?.id) {
-        navigate(role === 'Parent' ? '/family' : '/dashboard');
+        navigate(returnTo ?? (role === 'Parent' ? '/family' : '/dashboard'), {
+          replace: true,
+        });
       }
     } catch (error) {
       console.error('Registration error:', error);

@@ -22,6 +22,7 @@ import './login.styles.scss';
 // import ResetPasswordModal from '../../modals/reset-password/reset-password-modal.component';
 import { useSignIn } from '../../hooks/useAuth';
 import { getHomePath } from '../../assets/utils/home-path';
+import { peekReturnTo } from '../../lib/return-to';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -52,10 +53,13 @@ const Login = () => {
   const goToTerms = () => navigate('/terms');
 
   const onSubmit = async (values: LoginFormData) => {
+    // Read now: once the user is signed in the route itself moves on and
+    // forgets the remembered page
+    const returnTo = peekReturnTo();
     try {
       const userData = await signInMutation.mutateAsync(values);
       if (userData?.id) {
-        navigate(getHomePath(userData));
+        navigate(returnTo ?? getHomePath(userData), { replace: true });
       }
     } catch (error) {
       console.error('Login error:', error);

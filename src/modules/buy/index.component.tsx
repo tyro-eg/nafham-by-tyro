@@ -12,6 +12,7 @@ import {
 } from '@mui/icons-material';
 
 import { useAppSelector } from '../../redux/store';
+import { get } from '../../assets/utils/api';
 import { selectCurrentUser } from '../../redux/user/user.selectors';
 import { useRtlClass } from '../../assets/utils/utils';
 import { useFamily } from '../../hooks/useFamily';
@@ -28,8 +29,8 @@ import {
 import OpenPaymentBanner from '../payments/open-payment-banner.component';
 import {
   DEFAULT_HOURS,
-  clearDraft,
   courseKey,
+  openDraftAfterCheckout,
   draftFrom,
   loadDraft,
   saveDraft,
@@ -69,7 +70,9 @@ const BUNDLE = { minSubjects: 4, discountPercent: 5 };
  * The buy wizard: who the course is for, which course, the weekly times,
  * who teaches (a ranked list, the tutors the child trialed with, or Nafham
  * matching one), how many hours, then the basket and one payment. The
- * draft lives in sessionStorage per payer and survives the trip to Nomod.
+ * draft is kept per payer for a week and survives the trip to Nomod: it is
+ * only emptied once its payment went through, so a cancelled or declined
+ * payment comes back to the same basket.
  */
 const BuyPage: FC = () => {
   const { t, i18n } = useTranslation();
@@ -96,6 +99,29 @@ const BuyPage: FC = () => {
   useEffect(() => {
     saveDraft(userId, draft);
   }, [draft, userId]);
+
+  // A basket that went to pay and never came back through the payment page
+  // (the tab was closed): one look at how that payment ended
+  const checkoutSlug = initial.current.draft.checkoutSlug;
+  useEffect(() => {
+    if (!checkoutSlug) return undefined;
+    let stale = false;
+    get(`/payments/${checkoutSlug}`)
+      .then((response) => {
+        const status = (response.data?.data as { status?: string } | undefined)
+          ?.status;
+        if (stale || !status) return;
+        setDraft((prev) =>
+          prev.checkoutSlug === checkoutSlug
+            ? openDraftAfterCheckout(prev, status, isParent)
+            : prev,
+        );
+      })
+      .catch(() => undefined);
+    return () => {
+      stale = true;
+    };
+  }, [checkoutSlug]);
 
   const update = (patch: Partial<BuyDraft>) =>
     setDraft((prev) => ({ ...prev, ...patch }));
@@ -451,7 +477,12 @@ const BuyPage: FC = () => {
                   goTo(isParent ? 'who' : 'what');
                 }}
                 onBack={() => goTo(draft.choice ? 'hours' : 'tutors')}
-                onPaid={() => clearDraft(userId)}
+                onCheckout={(slug) => {
+                  // Saved now: the page leaves for Nomod before an effect runs
+                  const next = { ...draft, checkoutSlug: slug };
+                  saveDraft(userId, next);
+                  setDraft(next);
+                }}
               />
             )}
           </section>
