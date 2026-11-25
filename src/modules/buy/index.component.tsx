@@ -19,6 +19,7 @@ import { useFamily } from '../../hooks/useFamily';
 import { useTrialCourses } from '../../hooks/useTrial';
 import { usePurchaseTutors, type TutorSearch } from '../../hooks/usePurchases';
 import { trackEvent } from '../../lib/analytics';
+import { trackFunnel } from '../../lib/funnel';
 import { formatMoney } from '../../lib/money';
 import { isFromApp } from '../../lib/from-app';
 import {
@@ -99,6 +100,19 @@ const BuyPage: FC = () => {
   useEffect(() => {
     saveDraft(userId, draft);
   }, [draft, userId]);
+
+  // The funnel: the flow was opened, and each step as it is reached
+  useEffect(() => {
+    trackFunnel('buy_started', {
+      parent: isParent,
+      from_link: initial.current.preferredTutorId !== undefined,
+      lines: initial.current.draft.basket.length,
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  useEffect(() => {
+    trackFunnel('buy_step_viewed', { step: draft.step });
+  }, [draft.step]);
 
   // A basket that went to pay and never came back through the payment page
   // (the tab was closed): one look at how that payment ended
@@ -282,6 +296,11 @@ const BuyPage: FC = () => {
       floorPrice: option.floor_price,
       schedule: draft.schedule,
     };
+    trackFunnel('buy_line_added', {
+      kind: draft.choice.kind,
+      hours: option.hours,
+      lines: draft.basket.length + 1,
+    });
     trackEvent(
       'Purchase',
       'add_to_cart',

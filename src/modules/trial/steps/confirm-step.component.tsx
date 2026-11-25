@@ -24,6 +24,7 @@ import {
   type TrialTutor,
 } from '../../../hooks/useTrial';
 import { bookingErrorMessage } from '../../../hooks/useSessions';
+import { trackFunnel } from '../../../lib/funnel';
 import RegisterModal from '../../../modals/register-modal/register-modal.component';
 import LoginModal from '../../../modals/login-modal/login-modal.component';
 import {
@@ -98,6 +99,7 @@ const ConfirmStep: FC<ConfirmStepProps> = ({
   const send = async () => {
     if (!course || !startTime || !dispatch) return;
     setError(null);
+    trackFunnel('trial_submitted', { dispatch, on_calendar: onCalendar });
     try {
       const request = await createRequest.mutateAsync({
         grade_subject_id: course.id,
@@ -139,6 +141,7 @@ const ConfirmStep: FC<ConfirmStepProps> = ({
   };
 
   const openAuth = (which: 'register' | 'login') => {
+    trackFunnel('signup_started', { from: 'trial', kind: which });
     markAutoSend();
     setAuth(which);
   };

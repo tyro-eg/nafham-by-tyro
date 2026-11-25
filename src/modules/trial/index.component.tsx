@@ -17,6 +17,11 @@ import { selectCurrentUser } from '../../redux/user/user.selectors';
 import { useRtlClass } from '../../assets/utils/utils';
 import { useFamily } from '../../hooks/useFamily';
 import {
+  resetFunnelOnce,
+  trackFunnel,
+  trackFunnelOnce,
+} from '../../lib/funnel';
+import {
   useTrialCourses,
   useTrialTutors,
   type TrialRequest,
@@ -100,6 +105,18 @@ const TrialPage: FC = () => {
   useEffect(() => {
     saveDraft(draft);
   }, [draft]);
+
+  // The funnel: the flow was opened, and each step as it is reached
+  useEffect(() => {
+    trackFunnelOnce('trial', 'trial_started', {
+      parent: isParent,
+      guest: !currentUser,
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  useEffect(() => {
+    trackFunnel('trial_step_viewed', { step: draft.step });
+  }, [draft.step]);
 
   // The link's tutor is in the draft now; keep the address clean
   useEffect(() => {
@@ -399,6 +416,8 @@ const TrialPage: FC = () => {
                 onBack={() => goTo(draft.slot ? 'slot' : 'tutors')}
                 onSent={(request) => {
                   clearDraft();
+                  // The next trial in this tab is a new start
+                  resetFunnelOnce('trial');
                   setSent(request);
                 }}
               />
