@@ -183,7 +183,33 @@ export const trialKeys = {
   requests: (allChildren: boolean) =>
     [...trialKeys.all, 'requests', { allChildren }] as const,
   offers: (tab: TrialOfferTab) => [...trialKeys.all, 'offers', tab] as const,
+  allowance: () => [...trialKeys.all, 'allowance'] as const,
 };
+
+/** A student's free trials: used, left and the most there are */
+export interface TrialAllowance {
+  student_id: number;
+  first_name: string;
+  used: number;
+  left: number;
+  max: number;
+}
+
+/**
+ * The free trials left for the signed-in student, or for each of a parent's
+ * children, so the page can say they are used up before any step is filled
+ */
+export function useTrialAllowance(enabled: boolean) {
+  return useQuery({
+    queryKey: trialKeys.allowance(),
+    queryFn: async () => {
+      const response = await get('/trial_requests/allowance');
+      return (response.data.data || []) as TrialAllowance[];
+    },
+    enabled,
+    staleTime: 30 * 1000,
+  });
+}
 
 /** Courses at least one active tutor teaches, with curriculum, stage, subject and variants */
 export function useTrialCourses() {

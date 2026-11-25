@@ -115,6 +115,21 @@ export function useInfiniteSessions(
 // /sessions/:id/cancel and the move proposals)
 
 /**
+ * The reasons a booking was refused, as the backend states them, one per
+ * entry (empty when the response names none)
+ */
+export const bookingErrorList = (error: unknown): string[] => {
+  const data = (error as { response?: { data?: unknown } })?.response?.data;
+  if (data && typeof data === 'object') {
+    const errors = (data as { errors?: unknown }).errors;
+    if (Array.isArray(errors) && errors.length) return errors.map(String);
+    const message = (data as { error?: unknown }).error;
+    if (typeof message === 'string') return [message];
+  }
+  return [];
+};
+
+/**
  * The reasons a booking was refused, as the backend states them
  */
 export const bookingErrorMessage = (

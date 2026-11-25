@@ -17,6 +17,7 @@ import { selectCurrentUser } from '../../redux/user/user.selectors';
 import { useRtlClass } from '../../assets/utils/utils';
 import { useFamily } from '../../hooks/useFamily';
 import {
+  useTrialAllowance,
   useTrialCourses,
   useTrialTutors,
   type TrialRequest,
@@ -84,6 +85,24 @@ const TrialPage: FC = () => {
   const family = useFamily(isParent);
   const child = family.data?.children.find((c) => c.id === draft.childId);
 
+  // Free trials left: said on opening the page, not after every step
+  const allowance = useTrialAllowance(
+    currentUser?.type === 'Student' || isParent,
+  );
+  const trialsLeft = Object.fromEntries(
+    (allowance.data ?? []).map((a) => [a.student_id, a.left]),
+  ) as Record<number, number>;
+  const maxTrials = allowance.data?.[0]?.max ?? 3;
+  const usedUp =
+    !!allowance.data?.length && allowance.data.every((a) => a.left === 0);
+  const childUsedUp =
+    isParent && draft.childId !== undefined && trialsLeft[draft.childId] === 0;
+  // A parent whose chosen child has none left picks again
+  useEffect(() => {
+    if (childUsedUp && !usedUp && draft.step !== 'child')
+      setDraft((prev) => ({ ...prev, childId: undefined, step: 'child' }));
+  }, [childUsedUp, usedUp, draft.step]);
+
   useEffect(() => {
     saveDraft(draft);
   }, [draft]);
@@ -137,6 +156,41 @@ const TrialPage: FC = () => {
             >
               {t('NAVIGATION.DASHBOARD')}
             </Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (usedUp && !sent) {
+    return (
+      <div className={`trial ${rtlClass}`}>
+        <div className="trial__container container">
+          <div className="trial__card trial__out">
+            <h1 className="trial__step-title">{t('TRIAL.NO_TRIALS.TITLE')}</h1>
+            <p className="trial__hint">
+              {t(isParent ? 'TRIAL.NO_TRIALS.PARENT' : 'TRIAL.NO_TRIALS.TEXT', {
+                count: maxTrials,
+              })}
+            </p>
+            <div className="trial__actions">
+              <Button
+                component={Link}
+                to="/dashboard"
+                className="trial__back"
+                variant="outlined"
+              >
+                {t('NAVIGATION.DASHBOARD')}
+              </Button>
+              <Button
+                component={Link}
+                to="/buy"
+                className="trial__cta"
+                variant="contained"
+              >
+                {t('TRIAL.NO_TRIALS.BUY')}
+              </Button>
+            </div>
           </div>
         </div>
       </div>
@@ -253,6 +307,7 @@ const TrialPage: FC = () => {
             {draft.step === 'child' && (
               <ChildStep
                 childId={draft.childId}
+                trialsLeft={trialsLeft}
                 onNext={(childId) => {
                   update({
                     childId,
