@@ -19,7 +19,7 @@ import {
   asksLevel,
   compareGrades,
   curriculumName,
-  isIGCSE,
+  offersStage,
   shownCurriculum,
   stageOf,
   type Stage,
@@ -93,7 +93,7 @@ const distinct = (
   });
 };
 
-/** The curriculum a course is offered under (IGCSE under British System) */
+/** The curriculum a course is offered under, in Nafham System's words */
 const curriculumOf = (course: GradeSubject) =>
   curriculumName(course.curriculum.name);
 
@@ -135,7 +135,12 @@ const CourseStep: FC<CourseStepProps> = ({
     ),
   );
 
-  const shown = courses.filter((c) => shownCurriculum(c.curriculum.name));
+  // British System stops before Secondary (that is IGCSE); IGCSE is Secondary
+  const shown = courses.filter(
+    (c) =>
+      shownCurriculum(c.curriculum.name) &&
+      offersStage(c.curriculum.name, stageOf(c.grade.name, c.curriculum.name)),
+  );
   const curriculumOptions = Array.from(new Set(shown.map(curriculumOf)))
     .sort((a, b) => a.localeCompare(b))
     .map((name): Choice => ({ id: name, label: name }));
@@ -186,25 +191,16 @@ const CourseStep: FC<CourseStepProps> = ({
     (subjectOptions.length === 1 ? String(subjectOptions[0].id) : undefined);
   const afterSubject = afterSub.filter((c) => c.subject.name === subject);
 
-  // The course itself. British Secondary is IGCSE: its IGCSE course first.
-  // Then the plain one (no level, no board) when there is one.
-  const boardAsked = !!stage && asksExamBoard(curriculumLabel, stage);
-  const candidates = boardAsked
-    ? [
-        ...afterSubject.filter((c) => isIGCSE(c.curriculum.name)),
-        ...afterSubject.filter((c) => !isIGCSE(c.curriculum.name)),
-      ]
-    : afterSubject;
+  // The course itself: the plain one (no level, no board) when there is one
   const resolved =
     subject !== undefined && (!hasSubs || sub !== undefined)
-      ? (candidates.find((c) => !c.sub_curriculum && !c.exam_board) ??
-        candidates.find((c) => !c.exam_board) ??
-        candidates[0])
+      ? (afterSubject.find((c) => !c.sub_curriculum && !c.exam_board) ??
+        afterSubject.find((c) => !c.exam_board) ??
+        afterSubject[0])
       : undefined;
 
-  // The board the student sits: British Secondary (IGCSE) only, once the
-  // course's tutors declare any
-  const boardOptions: Choice[] = boardAsked
+  // The board the student sits: IGCSE only, once the course's tutors declare any
+  const boardOptions: Choice[] = asksExamBoard(curriculumLabel)
     ? (resolved?.exam_boards ?? []).map((b) => ({ id: b.id, label: b.name }))
     : [];
   const hasBoards = boardOptions.length > 0;

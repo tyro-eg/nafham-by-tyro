@@ -4,12 +4,11 @@
  * - Curriculum, then grade. Grades sit under their stage: KG is PreSchool,
  *   G1–6 Primary, G7–9 Preparatory, G10 and up Secondary; IB counts in PYP,
  *   MYP and DP.
- * - British System and IGCSE are one curriculum: British Secondary is IGCSE.
- * - A level (OL, AS, A2…) only for British (IGCSE), American and IB, and
- *   only at Secondary (DP for IB). Every other curriculum is grade and
- *   subject only.
- * - An exam board (Cambridge, Edexcel, Oxford…) only for British Secondary
- *   (IGCSE).
+ * - British System has no Secondary: it ends at Preparatory (G9). British
+ *   Secondary is IGCSE, its own curriculum, which is Secondary only.
+ * - A level (OL, AS, A2…) only for IGCSE, American and IB, and only at
+ *   Secondary (DP for IB). Every other curriculum is grade and subject only.
+ * - An exam board (Cambridge, Edexcel, Oxford…) only for IGCSE.
  */
 
 export const STAGES = [
@@ -28,6 +27,9 @@ export type Stage = (typeof STAGES)[number];
 
 const isIB = (curriculum: string) =>
   /^(ib|international baccalaureate)\b/i.test(curriculum.trim());
+const isBritishSystem = (curriculum: string) =>
+  /^british\b/i.test(curriculum.trim());
+const isIGCSE = (curriculum: string) => /^igcse\b/i.test(curriculum.trim());
 
 /** The stage a grade belongs to, as Nafham System counts it */
 export const stageOf = (grade: string, curriculum = ''): Stage => {
@@ -49,30 +51,29 @@ export const stageOf = (grade: string, curriculum = ''): Stage => {
   return n <= 6 ? 'PRIMARY' : n <= 9 ? 'PREPARATORY' : 'SECONDARY';
 };
 
-const isBritish = (curriculum: string) =>
-  /^(british|igcse)\b/i.test(curriculum.trim());
+/** British System has no Secondary (that is IGCSE); IGCSE is Secondary only */
+export const offersStage = (curriculum: string, stage: Stage): boolean => {
+  if (isBritishSystem(curriculum)) return stage !== 'SECONDARY';
+  if (isIGCSE(curriculum)) return stage === 'SECONDARY';
+  return true;
+};
 
-/** British (IGCSE), American and IB ask a level, at Secondary (DP for IB) only */
+/** IGCSE, American and IB ask a level, at Secondary (DP for IB) only */
 export const asksLevel = (curriculum: string, stage: Stage): boolean =>
-  (isBritish(curriculum) ||
+  (isIGCSE(curriculum) ||
     /^(american|ib|international baccalaureate)\b/i.test(curriculum.trim())) &&
   (stage === 'SECONDARY' || stage === 'DP');
 
-/** Only British Secondary (IGCSE) asks which exam board the student sits */
-export const asksExamBoard = (curriculum: string, stage: Stage): boolean =>
-  isBritish(curriculum) && stage === 'SECONDARY';
-
-/** At British Secondary the IGCSE course is the one booked */
-export const isIGCSE = (curriculum: string): boolean =>
-  /^igcse\b/i.test(curriculum.trim());
+/** Only IGCSE asks which exam board the student sits */
+export const asksExamBoard = (curriculum: string): boolean =>
+  isIGCSE(curriculum);
 
 /** Curricula the website has that Nafham System does not offer */
 const HIDDEN = /^unknown\b/i;
 export const shownCurriculum = (name: string): boolean => !HIDDEN.test(name);
 
-/** The website's curriculum names in Nafham System's words (IGCSE is British) */
+/** The website's curriculum names in Nafham System's words */
 const NAMES: Record<string, string> = {
-  igcse: 'British System',
   'kuwaiti national': 'Kuwait National',
   'jordanian national': 'Jordan National',
 };

@@ -4,7 +4,7 @@ import {
   asksLevel,
   compareGrades,
   curriculumName,
-  isIGCSE,
+  offersStage,
   shownCurriculum,
   stageOf,
 } from './course-map';
@@ -43,8 +43,7 @@ describe('stageOf (Nafham System: grades count to stages)', () => {
 });
 
 describe('asksLevel', () => {
-  it('British System asks one at Secondary only (British Secondary is IGCSE)', () => {
-    expect(asksLevel('British System', 'SECONDARY')).toBe(true);
+  it('British System never asks one', () => {
     expect(asksLevel('British System', 'PREPARATORY')).toBe(false);
     expect(asksLevel('British System', 'PRIMARY')).toBe(false);
   });
@@ -66,20 +65,30 @@ describe('asksLevel', () => {
 });
 
 describe('asksExamBoard', () => {
-  it('only British Secondary (IGCSE)', () => {
-    expect(asksExamBoard('British System', 'SECONDARY')).toBe(true);
-    expect(asksExamBoard('IGCSE', 'SECONDARY')).toBe(true);
-    expect(asksExamBoard('British System', 'PREPARATORY')).toBe(false);
-    expect(asksExamBoard('Pre-IGCSE', 'SECONDARY')).toBe(false);
-    expect(asksExamBoard('American Diploma', 'SECONDARY')).toBe(false);
+  it('only IGCSE', () => {
+    expect(asksExamBoard('IGCSE')).toBe(true);
+    expect(asksExamBoard('British System')).toBe(false);
+    expect(asksExamBoard('Pre-IGCSE')).toBe(false);
+    expect(asksExamBoard('American Diploma')).toBe(false);
   });
 });
 
-describe('IGCSE is British', () => {
-  it('is offered under British System', () => {
-    expect(curriculumName('IGCSE')).toBe('British System');
-    expect(isIGCSE('IGCSE')).toBe(true);
-    expect(isIGCSE('British System')).toBe(false);
+describe('offersStage: British Secondary is IGCSE', () => {
+  it('British System has no Secondary', () => {
+    expect(offersStage('British System', 'SECONDARY')).toBe(false);
+    expect(offersStage('British System', 'PREPARATORY')).toBe(true);
+    expect(offersStage('British System', 'PRESCHOOL')).toBe(true);
+  });
+
+  it('IGCSE is Secondary only', () => {
+    expect(offersStage('IGCSE', 'SECONDARY')).toBe(true);
+    expect(offersStage('IGCSE', 'PREPARATORY')).toBe(false);
+    expect(offersStage('IGCSE', 'PRIMARY')).toBe(false);
+  });
+
+  it('other curricula keep every stage', () => {
+    expect(offersStage('American System', 'SECONDARY')).toBe(true);
+    expect(offersStage('Pre-IGCSE', 'PREPARATORY')).toBe(true);
   });
 });
 
