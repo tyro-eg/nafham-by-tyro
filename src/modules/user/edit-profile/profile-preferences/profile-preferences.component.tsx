@@ -10,6 +10,7 @@ import {
 
 import { Instructor } from '../../../../assets/types';
 import { useUpdateTutorProfile } from '../../../../hooks/useInstructors';
+import { changeErrorMessage } from '../../../../hooks/useSessionChanges';
 import {
   parseTargetStudents,
   targetProgress,
@@ -46,6 +47,35 @@ const ProfilePreferences: FC<ProfilePreferencesProps> = ({ instructor }) => {
     accepting_new_students?: boolean;
     same_day_trials?: boolean;
   }) => update.mutate({ id: instructor.id, userData: { tutor } });
+
+  // The standing backup room: a lesson Zoom cannot host goes there by itself
+  const savedBackup = instructor.backup_meeting_link ?? '';
+  const [backup, setBackup] = useState(savedBackup);
+  const [backupError, setBackupError] = useState<string | null>(null);
+  const [backupSaved, setBackupSaved] = useState(false);
+  useEffect(() => setBackup(savedBackup), [savedBackup]);
+  const backupChanged = backup.trim() !== savedBackup;
+
+  const saveBackup = async (event: FormEvent) => {
+    event.preventDefault();
+    if (!backupChanged) return;
+    setBackupError(null);
+    setBackupSaved(false);
+    try {
+      await update.mutateAsync({
+        id: instructor.id,
+        userData: { tutor: { backup_meeting_link: backup.trim() } },
+      });
+      setBackupSaved(true);
+    } catch (err) {
+      setBackupError(
+        changeErrorMessage(
+          err,
+          t('PROFILE.EDITPROFILE.PREFERENCES.BACKUP_ERROR'),
+        ),
+      );
+    }
+  };
 
   const saveTarget = (event: FormEvent) => {
     event.preventDefault();
@@ -184,6 +214,50 @@ const ProfilePreferences: FC<ProfilePreferencesProps> = ({ instructor }) => {
           </p>
         </div>
       </div>
+
+      <form className="profile-preferences__row" onSubmit={saveBackup}>
+        <div className="profile-preferences__text">
+          <label
+            htmlFor="profile-backup-room"
+            className="profile-preferences__label"
+          >
+            {t('PROFILE.EDITPROFILE.PREFERENCES.BACKUP_LABEL')}
+          </label>
+          <p className="profile-preferences__hint">
+            {t('PROFILE.EDITPROFILE.PREFERENCES.BACKUP_HINT')}
+          </p>
+        </div>
+        <div className="profile-preferences__target">
+          <TextField
+            id="profile-backup-room"
+            size="small"
+            type="url"
+            fullWidth
+            placeholder="https://meet.google.com/..."
+            value={backup}
+            onChange={(e) => {
+              setBackup(e.target.value);
+              setBackupSaved(false);
+            }}
+            error={!!backupError}
+            helperText={
+              backupError ??
+              (backupSaved
+                ? t('PROFILE.EDITPROFILE.PREFERENCES.BACKUP_SAVED')
+                : undefined)
+            }
+          />
+          {backupChanged && (
+            <Button
+              type="submit"
+              variant="contained"
+              disabled={update.isPending}
+            >
+              {t('PROFILE.EDITPROFILE.PREFERENCES.BACKUP_SAVE')}
+            </Button>
+          )}
+        </div>
+      </form>
     </section>
   );
 };

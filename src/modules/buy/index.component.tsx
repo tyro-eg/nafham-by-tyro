@@ -51,6 +51,8 @@ import HoursStep from './steps/hours-step.component';
 import BasketStep from './steps/basket-step.component';
 
 import '../trial/trial.styles.scss';
+// The size cards and price summary are shared with the renew dialog
+import '../payments/payments.styles.scss';
 import './buy.styles.scss';
 
 const ICONS: Record<Step, JSX.Element> = {
@@ -155,6 +157,11 @@ const BuyPage: FC = () => {
   }, [coursesQuery.data, draft.courseId]);
   const course = coursesQuery.data?.find((item) => item.id === draft.courseId);
 
+  // The size ticked on the hours step, shown in the rail before it is added
+  const [pickedHours, setPickedHours] = useState<number>();
+  const railHours =
+    (draft.step === 'hours' ? pickedHours : undefined) ?? draft.hours;
+
   // The course the picks on the course step resolve to, before Continue, so
   // a subject the child already learns is flagged right there
   const [resolvedCourseId, setResolvedCourseId] = useState<number>();
@@ -246,8 +253,8 @@ const BuyPage: FC = () => {
           lessons: lessonsLabel,
         }),
     tutors: choiceLabel(draft.choice),
-    hours: draft.hours
-      ? t('PAYMENTS.RENEW.HOURS', { count: draft.hours })
+    hours: railHours
+      ? t('PAYMENTS.RENEW.HOURS', { count: railHours })
       : undefined,
     basket:
       draft.basket.length > 0
@@ -434,6 +441,7 @@ const BuyPage: FC = () => {
                 choice={draft.choice}
                 lessonsPerWeek={draft.schedule.lessons_per_week}
                 hours={draft.hours}
+                onPick={setPickedHours}
                 onAdd={addLine}
                 onBack={() => goTo('tutors')}
               />

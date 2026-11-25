@@ -33,17 +33,38 @@
   background: $surface;
   text-align: start;
   cursor: pointer;
+  // A click that wanders a little selects the card, not its text
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
   transition:
     border-color 0.15s ease,
+    background-color 0.15s ease,
     box-shadow 0.15s ease;
 
+  // Hover only hints: the chosen card is the filled one with the tick
   &:hover {
-    border-color: $brand-700;
+    border-color: $brand-300;
   }
 
-  &--on {
+  &--on,
+  &--on:hover {
     border-color: $brand-700;
+    background: $brand-50;
     box-shadow: 0 0 0 3px rgba(23, 146, 186, 0.15);
+  }
+
+  &--on &__hours::before {
+    content: '✓';
+    display: inline-grid;
+    place-items: center;
+    width: 2.2rem;
+    height: 2.2rem;
+    margin-inline-end: 0.8rem;
+    border-radius: 50%;
+    background: $brand-700;
+    color: $surface;
+    font-size: 1.3rem;
+    vertical-align: 0.15em;
   }
 
   &__hours {
