@@ -12,12 +12,14 @@ import {
 } from '@mui/icons-material';
 
 import { useAppSelector } from '../../redux/store';
+import { get } from '../../assets/utils/api';
 import { selectCurrentUser } from '../../redux/user/user.selectors';
 import { useRtlClass } from '../../assets/utils/utils';
 import { useFamily } from '../../hooks/useFamily';
 import { useTrialCourses } from '../../hooks/useTrial';
 import { usePurchaseTutors, type TutorSearch } from '../../hooks/usePurchases';
 import { trackEvent } from '../../lib/analytics';
+import { trackFunnel } from '../../lib/funnel';
 import { formatMoney } from '../../lib/money';
 import { isFromApp } from '../../lib/from-app';
 import {
@@ -28,8 +30,8 @@ import {
 import OpenPaymentBanner from '../payments/open-payment-banner.component';
 import {
   DEFAULT_HOURS,
-  clearDraft,
   courseKey,
+  openDraftAfterCheckout,
   draftFrom,
   loadDraft,
   saveDraft,
@@ -69,7 +71,9 @@ const BUNDLE = { minSubjects: 4, discountPercent: 5 };
  * The buy wizard: who the course is for, which course, the weekly times,
  * who teaches (a ranked list, the tutors the child trialed with, or Nafham
  * matching one), how many hours, then the basket and one payment. The
- * draft lives in sessionStorage per payer and survives the trip to Nomod.
+ * draft is kept per payer for a week and survives the trip to Nomod: it is
+ * only emptied once its payment went through, so a cancelled or declined
+ * payment comes back to the same basket.
  */
 const BuyPage: FC = () => {
   const { t, i18n } = useTranslation();
@@ -96,6 +100,42 @@ const BuyPage: FC = () => {
   useEffect(() => {
     saveDraft(userId, draft);
   }, [draft, userId]);
+
+  // The funnel: the flow was opened, and each step as it is reached
+  useEffect(() => {
+    trackFunnel('buy_started', {
+      parent: isParent,
+      from_link: initial.current.preferredTutorId !== undefined,
+      lines: initial.current.draft.basket.length,
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  useEffect(() => {
+    trackFunnel('buy_step_viewed', { step: draft.step });
+  }, [draft.step]);
+
+  // A basket that went to pay and never came back through the payment page
+  // (the tab was closed): one look at how that payment ended
+  const checkoutSlug = initial.current.draft.checkoutSlug;
+  useEffect(() => {
+    if (!checkoutSlug) return undefined;
+    let stale = false;
+    get(`/payments/${checkoutSlug}`)
+      .then((response) => {
+        const status = (response.data?.data as { status?: string } | undefined)
+          ?.status;
+        if (stale || !status) return;
+        setDraft((prev) =>
+          prev.checkoutSlug === checkoutSlug
+            ? openDraftAfterCheckout(prev, status, isParent)
+            : prev,
+        );
+      })
+      .catch(() => undefined);
+    return () => {
+      stale = true;
+    };
+  }, [checkoutSlug]);
 
   const update = (patch: Partial<BuyDraft>) =>
     setDraft((prev) => ({ ...prev, ...patch }));
@@ -256,6 +296,11 @@ const BuyPage: FC = () => {
       floorPrice: option.floor_price,
       schedule: draft.schedule,
     };
+    trackFunnel('buy_line_added', {
+      kind: draft.choice.kind,
+      hours: option.hours,
+      lines: draft.basket.length + 1,
+    });
     trackEvent(
       'Purchase',
       'add_to_cart',
@@ -451,7 +496,12 @@ const BuyPage: FC = () => {
                   goTo(isParent ? 'who' : 'what');
                 }}
                 onBack={() => goTo(draft.choice ? 'hours' : 'tutors')}
-                onPaid={() => clearDraft(userId)}
+                onCheckout={(slug) => {
+                  // Saved now: the page leaves for Nomod before an effect runs
+                  const next = { ...draft, checkoutSlug: slug };
+                  saveDraft(userId, next);
+                  setDraft(next);
+                }}
               />
             )}
           </section>

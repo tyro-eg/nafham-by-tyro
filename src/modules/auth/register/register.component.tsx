@@ -1,4 +1,4 @@
-import { FC, useMemo, useState } from 'react';
+import { FC, useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import {
@@ -22,6 +22,8 @@ import {
   type RegisterFormData,
 } from '../../../schemas/authSchemas';
 import { useRtlClass } from '../../../assets/utils/utils';
+import { peekReturnTo } from '../../../lib/return-to';
+import { trackFunnel } from '../../../lib/funnel';
 import {
   getCountries,
   getNationalities,
@@ -71,7 +73,14 @@ const Register: FC = () => {
 
   const goToTerms = () => navigate('/terms');
 
+  useEffect(() => {
+    trackFunnel('signup_started', { from: 'register', kind: 'register' });
+  }, []);
+
   const onSubmit = async (values: RegisterFormData) => {
+    // Read now: once the account exists the route itself moves on and
+    // forgets the remembered page
+    const returnTo = peekReturnTo();
     try {
       const { phone_number, ...submitValues } = values;
       if (childMissing) return;
@@ -92,7 +101,9 @@ const Register: FC = () => {
       });
 
       if (userData?.id) {
-        navigate(role === 'Parent' ? '/family' : '/dashboard');
+        navigate(returnTo ?? (role === 'Parent' ? '/family' : '/dashboard'), {
+          replace: true,
+        });
       }
     } catch (error) {
       console.error('Registration error:', error);

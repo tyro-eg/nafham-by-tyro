@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Alert,
@@ -24,9 +24,17 @@ import {
   type TrialTutor,
 } from '../../../hooks/useTrial';
 import { bookingErrorMessage } from '../../../hooks/useSessions';
+import { trackFunnel } from '../../../lib/funnel';
 import RegisterModal from '../../../modals/register-modal/register-modal.component';
 import LoginModal from '../../../modals/login-modal/login-modal.component';
-import { formatSlot, localTimeZone } from '../trial.types';
+import {
+  clearAutoSend,
+  formatSlot,
+  localTimeZone,
+  markAutoSend,
+  takeAutoSend,
+} from '../trial.types';
+import store from '../../../redux/store';
 import { DISPATCH_UI } from '../dispatch-ui';
 
 interface ConfirmStepProps {
@@ -46,6 +54,8 @@ interface ConfirmStepProps {
   signedIn: boolean;
   /** A parent's pick: the child the trial is for */
   childId?: number;
+  /** A parent books for a child: nothing is sent until one is picked */
+  needsChild?: boolean;
   onBack: () => void;
   onSent: (request: TrialRequest) => void;
 }
@@ -56,7 +66,8 @@ const NOTE_LENGTH = 1000;
 /**
  * The summary, a note for the instructor, an optional parent's phone, and
  * the request itself. A visitor creates an account (or signs in) first;
- * the auth modals bring them back here and the draft is restored.
+ * the auth modals bring them back here, the draft is restored, and the
+ * request goes out on its own: they already said "book" once.
  */
 const ConfirmStep: FC<ConfirmStepProps> = ({
   course,
@@ -72,6 +83,7 @@ const ConfirmStep: FC<ConfirmStepProps> = ({
   onGuardianPhone,
   signedIn,
   childId,
+  needsChild = false,
   onBack,
   onSent,
 }) => {
@@ -80,6 +92,59 @@ const ConfirmStep: FC<ConfirmStepProps> = ({
   const createRequest = useCreateTrialRequest();
   const [error, setError] = useState<string | null>(null);
   const [auth, setAuth] = useState<'register' | 'login' | null>(null);
+
+  const complete =
+    !!course && !!startTime && !!dispatch && (dispatch !== 'direct' || !!tutor);
+
+  const send = async () => {
+    if (!course || !startTime || !dispatch) return;
+    setError(null);
+    trackFunnel('trial_submitted', { dispatch, on_calendar: onCalendar });
+    try {
+      const request = await createRequest.mutateAsync({
+        grade_subject_id: course.id,
+        exam_board_id: examBoard?.id,
+        start_time: startTime,
+        time_zone: localTimeZone(),
+        dispatch,
+        tutor_id: dispatch === 'direct' ? tutor?.id : undefined,
+        note: note.trim() || undefined,
+        guardian_phone: guardianPhone.trim() || undefined,
+        childId,
+      });
+      onSent(request);
+    } catch (err) {
+      setError(bookingErrorMessage(err, t('TRIAL.ERROR')));
+    }
+  };
+
+  // Back from creating an account or logging in at this step: book now.
+  // Not for a parent: a guest's draft names no child, so they pick one and
+  // read the summary again before anything is sent.
+  const canAutoSend = signedIn && !loading && complete;
+  const autoSent = useRef(false);
+  useEffect(() => {
+    if (!canAutoSend || autoSent.current) return;
+    if (!takeAutoSend() || needsChild) return;
+    autoSent.current = true;
+    void send();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [canAutoSend]);
+
+  // Closed without signing in: they did not go through with it, so a later
+  // sign-in elsewhere must not book this on its own. The store is read
+  // directly because the form closes itself the moment sign-in succeeds,
+  // before this component has re-rendered as signed in.
+  const closeAuth = () => {
+    if (!store.getState().user.currentUser) clearAutoSend();
+    setAuth(null);
+  };
+
+  const openAuth = (which: 'register' | 'login') => {
+    trackFunnel('signup_started', { from: 'trial', kind: which });
+    markAutoSend();
+    setAuth(which);
+  };
 
   if (loading) {
     return (
@@ -107,26 +172,6 @@ const ConfirmStep: FC<ConfirmStepProps> = ({
       </div>
     );
   }
-
-  const send = async () => {
-    setError(null);
-    try {
-      const request = await createRequest.mutateAsync({
-        grade_subject_id: course.id,
-        exam_board_id: examBoard?.id,
-        start_time: startTime,
-        time_zone: localTimeZone(),
-        dispatch,
-        tutor_id: dispatch === 'direct' ? tutor?.id : undefined,
-        note: note.trim() || undefined,
-        guardian_phone: guardianPhone.trim() || undefined,
-        childId,
-      });
-      onSent(request);
-    } catch (err) {
-      setError(bookingErrorMessage(err, t('TRIAL.ERROR')));
-    }
-  };
 
   const tutorName = tutor
     ? `${tutor.first_name} ${tutor.last_name}`.trim()
@@ -244,14 +289,14 @@ const ConfirmStep: FC<ConfirmStepProps> = ({
             <Button
               className="trial__link"
               variant="text"
-              onClick={() => setAuth('login')}
+              onClick={() => openAuth('login')}
             >
               {t('TRIAL.CONFIRM.LOGIN')}
             </Button>
             <Button
               className="trial__cta trial__cta--gold"
               variant="contained"
-              onClick={() => setAuth('register')}
+              onClick={() => openAuth('register')}
             >
               {t('TRIAL.CONFIRM.REGISTER')}
             </Button>
@@ -261,24 +306,24 @@ const ConfirmStep: FC<ConfirmStepProps> = ({
 
       <Dialog
         open={auth === 'register'}
-        onClose={() => setAuth(null)}
+        onClose={closeAuth}
         maxWidth="sm"
         fullWidth
       >
         <RegisterModal
-          onClose={() => setAuth(null)}
+          onClose={closeAuth}
           openLoginModal={() => setAuth('login')}
           modalData={{ returnTo: '/trial' }}
         />
       </Dialog>
       <Dialog
         open={auth === 'login'}
-        onClose={() => setAuth(null)}
+        onClose={closeAuth}
         maxWidth="sm"
         fullWidth
       >
         <LoginModal
-          onClose={() => setAuth(null)}
+          onClose={closeAuth}
           openRegisterModal={() => setAuth('register')}
           modalData={{ returnTo: '/trial' }}
         />

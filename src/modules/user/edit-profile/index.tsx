@@ -7,7 +7,7 @@ import {
   Edit,
   EventAvailableRounded,
 } from '@mui/icons-material';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import { useAppSelector } from '../../../redux/store';
 import { selectCurrentUser } from '../../../redux/user/user.selectors';
@@ -60,6 +60,7 @@ export type UserInfoType =
 const EditProfile: FC = () => {
   const { t } = useTranslation();
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
 
   const currentUser = useAppSelector(selectCurrentUser);
   const updateTutorProfileMutation = useUpdateTutorProfile();
@@ -201,7 +202,9 @@ const EditProfile: FC = () => {
   const openRequestModal = (kind?: SessionRequestKind) =>
     setRequestKind(kind ?? 'schedule');
   const closeRequestModal = () => setRequestKind(null);
-  const openFreeTrialModal = () => openRequestModal('trial');
+  // The free trial is booked in the trial flow, with this tutor listed first
+  const openFreeTrialModal = () =>
+    id ? navigate(`/trial?tutor=${id}`) : openRequestModal('trial');
 
   const freeTrailCardFlag = () =>
     !showEditMode &&

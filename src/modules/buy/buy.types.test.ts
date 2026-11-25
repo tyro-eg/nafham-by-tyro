@@ -1,12 +1,20 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   basketTotals,
+  clearDraft,
   courseKey,
+  draftAfterCheckout,
   draftFrom,
   emptyDraft,
+  loadDraft,
+  openDraftAfterCheckout,
+  saveDraft,
+  settleCheckout,
   toCheckoutLine,
   type BasketLine,
+  type BuyDraft,
 } from './buy.types';
+import { blockedStorage, memoryStorage } from '../../test/memory-storage';
 
 const line = (overrides: Partial<BasketLine> = {}): BasketLine => ({
   key: overrides.key ?? 'k',
@@ -161,5 +169,142 @@ describe('draftFrom', () => {
       step: 'what' as const,
     };
     expect(draftFrom(saved, true, params('')).draft.step).toBe('basket');
+  });
+});
+
+describe('the saved draft', () => {
+  const DAY = 24 * 60 * 60 * 1000;
+  beforeEach(() => vi.stubGlobal('localStorage', memoryStorage()));
+  afterEach(() => vi.unstubAllGlobals());
+
+  const basket = (): BuyDraft => ({
+    ...emptyDraft(),
+    step: 'basket',
+    basket: [line()],
+  });
+
+  it('comes back in a new tab, per payer, for a week', () => {
+    saveDraft(7, basket(), 0);
+    expect(loadDraft(7, 6 * DAY).basket).toHaveLength(1);
+    expect(loadDraft(7, 6 * DAY).step).toBe('basket');
+    expect(loadDraft(8, 0).basket).toHaveLength(0);
+    expect(loadDraft(7, 8 * DAY)).toEqual(emptyDraft());
+  });
+
+  it('starts again from a draft saved without a date, or unreadable', () => {
+    localStorage.setItem('tyro.buyDraft.7', JSON.stringify(basket()));
+    expect(loadDraft(7, 0)).toEqual(emptyDraft());
+    localStorage.setItem('tyro.buyDraft.7', 'not json');
+    expect(loadDraft(7, 0)).toEqual(emptyDraft());
+  });
+
+  it('works without storage', () => {
+    vi.stubGlobal('localStorage', blockedStorage());
+    expect(() => saveDraft(7, basket())).not.toThrow();
+    expect(loadDraft(7)).toEqual(emptyDraft());
+    expect(() => clearDraft(7)).not.toThrow();
+  });
+});
+
+describe('draftAfterCheckout', () => {
+  const sent = (): BuyDraft => ({
+    ...emptyDraft(),
+    step: 'basket',
+    basket: [line()],
+    checkoutSlug: 'pay1',
+  });
+
+  it('empties the basket once the money was taken', () => {
+    for (const status of ['paid', 'fulfilled', 'needs_review', 'refunded']) {
+      expect(draftAfterCheckout(sent(), status)).toEqual(emptyDraft());
+    }
+  });
+
+  it('keeps the basket for another try when the payment did not go through', () => {
+    for (const status of ['failed', 'cancelled', 'expired']) {
+      const next = draftAfterCheckout(sent(), status);
+      expect(next.basket).toHaveLength(1);
+      expect(next.step).toBe('basket');
+      expect(next.checkoutSlug).toBeUndefined();
+    }
+  });
+
+  it('leaves a draft alone while its payment is still open', () => {
+    const draft = sent();
+    expect(draftAfterCheckout(draft, 'pending')).toBe(draft);
+    expect(draftAfterCheckout(draft, 'created')).toBe(draft);
+  });
+});
+
+describe('openDraftAfterCheckout', () => {
+  const sent = (overrides: Partial<BuyDraft> = {}): BuyDraft => ({
+    ...emptyDraft(),
+    step: 'basket',
+    childId: 3,
+    basket: [line()],
+    checkoutSlug: 'pay1',
+    pricing: { currency: 'AED', vatApplies: true, vatRatePercent: 5 },
+    ...overrides,
+  });
+
+  it('sends a parent looking at a paid basket back to "who", not to a step with no child', () => {
+    const next = openDraftAfterCheckout(sent(), 'fulfilled', true);
+    expect(next.basket).toHaveLength(0);
+    expect(next.step).toBe('who');
+    expect(next.checkoutSlug).toBeUndefined();
+    expect(next.pricing).toBeUndefined();
+  });
+
+  it('sends an adult learner back to the course step', () => {
+    expect(openDraftAfterCheckout(sent(), 'paid', false).step).toBe('what');
+  });
+
+  it('keeps what a link just picked while emptying the paid basket', () => {
+    const fromLink = sent({ step: 'tutors', childId: 3, courseId: 10 });
+    const next = openDraftAfterCheckout(fromLink, 'fulfilled', true);
+    expect(next).toMatchObject({ step: 'tutors', childId: 3, courseId: 10 });
+    expect(next.basket).toHaveLength(0);
+  });
+
+  it('treats an unpaid checkout like draftAfterCheckout does', () => {
+    const draft = sent();
+    expect(openDraftAfterCheckout(draft, 'pending', true)).toBe(draft);
+    expect(
+      openDraftAfterCheckout(draft, 'cancelled', true).basket,
+    ).toHaveLength(1);
+  });
+});
+
+describe('settleCheckout', () => {
+  beforeEach(() => vi.stubGlobal('localStorage', memoryStorage()));
+  afterEach(() => vi.unstubAllGlobals());
+
+  const sent = (slug: string): BuyDraft => ({
+    ...emptyDraft(),
+    step: 'basket',
+    basket: [line()],
+    checkoutSlug: slug,
+  });
+
+  it('clears the basket that was paid', () => {
+    saveDraft(7, sent('pay1'));
+    settleCheckout(7, 'pay1', 'fulfilled');
+    expect(loadDraft(7)).toEqual(emptyDraft());
+    expect(localStorage.getItem('tyro.buyDraft.7')).toBeNull();
+  });
+
+  it('keeps the basket when the payment was cancelled', () => {
+    saveDraft(7, sent('pay1'));
+    settleCheckout(7, 'pay1', 'cancelled');
+    const draft = loadDraft(7);
+    expect(draft.basket).toHaveLength(1);
+    expect(draft.checkoutSlug).toBeUndefined();
+  });
+
+  it('leaves a basket alone when another payment settles (a renewal)', () => {
+    saveDraft(7, sent('pay1'));
+    settleCheckout(7, 'renewal9', 'fulfilled');
+    expect(loadDraft(7).basket).toHaveLength(1);
+    expect(loadDraft(7).checkoutSlug).toBe('pay1');
   });
 });

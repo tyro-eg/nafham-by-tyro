@@ -52,7 +52,20 @@ export interface TrialDraft {
   /** For the instructor, optional */
   note: string;
   guardianPhone: string;
+  /** The tutor whose profile sent them here: listed first once tutors load */
+  wantTutorId?: number;
 }
+
+/** The tutor a profile asked for goes to the top; the rest keep their order */
+export const wantedFirst = <T extends { id: number }>(
+  tutors: T[] | undefined,
+  wantTutorId: number | undefined,
+): T[] | undefined => {
+  if (!tutors || wantTutorId === undefined) return tutors;
+  const wanted = tutors.filter((tutor) => tutor.id === wantTutorId);
+  if (wanted.length === 0) return tutors;
+  return [...wanted, ...tutors.filter((tutor) => tutor.id !== wantTutorId)];
+};
 
 /** Picking something earlier in the wizard forgets the tutor and time */
 export const NO_CHOICE: Pick<
@@ -147,15 +160,24 @@ export const emptyDraft = (): TrialDraft => ({
   guardianPhone: '',
 });
 
+/** A draft older than this starts again: the free times have moved on */
+export const DRAFT_TTL_MS = 7 * 24 * 60 * 60 * 1000;
+
 /**
- * The draft survives a page change: a visitor registers at the last step,
- * the app switches layout, and the wizard picks up where they were.
+ * The draft survives a page change, a new tab and a few days away: a
+ * visitor registers at the last step, the app switches layout, and the
+ * wizard picks up where they were.
  */
-export const loadDraft = (): TrialDraft => {
+export const loadDraft = (now: number = Date.now()): TrialDraft => {
   try {
-    const raw = sessionStorage.getItem(DRAFT_KEY);
+    const raw = localStorage.getItem(DRAFT_KEY);
     if (!raw) return emptyDraft();
-    const saved = JSON.parse(raw) as Partial<TrialDraft>;
+    const { savedAt, ...saved } = JSON.parse(raw) as Partial<TrialDraft> & {
+      savedAt?: number;
+    };
+    if (typeof savedAt !== 'number' || now - savedAt > DRAFT_TTL_MS) {
+      return emptyDraft();
+    }
     const draft = { ...emptyDraft(), ...saved };
     if (!['today', 'tomorrow', 'date', 'flexible'].includes(draft.day)) {
       draft.day = 'tomorrow';
@@ -173,9 +195,9 @@ export const loadDraft = (): TrialDraft => {
   }
 };
 
-export const saveDraft = (draft: TrialDraft) => {
+export const saveDraft = (draft: TrialDraft, now: number = Date.now()) => {
   try {
-    sessionStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
+    localStorage.setItem(DRAFT_KEY, JSON.stringify({ ...draft, savedAt: now }));
   } catch {
     // Private mode or storage full: the wizard still works for this page
   }
@@ -183,9 +205,47 @@ export const saveDraft = (draft: TrialDraft) => {
 
 export const clearDraft = () => {
   try {
-    sessionStorage.removeItem(DRAFT_KEY);
+    localStorage.removeItem(DRAFT_KEY);
   } catch {
     // Nothing to clear
+  }
+};
+
+const AUTO_SEND_KEY = 'tyro.trialAutoSend';
+const AUTO_SEND_TTL_MS = 15 * 60 * 1000;
+
+/**
+ * A visitor pressed "Create account" or "Log in" at the last step: once
+ * they are signed in, the request goes out on its own instead of asking
+ * them to press Book a second time. Good for a quarter of an hour.
+ */
+export const markAutoSend = (now: number = Date.now()) => {
+  try {
+    sessionStorage.setItem(AUTO_SEND_KEY, String(now));
+  } catch {
+    // Private mode: they press Book themselves
+  }
+};
+
+/** They closed the form without signing in, or the session ended: forget it */
+export const clearAutoSend = () => {
+  try {
+    sessionStorage.removeItem(AUTO_SEND_KEY);
+  } catch {
+    // Nothing to clear
+  }
+};
+
+/** Whether the request should go out now; asked once, then forgotten */
+export const takeAutoSend = (now: number = Date.now()): boolean => {
+  try {
+    const raw = sessionStorage.getItem(AUTO_SEND_KEY);
+    sessionStorage.removeItem(AUTO_SEND_KEY);
+    if (raw === null) return false;
+    const elapsed = now - Number(raw);
+    return elapsed >= 0 && elapsed <= AUTO_SEND_TTL_MS;
+  } catch {
+    return false;
   }
 };
 
