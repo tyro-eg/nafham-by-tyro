@@ -4,6 +4,7 @@ import {
   asksLevel,
   compareGrades,
   curriculumName,
+  isIGCSE,
   shownCurriculum,
   stageOf,
 } from './course-map';
@@ -42,8 +43,10 @@ describe('stageOf (Nafham System: grades count to stages)', () => {
 });
 
 describe('asksLevel', () => {
-  it('British System never asks a level', () => {
-    expect(asksLevel('British System', 'SECONDARY')).toBe(false);
+  it('British System asks one at Secondary only (British Secondary is IGCSE)', () => {
+    expect(asksLevel('British System', 'SECONDARY')).toBe(true);
+    expect(asksLevel('British System', 'PREPARATORY')).toBe(false);
+    expect(asksLevel('British System', 'PRIMARY')).toBe(false);
   });
 
   it('IGCSE, American and IB ask one at Secondary (DP) only', () => {
@@ -63,11 +66,20 @@ describe('asksLevel', () => {
 });
 
 describe('asksExamBoard', () => {
-  it('only IGCSE', () => {
-    expect(asksExamBoard('IGCSE')).toBe(true);
-    expect(asksExamBoard('British System')).toBe(false);
-    expect(asksExamBoard('Pre-IGCSE')).toBe(false);
-    expect(asksExamBoard('American Diploma')).toBe(false);
+  it('only British Secondary (IGCSE)', () => {
+    expect(asksExamBoard('British System', 'SECONDARY')).toBe(true);
+    expect(asksExamBoard('IGCSE', 'SECONDARY')).toBe(true);
+    expect(asksExamBoard('British System', 'PREPARATORY')).toBe(false);
+    expect(asksExamBoard('Pre-IGCSE', 'SECONDARY')).toBe(false);
+    expect(asksExamBoard('American Diploma', 'SECONDARY')).toBe(false);
+  });
+});
+
+describe('IGCSE is British', () => {
+  it('is offered under British System', () => {
+    expect(curriculumName('IGCSE')).toBe('British System');
+    expect(isIGCSE('IGCSE')).toBe(true);
+    expect(isIGCSE('British System')).toBe(false);
   });
 });
 
