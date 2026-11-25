@@ -1716,13 +1716,25 @@
       "TITLE": "What would you like to try?",
       "CURRICULUM": "Curriculum",
       "SUB_CURRICULUM": "Level",
-      "GRADE": "Stage",
+      "GRADE": "Grade",
       "SUBJECT": "Subject",
       "EXAM_BOARD": "Exam board",
       "GENERAL": "General",
       "LOADING": "Loading courses...",
       "EMPTY": "No courses are open for free trials right now. Please check back soon.",
-      "PLACEHOLDER": "Choose…"
+      "PLACEHOLDER": "Choose…",
+      "STAGES": {
+        "PRESCHOOL": "Pre-school",
+        "PRIMARY": "Primary",
+        "PREPARATORY": "Preparatory",
+        "SECONDARY": "Secondary",
+        "PYP": "PYP",
+        "MYP": "MYP",
+        "DP": "DP",
+        "UNIVERSITY": "University",
+        "ADULTS": "Adults",
+        "OTHER": "Other"
+      }
     },
     "WHEN": {
       "TITLE": "When suits you?",

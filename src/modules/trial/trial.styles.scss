@@ -1036,6 +1036,17 @@ $gold-fg: #b07800;
   border-radius: $radius-md;
   box-shadow: $shadow-lg;
 
+  // A stage heading over its grades (Primary: G1…G6)
+  .trial-select__group {
+    line-height: 3.2rem;
+    font-size: $font-xs;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: $brand-800;
+    background-color: $gray-50;
+  }
+
   .MuiMenuItem-root {
     min-height: 4.2rem;
     font-size: $font-sm;

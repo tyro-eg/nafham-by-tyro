@@ -4,6 +4,7 @@ import {
   Button,
   CircularProgress,
   FormControl,
+  ListSubheader,
   MenuItem,
   Select,
 } from '@mui/material';
@@ -12,6 +13,16 @@ import { ArrowForwardRounded, CheckCircleRounded } from '@mui/icons-material';
 import type { GradeSubject } from '../../../assets/types';
 import type { TrialCourse } from '../../../hooks/useTrial';
 import type { Choice } from './choice-chips.component';
+import {
+  STAGES,
+  asksExamBoard,
+  asksLevel,
+  compareGrades,
+  curriculumName,
+  shownCurriculum,
+  stageOf,
+  type Stage,
+} from './course-map';
 
 interface CourseStepProps {
   courses?: TrialCourse[];
@@ -29,19 +40,22 @@ interface CourseStepProps {
 
 interface Picks {
   curriculum?: number;
-  sub?: number;
   grade?: number;
+  sub?: number;
   subject?: number;
   board?: number;
 }
 
 const ORDER: (keyof Picks)[] = [
   'curriculum',
-  'sub',
   'grade',
+  'sub',
   'subject',
   'board',
 ];
+
+/** A choice under a heading (a grade under its stage) */
+type Grouped = Choice & { group?: Stage };
 
 /** The distinct values of one part of a course, "general" (0) first */
 const distinct = (
@@ -84,9 +98,11 @@ const picksFor = (course?: GradeSubject, examBoardId?: number): Picks =>
     : {};
 
 /**
- * Curriculum, then level and exam board only when the curriculum has them,
- * stage and subject. Each group only offers what still leads to a course a
- * tutor teaches; a group with a single entry is picked for you.
+ * Nafham System's course map (see course-map.ts): curriculum, then grade
+ * (under its stage), a level only for IGCSE, American and IB at Secondary,
+ * subject, and an exam board only for IGCSE. Each group only offers what
+ * still leads to a course a tutor teaches; a group with a single entry is
+ * picked for you.
  */
 const CourseStep: FC<CourseStepProps> = ({
   courses = [],
@@ -107,47 +123,69 @@ const CourseStep: FC<CourseStepProps> = ({
     ),
   );
 
-  const curriculumOptions = distinct(courses, (c) => c.curriculum, general);
+  const shown = courses.filter((c) => shownCurriculum(c.curriculum.name));
+  const curriculumOptions = distinct(shown, (c) => c.curriculum, general)
+    .map((option) => ({ ...option, label: curriculumName(option.label) }))
+    .sort((a, b) => a.label.localeCompare(b.label));
   const curriculum =
     picks.curriculum ??
     (curriculumOptions.length === 1
       ? Number(curriculumOptions[0].id)
       : undefined);
-  const inCurriculum = courses.filter((c) => c.curriculum.id === curriculum);
+  const inCurriculum = shown.filter((c) => c.curriculum.id === curriculum);
+  const curriculumLabel = inCurriculum[0]?.curriculum.name ?? '';
 
-  const subOptions = distinct(inCurriculum, (c) => c.sub_curriculum, general);
+  // Grades under their stage (Primary: G1…G6), stages in taught order
+  const gradeOptions = distinct(inCurriculum, (c) => c.grade, general)
+    .map(
+      (option): Grouped => ({
+        ...option,
+        group: stageOf(option.label, curriculumLabel),
+      }),
+    )
+    .sort(
+      (a, b) =>
+        STAGES.indexOf(a.group ?? 'OTHER') -
+          STAGES.indexOf(b.group ?? 'OTHER') || compareGrades(a.label, b.label),
+    );
+  const grade =
+    picks.grade ??
+    (gradeOptions.length === 1 ? Number(gradeOptions[0].id) : undefined);
+  const afterGrade = inCurriculum.filter((c) => c.grade.id === grade);
+  const stage = gradeOptions.find((option) => option.id === grade)?.group;
+
+  // A level only where Nafham System asks one; elsewhere every variant counts
+  const levelAsked = !!stage && asksLevel(curriculumLabel, stage);
+  const subOptions = levelAsked
+    ? distinct(afterGrade, (c) => c.sub_curriculum, general)
+    : [];
   const hasSubs = subOptions.some((option) => option.id !== 0);
   const sub = hasSubs
     ? (picks.sub ??
       (subOptions.length === 1 ? Number(subOptions[0].id) : undefined))
-    : 0;
-  const afterSub = inCurriculum.filter(
-    (c) => sub === undefined || (c.sub_curriculum?.id ?? 0) === sub,
-  );
+    : undefined;
+  const afterSub = hasSubs
+    ? afterGrade.filter((c) => (c.sub_curriculum?.id ?? 0) === sub)
+    : afterGrade;
 
-  const gradeOptions = distinct(afterSub, (c) => c.grade, general);
-  const grade =
-    picks.grade ??
-    (gradeOptions.length === 1 ? Number(gradeOptions[0].id) : undefined);
-  const afterGrade = afterSub.filter((c) => c.grade.id === grade);
-
-  const subjectOptions = distinct(afterGrade, (c) => c.subject, general);
+  const subjectOptions = distinct(afterSub, (c) => c.subject, general);
   const subject =
     picks.subject ??
     (subjectOptions.length === 1 ? Number(subjectOptions[0].id) : undefined);
-  const afterSubject = afterGrade.filter((c) => c.subject.id === subject);
+  const afterSubject = afterSub.filter((c) => c.subject.id === subject);
 
-  // The course itself; a course split by board (legacy variants) resolves to its general entry
+  // The course itself: the plain one (no level, no board) when there is one
   const resolved =
-    subject !== undefined
-      ? (afterSubject.find((c) => !c.exam_board) ?? afterSubject[0])
+    subject !== undefined && (!hasSubs || sub !== undefined)
+      ? (afterSubject.find((c) => !c.sub_curriculum && !c.exam_board) ??
+        afterSubject.find((c) => !c.exam_board) ??
+        afterSubject[0])
       : undefined;
 
-  // The board the student sits: required once the course's tutors declare any
-  const boardOptions: Choice[] = (resolved?.exam_boards ?? []).map((b) => ({
-    id: b.id,
-    label: b.name,
-  }));
+  // The board the student sits: IGCSE only, once the course's tutors declare any
+  const boardOptions: Choice[] = asksExamBoard(curriculumLabel)
+    ? (resolved?.exam_boards ?? []).map((b) => ({ id: b.id, label: b.name }))
+    : [];
   const hasBoards = boardOptions.length > 0;
   const board = hasBoards
     ? (picks.board ??
@@ -174,7 +212,7 @@ const CourseStep: FC<CourseStepProps> = ({
   const field = (
     key: keyof Picks,
     label: string,
-    options: Choice[],
+    options: Grouped[],
     value: number | undefined,
   ) => (
     <div className="trial-field">
@@ -199,11 +237,26 @@ const CourseStep: FC<CourseStepProps> = ({
           }
           MenuProps={{ className: 'trial-select__menu' }}
         >
-          {options.map((option) => (
-            <MenuItem key={option.id} value={String(option.id)}>
-              {option.label}
-            </MenuItem>
-          ))}
+          {options.flatMap((option, index) => {
+            const item = (
+              <MenuItem key={option.id} value={String(option.id)}>
+                {option.label}
+              </MenuItem>
+            );
+            const heading =
+              option.group && option.group !== options[index - 1]?.group;
+            return heading
+              ? [
+                  <ListSubheader
+                    key={`stage-${option.group}`}
+                    className="trial-select__group"
+                  >
+                    {t(`TRIAL.COURSE.STAGES.${option.group}`)}
+                  </ListSubheader>,
+                  item,
+                ]
+              : [item];
+          })}
         </Select>
       </FormControl>
     </div>
@@ -233,13 +286,12 @@ const CourseStep: FC<CourseStepProps> = ({
           curriculumOptions,
           curriculum,
         )}
-        {hasSubs &&
-          curriculum !== undefined &&
-          field('sub', t('TRIAL.COURSE.SUB_CURRICULUM'), subOptions, sub)}
         {curriculum !== undefined &&
-          sub !== undefined &&
           field('grade', t('TRIAL.COURSE.GRADE'), gradeOptions, grade)}
+        {hasSubs &&
+          field('sub', t('TRIAL.COURSE.SUB_CURRICULUM'), subOptions, sub)}
         {grade !== undefined &&
+          (!hasSubs || sub !== undefined) &&
           field('subject', t('TRIAL.COURSE.SUBJECT'), subjectOptions, subject)}
         {hasBoards &&
           field('board', t('TRIAL.COURSE.EXAM_BOARD'), boardOptions, board)}

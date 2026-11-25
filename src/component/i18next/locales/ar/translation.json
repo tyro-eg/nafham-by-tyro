@@ -1795,13 +1795,25 @@
       "TITLE": "ماذا تريد أن تجرّب؟",
       "CURRICULUM": "المنهج",
       "SUB_CURRICULUM": "المستوى",
-      "GRADE": "المرحلة",
+      "GRADE": "الصف",
       "SUBJECT": "المادة",
       "EXAM_BOARD": "هيئة الامتحان",
       "GENERAL": "عام",
       "LOADING": "جارٍ تحميل المواد...",
       "EMPTY": "لا توجد مواد متاحة للتجربة المجانية حاليًا. عُد لاحقًا من فضلك.",
-      "PLACEHOLDER": "اختر…"
+      "PLACEHOLDER": "اختر…",
+      "STAGES": {
+        "PRESCHOOL": "ما قبل المدرسة",
+        "PRIMARY": "المرحلة الابتدائية",
+        "PREPARATORY": "المرحلة الإعدادية",
+        "SECONDARY": "المرحلة الثانوية",
+        "PYP": "PYP",
+        "MYP": "MYP",
+        "DP": "DP",
+        "UNIVERSITY": "الجامعة",
+        "ADULTS": "الكبار",
+        "OTHER": "أخرى"
+      }
     },
     "WHEN": {
       "TITLE": "ما الموعد المناسب لك؟",
