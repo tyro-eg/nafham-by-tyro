@@ -30,7 +30,7 @@ import OpenPaymentBanner from '../payments/open-payment-banner.component';
 import {
   DEFAULT_HOURS,
   courseKey,
-  draftAfterCheckout,
+  openDraftAfterCheckout,
   draftFrom,
   loadDraft,
   saveDraft,
@@ -113,7 +113,7 @@ const BuyPage: FC = () => {
         if (stale || !status) return;
         setDraft((prev) =>
           prev.checkoutSlug === checkoutSlug
-            ? draftAfterCheckout(prev, status)
+            ? openDraftAfterCheckout(prev, status, isParent)
             : prev,
         );
       })

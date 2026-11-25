@@ -11,6 +11,8 @@ import { queryClient } from '@/lib/queryClient';
 import { getActiveChildId } from '@/lib/family-child';
 import { onHandoffPage } from '@/lib/handoff-reset';
 import { AUTH_KEYS, clearAuthStorage, saveTokens } from '@/lib/auth-storage';
+import { noteSignOut } from '@/lib/return-to';
+import { forgetPersonalDrafts } from '@/lib/session-storage';
 
 // ============================================================================
 // Types
@@ -123,6 +125,10 @@ const performLogout = (): void => {
   if (onHandoffPage()) return;
 
   clearAuthStorage();
+  // An expired session ends like a sign-out: nothing of it is left for the
+  // next person on this browser, and no page is remembered for them
+  forgetPersonalDrafts();
+  noteSignOut();
 
   // Clear Redux state
   store.dispatch(clearCurrentUser());

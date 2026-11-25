@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import {
+  clearAutoSend,
   emptyDraft,
   firstDay,
   freshWhen,
@@ -142,6 +143,14 @@ describe('booking right after signing up', () => {
     vi.stubGlobal('sessionStorage', blockedStorage());
     expect(() => markAutoSend(0)).not.toThrow();
     expect(takeAutoSend(0)).toBe(false);
+    expect(() => clearAutoSend()).not.toThrow();
+  });
+
+  it('is off again once they close the form without signing in', () => {
+    vi.stubGlobal('sessionStorage', memoryStorage());
+    markAutoSend(0);
+    clearAutoSend();
+    expect(takeAutoSend(1000)).toBe(false);
   });
 });
 

@@ -1,9 +1,13 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 
 import { useAppSelector } from '../../redux/store';
 import { selectCurrentUser } from '../../redux/user/user.selectors';
-import { clearReturnTo, rememberReturnTo } from '../../lib/return-to';
+import {
+  clearReturnTo,
+  justSignedOut,
+  rememberReturnTo,
+} from '../../lib/return-to';
 
 interface GuardedRouteProps {
   element: React.ReactElement;
@@ -19,9 +23,6 @@ interface GuardedRouteProps {
 const GuardedRoute: React.FC<GuardedRouteProps> = ({ element, auth }) => {
   const location = useLocation();
   const signedIn = !!useAppSelector(selectCurrentUser);
-  // Someone who signs out while on this page goes to the landing page, not
-  // to a login screen that would bring them straight back here
-  const arrivedSignedIn = useRef(signedIn);
 
   // They arrived: a remembered destination has done its job
   useEffect(() => {
@@ -29,7 +30,9 @@ const GuardedRoute: React.FC<GuardedRouteProps> = ({ element, auth }) => {
   }, [auth]);
 
   if (auth) return element;
-  if (signedIn || arrivedSignedIn.current) return <Navigate to="/" replace />;
+  // Someone who has just signed out goes to the landing page, not to a
+  // login screen that would bring the next person straight back here
+  if (signedIn || justSignedOut()) return <Navigate to="/" replace />;
 
   rememberReturnTo(`${location.pathname}${location.search}`);
   return <Navigate to="/login" replace />;

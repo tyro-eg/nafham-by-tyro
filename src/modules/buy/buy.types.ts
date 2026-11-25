@@ -150,6 +150,26 @@ export const draftAfterCheckout = (
 };
 
 /**
+ * The same, for a draft open in the wizard: a paid basket is emptied, but
+ * the child and course being picked right now (from a link, say) are kept,
+ * and someone who was looking at that basket goes back to the first step.
+ */
+export const openDraftAfterCheckout = (
+  draft: BuyDraft,
+  status: string,
+  parent: boolean,
+): BuyDraft => {
+  if (!MONEY_TAKEN.includes(status)) return draftAfterCheckout(draft, status);
+  const { checkoutSlug: _done, pricing: _old, ...rest } = draft;
+  const first: Step = parent ? 'who' : 'what';
+  return {
+    ...rest,
+    basket: [],
+    step: draft.step === 'basket' ? first : draft.step,
+  };
+};
+
+/**
  * The payment page reports how a checkout ended. Only the draft that was
  * sent to that very payment is touched: paying a renewal leaves a basket
  * of new courses alone.

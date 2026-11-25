@@ -27,11 +27,13 @@ import { bookingErrorMessage } from '../../../hooks/useSessions';
 import RegisterModal from '../../../modals/register-modal/register-modal.component';
 import LoginModal from '../../../modals/login-modal/login-modal.component';
 import {
+  clearAutoSend,
   formatSlot,
   localTimeZone,
   markAutoSend,
   takeAutoSend,
 } from '../trial.types';
+import store from '../../../redux/store';
 import { DISPATCH_UI } from '../dispatch-ui';
 
 interface ConfirmStepProps {
@@ -114,17 +116,27 @@ const ConfirmStep: FC<ConfirmStepProps> = ({
     }
   };
 
-  // Back from creating an account or logging in at this step: book now
-  const canAutoSend =
-    signedIn && !loading && complete && (!needsChild || childId !== undefined);
+  // Back from creating an account or logging in at this step: book now.
+  // Not for a parent: a guest's draft names no child, so they pick one and
+  // read the summary again before anything is sent.
+  const canAutoSend = signedIn && !loading && complete;
   const autoSent = useRef(false);
   useEffect(() => {
     if (!canAutoSend || autoSent.current) return;
-    if (!takeAutoSend()) return;
+    if (!takeAutoSend() || needsChild) return;
     autoSent.current = true;
     void send();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [canAutoSend]);
+
+  // Closed without signing in: they did not go through with it, so a later
+  // sign-in elsewhere must not book this on its own. The store is read
+  // directly because the form closes itself the moment sign-in succeeds,
+  // before this component has re-rendered as signed in.
+  const closeAuth = () => {
+    if (!store.getState().user.currentUser) clearAutoSend();
+    setAuth(null);
+  };
 
   const openAuth = (which: 'register' | 'login') => {
     markAutoSend();
@@ -291,24 +303,24 @@ const ConfirmStep: FC<ConfirmStepProps> = ({
 
       <Dialog
         open={auth === 'register'}
-        onClose={() => setAuth(null)}
+        onClose={closeAuth}
         maxWidth="sm"
         fullWidth
       >
         <RegisterModal
-          onClose={() => setAuth(null)}
+          onClose={closeAuth}
           openLoginModal={() => setAuth('login')}
           modalData={{ returnTo: '/trial' }}
         />
       </Dialog>
       <Dialog
         open={auth === 'login'}
-        onClose={() => setAuth(null)}
+        onClose={closeAuth}
         maxWidth="sm"
         fullWidth
       >
         <LoginModal
-          onClose={() => setAuth(null)}
+          onClose={closeAuth}
           openRegisterModal={() => setAuth('register')}
           modalData={{ returnTo: '/trial' }}
         />
