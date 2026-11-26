@@ -12,8 +12,9 @@ interface LayoutProps {
 
 // Routes where footer should not be displayed
 const ROUTES_WITHOUT_FOOTER = ['/login', '/register', '/registered'];
-// Sign in carries its own small top row (logo, language): no site header
-const ROUTES_WITHOUT_HEADER = ['/login'];
+// Sign in and sign up carry their own small top row (logo, language): no
+// site header, so the form is the only thing to do on the page
+const ROUTES_WITHOUT_HEADER = ['/login', '/register'];
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   const location = useLocation();

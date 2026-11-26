@@ -99,6 +99,40 @@ export const registerSchema = z
 export type RegisterFormData = z.infer<typeof registerSchema>;
 
 /**
+ * The short sign-up form (26 Nov 2026): a name, a phone, an email and a
+ * password typed once. The country is the phone's country, set by the form.
+ */
+export const quickRegisterSchema = z.object({
+  first_name: z
+    .string()
+    .trim()
+    .min(1, { message: i18n.t('GENEREL.REQUIRED') }),
+  last_name: z
+    .string()
+    .trim()
+    .min(1, { message: i18n.t('GENEREL.REQUIRED') }),
+  email: z
+    .string()
+    .trim()
+    .min(1, { message: i18n.t('GENEREL.REQUIRED') })
+    .email({ message: i18n.t('GENEREL.INVALID_EMAIL') }),
+  password: z
+    .string()
+    .min(1, { message: i18n.t('GENEREL.REQUIRED') })
+    .min(6, { message: i18n.t('GENEREL.PASSWORD_MIN_LENGTH') }),
+  // Country code and number together: anything shorter is not a phone
+  phone_number: z
+    .string()
+    .min(1, { message: i18n.t('GENEREL.REQUIRED') })
+    .refine((value) => value.replace(/\D/g, '').length >= 8, {
+      message: i18n.t('REGISTER.REGISTER_PHONE_NUMBER_CODE_VALIDATION'),
+    }),
+  country_code: z.string().min(1, { message: i18n.t('GENEREL.REQUIRED') }),
+});
+
+export type QuickRegisterFormData = z.infer<typeof quickRegisterSchema>;
+
+/**
  * Reset Password Schema
  *
  * Validates password reset request form data.

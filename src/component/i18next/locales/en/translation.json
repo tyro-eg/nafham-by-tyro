@@ -1087,9 +1087,15 @@
       "TITLE": "Welcome  👋",
       "SUBTITLE": "Enter your details below."
     },
+    "QUICK": {
+      "CHILD_FIRST_NAME": "Your child's first name",
+      "CHILD_HINT": "You can add more children later.",
+      "PASSWORD_HINT": "At least 6 characters"
+    },
     "TRIAL": {
       "TITLE": "Create your account to book your free trial",
-      "SUBTITLE": "It takes a minute. Next you pick the subject, the tutor and the time."
+      "SUBTITLE": "It takes a minute. Next you pick the subject, the tutor and the time.",
+      "SUBMIT": "Create account and continue"
     },
     "ROLE": {
       "LABEL": "I am a",

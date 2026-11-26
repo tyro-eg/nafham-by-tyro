@@ -2,13 +2,13 @@
 @import '../../../assets/styles/mixins.scss';
 @import '../../../component/login/auth-form';
 
-// The sign-in page's split layout; the form is longer, so the brand panel
-// stays put while it scrolls
+// The sign-in page's split layout, with no site header above it. Should
+// the form run past a short window, the brand panel stays put while it scrolls.
 .register {
   .signin__panel {
     position: sticky;
-    top: $header-height;
-    height: calc(100vh - #{$header-height});
+    top: 0;
+    height: 100vh;
 
     @include respond(tab-port) {
       position: relative;
@@ -19,6 +19,14 @@
 
   .signin__form {
     align-items: flex-start;
+  }
+
+  // On a phone the form should start as high as it can: the brand panel
+  // keeps its logo and headline only
+  .signin__sub {
+    @include respond(phone) {
+      display: none;
+    }
   }
 
   &__inner {
