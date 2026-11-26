@@ -2962,6 +2962,7 @@
     "SEND_CODE": "Send me the code on WhatsApp",
     "SENDING": "Sending…",
     "CODE_SENT": "We sent a code on WhatsApp to {{phone}}. It works for {{minutes}} minutes.",
+    "CODE_SENT_EARLIER": "We sent a code on WhatsApp to {{phone}}. Type it here, or ask for a new one.",
     "CODE": "Code from WhatsApp",
     "PASSWORD": "Choose a password",
     "CONFIRM": "Type the password again",

@@ -9,6 +9,13 @@ import { get, post } from '../../../assets/utils/api';
 import { useSignIn } from '../../../hooks/useAuth';
 import { getHomePath } from '../../../assets/utils/home-path';
 import { useRtlClass } from '../../../assets/utils/utils';
+import {
+  RESEND_SECONDS,
+  codeAskedAt,
+  forgetCodeAsked,
+  rememberCodeAsked,
+  resendWait,
+} from './activate.utils';
 import '../signin/signin.styles.scss';
 import '../../../component/login/login.styles.scss';
 
@@ -46,13 +53,19 @@ const Activate: FC = () => {
 
   const [info, setInfo] = useState<Info | null>(null);
   const [problem, setProblem] = useState('');
-  const [step, setStep] = useState<'intro' | 'code'>('intro');
+  // A code asked for before a reload: the code step again, not "Send code"
+  const [step, setStep] = useState<'intro' | 'code'>(() =>
+    codeAskedAt(token) === null ? 'intro' : 'code',
+  );
   const [code, setCode] = useState('');
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
   const [busy, setBusy] = useState(false);
-  const [message, setMessage] = useState('');
-  const [wait, setWait] = useState(0);
+  // Where the code just went; unknown after a reload
+  const [sent, setSent] = useState<{ phone: string; minutes: number } | null>(
+    null,
+  );
+  const [wait, setWait] = useState(() => resendWait(codeAskedAt(token)));
 
   useEffect(() => {
     get(`/activations/${encodeURIComponent(token)}`)
@@ -75,14 +88,13 @@ const Activate: FC = () => {
         `/activations/${encodeURIComponent(token)}/code`,
         {},
       );
-      setMessage(
-        t('ACTIVATE.CODE_SENT', {
-          phone: res.data.data.sent_to,
-          minutes: res.data.data.expires_in_minutes,
-        }),
-      );
+      rememberCodeAsked(token);
+      setSent({
+        phone: res.data.data.sent_to,
+        minutes: res.data.data.expires_in_minutes,
+      });
       setStep('code');
-      setWait(60);
+      setWait(RESEND_SECONDS);
     } catch (err) {
       setProblem(errorText(err, t('ACTIVATE.TRY_AGAIN')));
     } finally {
@@ -106,6 +118,7 @@ const Activate: FC = () => {
         password,
         password_confirmation: confirm,
       });
+      forgetCodeAsked(token);
       const user = await signIn.mutateAsync({
         email: res.data.data.email,
         password,
@@ -195,7 +208,13 @@ const Activate: FC = () => {
                   activate();
                 }}
               >
-                {message && <p className="sub-title">{message}</p>}
+                {!byEmail && (
+                  <p className="sub-title">
+                    {sent
+                      ? t('ACTIVATE.CODE_SENT', sent)
+                      : t('ACTIVATE.CODE_SENT_EARLIER', { phone: info.phone })}
+                  </p>
+                )}
                 {!byEmail && (
                   <div className="auth-field">
                     <InputLabel htmlFor="code">{t('ACTIVATE.CODE')}</InputLabel>
