@@ -1,12 +1,17 @@
 import { FC, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useQueryClient } from '@tanstack/react-query';
 import { Button, InputLabel, TextField as MuiTextField } from '@mui/material';
 import { WhatsApp } from '@mui/icons-material';
 import LanguageSelector from '../../../component/i18next/LanguageSelector';
 import logo from '../../../assets/images/logo.png';
 import { get, post } from '../../../assets/utils/api';
 import { useSignIn } from '../../../hooks/useAuth';
+import { useAppDispatch } from '../../../redux/store';
+import { clearCurrentUser } from '../../../redux/user/user.slice';
+import { clearAuthStorage } from '../../../lib/auth-storage';
+import { setActiveChildId } from '../../../lib/family-child';
 import { getHomePath } from '../../../assets/utils/home-path';
 import { useRtlClass } from '../../../assets/utils/utils';
 import {
@@ -45,6 +50,8 @@ const Activate: FC = () => {
   const navigate = useNavigate();
   const rtlClass = useRtlClass();
   const signIn = useSignIn();
+  const dispatch = useAppDispatch();
+  const queryClient = useQueryClient();
 
   const [info, setInfo] = useState<Info | null>(null);
   // Kept as a key, so the sentence follows the language switch
@@ -149,6 +156,15 @@ const Activate: FC = () => {
         password_confirmation: confirm,
       });
       forgetCodeAsked(token);
+      // The link can be opened on a browser where someone else is signed in
+      // (a parent's other account, or staff viewing as a customer). They
+      // are not who this link is for: their session, the child they had
+      // picked (sent as X-Child-Id on every request) and what was loaded
+      // for them go before the new session starts.
+      clearAuthStorage();
+      setActiveChildId(null);
+      dispatch(clearCurrentUser());
+      queryClient.clear();
       const user = await signIn.mutateAsync({
         email: res.data.data.email,
         password,

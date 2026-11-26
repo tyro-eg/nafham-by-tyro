@@ -25,8 +25,11 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   const showHeader =
     !activating && !ROUTES_WITHOUT_HEADER.includes(location.pathname);
 
-  // Signed-in users navigate with the left sidebar instead of the header
-  if (currentUser) {
+  // Signed-in users navigate with the left sidebar instead of the header.
+  // Not on the activation page: it is for whoever holds the link, signed in
+  // or not, and it must stay mounted while the session changes under it
+  // (the sidebar coming and going restarted the page mid-activation).
+  if (currentUser && !activating) {
     return <SidebarLayout>{children}</SidebarLayout>;
   }
 
