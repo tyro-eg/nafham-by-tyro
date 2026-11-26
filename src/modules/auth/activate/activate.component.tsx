@@ -59,6 +59,10 @@ const Activate: FC = () => {
   // The first load failed for a reason other than the link: offer it again
   const [canRetry, setCanRetry] = useState(false);
   const [attempt, setAttempt] = useState(0);
+  // The account became active here, but signing in right after failed
+  const [activated, setActivated] = useState<{ email: string | null } | null>(
+    null,
+  );
   // A code asked for before a reload: the code step again, not "Send code"
   const [step, setStep] = useState<'intro' | 'code'>(() =>
     codeAskedAt(token) === null ? 'intro' : 'code',
@@ -149,12 +153,23 @@ const Activate: FC = () => {
     if (password !== confirm)
       return setProblem({ key: 'ACTIVATE.PASSWORD_MISMATCH' });
     setBusy(true);
+    let email: string | null;
     try {
       const res = await post(`/activations/${encodeURIComponent(token)}`, {
         code: byEmail ? undefined : code.replace(/\D/g, ''),
         password,
         password_confirmation: confirm,
       });
+      email = res.data.data.email ?? null;
+    } catch (err) {
+      setBusy(false);
+      const failure = activationFailure(err, 'action');
+      if (failure.code === 'active') return showActive();
+      return setProblem(failure.problem);
+    }
+
+    // The account is active from here on, whatever happens next
+    try {
       forgetCodeAsked(token);
       // The link can be opened on a browser where someone else is signed in
       // (a parent's other account, or staff viewing as a customer). They
@@ -165,19 +180,20 @@ const Activate: FC = () => {
       setActiveChildId(null);
       dispatch(clearCurrentUser());
       queryClient.clear();
-      const user = await signIn.mutateAsync({
-        email: res.data.data.email,
-        password,
-      });
+      const user = await signIn.mutateAsync({ email: email ?? '', password });
       navigate(getHomePath(user));
-    } catch (err) {
-      const failure = activationFailure(err, 'action');
-      if (failure.code === 'active') return showActive();
-      setProblem(failure.problem);
+    } catch {
+      // Only the automatic sign-in failed (the connection dropped, say).
+      // Sending the form again could only answer "active already", so the
+      // page says the account is active and points to sign in.
+      setActivated({ email });
     } finally {
       setBusy(false);
     }
   };
+
+  // The account as it waits to be activated here; null in every other state
+  const pending = !activated && info?.state === 'pending' ? info : null;
 
   return (
     <div className="signin">
@@ -202,24 +218,53 @@ const Activate: FC = () => {
           <div className="login-container">
             <div className="login-container__header">
               <h1 className="title">
-                {info
-                  ? t('ACTIVATE.TITLE', { name: info.first_name })
-                  : t('ACTIVATE.TITLE_PLAIN')}
+                {activated
+                  ? t('ACTIVATE.ACTIVATED_TITLE')
+                  : info
+                    ? t('ACTIVATE.TITLE', { name: info.first_name })
+                    : t('ACTIVATE.TITLE_PLAIN')}
               </h1>
-              {info?.state === 'pending' && (
+              {pending && (
                 <p className="sub-title">
                   {byEmail
-                    ? t('ACTIVATE.SUBTITLE_EMAIL', { email: info.email || '' })
-                    : t('ACTIVATE.SUBTITLE', { phone: info.phone })}
+                    ? t('ACTIVATE.SUBTITLE_EMAIL', {
+                        email: pending.email || '',
+                      })
+                    : t('ACTIVATE.SUBTITLE', { phone: pending.phone })}
                 </p>
               )}
             </div>
+
+            {activated && (
+              <div className={`login-container__form ${rtlClass}`}>
+                <p
+                  className="sub-title"
+                  role="status"
+                  data-testid="text-activated"
+                >
+                  {t('ACTIVATE.ACTIVATED')}
+                </p>
+                {activated.email && (
+                  <p className="sub-title">
+                    {t('ACTIVATE.ACTIVATED_EMAIL', { email: activated.email })}
+                  </p>
+                )}
+                <Button
+                  variant="contained"
+                  className="btn-custom-style"
+                  onClick={() => navigate('/login')}
+                  data-testid="button-activated-sign-in"
+                >
+                  {t('ACTIVATE.GO_SIGN_IN')}
+                </Button>
+              </div>
+            )}
 
             {!info && !problem && (
               <p className="sub-title">{t('ACTIVATE.LOADING')}</p>
             )}
 
-            {info?.state === 'active' && (
+            {!activated && info?.state === 'active' && (
               <div className={`login-container__form ${rtlClass}`}>
                 <p className="sub-title">{t('ACTIVATE.ALREADY_ACTIVE')}</p>
                 <Button
@@ -233,7 +278,7 @@ const Activate: FC = () => {
               </div>
             )}
 
-            {info?.state === 'pending' && !byEmail && step === 'intro' && (
+            {pending && !byEmail && step === 'intro' && (
               <div className={`login-container__form ${rtlClass}`}>
                 <Button
                   variant="contained"
@@ -248,7 +293,7 @@ const Activate: FC = () => {
               </div>
             )}
 
-            {info?.state === 'pending' && (byEmail || step === 'code') && (
+            {pending && (byEmail || step === 'code') && (
               <form
                 className={`login-container__form ${rtlClass}`}
                 onSubmit={(e) => {
@@ -260,7 +305,9 @@ const Activate: FC = () => {
                   <p className="sub-title">
                     {sent
                       ? t('ACTIVATE.CODE_SENT', sent)
-                      : t('ACTIVATE.CODE_SENT_EARLIER', { phone: info.phone })}
+                      : t('ACTIVATE.CODE_SENT_EARLIER', {
+                          phone: pending.phone,
+                        })}
                   </p>
                 )}
                 {!byEmail && (
