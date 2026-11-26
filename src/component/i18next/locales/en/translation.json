@@ -1581,6 +1581,8 @@
     "NO_RATE": "No rate set",
     "UNPRICED_one": "{{count}} session has no hourly rate for its course yet, so it isn't included in the total.",
     "UNPRICED_other": "{{count}} sessions have no hourly rate for their course yet, so they aren't included in the total.",
+    "RATE_LOOKS_WRONG_one": "{{count}} session has an hourly rate that looks wrong, so it isn't included in the total until Nafham corrects it.",
+    "RATE_LOOKS_WRONG_other": "{{count}} sessions have an hourly rate that looks wrong, so they aren't included in the total until Nafham corrects it.",
     "SESSIONS": {
       "TITLE": "Paid sessions",
       "HINT_one": "{{count}} session",
@@ -1590,6 +1592,8 @@
     "STUDENT_MISSED": "Student missed",
     "LATE_CANCEL_HALF": "Paid half: the family cancelled {{hours}} h before",
     "LATE_CANCEL_FULL": "Paid: the family cancelled {{hours}} h before",
+    "LATE_CANCEL_HALF_PLAIN": "Paid half: the family cancelled late",
+    "LATE_CANCEL_FULL_PLAIN": "Paid: the family cancelled late",
     "EMPTY_MTD": "No paid sessions yet this month. Your earnings will appear here as sessions are completed.",
     "EMPTY_MONTH": "No paid sessions in this month.",
     "NOTE": "You are paid for completed sessions, free trials and sessions your student missed, for their booked length at your hourly rate for each course. Cancelled sessions and sessions you missed aren't paid. Your final payout may differ."
