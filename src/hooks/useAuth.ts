@@ -264,8 +264,8 @@ export function useImpersonate() {
     }) => {
       showSpinner();
       try {
-        // Clear existing user data
-        localStorage.clear();
+        // Clear existing user data (the language of this browser stays)
+        clearLocalSession();
         // The staff banner stays up while staff act as this person
         setStaffView(payload.impersonatorEmail ?? null);
         dispatch(clearCurrentUser());
@@ -286,7 +286,7 @@ export function useImpersonate() {
         return userData;
       } catch (error) {
         // Clear token on error
-        localStorage.clear();
+        clearLocalSession();
         clearStaffView();
         throw error;
       } finally {

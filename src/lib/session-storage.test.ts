@@ -11,6 +11,9 @@ describe('what a sign-out leaves in the browser', () => {
         'tyro.refreshToken': 'secret',
         'persist:root': '{"user":"..."}',
         'tyro.visitorId': 'q3ZkT0b1Yw9LmN2xAaBcDe',
+        i18nextLng: 'ar',
+        'nafham.staffView': 'staff@nafham.com',
+        'nafham.child': '12',
         'tyro.buyDraft.7': '{"basket":[1]}',
         'tyro.buyDraft.9': '{"basket":[2]}',
         'tyro.trialDraft': '{"note":"private","guardianPhone":"+971"}',
@@ -30,6 +33,14 @@ describe('what a sign-out leaves in the browser', () => {
     expect(localStorage.getItem('persist:root')).toBeNull();
     expect(localStorage.getItem('tyro.trialDraft')).toBeNull();
     expect(sessionStorage.getItem('tyro.trialAutoSend')).toBeNull();
+    // Whose view it was and which child was picked end with the session
+    expect(localStorage.getItem('nafham.staffView')).toBeNull();
+    expect(localStorage.getItem('nafham.child')).toBeNull();
+  });
+
+  it('keeps the language the browser was switched to', () => {
+    clearLocalSession();
+    expect(localStorage.getItem('i18nextLng')).toBe('ar');
   });
 
   it('keeps the visitor id and each account’s own basket', () => {
