@@ -36,6 +36,9 @@ interface RenewDialogProps {
   onClose: () => void;
   /** Offered when the package cannot be renewed online: the old request flow */
   onRequestInstead?: () => void;
+  /** Hours left as the card that opened this shows them (booked included).
+   * The quote only knows the hours still free to book. */
+  hoursLeft?: number;
 }
 
 /** What the payer is about to pay for: the price, its VAT and the total */
@@ -58,6 +61,7 @@ const RenewDialog: FC<RenewDialogProps> = ({
   packageType,
   onClose,
   onRequestInstead,
+  hoursLeft,
 }) => {
   const { t, i18n } = useTranslation();
   const locale = LOCALES[i18n.language as 'en' | 'ar'] ?? enUS;
@@ -216,7 +220,10 @@ const RenewDialog: FC<RenewDialogProps> = ({
               name: pkg.student_first_name,
               tutor: pkg.tutor_name,
             })}{' '}
-            · {t('PAYMENTS.RENEW.LOW', { count: pkg.remaining_hours })}
+            ·{' '}
+            {t('PAYMENTS.RENEW.LOW', {
+              count: Number(hoursLeft ?? pkg.remaining_hours) || 0,
+            })}
           </p>
         )}
 

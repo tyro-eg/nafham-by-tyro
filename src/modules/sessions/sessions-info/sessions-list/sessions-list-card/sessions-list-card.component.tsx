@@ -47,6 +47,7 @@ import {
   useNow,
 } from '../../../session-state';
 
+import RequestSessionsModal from '../../../../../modals/request-sessions-modal/request-sessions-modal.component';
 import {
   ReportLinkProblem,
   TutorMeetingLink,
@@ -112,10 +113,12 @@ const SessionListCard: React.FC<SessionListCardProps> = ({ session }) => {
   const canMessage = useCanMessage(counterpart?.id);
   const chat = useStartConversation();
   const [sessionDuration, setSessionDuration] = useState(0);
-  // Cancelling and moving: the backend says what this viewer may do
+  // Cancelling and moving: the backend says what this viewer may do; for
+  // anything else the family asks the back office (19 Nov 2026)
   const [changeModal, setChangeModal] = useState<'cancel' | 'move' | null>(
     null,
   );
+  const [changeOpen, setChangeOpen] = useState(false);
   const proposal = session.pending_reschedule_request;
 
   const locales = { ar: arSA, en: enUS };
@@ -433,7 +436,7 @@ const SessionListCard: React.FC<SessionListCardProps> = ({ session }) => {
                 className="sessions-card__avatar sessions-card__instructor-img"
                 onClick={() => navigate(`/profile/${session.tutor?.id}`)}
               >
-                <PersonAvatar person={session.tutor} alt="instructor" />
+                <PersonAvatar person={session.tutor} alt="Tutor" />
               </Button>
             )}
             <div className="sessions-card__person-info">
@@ -490,6 +493,45 @@ const SessionListCard: React.FC<SessionListCardProps> = ({ session }) => {
                   : t('ASSISTANT.SESSION.RECORDING')}
             </Button>
           )}
+        {/* The back office for what the family can't do here themselves
+            (catchup: only the pair's next session can be cancelled or moved
+            from the website; for the others, ask) */}
+        {!isInstructor &&
+          session.session_type !== 'group' &&
+          session.status === 'scheduled' &&
+          phase === 'upcoming' &&
+          !session.can_cancel &&
+          !session.can_propose_move && (
+            <Button
+              className="sessions-card__actions-button"
+              variant="text"
+              color="secondary"
+              startIcon={<EventRepeatRounded />}
+              onClick={() => setChangeOpen(true)}
+            >
+              {t('SESSION_REQUEST.CHANGE.BUTTON')}
+            </Button>
+          )}
+        {changeOpen && (
+          <Dialog
+            maxWidth="sm"
+            fullWidth
+            open
+            onClose={() => setChangeOpen(false)}
+          >
+            <RequestSessionsModal
+              changeSession={{
+                id: session.id,
+                label: `${sessionName} · ${format(
+                  parseISO(session.start_time),
+                  'EEE d MMM, h:mm a',
+                  { locale },
+                )}`,
+              }}
+              handleClose={() => setChangeOpen(false)}
+            />
+          </Dialog>
+        )}
         {canMessage && counterpart?.id && (
           <Button
             className="sessions-card__actions-button"

@@ -225,3 +225,15 @@
     gap: 0.6rem;
   }
 }
+
+// The hours open My Packages (19 Nov 2026)
+.mi-card__hours-link {
+  color: inherit;
+  text-decoration: underline dotted;
+  text-underline-offset: 0.3rem;
+
+  &:hover,
+  &:focus-visible {
+    color: $brand-700;
+  }
+}

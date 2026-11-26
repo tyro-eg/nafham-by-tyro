@@ -142,3 +142,65 @@ describe('a step that counts once per run', () => {
     expect(post).toHaveBeenCalledTimes(1);
   });
 });
+
+describe('while staff view the site as a customer', () => {
+  beforeEach(() => {
+    post.mockReset();
+    post.mockResolvedValue({});
+    vi.stubGlobal(
+      'localStorage',
+      memoryStorage({
+        'tyro.token': 'the-customers-session',
+        'nafham.staffView': 'staff@nafham.com',
+      }),
+    );
+    vi.stubGlobal('sessionStorage', memoryStorage());
+  });
+  afterEach(async () => {
+    await flushFunnel();
+    vi.unstubAllGlobals();
+  });
+
+  it('reports no step as the customer’s', async () => {
+    trackFunnel('buy_started');
+    trackFunnel('trial_submitted', { dispatch: 'now' });
+    await flushFunnel();
+    expect(post).not.toHaveBeenCalled();
+  });
+
+  it('does not use up the customer’s own once-per-run step', async () => {
+    trackFunnelOnce('trial', 'trial_started');
+    await flushFunnel();
+    expect(post).not.toHaveBeenCalled();
+
+    // Staff leave; the family opens the trial page themselves
+    localStorage.removeItem('nafham.staffView');
+    trackFunnelOnce('trial', 'trial_started');
+    await flushFunnel();
+    expect(post).toHaveBeenCalledTimes(1);
+    expect(post.mock.calls[0][1].events).toEqual([
+      { name: 'trial_started', properties: {} },
+    ]);
+  });
+
+  it('drops steps that were waiting when the staff view began', async () => {
+    localStorage.removeItem('nafham.staffView');
+    trackFunnel('landing_viewed');
+    localStorage.setItem('nafham.staffView', 'staff');
+    await flushFunnel();
+    expect(post).not.toHaveBeenCalled();
+
+    // And they do not come back once the staff view ends
+    localStorage.removeItem('nafham.staffView');
+    await flushFunnel();
+    expect(post).not.toHaveBeenCalled();
+  });
+
+  it('reports again once the staff view is over', async () => {
+    localStorage.removeItem('nafham.staffView');
+    trackFunnel('buy_started');
+    await flushFunnel();
+    expect(post).toHaveBeenCalledTimes(1);
+    expect(post.mock.calls[0][0]).toBe('/funnel_events');
+  });
+});

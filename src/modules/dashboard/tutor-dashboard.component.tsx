@@ -24,8 +24,8 @@ import {
   useLiveSessionToast,
   useNow,
 } from '../sessions/session-state';
-import { useSessions } from '../../hooks/useSessions';
-import { usePackages } from '../../hooks/usePackages';
+import { useSessionHistory, useSessionSummary } from '../../hooks/useSessions';
+import { useAllPackages } from '../../hooks/usePackages';
 import { useInstructor } from '../../hooks/useInstructors';
 import { targetProgress } from '../user/edit-profile/edit-profile.utils';
 import { useRtlClass } from '../../assets/utils/utils';
@@ -43,8 +43,7 @@ import { buildStudents } from '../my-students/my-students.utils';
 
 import './dashboard.styles.scss';
 import './tutor-dashboard.styles.scss';
-
-const HISTORY_SIZE = 100;
+import { hoursLeft as packageHoursLeft } from '../../lib/package-hours';
 
 interface SectionProps {
   title: string;
@@ -92,8 +91,12 @@ const TutorDashboard: FC = () => {
   const rtlClass = useRtlClass();
   const currentUser = useAppSelector(selectCurrentUser);
 
-  const sessionsQuery = useSessions(1, HISTORY_SIZE);
-  const packagesQuery = usePackages(1, HISTORY_SIZE);
+  const sessionsQuery = useSessionHistory();
+  // Totals added up by the server, not from every session in the browser
+  const summaryQuery = useSessionSummary();
+  const summary = summaryQuery.data;
+  const totalsLoading = summaryQuery.isLoading;
+  const packagesQuery = useAllPackages();
   const profileQuery = useInstructor(currentUser?.id || 0, !!currentUser);
 
   // Ticks every 30 s so the countdown and the Join button move on their own
@@ -116,25 +119,16 @@ const TutorDashboard: FC = () => {
     [sessions, now],
   );
   const today = upcoming.filter((s) => isSameDay(new Date(s.start_time), now));
-  const weeks = useMemo(() => weeklyHours(sessions, now), [sessions, now]);
+  const weeks = useMemo(() => weeklyHours(summary), [summary]);
   const students = useMemo(
-    () => buildStudents(packages, sessions, now),
-    [packages, sessions, now],
+    () => buildStudents(packages, summary?.students || []),
+    [packages, summary],
   );
 
-  const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
-  const completed = sessions.filter((s) => s.status === 'completed');
-  const hoursThisMonth = completed
-    .filter((s) => new Date(s.start_time) >= monthStart)
-    .reduce(
-      (acc, s) =>
-        acc +
-        (new Date(s.end_time).getTime() - new Date(s.start_time).getTime()) /
-          3600000,
-      0,
-    );
-  const missed = sessions.filter((s) => s.status === 'missed').length;
-  const canceled = sessions.filter((s) => s.status === 'canceled').length;
+  const hoursThisMonth = summary?.totals.hours_this_month || 0;
+  const completedCount = summary?.totals.completed || 0;
+  const missed = summary?.totals.missed || 0;
+  const canceled = summary?.totals.cancelled || 0;
   const activeStudents = students.filter((s) => s.active).length;
   const maxWeekHours = Math.max(1, ...weeks.map((w) => w.hours));
 
@@ -143,7 +137,7 @@ const TutorDashboard: FC = () => {
     .filter(
       (s) =>
         (s.hoursRemaining > 0 && s.hoursRemaining <= 1) ||
-        (s.hoursRemaining > 0 && !s.nextSession),
+        (s.hoursRemaining > 0 && !s.nextSessionAt),
     )
     .slice(0, 4);
 
@@ -154,17 +148,12 @@ const TutorDashboard: FC = () => {
     )
     .slice(0, 3);
 
-  const activePackages = packages.filter(
-    (p) => Number(p.remaining_hours) > 0,
-  ).length;
+  const activePackages = packages.filter((p) => packageHoursLeft(p) > 0).length;
   const hoursSold = packages.reduce(
     (acc, p) => acc + (Number(p.original_hours) || 0),
     0,
   );
-  const hoursLeft = packages.reduce(
-    (acc, p) => acc + (Number(p.remaining_hours) || 0),
-    0,
-  );
+  const hoursLeft = packages.reduce((acc, p) => acc + packageHoursLeft(p), 0);
 
   useLiveSessionToast(sessionsQuery.data ? sessions : undefined, (session) =>
     t('MYSESSIONS.MAIN.CARD.LIVE_TOAST', {
@@ -224,6 +213,8 @@ const TutorDashboard: FC = () => {
     icon: ReactNode;
     value: string;
     label: string;
+    /** Where the tile leads */
+    to: string;
     progress?: { width: number; text: string };
   }[] = [
     {
@@ -232,22 +223,27 @@ const TutorDashboard: FC = () => {
       icon: <CalendarMonthRounded />,
       value: String(upcoming.length),
       label: t('TUTOR_DASHBOARD.STATS.UPCOMING'),
+      to: '/my_sessions?status=scheduled',
     },
     {
       key: 'taught',
       tone: 'mint',
       icon: <SchoolRounded />,
-      value: formatHours(hoursThisMonth),
+      value: totalsLoading ? '–' : formatHours(hoursThisMonth),
       label: t('TUTOR_DASHBOARD.STATS.HOURS_MONTH'),
+      to: '/my_salary',
     },
     {
       key: 'students',
       tone: 'sun',
       icon: <GroupsRounded />,
-      value: studentTarget
-        ? `${studentCount} / ${studentTarget}`
-        : String(studentCount),
+      value: totalsLoading
+        ? '–'
+        : studentTarget
+          ? `${studentCount} / ${studentTarget}`
+          : String(studentCount),
       label: t('TUTOR_DASHBOARD.STATS.ACTIVE_STUDENTS'),
+      to: '/my_students',
       progress: studentProgress
         ? {
             width: studentProgress.width,
@@ -266,6 +262,7 @@ const TutorDashboard: FC = () => {
       label: t('TUTOR_DASHBOARD.STATS.RATING', {
         count: Number(profile?.number_of_reviews) || 0,
       }),
+      to: `/profile/${currentUser?.id ?? ''}`,
     },
   ];
 
@@ -323,7 +320,11 @@ const TutorDashboard: FC = () => {
         {/* ---------- Highlights ---------- */}
         <div className="sd-stats">
           {stats.map((stat) => (
-            <div key={stat.key} className={`sd-stat sd-stat--${stat.tone}`}>
+            <Link
+              key={stat.key}
+              to={stat.to}
+              className={`sd-stat sd-stat--${stat.tone} sd-stat--link`}
+            >
               <span className="sd-stat__icon" aria-hidden="true">
                 {stat.icon}
               </span>
@@ -351,7 +352,7 @@ const TutorDashboard: FC = () => {
                   <span className="sd-stat__note">{stat.progress.text}</span>
                 </>
               )}
-            </div>
+            </Link>
           ))}
         </div>
 
@@ -497,17 +498,24 @@ const TutorDashboard: FC = () => {
                   <EmojiEventsRounded />
                 </span>
                 <div>
+                  {/* No cheer for 0 hours, nor while every page is still loading */}
                   <p className="sd-cheer__text">
-                    {t('TUTOR_DASHBOARD.ACTIVITY.CHEER', {
-                      hours: formatHours(hoursThisMonth),
-                      count: hoursThisMonth,
-                    })}
+                    {totalsLoading
+                      ? t('TUTOR_DASHBOARD.ACTIVITY.LOADING')
+                      : hoursThisMonth > 0
+                        ? t('TUTOR_DASHBOARD.ACTIVITY.CHEER', {
+                            hours: formatHours(hoursThisMonth),
+                            count: hoursThisMonth,
+                          })
+                        : t('TUTOR_DASHBOARD.ACTIVITY.NONE_YET')}
                   </p>
-                  <p className="sd-cheer__sub">
-                    {t('TUTOR_DASHBOARD.ACTIVITY.TOTAL', {
-                      count: completed.length,
-                    })}
-                  </p>
+                  {!totalsLoading && (
+                    <p className="sd-cheer__sub">
+                      {t('TUTOR_DASHBOARD.ACTIVITY.TOTAL', {
+                        count: completedCount,
+                      })}
+                    </p>
+                  )}
                 </div>
               </div>
               <div className="sd-progress">
@@ -560,18 +568,24 @@ const TutorDashboard: FC = () => {
                     {t('TUTOR_DASHBOARD.ACTIVITY.SESSIONS')}
                   </h3>
                   <div className="sd-attendance">
-                    <span className="sd-attendance__item sd-attendance__item--done">
-                      <strong>{completed.length}</strong>
+                    <Link
+                      to="/my_sessions?status=completed"
+                      className="sd-attendance__item sd-attendance__item--done sd-attendance__item--link"
+                    >
+                      <strong>{completedCount}</strong>
                       {t('DASHBOARD.PROGRESS.COMPLETED')}
-                    </span>
+                    </Link>
                     <span className="sd-attendance__item sd-attendance__item--missed">
                       <strong>{missed}</strong>
                       {t('DASHBOARD.PROGRESS.MISSED')}
                     </span>
-                    <span className="sd-attendance__item sd-attendance__item--canceled">
+                    <Link
+                      to="/my_sessions?status=cancelled"
+                      className="sd-attendance__item sd-attendance__item--canceled sd-attendance__item--link"
+                    >
                       <strong>{canceled}</strong>
                       {t('DASHBOARD.PROGRESS.CANCELED')}
-                    </span>
+                    </Link>
                   </div>
 
                   <h3 className="sd-subheading sd-subheading--spaced">

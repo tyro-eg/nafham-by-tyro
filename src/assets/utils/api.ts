@@ -13,6 +13,7 @@ import { onHandoffPage } from '@/lib/handoff-reset';
 import { AUTH_KEYS, clearAuthStorage, saveTokens } from '@/lib/auth-storage';
 import { noteSignOut } from '@/lib/return-to';
 import { forgetPersonalDrafts } from '@/lib/session-storage';
+import { clearStaffView } from '@/lib/staff-view';
 
 // ============================================================================
 // Types
@@ -129,6 +130,8 @@ const performLogout = (): void => {
   // next person on this browser, and no page is remembered for them
   forgetPersonalDrafts();
   noteSignOut();
+  // A staff view that expired is over: no banner for whoever signs in next
+  clearStaffView();
 
   // Clear Redux state
   store.dispatch(clearCurrentUser());

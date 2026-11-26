@@ -1,0 +1,44 @@
+@import '../../assets/styles/variables.scss';
+
+.staff-banner {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 16px;
+  padding: 10px 16px;
+  border-radius: 12px;
+  background: #fff4d6;
+  border: 1px solid #f0c45c;
+  color: #6b4500;
+
+  &__icon {
+    flex: none;
+  }
+
+  &__text {
+    flex: 1;
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.45;
+  }
+
+  &__who {
+    opacity: 0.8;
+  }
+
+  &__leave {
+    flex: none;
+    white-space: nowrap;
+  }
+
+  @media (max-width: 600px) {
+    flex-wrap: wrap;
+
+    &__leave {
+      width: 100%;
+    }
+  }
+}

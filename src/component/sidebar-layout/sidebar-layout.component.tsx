@@ -1,4 +1,4 @@
-import { FC, ReactNode, useEffect, useState } from 'react';
+import { FC, Fragment, ReactNode, useEffect, useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Avatar, IconButton, Tooltip } from '@mui/material';
@@ -44,6 +44,7 @@ import ChildSwitcher from '../../modules/family/child-switcher.component';
 import logo from '../../assets/images/logo.png';
 
 import './sidebar-layout.styles.scss';
+import StaffBanner from '../staff-banner/staff-banner.component';
 
 const SIDEBAR_KEY = 'nafham.sidebar';
 
@@ -55,6 +56,8 @@ interface NavItem {
   badge?: number;
   /** What the count means, for screen readers; unread messages otherwise */
   badgeLabel?: string;
+  /** A small heading shown above the first item of each group */
+  group?: string;
 }
 
 interface SidebarLayoutProps {
@@ -65,6 +68,8 @@ interface SidebarLayoutProps {
  * App shell for signed-in users (students and tutors): the left sidebar
  * (right in Arabic) replaces the site header and holds the logo, the
  * role's navigation, the language switch and the account/logout block.
+ * The language switch and the account block are always in view: the menu
+ * scrolls above them when the window is not tall enough for all of it.
  * On small screens a slim top bar with a menu button slides the same
  * sidebar in as a drawer. Visitors get children unchanged.
  */
@@ -272,14 +277,23 @@ const SidebarLayout: FC<SidebarLayoutProps> = ({ children }) => {
       icon: <Inventory2Rounded />,
       label: t('NAVIGATION.PACKAGES'),
     },
-    {
-      to: '/payments',
-      icon: <ReceiptLongRounded />,
-      label: t('NAVIGATION.PAYMENTS'),
-    },
+    // A child in a family never pays: the parent does, from their own account
+    ...(currentUser?.family_id
+      ? []
+      : [
+          {
+            to: '/payments',
+            icon: <ReceiptLongRounded />,
+            label: t('NAVIGATION.PAYMENTS'),
+          },
+        ]),
   ];
 
-  // Parents: the family home first, then the picked child's pages
+  // Parents: the family home first, then three small groups (19 Nov 2026:
+  // 13 loose links before). Free trial and buying sit in the footer.
+  const learning = t('NAVIGATION.GROUP_LEARNING');
+  const money = t('NAVIGATION.GROUP_MONEY');
+  const help = t('NAVIGATION.GROUP_HELP');
   const parentItems: NavItem[] = [
     {
       to: '/family',
@@ -287,56 +301,71 @@ const SidebarLayout: FC<SidebarLayoutProps> = ({ children }) => {
       label: t('NAVIGATION.FAMILY'),
     },
     {
-      to: '/family/notes',
-      icon: <MenuBookRounded />,
-      label: t('NAVIGATION.NOTES'),
-    },
-    {
-      to: '/trial',
-      icon: <CardGiftcardRounded />,
-      label: t('NAVIGATION.FREE_TRIAL'),
-    },
-    ...buyItem,
-    {
-      to: '/my_instructors',
-      icon: <PeopleAltRounded />,
-      label: t('NAVIGATION.MY_INSTRUCTORS'),
-    },
-    {
       to: '/my_sessions',
       icon: <EventNoteRounded />,
       label: t('NAVIGATION.SESSIONS'),
-    },
-    requestsItem,
-    {
-      to: '/homework',
-      icon: <AssignmentRounded />,
-      label: t('NAVIGATION.HOMEWORK'),
+      group: learning,
     },
     {
       to: '/calendar',
       icon: <CalendarMonthRounded />,
       label: t('NAVIGATION.CALENDAR'),
+      group: learning,
     },
-    ...messagesItem,
+    {
+      to: '/homework',
+      icon: <AssignmentRounded />,
+      label: t('NAVIGATION.HOMEWORK'),
+      group: learning,
+    },
+    {
+      to: '/family/notes',
+      icon: <MenuBookRounded />,
+      label: t('NAVIGATION.NOTES'),
+      group: learning,
+    },
+    {
+      to: '/my_instructors',
+      icon: <PeopleAltRounded />,
+      label: t('NAVIGATION.MY_INSTRUCTORS'),
+      group: learning,
+    },
     {
       to: '/my_packages',
       icon: <Inventory2Rounded />,
       label: t('NAVIGATION.PACKAGES'),
+      group: money,
     },
     {
       to: '/payments',
       icon: <ReceiptLongRounded />,
       label: t('NAVIGATION.PAYMENTS'),
+      group: money,
     },
+    { ...requestsItem, group: help },
+    ...messagesItem.map((item) => ({ ...item, group: help })),
     {
       to: '/family/settings',
       icon: <SettingsRounded />,
       label: t('HEADER.USER.SETTINGS'),
+      group: help,
     },
   ];
+  // A parent's two ways to start something new, under the menu
+  const parentStarts: NavItem[] = isParent
+    ? [
+        {
+          to: '/trial',
+          icon: <CardGiftcardRounded />,
+          label: t('NAVIGATION.FREE_TRIAL'),
+        },
+        ...buyItem,
+      ]
+    : [];
 
   const items = isTutor ? tutorItems : isParent ? parentItems : studentItems;
+  // Links under the menu: a parent's two starts, a student's tutor search
+  const hasStarts = parentStarts.length > 0 || (!isTutor && !isParent);
   const homeLink = isParent ? '/family' : '/dashboard';
   const accountLink = isTutor
     ? `/profile/${currentUser.id}`
@@ -440,53 +469,88 @@ const SidebarLayout: FC<SidebarLayoutProps> = ({ children }) => {
           </div>
         )}
 
-        <nav className="side-layout__nav" aria-label={t('NAVIGATION.MENU')}>
-          {items.map((item) => (
-            <NavLink
-              key={item.to}
-              to={item.to}
-              title={collapsed ? item.label : undefined}
-              onClick={() => setDrawerOpen(false)}
-              className={({ isActive }) =>
-                `side-layout__link${
-                  isActive ? ' side-layout__link--active' : ''
-                }`
-              }
-            >
-              <span className="side-layout__icon" aria-hidden="true">
-                {item.icon}
-              </span>
-              <span className="side-layout__label">{item.label}</span>
-              {!!item.badge && item.badge > 0 && (
-                <span
-                  className="side-layout__badge"
-                  aria-label={
-                    item.badgeLabel ??
-                    t('MESSAGES.UNREAD_COUNT', { count: item.badge })
+        {/* What scrolls when the window is short; the footer stays put */}
+        <div className="side-layout__scroll">
+          <nav className="side-layout__nav" aria-label={t('NAVIGATION.MENU')}>
+            {items.map((item, index) => (
+              <Fragment key={item.to}>
+                {item.group && item.group !== items[index - 1]?.group && (
+                  <p className="side-layout__group" aria-hidden="true">
+                    {item.group}
+                  </p>
+                )}
+                <NavLink
+                  key={item.to}
+                  to={item.to}
+                  title={collapsed ? item.label : undefined}
+                  onClick={() => setDrawerOpen(false)}
+                  className={({ isActive }) =>
+                    `side-layout__link${
+                      isActive ? ' side-layout__link--active' : ''
+                    }`
                   }
                 >
-                  {item.badge > 99 ? '99+' : item.badge}
-                </span>
-              )}
-            </NavLink>
-          ))}
-        </nav>
+                  <span className="side-layout__icon" aria-hidden="true">
+                    {item.icon}
+                  </span>
+                  <span className="side-layout__label">{item.label}</span>
+                  {!!item.badge && item.badge > 0 && (
+                    <span
+                      className="side-layout__badge"
+                      aria-label={
+                        item.badgeLabel ??
+                        t('MESSAGES.UNREAD_COUNT', { count: item.badge })
+                      }
+                    >
+                      {item.badge > 99 ? '99+' : item.badge}
+                    </span>
+                  )}
+                </NavLink>
+              </Fragment>
+            ))}
+          </nav>
 
-        <div className="side-layout__footer">
-          {!isTutor && !isParent && (
-            <NavLink
-              to="/home"
-              onClick={() => setDrawerOpen(false)}
-              className={({ isActive }) =>
-                `side-layout__browse${
-                  isActive ? ' side-layout__browse--active' : ''
-                }`
-              }
-            >
-              <PersonSearchRounded aria-hidden="true" />
-              {t('NAVIGATION.BROWSE_INSTRUCTORS')}
-            </NavLink>
+          {hasStarts && (
+            <div className="side-layout__starts">
+              {parentStarts.map((item) => (
+                <NavLink
+                  key={item.to}
+                  to={item.to}
+                  title={collapsed ? item.label : undefined}
+                  onClick={() => setDrawerOpen(false)}
+                  className={({ isActive }) =>
+                    `side-layout__browse${
+                      isActive ? ' side-layout__browse--active' : ''
+                    }`
+                  }
+                >
+                  {item.icon}
+                  <span>{item.label}</span>
+                </NavLink>
+              ))}
+              {!isTutor && !isParent && (
+                <NavLink
+                  to="/home"
+                  onClick={() => setDrawerOpen(false)}
+                  className={({ isActive }) =>
+                    `side-layout__browse${
+                      isActive ? ' side-layout__browse--active' : ''
+                    }`
+                  }
+                >
+                  <PersonSearchRounded aria-hidden="true" />
+                  {t('NAVIGATION.BROWSE_INSTRUCTORS')}
+                </NavLink>
+              )}
+            </div>
           )}
+        </div>
+
+        <div
+          className={`side-layout__footer${
+            hasStarts ? ' side-layout__footer--joined' : ''
+          }`}
+        >
           <div className="side-layout__language">
             <LanguageSelector />
           </div>
@@ -511,7 +575,10 @@ const SidebarLayout: FC<SidebarLayoutProps> = ({ children }) => {
         </div>
       </aside>
 
-      <main className="side-layout__main">{children}</main>
+      <main className="side-layout__main">
+        <StaffBanner />
+        {children}
+      </main>
     </div>
   );
 };

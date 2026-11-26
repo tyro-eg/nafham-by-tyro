@@ -14,3 +14,34 @@
     @include auth-form;
   }
 }
+
+// "or" and the free trial button under Sign in (19 Nov 2026)
+.login-container__or {
+  display: flex;
+  align-items: center;
+  gap: $space-3;
+  margin: $space-1 0;
+  font-size: $font-sm;
+  color: $text-muted;
+
+  &::before,
+  &::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background-color: $border;
+  }
+}
+
+.login-container__trial.MuiButton-root {
+  min-height: 4.8rem;
+  font-size: $font-base;
+  font-weight: 700;
+  color: $text-strong;
+  border-color: $border-strong;
+
+  &:hover {
+    border-color: $brand-500;
+    background-color: $brand-50;
+  }
+}

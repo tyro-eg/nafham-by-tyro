@@ -161,6 +161,12 @@ export type PackageHours = {
   used: number;
   scheduled: number;
   unscheduled: number;
+  /** Hours the cancellation policy took for late changes by the family */
+  charged?: number;
+  /** Hours approved refunds took off */
+  refunded?: number;
+  /** Hours added or taken outside a sale (may be negative) */
+  granted?: number;
   consistent: boolean;
 };
 

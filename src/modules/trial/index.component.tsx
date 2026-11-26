@@ -106,6 +106,22 @@ const TrialPage: FC = () => {
     saveDraft(draft);
   }, [draft]);
 
+  // A parent with one child has nothing to choose: that child is picked and
+  // the "which child" step passed (they can still go back to it)
+  const children = family.data?.children;
+  useEffect(() => {
+    if (!isParent || children?.length !== 1) return;
+    setDraft((prev) =>
+      prev.childId !== undefined
+        ? prev
+        : {
+            ...prev,
+            childId: children[0].id,
+            step: prev.step === 'child' ? 'course' : prev.step,
+          },
+    );
+  }, [isParent, children]);
+
   // The funnel: the flow was opened, and each step as it is reached
   useEffect(() => {
     trackFunnelOnce('trial', 'trial_started', {

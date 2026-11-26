@@ -22,6 +22,8 @@ import {
   matchRoutes,
 } from 'react-router-dom';
 
+import { scrubAddresses } from './safe-path';
+
 /**
  * Initialize Sentry
  *
@@ -65,6 +67,8 @@ export const initSentry = () => {
       Sentry.replayIntegration({
         maskAllText: true,
         blockAllMedia: true,
+        // The replay's own navigation and request entries carry addresses
+        beforeAddRecordingEvent: (event) => scrubAddresses(event),
       }),
     ],
 
@@ -86,6 +90,10 @@ export const initSentry = () => {
       'canceled',
       'AbortError',
     ],
+
+    // Addresses in the trail of a report name the route, not a secret in it
+    // (the activation link's token): see safe-path.ts
+    beforeBreadcrumb: (breadcrumb) => scrubAddresses(breadcrumb),
 
     // Filter out sensitive data
     beforeSend(event, hint) {
@@ -110,6 +118,10 @@ export const initSentry = () => {
       return event;
     },
   });
+
+  // Every kind of report (errors, page loads, replays) passes here before
+  // it is sent: its page address, spans and request lose the same secrets
+  Sentry.addEventProcessor((event) => scrubAddresses(event));
 };
 
 /**

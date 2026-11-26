@@ -91,7 +91,7 @@ const InstructorCard: React.FC<{ instructor: Instructor }> = memo(
                 <Box className={`image ${rtlClass}`}>
                   <img
                     src={instructor.avatar || Profile}
-                    alt="Instructor"
+                    alt="Tutor"
                     loading="lazy"
                   />
                 </Box>

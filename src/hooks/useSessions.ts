@@ -1,23 +1,7 @@
-import {
-  useQuery,
-  useMutation,
-  useInfiniteQuery,
-  useQueryClient,
-} from '@tanstack/react-query';
-import { get, post } from '../assets/utils/api';
+import { useQuery, useInfiniteQuery } from '@tanstack/react-query';
+import { get } from '../assets/utils/api';
 import { queryKeys, SessionFilters } from '../lib/queryKeys';
-import { SessionType, ApiError } from '../assets/types';
-import { snackActions } from '../assets/utils/toaster';
-
-/**
- * Private session booking data
- */
-export interface PrivateSessionData {
-  tutor_id: number;
-  start_time: string;
-  grade_subject_id: number;
-  package_id: number;
-}
+import { SessionType } from '../assets/types';
 
 /** How often session lists re-read the server while the tab is visible */
 export const LIVE_REFRESH_MS = 30_000;
@@ -111,8 +95,10 @@ export function useInfiniteSessions(
   });
 }
 
-// Cancelling and moving a lesson live in useSessionChanges (PATCH
-// /sessions/:id/cancel and the move proposals)
+// Cancelling and moving a session live in useSessionChanges (PATCH
+// /sessions/:id/cancel and the move proposals); for anything those don't
+// allow, families send a session request (useSessionRequests) and the back
+// office does it. Free trials are trial requests (useTrialRequests).
 
 /**
  * The reasons a booking was refused, as the backend states them
@@ -130,32 +116,76 @@ export const bookingErrorMessage = (
   }
   return fallback;
 };
+/** The server hands out at most 100 rows a page */
+const LIVE_PAGE_SIZE = 100;
+
+/** Totals the server adds up for the home pages and My Students */
+export interface SessionSummary {
+  totals: {
+    completed: number;
+    missed: number;
+    cancelled: number;
+    /** Real length of every completed session, in hours */
+    hours_completed: number;
+    hours_this_month: number;
+  };
+  /** Completed hours for the last 8 weeks, Monday first, this week last */
+  weeks: { start: string; hours: number }[];
+  /** Completed hours by course, most first */
+  subjects: { course: string; hours: number }[];
+  /** A tutor's students only */
+  students?: SummaryStudent[];
+}
+
+export interface SummaryStudent {
+  id: number;
+  first_name: string;
+  last_name: string;
+  email?: string;
+  /** Full course names ("IGCSE - G10 - Math") */
+  courses: string[];
+  completed: number;
+  hours: number;
+  next_session_at: string | null;
+  last_session_at: string | null;
+  /** Full course name of the last completed session */
+  last_course: string | null;
+}
+
+const browserZone = () => {
+  try {
+    return Intl.DateTimeFormat().resolvedOptions().timeZone;
+  } catch {
+    return undefined;
+  }
+};
 
 /**
- * Book a private session
+ * The viewer's totals in one small answer (GET /sessions/summary). These used
+ * to be added up here from every session, 100 a page: slow for a tutor with
+ * thousands, half-counted while loading, and cut at 5,000.
  */
-export function useBookPrivateSession() {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async (sessionData: PrivateSessionData) => {
-      await post(`/sessions/private`, { private_session: sessionData });
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: queryKeys.sessions.all,
+export function useSessionSummary(enabled = true) {
+  return useQuery({
+    queryKey: [...queryKeys.sessions.all, 'summary'] as const,
+    enabled,
+    queryFn: async () => {
+      const response = await get(`/sessions/summary`, {
+        params: { zone: browserZone() },
       });
-      queryClient.invalidateQueries({
-        queryKey: queryKeys.calendar.all,
-      });
-      snackActions.success('Private session booked successfully');
+      return response.data as SessionSummary;
     },
-    onError: (error: ApiError) => {
-      const errorMessage =
-        error.response?.data?.error ||
-        error.message ||
-        'Failed to book private session';
-      snackActions.error(errorMessage);
-    },
+    staleTime: 3 * 60 * 1000,
+    refetchInterval: 3 * 60 * 1000,
+    refetchIntervalInBackground: false,
   });
+}
+
+/**
+ * The first 100 sessions, nearest first, kept live (every 30 s) so the
+ * schedule, countdowns and Join buttons stay fresh. Totals come from
+ * `useSessionSummary`. Same shape as `useSessions`.
+ */
+export function useSessionHistory() {
+  return useSessions(1, LIVE_PAGE_SIZE);
 }

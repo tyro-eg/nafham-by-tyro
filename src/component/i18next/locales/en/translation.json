@@ -31,8 +31,8 @@
   },
   "NAVIGATION": {
     "HOME": "Home",
-    "INSTRUCTORS": "Instructors",
-    "MY_INSTRUCTORS": "My Instructors",
+    "INSTRUCTORS": "Tutors",
+    "MY_INSTRUCTORS": "My Tutors",
     "COURSES": "Group Sessions",
     "CONTACT": "Contact",
     "BLOG": "Blog",
@@ -49,28 +49,32 @@
     "MENU": "Main menu",
     "OPEN_MENU": "Open menu",
     "CLOSE_MENU": "Close menu",
-    "BROWSE_INSTRUCTORS": "Browse instructors",
+    "BROWSE_INSTRUCTORS": "Browse tutors",
     "MESSAGES": "Messages",
     "CALENDAR": "Calendar",
     "AVAILABILITY": "Availability",
     "HOMEWORK": "Homework",
+    "ASSISTANT": "AI Teaching Assistant",
     "FREE_TRIAL": "Book a free trial",
     "FAMILY": "My family",
-    "NOTES": "Lesson notes",
+    "NOTES": "Session notes",
     "COLLAPSE": "Hide menu",
     "EXPAND": "Show menu",
     "PAYMENTS": "Payments",
     "TRIAL_REQUESTS": "Trial requests",
-    "REQUESTS": "Requests"
+    "REQUESTS": "Requests",
+    "GROUP_LEARNING": "Learning",
+    "GROUP_MONEY": "Money",
+    "GROUP_HELP": "Help"
   },
   "CARDS": {
     "FREE_ASSESMENT": {
       "TITLE": "Do not know your language level?",
       "LABEL": "Free Assessment",
-      "BODY": "Take our free online assessment! In less than 15 minutes, you can know what your English level is with the help of our hand-picked expert instructors"
+      "BODY": "Take our free online assessment! In less than 15 minutes, you can know what your English level is with the help of our hand-picked expert tutors"
     },
     "FREE_TRIAL": {
-      "TITLE": "Free Trial Session",
+      "TITLE": "Free trial",
       "LABEL": "Request now",
       "BODY": "A 30-minute session, free of charge it's an excellent way to learn how to use Nafham"
     }
@@ -111,7 +115,7 @@
     "BLOCK1": {
       "TITLE": "Your go-to platform for quality tutoring",
       "SUBTITLE": "START THE SUCCESS",
-      "DESCRIPTION": "Select, Schedule & Book your online sessions and enjoy a unique learning experience with many of our top-notch professional instructors.",
+      "DESCRIPTION": "Select, Schedule & Book your online sessions and enjoy a unique learning experience with many of our top-notch professional tutors.",
       "ACTION": "Book a free session now",
       "FEATURED": {
         "PART1": "Featured",
@@ -127,10 +131,10 @@
       }
     },
     "BLOCK3": {
-      "TITLE": "Our Best Instructors",
+      "TITLE": "Our Best Tutors",
       "DESCRIPTION": {
         "PART1": "Unleashing Excellence with ",
-        "PART2": "Our Top Instructors!"
+        "PART2": "Our Top Tutors!"
       }
     },
     "BLOCK4": {
@@ -155,7 +159,7 @@
         "PART1": "Ready",
         "PART2": " to start learning?"
       },
-      "DESCRIPTION": "Join us on a journey where every lesson is a discovery, and each step forward is a celebration of growth. Learning, the friendly way!",
+      "DESCRIPTION": "Join us on a journey where every session is a discovery, and each step forward is a celebration of growth. Learning, the friendly way!",
       "ACTION": "Book a free session now"
     },
     "BLOCK7": {
@@ -165,12 +169,12 @@
         "PART2": "learning experience"
       },
       "ITEM1": {
-        "TITLE": "Top Qualified Teachers",
-        "DESCRIPTION": "Hand-picked Qualified teachers with years of teaching experience."
+        "TITLE": "Top Qualified Tutors",
+        "DESCRIPTION": "Hand-picked Qualified tutors with years of teaching experience."
       },
       "ITEM2": {
         "TITLE": "Flexible Scheduling",
-        "DESCRIPTION": "Select the lessons suitable at the time of your choosing."
+        "DESCRIPTION": "Select the sessions suitable at the time of your choosing."
       },
       "ITEM3": {
         "TITLE": "24/7 Customer Support",
@@ -180,10 +184,10 @@
     },
     "BLOCK8": {
       "TITLE": "How does it work?",
-      "DESCRIPTION": "Choose the best instructor based on your needs, Schedule your sessions on your preferred dates, and enjoy a unique learning experience.",
+      "DESCRIPTION": "Choose the best tutor based on your needs, Schedule your sessions on your preferred dates, and enjoy a unique learning experience.",
       "ITEM1": {
-        "TITLE": "Choose the best instructor",
-        "DESCRIPTION": "We provide you with the best teachers for every curriculum."
+        "TITLE": "Choose the best tutor",
+        "DESCRIPTION": "We provide you with the best tutors for every curriculum."
       },
       "ITEM2": {
         "TITLE": "Schedule your sessions",
@@ -227,7 +231,7 @@
       "SUBTITLE": "From IGCSE to the UAE national system, with tutors who teach that exact syllabus."
     },
     "STEPS": {
-      "TITLE": "From first message to first lesson in a day"
+      "TITLE": "From first message to first session in a day"
     },
     "WHY": {
       "ITEM4": {
@@ -276,14 +280,14 @@
     "BLOCK1": {
       "TITLE": "Speak English like a ",
       "TITLEGREEN": "native",
-      "DESCRIPTION": "Get fluent faster with video chat lessons from an experienced English speaking teacher. We'll customize your lesson based on your interests.",
+      "DESCRIPTION": "Get fluent faster with video chat sessions from an experienced English speaking tutor. We'll customize your session based on your interests.",
       "ITEM1": {
         "TITLE": "Pay Per Hour",
         "DESCRIPTION": "According to your work, studies and lifestyle, you will just pay for the exact number of hours you need."
       },
       "ITEM2": {
-        "TITLE": "Expert Teachers",
-        "DESCRIPTION": "With fully interactive teachers who were previously trained on advantages of the online sessions "
+        "TITLE": "Expert Tutors",
+        "DESCRIPTION": "With fully interactive tutors who were previously trained on advantages of the online sessions "
       },
       "ITEM3": {
         "TITLE": "Learn From Anywhere",
@@ -321,37 +325,37 @@
     "BLOCK4": {
       "TITLE": "Improve Your Language Skills in 3 Easy Steps",
       "ITEM1": {
-        "TITLE": "Choose the best instructor based on your needs",
-        "DESCRIPTION": "We provide you with a wide selection of professional instructors in different fields, to offer you the best learning experience."
+        "TITLE": "Choose the best tutor based on your needs",
+        "DESCRIPTION": "We provide you with a wide selection of professional tutors in different fields, to offer you the best learning experience."
       },
       "ITEM2": {
         "TITLE": "Schedule your session based on your availability using a clear and easy process",
-        "DESCRIPTION": "Book your session easily with the instructor you prefer and adjust the schedule to your suitable free time."
+        "DESCRIPTION": "Book your session easily with the tutor you prefer and adjust the schedule to your suitable free time."
       },
       "ITEM3": {
         "TITLE": "Start your Live sessions and feel confident about your language skills day by day",
-        "DESCRIPTION": "Start your session anywhere and interact with your instructor and get the best online learning experience."
+        "DESCRIPTION": "Start your session anywhere and interact with your tutor and get the best online learning experience."
       }
     },
     "BLOCK5": {
       "TITLE": "We also provide live group courses for a more interactive learning environment.",
       "DESCRIPTION": "Our live group courses will help you communicate and share your learning experience with others in an easy, affordable way.",
-      "ACTION": "Explore More Instructors"
+      "ACTION": "Explore More Tutors"
     },
     "BLOCK6": {
       "TITLE": "Your language skills are not good? it's okay we got your back",
-      "DESCRIPTION": "If you are not sure about your language skills, now you can get an evaluation for your level from our instructors and how to improve your skills in a free session. ",
+      "DESCRIPTION": "If you are not sure about your language skills, now you can get an evaluation for your level from our tutors and how to improve your skills in a free session. ",
       "ACTION": "Book a free session now"
     },
     "TESTIMONIAL": "Some special words for our students about us"
   },
   "HOME": {
     "HEAD": {
-      "TITLE": "English course online now is more easier with qualified English teacher",
+      "TITLE": "English course online now is more easier with qualified English tutor",
       "HIDDEN_TITLE": "English course online",
       "META": {
-        "KEYWORDS": "English teacher - English course - course online - English course online",
-        "DESCRIPTION": "English course online is the best way to save time and make it easy for your to learn with interpersonal English teacher it's fun to learn"
+        "KEYWORDS": "English tutor - English course - course online - English course online",
+        "DESCRIPTION": "English course online is the best way to save time and make it easy for your to learn with interpersonal English tutor it's fun to learn"
       }
     },
     "BANNER": {
@@ -372,7 +376,7 @@
     },
     "BANNER": {
       "TITLE1": "Nafham also provides",
-      "TITLE2": "Instructors",
+      "TITLE2": "Tutors",
       "DESCRIPTION": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation",
       "ACTION": "Book Free Trail"
     },
@@ -390,7 +394,7 @@
       "SECOND_CARD": {
         "TITLE": "Do not know your language level ?",
         "LABEL": "Free Assessment",
-        "BODY": "Take our free online assessment! In less than 15 minutes, you can know what your English level is with the help of our hand-picked expert instructors."
+        "BODY": "Take our free online assessment! In less than 15 minutes, you can know what your English level is with the help of our hand-picked expert tutors."
       }
     },
     "COURSE_INFO": {
@@ -403,12 +407,12 @@
       "LANGUAGE_LEVEL": "Language Level",
       "COURSE_DURATION": "Course Duration",
       "HOURS": "hours",
-      "HOURS_PER_LESSON": "hours per lesson",
+      "HOURS_PER_LESSON": "hours per session",
       "NUMBER_OF_STUDENTS": "Number of students",
-      "INSTRUCOR_COURSE": "Instructor Name"
+      "INSTRUCOR_COURSE": "Tutor Name"
     },
     "COURSE_INSTRUCTOR": {
-      "INSTRUCTOR": "Instructor",
+      "INSTRUCTOR": "Tutor",
       "ABOUT_ME": "About Me",
       "READ_MORE": "See more"
     },
@@ -418,8 +422,8 @@
     "COURSE_LIST": {
       "FIRST_CARD": {
         "TITLE": "The schedule does not suit you!",
-        "LABEL": "Find an Instructor",
-        "BODY": "Try our one to one private sessions with the same instructor and get a flexible scheduling time"
+        "LABEL": "Find a Tutor",
+        "BODY": "Try our one to one private sessions with the same tutor and get a flexible scheduling time"
       },
       "NO_RESULTS": {
         "FIRST_P": "Sorry, We Couldn't Find",
@@ -436,7 +440,7 @@
       },
       "COURSE_ITEM_3": {
         "TITLE": "Group Courses",
-        "DESCRIPTION": "Excellent-selected instructors chosen for your online group experience with the luxury of recording your session and changing the instructor, Choose now the best bit course that meets your needs and criteria."
+        "DESCRIPTION": "Excellent-selected tutors chosen for your online group experience with the luxury of recording your session and changing the tutor, Choose now the best bit course that meets your needs and criteria."
       },
       "COURSE": "Course",
       "COURSES": "Courses",
@@ -448,8 +452,8 @@
       "LANGUAGE_LEVEL": "Language Level",
       "COURSE_DURATION": "Course Duration",
       "HOURS": "hours",
-      "HOURS_PER_LESSON": "hours per lesson",
-      "LESSON_DURATION": "Lesson Duration",
+      "HOURS_PER_LESSON": "hours per session",
+      "LESSON_DURATION": "Session Duration",
       "REVIEWS": "reviews",
       "COURSE_BTN": {
         "PURCHASED": "Joined",
@@ -517,7 +521,7 @@
   },
   "PROFILE": {
     "ABOUT_INSTRUCTOR": "About Me",
-    "INSTRUCTOR_AVAILABILITY": "Instructor Availability",
+    "INSTRUCTOR_AVAILABILITY": "Tutor Availability",
     "REVIEWS": "reviews",
     "READ_MORE": "Read More",
     "SHOW_MORE": "Show More",
@@ -541,7 +545,7 @@
     },
     "STUDENTMODAL": {
       "UNSCHEDULEDHOURS1": "You have",
-      "UNSCHEDULEDHOURS2": "unscheduled hours with this instructor",
+      "UNSCHEDULEDHOURS2": "unscheduled hours with this tutor",
       "BODYMESS1": "This calendar is for view only",
       "BODYMESS2": "You can schedule your hours through my sessions page OR You can book more hours through packages checkout",
       "ACTIONS": {
@@ -552,7 +556,7 @@
     "EDITPROFILE": {
       "MISSING_INFORMATION": {
         "TITLE": "Your profile is missing some important information",
-        "DESCRIPTION": "Completing your profile would help making it more professional. Make sure to complete the missing information to help students choose the best suitable instructor that fits their needs. And by default, it serves a better learning process and student-instructor communication.",
+        "DESCRIPTION": "Completing your profile would help making it more professional. Make sure to complete the missing information to help students choose the best suitable tutor that fits their needs. And by default, it serves a better learning process and student-tutor communication.",
         "AVAILABILITY": "No Availability Set in Calendar",
         "PICTURE": "Missing Profile Picture",
         "ABOUT": "Missing About Information",
@@ -604,13 +608,13 @@
         "PROGRESS_REACHED": "Target reached: {{current}} of {{target}} students · {{percent}}% 🎉",
         "NO_TARGET_one": "{{count}} active student. Set a target to track your progress.",
         "NO_TARGET_other": "{{count}} active students. Set a target to track your progress.",
-        "ACTIVE_HINT": "Active students have hours left or a lesson coming with you, or had a lesson with you in the last 30 days.",
+        "ACTIVE_HINT": "Active students have hours left or a session coming with you, or had a session with you in the last 30 days.",
         "SAME_DAY_LABEL": "Same-day trials",
         "SAME_DAY_HINT": "Students can book a free trial with you for later the same day (at least 4 hours ahead). Turn this off if you need a day's notice.",
         "NEW_STUDENTS_LABEL": "I'm open to new students",
         "NEW_STUDENTS_HINT": "When off, you won't appear in the free trial or the instructor list. Your current students are not affected.",
         "BACKUP_LABEL": "Backup meeting room",
-        "BACKUP_HINT": "Your own Google Meet, Zoom or Teams link. If Zoom can't make a room for one of your lessons, the Join button takes you and your student here instead. Leave empty to remove it.",
+        "BACKUP_HINT": "Your own Google Meet, Zoom or Teams link. If Zoom can't make a room for one of your sessions, the Join button takes you and your student here instead. Leave empty to remove it.",
         "BACKUP_SAVE": "Save room",
         "BACKUP_SAVED": "Backup room saved",
         "BACKUP_ERROR": "Couldn't save the backup room"
@@ -643,7 +647,7 @@
         "WARNING": {
           "TITLE": "Warning",
           "BODY1": "This time slot is already booked up by another student, please try to select another available time slot for your session",
-          "BODY2": "This time slot is already booked by you with another instructor, please try to select another available time slot for your session"
+          "BODY2": "This time slot is already booked by you with another tutor, please try to select another available time slot for your session"
         }
       }
     },
@@ -673,7 +677,7 @@
           "TITLE": "Warning",
           "FOURHOURS": "You cannot schedule a session within 4 hours from current time",
           "ALREADYRESERVEDSTUDENT": "This session is already reserved by another student, please select another one",
-          "ALREADYRESERVEDINSTRUCTOR": "You have another session at this time with another instructor!",
+          "ALREADYRESERVEDINSTRUCTOR": "You have another session at this time with another tutor!",
           "NOHOURSAVAILABLE": "You don't have enough hours to schedule another session"
         }
       },
@@ -751,7 +755,7 @@
   },
   "MYSESSIONS": {
     "NO_SESSIONS_TITLE": "No Sessions Scheduled",
-    "NO_SESSIONS_SUBTITLE": "You have no scheduled lessons, Select a teacher to get started.",
+    "NO_SESSIONS_SUBTITLE": "You have no scheduled sessions, Select a tutor to get started.",
     "NO_SESSIONS_ACTION": "Schedule a Session",
     "LOADING_SESSIONS": "Loading sessions...",
     "LOADING_MORE": "Loading more sessions...",
@@ -765,9 +769,9 @@
     "FILTERS": {
       "ALL": "All",
       "SESSIONTYPE": "Session Type",
-      "1TO1SESSION": "1-1 Private Session",
+      "1TO1SESSION": "Session",
       "GROUPSESSION": "Group Session",
-      "FREETRIALSESSION": "Free Trial Session",
+      "FREETRIALSESSION": "Free trial",
       "SESSIONSTATE": "Session Status",
       "SESSIONDATE": "Session Date",
       "MISSEDSESSIONS": "Missed Sessions",
@@ -780,11 +784,11 @@
       "NEXTWEEKSESSIONS": "Next Week's Sessions",
       "LASTWEEKSESSIONS": "Last Week's Sessions",
       "SEARCH": "Search",
-      "INSTRUCTOR": "Instructor",
-      "SELECT_INSTRUCTOR": "Select Instructor",
-      "SEARCH_INSTRUCTOR": "Search instructor...",
-      "NO_INSTRUCTORS_FOUND": "No instructors found",
-      "LOADING_INSTRUCTORS": "Loading instructors...",
+      "INSTRUCTOR": "Tutor",
+      "SELECT_INSTRUCTOR": "Select Tutor",
+      "SEARCH_INSTRUCTOR": "Search tutor...",
+      "NO_INSTRUCTORS_FOUND": "No tutors found",
+      "LOADING_INSTRUCTORS": "Loading tutors...",
       "COURSE": "Course",
       "SELECT_COURSE": "Select Course",
       "NO_COURSES_FOUND": "No courses found",
@@ -800,11 +804,11 @@
       "LIST": "List",
       "CALENDAR": "Calendar",
       "DOWNLOADS": "Downloads",
-      "1TO1SESSION": "1-1 Private Session",
+      "1TO1SESSION": "Session",
       "GROUPSESSION": "Group Session",
-      "FREETRIALSESSION": "Free Trial Session",
+      "FREETRIALSESSION": "Free trial",
       "CARD": {
-        "NAME": "Instructor Name",
+        "NAME": "Tutor Name",
         "NAME2": "Student Name",
         "DETAILS": "Session Details",
         "COURSE": "Course Name",
@@ -872,7 +876,7 @@
     },
     "SCHEDULE": {
       "TITLE": "Unscheduled Sessions",
-      "DESCRIPTION": "Select from your instructors list the one you want to schedule your session with.",
+      "DESCRIPTION": "Select from your tutors list the one you want to schedule your session with.",
       "CARD": {
         "UNSCHEDULED": "Unscheduled Hours",
         "SCHEDULE": "Schedule Now"
@@ -895,7 +899,7 @@
         "GOALDESCRIPTION": "How was the students learning progress within the last month? What areas did he/she improved in most? And what aspects need further improvement?",
         "AREAOFIMPROVEMENT": "Areas of improvement",
         "AREAOFIMPROVEMENTDESCRIPTION": "What are you plans to work on the student’s weaknesses and further improve their language level? If they have a low willingness to learn, how do you plan to encourage them and increase their engagement?",
-        "NOTES": "Instructor's Notes (Optional)",
+        "NOTES": "Tutor's Notes (Optional)",
         "TYROFEEDBACK": "Feedback on Tyro (Optional)",
         "SUBMIT": "Submit",
         "CANCEL": "Cancel",
@@ -903,14 +907,14 @@
         "THANKYOU2": "Your rating submitted successfully. Thank you for your cooperation with us"
       }
     },
-    "SUBTITLE": "Every lesson, past and coming, with its tutor and course.",
+    "SUBTITLE": "Every session, past and coming, with its tutor and course.",
     "GROUP": {
       "TODAY": "Today",
       "TOMORROW": "Tomorrow",
       "YESTERDAY": "Yesterday"
     },
     "NEXT_UP": {
-      "LABEL": "Next lesson",
+      "LABEL": "Next session",
       "STARTS_IN": "starts in {{time}}"
     }
   },
@@ -925,7 +929,7 @@
     "CARD": {
       "TYPE": "Package Type",
       "TRIAL_SESSION": "Trial Session",
-      "PRIVATE_SESSION": "Private Session",
+      "PRIVATE_SESSION": "Session",
       "GROUP_COURSE": "Group Course",
       "REMAINING_HOURS": "Hours Left",
       "ORIGINAL_HOURS": "Original Hours",
@@ -955,9 +959,11 @@
       },
       "LEGEND": {
         "USED": "used",
-        "SCHEDULED": "scheduled",
+        "SCHEDULED": "booked",
         "FREE": "free to book",
-        "MOVED_OUT": "moved to another tutor"
+        "MOVED_OUT": "moved to another tutor",
+        "CHARGED": "charged for late changes",
+        "REFUNDED": "refunded"
       }
     },
     "SUBTITLE": "Hours bought, used and still free to book, per tutor.",
@@ -968,10 +974,10 @@
   },
   "DIRECTORY": {
     "HEAD": {
-      "TITLE": "English course online now is more easier with qualified English teacher",
+      "TITLE": "English course online now is more easier with qualified English tutor",
       "META": {
-        "KEYWORDS": "english teacher - english course - course online - english course online",
-        "DESCRIPTION": "English course online is the best way to save time and make it easy for your to learn with interpersonal English teacher it's fun to learn"
+        "KEYWORDS": "english tutor - english course - course online - english course online",
+        "DESCRIPTION": "English course online is the best way to save time and make it easy for your to learn with interpersonal English tutor it's fun to learn"
       }
     },
     "NEW": "New",
@@ -982,7 +988,7 @@
     "FREETRIAL": "Request a free trial",
     "COURSEAD": {
       "TITLE": "We Also Provide Group Courses",
-      "SUBTITLE": "Prefer learning in a group? We got you covered! We provide group courses with a maximum of 8 students so the instructor could focus with every student in the session. View our courses for more details regarding our group courses.",
+      "SUBTITLE": "Prefer learning in a group? We got you covered! We provide group courses with a maximum of 8 students so the tutor could focus with every student in the session. View our courses for more details regarding our group courses.",
       "ACTION": "View our group courses"
     },
     "MOBILEAPP": {
@@ -990,14 +996,15 @@
       "SUBTITLE": "Join the fast-paced learning journey and complete your sessions on the go from anywhere by downloading our new app for Android & iOS."
     },
     "SHOWMORE": "SHOW MORE",
-    "LOADING": "Loading more Instructors"
+    "LOADING": "Loading more Tutors"
   },
   "LOGIN": {
+    "TITLE": "Sign in",
     "LOGIN_TITLE": "Login to complete the scheduling process",
     "LOGIN_TITLE_1": "Login to complete the joining process",
     "LOGIN_SUBTITLE": "Welcome back",
     "FACEBOOK_LOGIN": "Login with facebook",
-    "LOGIN_EMAIL": "Email Address",
+    "LOGIN_EMAIL": "Email",
     "LOGIN_EMAIL_INPUT_PLACEHOLDER": "Enter your email",
     "LOGIN_PASSWORD": "Password",
     "LOGIN_PASSWORD_INPUT_PLACEHOLDER": "Enter your password",
@@ -1008,25 +1015,29 @@
     "NO_ACCOUNT": "Don't have an account yet?",
     "REGISTER": "Create an account",
     "OR": "or Sign In with",
+    "OR_SHORT": "or",
+    "FREE_TRIAL": "Book a free trial",
+    "SHOW_PASSWORD": "Show password",
+    "HIDE_PASSWORD": "Hide password",
     "ERROR": "Unable to login, please check your email and password and try again",
     "TERMS": "By clicking sign in you agree to our ",
     "TERMS_GREEN": "Terms and Conditions",
     "MAIN": {
-      "TITLE": "Welcome Back !",
-      "SUBTITLE": "Enter your details below."
+      "TITLE": "Welcome back",
+      "SUBTITLE": "Sign in to your Nafham account."
     },
     "TAB": {
       "STUDENT": "Student",
-      "INSTRUCTOR": "Instructor"
+      "INSTRUCTOR": "Tutor"
     },
     "PANEL": {
-      "EYEBROW": "Nafham Learning",
-      "TITLE": "Pick up right where you left off.",
-      "SUBTITLE": "Your sessions, packages and tutors are waiting.",
-      "QUOTE": "She is the best teacher we've dealt with. Ahmed got better at school and she follows up with him every week.",
-      "QUOTE_BY": "Ahmed's parent"
-    },
-    "TITLE": "Sign in"
+      "TITLE_START": "Pick up right",
+      "TITLE_END": "where you left off",
+      "SUBTITLE": "Your sessions, packages and tutors, in one calm place.",
+      "FACT_TUTORS": "One-to-one sessions with checked tutors",
+      "FACT_NOTES": "Notes after every recorded session",
+      "FACT_CHANGES": "Book, move or pause in a few clicks"
+    }
   },
   "IMPERSONATE": {
     "LOADING": "Logging you in..."
@@ -1076,10 +1087,24 @@
       "TITLE": "Welcome  👋",
       "SUBTITLE": "Enter your details below."
     },
+    "QUICK": {
+      "CHILD_FIRST_NAME": "Your child's first name",
+      "CHILD_HINT": "You can add more children later.",
+      "PASSWORD_HINT": "At least 6 characters"
+    },
+    "TRIAL": {
+      "TITLE": "Create your account to book your free trial",
+      "SUBTITLE": "It takes a minute. Next you pick the subject, the tutor and the time.",
+      "SUBMIT": "Create account and continue"
+    },
     "ROLE": {
       "LABEL": "I am a",
       "STUDENT": "Student",
       "PARENT": "Parent",
+      "PARENT_TITLE": "I'm a parent",
+      "PARENT_LINE": "For my child",
+      "STUDENT_TITLE": "I'm a student",
+      "STUDENT_LINE": "For myself",
       "PARENT_HINT": "You hold the account for your children. Add your first child below; you can add more later."
     },
     "CHILD": {
@@ -1087,11 +1112,12 @@
       "LAST_NAME": "Child's last name"
     },
     "PANEL": {
-      "EYEBROW": "Nafham Learning",
-      "TITLE": "Learning that fits around your family.",
+      "TITLE_START": "Learning that fits",
+      "TITLE_END": "around your family",
       "SUBTITLE": "Create the account, add your child, and book a free trial with a tutor who teaches their syllabus.",
-      "QUOTE": "We tried three platforms before Nafham. This is the first one where I actually know what my daughter did in each lesson.",
-      "QUOTE_BY": "Salma's parent"
+      "FACT_TRIAL": "A free trial before you buy",
+      "FACT_TUTORS": "One-to-one sessions with checked tutors",
+      "FACT_FAMILY": "One account for all your children"
     }
   },
   "REGISTERED": {
@@ -1100,14 +1126,19 @@
     "BACK_HOME": "Back Home"
   },
   "FORGET_PASSWORD": {
-    "TITLE": "Forgot Password",
+    "TITLE": "Forgot your password?",
     "DESCRIPTION1": "Please enter your email address.",
     "DESCRIPTION2": "You will receive a link to create a new password via email.",
     "FORM": {
       "LABEL": "Email",
       "EMAIL_PLACEHOLDER": "Email address..",
       "RESET_PASSWORD_BTN": "Submit"
-    }
+    },
+    "ASK_SUPPORT": "Message us and we'll send you a new password.",
+    "OLD_STOPS": "The old one stops working as soon as the new one is sent.",
+    "WHATSAPP": "Message us on WhatsApp",
+    "EMAIL": "Email learn@nafhambytyro.com",
+    "CLOSE": "Close"
   },
   "RESET_PASSWORD": {
     "TITLE": "Reset your Password",
@@ -1132,6 +1163,7 @@
       "CANCEL": "Cancel"
     },
     "CHANGE_PASSWORD_FORM": {
+      "CURRENT_PASSWORD": "Current password",
       "TITLE": "Change your Password",
       "CURRENT": "Current Password",
       "NEW_PASSWORD": "New Password",
@@ -1146,7 +1178,7 @@
   },
   "CONFIRM_PAGE": {
     "TITLE": "Your account has been confirmed ",
-    "TEXT": "Welcome to Tyro! Your go-to marketplace to find qualified instructors. For info on how to book your first session, click here.",
+    "TEXT": "Welcome to Tyro! Your go-to marketplace to find qualified tutors. For info on how to book your first session, click here.",
     "START_LEARNING_BTN": "Start Learning"
   },
   "EMAIL_CONFIRMATION": {
@@ -1312,7 +1344,7 @@
       "DECLINE": {
         "TITLE": "Payment Declined!",
         "MESSAGE": "We are unable to process your online payment from the credit card provided. Please resubmit your payment using another credit card or use another payment method.",
-        "BUTTON": "Go to instructors"
+        "BUTTON": "Go to tutors"
       },
       "COMPLETE_REGISTER": {
         "TITLE": "Registration Completed!",
@@ -1362,10 +1394,10 @@
     "NOT_AVAILABLE": "Not Available"
   },
   "MYINSTRUCTORS": {
-    "LOADING": "Loading instructors...",
+    "LOADING": "Loading tutors...",
     "EMPTY": {
       "FIRST_P": "You haven't booked any sessions yet",
-      "SECOND_P": "Start booking sessions to see your instructors here!"
+      "SECOND_P": "Start booking sessions to see your tutors here!"
     },
     "SUBTITLE": "The tutors you learn with, what they teach you and when you meet next.",
     "CARD": {
@@ -1375,7 +1407,7 @@
       "WITH_US": "With us",
       "NO_PACKAGE": "No package yet",
       "HOURS_LEFT": "Hours left",
-      "NEXT_LESSON": "Next lesson",
+      "NEXT_LESSON": "Next session",
       "NO_LESSON": "Nothing booked"
     }
   },
@@ -1408,7 +1440,7 @@
       "IN_HOURS_other": "In {{count}} hours",
       "IN_DAYS_one": "Tomorrow",
       "IN_DAYS_other": "In {{count}} days",
-      "EMPTY": "No sessions scheduled yet. Send a request and our team will set up your next lesson."
+      "EMPTY": "No sessions scheduled yet. Send a request and our team will set up your next session."
     },
     "PROGRESS": {
       "TITLE": "Your progress",
@@ -1435,9 +1467,9 @@
       "EMPTY": "You don't have any packages yet."
     },
     "INSTRUCTORS": {
-      "TITLE": "My instructors",
-      "EMPTY": "You haven't studied with an instructor yet.",
-      "FIND": "Find an instructor"
+      "TITLE": "My tutors",
+      "EMPTY": "You haven't studied with a tutor yet.",
+      "FIND": "Find a tutor"
     },
     "ROLE": "Student",
     "BOOK_TRIAL": "Book a free trial"
@@ -1478,9 +1510,9 @@
     }
   },
   "TUTOR_DASHBOARD": {
-    "ROLE": "Instructor",
+    "ROLE": "Tutor",
     "HERO": {
-      "EYEBROW": "Instructor space",
+      "EYEBROW": "Tutor space",
       "TODAY_one": "You have {{count}} session today. Next up: {{subject}} with {{student}}, {{when}}.",
       "TODAY_other": "You have {{count}} sessions today. Next up: {{subject}} with {{student}}, {{when}}.",
       "NEXT": "Your next session is {{subject}} with {{student}}, {{when}}.",
@@ -1506,7 +1538,9 @@
       "TOTAL_one": "{{count}} completed session in total.",
       "TOTAL_other": "{{count}} completed sessions in total.",
       "WEEKLY": "Hours taught per week",
-      "SESSIONS": "Sessions"
+      "SESSIONS": "Sessions",
+      "LOADING": "Adding up your sessions…",
+      "NONE_YET": "No hours taught yet this month."
     },
     "PACKAGES": {
       "TITLE": "Packages",
@@ -1530,7 +1564,7 @@
   },
   "MY_SALARY": {
     "TITLE": "My Salary",
-    "SUBTITLE": "Your earnings from completed sessions, trials and sessions your students missed, by curriculum, stage and subject.",
+    "SUBTITLE": "Your earnings from completed sessions, free trials and sessions your students missed, by curriculum, stage and subject.",
     "MTD": "Month to date",
     "PREV_MONTH": "Previous month",
     "NEXT_MONTH": "Next month",
@@ -1545,7 +1579,7 @@
     "PROJECTION_other": "{{count}} more sessions are booked this month, worth about {{amount}} once completed.",
     "BREAKDOWN": {
       "TITLE": "Breakdown by course",
-      "HINT": "Completed sessions, trials and sessions your students missed"
+      "HINT": "Completed sessions, free trials and sessions your students missed"
     },
     "COLS": {
       "CURRICULUM": "Curriculum",
@@ -1561,6 +1595,8 @@
     "NO_RATE": "No rate set",
     "UNPRICED_one": "{{count}} session has no hourly rate for its course yet, so it isn't included in the total.",
     "UNPRICED_other": "{{count}} sessions have no hourly rate for their course yet, so they aren't included in the total.",
+    "RATE_LOOKS_WRONG_one": "{{count}} session has an hourly rate that looks wrong, so it isn't included in the total until Nafham corrects it.",
+    "RATE_LOOKS_WRONG_other": "{{count}} sessions have an hourly rate that looks wrong, so they aren't included in the total until Nafham corrects it.",
     "SESSIONS": {
       "TITLE": "Paid sessions",
       "HINT_one": "{{count}} session",
@@ -1568,9 +1604,13 @@
     },
     "LINE_CALC": "{{hours}} h × {{rate}}",
     "STUDENT_MISSED": "Student missed",
+    "LATE_CANCEL_HALF": "Paid half: the family cancelled {{hours}} h before",
+    "LATE_CANCEL_FULL": "Paid: the family cancelled {{hours}} h before",
+    "LATE_CANCEL_HALF_PLAIN": "Paid half: the family cancelled late",
+    "LATE_CANCEL_FULL_PLAIN": "Paid: the family cancelled late",
     "EMPTY_MTD": "No paid sessions yet this month. Your earnings will appear here as sessions are completed.",
     "EMPTY_MONTH": "No paid sessions in this month.",
-    "NOTE": "You are paid for completed sessions, trials and sessions your student missed, for their booked length at your hourly rate for each course. Cancelled sessions and sessions you missed aren't paid. Your final payout may differ."
+    "NOTE": "You are paid for completed sessions, free trials and sessions your student missed, for their booked length at your hourly rate for each course. Cancelled sessions and sessions you missed aren't paid. Your final payout may differ."
   },
   "CALENDAR_PAGE": {
     "TITLE": "Calendar",
@@ -1598,12 +1638,11 @@
     },
     "YOU": "You",
     "NAFHAM_SUPPORT": "Nafham Support",
-    "ASSISTANT": "Nafham Assistant",
     "ADMIN_IN_CHAT": "Nafham Support is in this conversation",
     "MEMBERS": "Members",
     "ROLE": {
       "STUDENT": "Student",
-      "INSTRUCTOR": "Instructor",
+      "INSTRUCTOR": "Tutor",
       "ADMIN": "Admin",
       "SUPPORT": "Support",
       "ASSISTANT": "Assistant"
@@ -1622,7 +1661,7 @@
     "UNREAD_COUNT_other": "{{count}} unread messages",
     "EMPTY": {
       "TITLE": "No conversations yet",
-      "STUDENT_TEXT": "Message an instructor from their profile. Nafham Support joins every conversation.",
+      "STUDENT_TEXT": "Message a tutor from their profile. Nafham Support joins every conversation.",
       "TUTOR_TEXT": "Conversations with your students will appear here. Nafham Support joins every conversation."
     },
     "PICK": {
@@ -1683,13 +1722,13 @@
       "MORE_HOURS": "Buy more hours",
       "TRIAL": "A free trial session"
     },
-    "INSTRUCTOR": "Instructor",
+    "INSTRUCTOR": "Tutor",
     "ANY_INSTRUCTOR": "No preference",
     "COURSE": "Course",
     "ANY_COURSE": "Not sure yet",
     "HOURS": "Hours",
     "HOURS_HINT": "How many hours would you like? (optional)",
-    "HOURS_LEFT": "You have {{hours}} hours left in {{course}}.",
+    "HOURS_LEFT": "You have {{hours}} hours free to book in {{course}}.",
     "PREFERRED_TIMES": "Preferred days and times",
     "PREFERRED_TIMES_PLACEHOLDER": "e.g. Monday and Wednesday after 5pm",
     "NOTE": "Anything else?",
@@ -1702,6 +1741,16 @@
       "TITLE": "Request sent!",
       "TEXT": "Our support team will schedule your sessions and get back to you shortly.",
       "BUTTON": "Done"
+    },
+    "CHANGE": {
+      "BUTTON": "Ask to cancel or move",
+      "TITLE": "Cancel or move a session",
+      "SUBTITLE": "{{session}}. Our team will cancel or move it for you and let you know.",
+      "WHAT": "What would you like?",
+      "WHAT_PLACEHOLDER": "e.g. Please cancel it, or move it to the same time on Friday",
+      "TIMES": "If moving: days and times that suit you",
+      "REQUIRED": "Please tell us whether to cancel or move it.",
+      "SUCCESS": "Our team will cancel or move the session and let you know."
     }
   },
   "TRIAL": {
@@ -1777,7 +1826,7 @@
       "WHEN": "When",
       "DURATION": "{{minutes}} minutes",
       "GUARDIAN_PHONE": "Parent's phone number (optional)",
-      "GUARDIAN_HINT": "We'll keep your parent in the loop about your lessons.",
+      "GUARDIAN_HINT": "We'll keep your parent in the loop about your sessions.",
       "VISITOR": "Create your account to send the request. Your choices are saved.",
       "REGISTER": "Create account",
       "LOGIN": "I already have an account",
@@ -2067,7 +2116,7 @@
   },
   "ASSISTANT": {
     "TITLE": "AI Teaching Assistant",
-    "SUBTITLE": "Built from your recorded lessons and homework: what each student needs, the next lesson's plan with slides, homework ideas, and how you teach.",
+    "SUBTITLE": "Built from your recorded sessions and homework: what each student needs, the next session's plan with slides, homework ideas, and how you teach.",
     "STUDENTS": "Students",
     "SEARCH": "Search students or courses",
     "EMPTY": {
@@ -2075,21 +2124,21 @@
       "TEXT": "Once you have a student with a package or a session, they will show up here."
     },
     "LIST": {
-      "NEXT": "Next lesson {{date}}",
-      "LESSONS_one": "{{count}} recorded lesson",
-      "LESSONS_other": "{{count}} recorded lessons",
+      "NEXT": "Next session {{date}}",
+      "LESSONS_one": "{{count}} recorded session",
+      "LESSONS_other": "{{count}} recorded sessions",
       "NO_MATCH": "No student matches that search."
     },
     "TABS": {
       "INSIGHTS": "Learner insights",
-      "PLAN": "Lesson plan",
+      "PLAN": "Session plan",
       "HOMEWORK": "Homework",
-      "COACH": "Be a better teacher"
+      "COACH": "Be a better tutor"
     },
     "COMMON": {
       "AI": "AI",
       "AI_DRAFT": "AI draft",
-      "STALE": "New lessons since",
+      "STALE": "New sessions since",
       "REFRESH": "Refresh",
       "GENERATE": "Generate",
       "GENERATING": "Working…",
@@ -2110,27 +2159,27 @@
       "TITLE": "Where this student is",
       "STRENGTHS": "Strengths",
       "WEAKNESSES": "Weaknesses",
-      "FOCUS": "Focus next lesson",
+      "FOCUS": "Focus next session",
       "EVIDENCE_one": "{{count}} piece of evidence",
       "EVIDENCE_other": "{{count}} pieces of evidence",
-      "FROM_LESSON": "from a lesson",
+      "FROM_LESSON": "from a session",
       "FROM_HOMEWORK": "from homework",
-      "BASED_ON": "Based on {{lessons}} recorded lessons and {{homework}} reviewed homework.",
-      "RECENT_LESSONS": "Recent lessons",
-      "NO_NOTES": "No lesson notes yet.",
+      "BASED_ON": "Based on {{sessions}} recorded sessions and {{homework}} reviewed homework.",
+      "RECENT_LESSONS": "Recent sessions",
+      "NO_NOTES": "No session notes yet.",
       "COVERED": "Covered",
       "STRUGGLES": "Struggled with",
       "NEXT_STEPS": "Next steps",
       "SUMMARY": "Summary",
       "TRY_NEXT": "Try next time:",
       "EDITED_BY_YOU": "Edited by you",
-      "NOTE_SAVED": "Lesson note saved",
+      "NOTE_SAVED": "Session note saved",
       "EMPTY_TITLE": "No insights yet",
-      "EMPTY_TEXT": "Insights appear after your first recorded lesson with this student. Ask support to switch recording on for this package.",
-      "EMPTY_TEXT_PENDING": "A lesson was recorded. The insight is being written; generate it now or check back shortly."
+      "EMPTY_TEXT": "Insights appear after your first recorded session with this student. Ask support to switch recording on for this package.",
+      "EMPTY_TEXT_PENDING": "A session was recorded. The insight is being written; generate it now or check back shortly."
     },
     "PLAN": {
-      "UNTITLED": "Lesson plan",
+      "UNTITLED": "Session plan",
       "OBJECTIVES": "Objectives",
       "CHECKS": "Check understanding",
       "MATERIALS": "Materials",
@@ -2143,8 +2192,8 @@
       "NOTES_FOR_YOU": "For you:",
       "TITLE_FIELD": "Title",
       "FOR_SESSION": "For your session on {{date}}",
-      "NEXT_LESSON": "For the next lesson",
-      "GENERATE": "Generate a lesson plan",
+      "NEXT_LESSON": "For the next session",
+      "GENERATE": "Generate a session plan",
       "REGENERATE": "New plan",
       "GENERATING_TEXT": "Writing a new plan. This takes about half a minute.",
       "PRESENT_one": "Present {{count}} slide",
@@ -2168,8 +2217,8 @@
       "NO_NOTES": "No notes for this slide.",
       "PREVIOUS": "Previous slide",
       "NEXT": "Next slide",
-      "EMPTY_TITLE": "No lesson plan yet",
-      "EMPTY_TEXT": "Generate a plan for the next lesson from this student's insights and recent lessons.",
+      "EMPTY_TITLE": "No session plan yet",
+      "EMPTY_TEXT": "Generate a plan for the next session from this student's insights and recent sessions.",
       "EMPTY_TEXT_SESSION": "Your next session with this student is on {{date}}. Generate its plan and slides now.",
       "WRITE_SLIDES": "Write the slides",
       "WRITING_SLIDES": "Writing the slides…",
@@ -2187,17 +2236,17 @@
       "ASSIGNED": "Homework assigned",
       "ASSIGNED_AS": "Assigned:",
       "EMPTY_TITLE": "No homework ideas yet",
-      "EMPTY_TEXT": "Ideas appear after your first recorded lesson with this student.",
-      "EMPTY_TEXT_PENDING": "A lesson was recorded. Ideas are being written; generate them now or check back shortly."
+      "EMPTY_TEXT": "Ideas appear after your first recorded session with this student.",
+      "EMPTY_TEXT_PENDING": "A session was recorded. Ideas are being written; generate them now or check back shortly."
     },
     "COACH": {
       "TITLE": "How you teach",
       "PERIOD": "{{from}} to {{to}}",
-      "LESSONS": "Lessons analysed",
-      "LESSONS_HINT": "Recorded lessons with a note in this period",
+      "LESSONS": "Sessions analysed",
+      "LESSONS_HINT": "Recorded sessions with a note in this period",
       "TALK_RATIO": "You talking",
       "TALK_RATIO_HINT": "Share of speaking time that was yours. Lower usually means the student is doing more.",
-      "CHECKS": "Checks per lesson",
+      "CHECKS": "Checks per session",
       "CHECKS_HINT": "Times you had the student answer, solve or explain back",
       "MONOLOGUE": "Longest stretch",
       "MONOLOGUE_HINT": "Longest time you spoke without the student taking part",
@@ -2207,13 +2256,13 @@
       "TECHNIQUES": "Techniques to try this month",
       "HISTORY": "Previous reports",
       "EMPTY_TITLE": "No coaching report yet",
-      "EMPTY_TEXT": "Your report is written from your recorded lessons. It appears after your first few recorded lessons.",
-      "EMPTY_TEXT_PENDING_one": "You have {{count}} recorded lesson. Generate your first report now.",
-      "EMPTY_TEXT_PENDING_other": "You have {{count}} recorded lessons. Generate your first report now."
+      "EMPTY_TEXT": "Your report is written from your recorded sessions. It appears after your first few recorded sessions.",
+      "EMPTY_TEXT_PENDING_one": "You have {{count}} recorded session. Generate your first report now.",
+      "EMPTY_TEXT_PENDING_other": "You have {{count}} recorded sessions. Generate your first report now."
     },
     "SESSION": {
-      "PLAN_READY": "Lesson plan ready",
-      "NOTE_READY": "Lesson note",
+      "PLAN_READY": "Session plan ready",
+      "NOTE_READY": "Session note",
       "OPEN": "Open in Assistant",
       "RECORDING": "Recording being processed"
     }
@@ -2230,14 +2279,14 @@
     "SWITCHER": "Which child",
     "HOMEWORK_PARENT_HINT": "Only the student can hand in the homework. You can follow it here.",
     "CARD": {
-      "NEW_NOTE": "New lesson note",
-      "NEXT_LESSON": "Next lesson",
+      "NEW_NOTE": "New session note",
+      "NEXT_LESSON": "Next session",
       "NO_LESSON": "Nothing booked",
       "HOURS_LEFT": "Hours left",
       "HOURS_one": "{{count}} hour",
       "HOURS_other": "{{count}} hours",
       "HOMEWORK_DUE": "Homework due this week",
-      "LESSONS": "Lessons completed",
+      "LESSONS": "Sessions completed",
       "OPEN": "Open sessions",
       "OPEN_AS": "Open as {{name}}",
       "COMING_UP": "Coming up",
@@ -2246,7 +2295,17 @@
       "LIVE": "Live now",
       "LATEST_NOTE": "Latest note",
       "NO_NOTE": "None yet",
-      "HOURS_OF": "{{left}} of {{total}} hours left"
+      "HOURS_OF": "{{left}} of {{total}} hours left",
+      "WITH_HOURS": "Packages with hours left",
+      "LOW": "Low · Renew",
+      "MORE_LEFT_one": "+{{count}} more with hours left",
+      "MORE_LEFT_other": "+{{count}} more with hours left",
+      "USED_UP_one": "{{count}} used up",
+      "USED_UP_other": "{{count}} used up",
+      "SHOW_ALL": "Show all",
+      "SHOW_LESS": "Show less",
+      "NONE_LEFT": "No hours left on any package.",
+      "USED_UP_TAG": "Used up"
     },
     "TOP_UP": {
       "BUTTON": "Request more hours",
@@ -2259,10 +2318,10 @@
       "SENT": "Request sent. We will get back to you shortly."
     },
     "NOTES": {
-      "TITLE": "Lesson notes",
-      "SUBTITLE": "What each lesson covered, where your child struggled and what comes next.",
+      "TITLE": "Session notes",
+      "SUBTITLE": "What each session covered, where your child struggled and what comes next.",
       "ALL_CHILDREN": "All children",
-      "EMPTY": "No lesson notes yet. They appear after the first recorded lesson.",
+      "EMPTY": "No session notes yet. They appear after the first recorded session.",
       "COVERED": "Covered",
       "STRUGGLED": "Needs work",
       "NEXT": "Next"
@@ -2301,7 +2360,7 @@
       "LOGIN_SENT": "Login invitation sent to {{name}}.",
       "REMOVE_LOGIN": "Remove login",
       "LOGIN_REMOVED": "{{name}} now signs in through your account.",
-      "CONSENT_TEXT": "Lesson recording lets the tutor review the lesson and powers the lesson notes. Switch it on per course.",
+      "CONSENT_TEXT": "Session recording lets the tutor review the session and powers the session notes. Switch it on per course.",
       "CONSENT_FOR": "Recording consent for {{course}}",
       "CONSENTED": "Consented {{date}}",
       "NOT_CONSENTED": "Not recorded"
@@ -2311,24 +2370,44 @@
     "HERO": {
       "EYEBROW": "The {{name}} family",
       "WELCOME": "Welcome back, {{name}} 👋",
-      "NEXT": "{{child}}'s next lesson is {{subject}} with {{tutor}}, {{when}}.",
-      "NO_NEXT": "Nothing is booked yet. Ask for hours on a child's card and our team will schedule the lessons.",
+      "NEXT": "{{child}}'s next session is {{subject}} with {{tutor}}, {{when}}.",
+      "NO_NEXT": "Nothing is booked yet. Ask for hours on a child's card and our team will schedule the sessions.",
       "HOURS_one": "{{count}} hour left",
       "HOURS_other": "{{count}} hours left",
-      "LESSONS_WEEK_one": "{{count}} lesson this week",
-      "LESSONS_WEEK_other": "{{count}} lessons this week",
+      "LESSONS_WEEK_one": "{{count}} session this week",
+      "LESSONS_WEEK_other": "{{count}} sessions this week",
       "HOMEWORK_one": "{{count}} homework due",
-      "HOMEWORK_other": "{{count}} homework due"
+      "HOMEWORK_other": "{{count}} homework due",
+      "GREET_MORNING": "Good morning, {{name}}",
+      "GREET_AFTERNOON": "Good afternoon, {{name}}",
+      "GREET_EVENING": "Good evening, {{name}}",
+      "CHILDREN_one": "{{count}} child",
+      "CHILDREN_other": "{{count}} children",
+      "REQUEST": "Request sessions"
     },
     "STATS": {
       "HOURS": "Hours left",
-      "LESSONS_WEEK": "Lessons this week",
+      "LESSONS_WEEK": "Sessions this week",
       "HOMEWORK": "Homework due",
-      "NOTES": "New lesson notes"
+      "NOTES": "New session notes"
     },
     "UPCOMING": {
-      "TITLE": "Upcoming lessons",
-      "EMPTY": "Nothing booked yet."
+      "TITLE": "Upcoming sessions",
+      "EMPTY": "Nothing booked yet.",
+      "NONE": "No sessions coming up",
+      "NONE_TEXT": "Press Request sessions and our team books them."
+    },
+    "TILES": {
+      "HOURS_one": "left on {{count}} package",
+      "HOURS_other": "left on {{count}} packages",
+      "NONE": "None",
+      "COMING_UP": "sessions coming up",
+      "NEXT": "next: {{subject}} · {{child}}",
+      "HOMEWORK": "homework due this week",
+      "HOURS_UNIT": "{{count}} h"
+    },
+    "NOTES_CARD": {
+      "EMPTY": "Notes appear here after a recorded session. Recording is set per course in Family settings."
     }
   },
   "PAYMENTS": {
@@ -2354,7 +2433,7 @@
       "REDIRECT": "You pay by card on Nomod's secure page and come straight back here.",
       "NOT_RENEWABLE": "This package can't be renewed online yet.",
       "ASK_INSTEAD": "Request more hours instead",
-      "ASK_PARENT_SHORT": "Your parent renews this package.",
+      "ASK_PARENT_SHORT": "Ask your parent to renew it.",
       "UNAVAILABLE": "Online payments are unavailable right now. Please try again in a few minutes.",
       "BUTTON_LONG": "Renew this package",
       "SAME_AGAIN": "Same as last time",
@@ -2388,7 +2467,7 @@
       "LINE_NEW": "{{hours}}h {{course}} for {{student}}: new package with {{tutor}}, hours added.",
       "LINE_TOP_UP": "{{hours}}h {{course}} for {{student}}: added to the package with {{tutor}}.",
       "LINE_MATCH": "{{hours}}h {{course}} for {{student}}: we're finding a tutor who fits your times, within two working days.",
-      "NEXT_STEPS": "Our team books the first lessons from your preferred times, and the chat with the tutor opens in Messages.",
+      "NEXT_STEPS": "Our team books the first sessions from your preferred times, and the chat with the tutor opens in Messages.",
       "BACK_TO_BASKET": "Back to my basket",
       "BACK_TO_PACKAGE": "Back to my packages"
     },
@@ -2396,7 +2475,7 @@
       "created": "Starting",
       "pending": "Awaiting payment",
       "paid": "Paid",
-      "fulfilled": "Completed",
+      "fulfilled": "Paid",
       "needs_review": "Being checked",
       "failed": "Declined",
       "cancelled": "Cancelled",
@@ -2420,7 +2499,7 @@
     },
     "BANNER": {
       "LOW": "One of your packages is down to its last hours.",
-      "LOW_CHILD": "One of your packages is down to its last hours. Your parent can renew it.",
+      "LOW_CHILD": "One of your packages is down to its last hours. Ask your parent to renew it.",
       "RENEW": "Renew now"
     },
     "RENEW_ALL": {
@@ -2433,7 +2512,7 @@
       "SUBJECTS_other": "{{count}} subjects",
       "DUE": "Low on hours",
       "BOOKED": "{{count}}h booked ahead",
-      "LAST_LESSON": "Last lesson {{date}}",
+      "LAST_LESSON": "Last session {{date}}",
       "TODAYS_PRICE": "Today's price",
       "MORE_HOURS": "More hours",
       "KEEP": "Keep {{hours}}",
@@ -2457,7 +2536,7 @@
   "BUY": {
     "EYEBROW": "New course",
     "TITLE": "Buy a course",
-    "SUBTITLE": "Pick the course, tell us when lessons suit you, choose who teaches, and pay in one go.",
+    "SUBTITLE": "Pick the course, tell us when sessions suit you, choose who teaches, and pay in one go.",
     "ENTRY": "Buy a course",
     "ADD_COURSE": "Add a course",
     "FIRST_COURSE": "Buy the first course",
@@ -2504,16 +2583,16 @@
       "BUTTON": "Buy a package with {{tutor}}"
     },
     "WHEN": {
-      "TITLE": "When do lessons suit you?",
-      "TEXT": "We rank tutors by their free times in your week, and our team books the first lessons from these. Leave it empty if you don't mind.",
+      "TITLE": "When do sessions suit you?",
+      "TEXT": "We rank tutors by their free times in your week, and our team books the first sessions from these. Leave it empty if you don't mind.",
       "DAYS": "Days",
       "WINDOWS": "Time of day",
       "MORNING": "Morning",
       "AFTERNOON": "Afternoon",
       "EVENING": "Evening",
-      "LESSONS": "Lessons a week",
-      "LESSONS_COUNT_one": "{{count}} lesson a week",
-      "LESSONS_COUNT_other": "{{count}} lessons a week",
+      "LESSONS": "Sessions a week",
+      "LESSONS_COUNT_one": "{{count}} session a week",
+      "LESSONS_COUNT_other": "{{count}} sessions a week",
       "NOTE": "Anything else?",
       "NOTE_HINT": "Exams coming up, days to avoid, a tutor you liked…",
       "TIMEZONE": "Times are in your local timezone ({{tz}}).",
@@ -2540,7 +2619,7 @@
       "RENEW_THAT": "Renew that package",
       "CHANGE_TUTOR": "Ask us to change tutor",
       "MATCH_TITLE": "Let Nafham choose",
-      "MATCH_TEXT": "Pay now at our standard price. We match {{name}} with a tutor who fits your weekly times, then book the first lessons.",
+      "MATCH_TEXT": "Pay now at our standard price. We match {{name}} with a tutor who fits your weekly times, then book the first sessions.",
       "MATCH_SLA": "You hear from us within two working days. If you'd rather pick yourself later, you can.",
       "MATCH_NEEDS_TIMES": "Tell us your weekly times first, so we can match a tutor who is free then.",
       "MATCH_ADD_TIMES": "Add my times",
@@ -2553,8 +2632,8 @@
       "TITLE_MATCH": "How many hours with the matched tutor?",
       "WITH": "With {{name}}. Every size is priced today; the price is locked when you pay.",
       "CHOOSE": "Choose a package size",
-      "WEEKS_one": "About {{count}} week at {{lessons}} lessons a week.",
-      "WEEKS_other": "About {{count}} weeks at {{lessons}} lessons a week."
+      "WEEKS_one": "About {{count}} week at {{sessions}} sessions a week.",
+      "WEEKS_other": "About {{count}} weeks at {{sessions}} sessions a week."
     },
     "BASKET": {
       "TITLE": "Your basket",
@@ -2579,7 +2658,7 @@
       "PENDING_OPEN": "A payment for one of these courses is already open. Continue it, or cancel it from your receipts and try again.",
       "RESUME": "Continue that payment",
       "CANCEL_OPEN": "My receipts",
-      "REDIRECT": "You pay by card on Nomod's secure page and come straight back. Hours land the moment the card clears; our team then books the first lessons from your times.",
+      "REDIRECT": "You pay by card on Nomod's secure page and come straight back. Hours land the moment the card clears; our team then books the first sessions from your times.",
       "COUNTRY_NEEDED": "Choose your country to continue.",
       "TERMS_NEEDED": "Please accept the terms of service to continue."
     }
@@ -2654,7 +2733,7 @@
       "EMERGENCY": "An emergency",
       "CONNECTIVITY": "A connection problem",
       "OTHER": "Another reason",
-      "FREEZE": "Lessons paused",
+      "FREEZE": "Sessions paused",
       "SCHEDULE_CHANGE": "New weekly times",
       "TUTOR_CHANGE": "Change of instructor"
     },
@@ -2669,24 +2748,24 @@
       "TEXT_TRIAL": "The trial is cancelled and the instructor is told right away.",
       "WHY": "Why?",
       "NOTE": "A word for the other side (optional)",
-      "KEEP": "Keep the lesson",
-      "CONFIRM": "Cancel the lesson",
-      "ERROR": "We couldn't cancel this lesson. Please try again."
+      "KEEP": "Keep the session",
+      "CONFIRM": "Cancel the session",
+      "ERROR": "We couldn't cancel this session. Please try again."
     },
     "POLICY": {
-      "FAMILY_CHARGE_CANCEL": "This is {{notice}} hours before the lesson. Under our cancellation policy, cancelling now takes {{percent}}% of the lesson ({{hours}} h) from the package.",
-      "FAMILY_CHARGE_MOVE": "This is {{notice}} hours before the lesson. Under our cancellation policy, moving it now takes {{percent}}% of the lesson ({{hours}} h) from the package, once the new time is accepted.",
-      "FAMILY_FREE_CANCEL": "More than 12 hours before the lesson: cancelling is free.",
-      "FAMILY_FREE_MOVE": "More than 12 hours before the lesson: moving it is free.",
-      "FAMILY_RULES": "Free 12 hours or more before the lesson · half the lesson from 4 to 12 hours · the whole lesson under 4 hours.",
-      "TUTOR_COMPENSATION_CANCEL": "This is {{notice}} hours before the lesson. Under our cancellation policy, cancelling now gives the student {{hours}} h free.",
-      "TUTOR_COMPENSATION_MOVE": "This is {{notice}} hours before the lesson. Under our cancellation policy, moving it now gives the student {{hours}} h free, once the new time is accepted.",
-      "TUTOR_RULES": "Changes 12 hours or more ahead: the lesson is rebooked · 4 to 12 hours: 30 free minutes for the student · under 4 hours: a free hour. A lesson you cancel is not paid."
+      "FAMILY_CHARGE_CANCEL": "This is {{notice}} hours before the session. Under our cancellation policy, cancelling now takes {{percent}}% of the session ({{hours}} h) from the package.",
+      "FAMILY_CHARGE_MOVE": "This is {{notice}} hours before the session. Under our cancellation policy, moving it now takes {{percent}}% of the session ({{hours}} h) from the package, once the new time is accepted.",
+      "FAMILY_FREE_CANCEL": "More than 12 hours before the session: cancelling is free.",
+      "FAMILY_FREE_MOVE": "More than 12 hours before the session: moving it is free.",
+      "FAMILY_RULES": "Free 12 hours or more before the session · half the session from 4 to 12 hours · the whole session under 4 hours.",
+      "TUTOR_COMPENSATION_CANCEL": "This is {{notice}} hours before the session. Under our cancellation policy, cancelling now gives the student {{hours}} h free.",
+      "TUTOR_COMPENSATION_MOVE": "This is {{notice}} hours before the session. Under our cancellation policy, moving it now gives the student {{hours}} h free, once the new time is accepted.",
+      "TUTOR_RULES": "Changes 12 hours or more ahead: the session is rebooked · 4 to 12 hours: 30 free minutes for the student · under 4 hours: a free hour. A session you cancel is not paid."
     },
     "MOVE": {
       "BUTTON": "Move",
       "TITLE": "Propose new times",
-      "TEXT": "The lesson is on {{when}}. Pick up to {{count}} times the instructor is open; the lesson stays where it is until one is accepted.",
+      "TEXT": "The session is on {{when}}. Pick up to {{count}} times the instructor is open; the session stays where it is until one is accepted.",
       "DAY": "Day",
       "TIME": "Time",
       "HELD_FOR_YOU": "Kept for you",
@@ -2724,7 +2803,7 @@
     },
     "REQUESTS": {
       "TITLE": "Requests",
-      "SUBTITLE": "Proposals to move a lesson or change weekly times. Times are in your timezone ({{tz}}).",
+      "SUBTITLE": "Proposals to move a session or change weekly times. Times are in your timezone ({{tz}}).",
       "TABS": {
         "INBOX": "Needs your answer",
         "SENT": "Sent",
@@ -2733,11 +2812,11 @@
       "ERROR_LOADING": "We couldn't load the requests. Please try again.",
       "EMPTY": {
         "INBOX": "Nothing to answer right now. We message you in the chat and by email when the other side proposes a change.",
-        "SENT": "You have no open proposals. Move a lesson from My sessions, or change the weekly times from My packages.",
+        "SENT": "You have no open proposals. Move a session from My sessions, or change the weekly times from My packages.",
         "HISTORY": "Answered proposals will show here."
       },
       "KIND": {
-        "MOVE": "Move a lesson",
+        "MOVE": "Move a session",
         "WEEKLY": "Weekly times"
       },
       "YOU_ASKED": "You asked {{name}}",
@@ -2748,19 +2827,19 @@
       "WAITING_COUNT_other": "{{count}} requests waiting"
     },
     "FREEZE": {
-      "BUTTON": "Pause lessons",
-      "TITLE": "Pause the lessons",
-      "TEXT": "{{course}} with {{tutor}}: pause for {{min}} to {{max}} days. The booked lessons in between are cancelled and the hours stay on the package; the usual times are kept and booked again when you're back.",
+      "BUTTON": "Pause sessions",
+      "TITLE": "Pause the sessions",
+      "TEXT": "{{course}} with {{tutor}}: pause for {{min}} to {{max}} days. The booked sessions in between are cancelled and the hours stay on the package; the usual times are kept and booked again when you're back.",
       "FROM": "First day",
       "TO": "Last day",
-      "LENGTH_one": "{{count}} day · lessons resume on {{resume}}",
-      "LENGTH_other": "{{count}} days · lessons resume on {{resume}}",
+      "LENGTH_one": "{{count}} day · sessions resume on {{resume}}",
+      "LENGTH_other": "{{count}} days · sessions resume on {{resume}}",
       "LENGTH_WRONG": "A pause lasts between {{min}} and {{max}} days",
-      "CANCELS_zero": "No booked lesson falls in these days.",
-      "CANCELS_one": "{{count}} booked lesson is cancelled:",
-      "CANCELS_other": "{{count}} booked lessons are cancelled:",
+      "CANCELS_zero": "No booked session falls in these days.",
+      "CANCELS_one": "{{count}} booked session is cancelled:",
+      "CANCELS_other": "{{count}} booked sessions are cancelled:",
       "KEPT": "The usual times ({{times}}) are kept and booked again after the pause.",
-      "NO_PATTERN": "There is no regular weekly time yet; Nafham Support will book the lessons after the pause.",
+      "NO_PATTERN": "There is no regular weekly time yet; Nafham Support will book the sessions after the pause.",
       "WHY": "Why?",
       "REASONS": {
         "TRAVEL": "Travelling",
@@ -2770,11 +2849,11 @@
         "OTHER": "Another reason"
       },
       "NOTE": "A word for the instructor (optional)",
-      "SUBMIT": "Pause the lessons",
+      "SUBMIT": "Pause the sessions",
       "ERROR": "We couldn't save that. Please try again.",
       "STRIP": {
-        "SCHEDULED": "Lessons pause from {{from}} to {{to}}; back on {{resume}}",
-        "ACTIVE": "Lessons paused until {{to}}; back on {{resume}}"
+        "SCHEDULED": "Sessions pause from {{from}} to {{to}}; back on {{resume}}",
+        "ACTIVE": "Sessions paused until {{to}}; back on {{resume}}"
       },
       "END_EARLY": "Come back early",
       "CALL_OFF": "Call it off"
@@ -2782,8 +2861,8 @@
     "WEEKLY": {
       "BUTTON": "Change weekly times",
       "TITLE": "New weekly times",
-      "TEXT": "{{course}}: pick the weekly times the instructor is open for every week. Once the other side approves, the booked lessons move to them. Times in your timezone ({{tz}}).",
-      "LENGTH": "Lesson length",
+      "TEXT": "{{course}}: pick the weekly times the instructor is open for every week. Once the other side approves, the booked sessions move to them. Times in your timezone ({{tz}}).",
+      "LENGTH": "Session length",
       "TIMES": "Weekly times · picked {{count}} of {{max}}",
       "ERROR_LOADING": "We couldn't load the instructor's weekly times. Please try again.",
       "NO_TIMES": "The instructor has no weekly time open for this length in the coming weeks. Ask in the chat.",
@@ -2797,12 +2876,12 @@
       "ERROR_ANSWER": "We couldn't save your answer. Please try again.",
       "INSTEAD_OF": "instead of {{times}}",
       "EFFECTIVE": "From {{date}}",
-      "BOOKED_one": "{{count}} lesson booked on the new times.",
-      "BOOKED_other": "{{count}} lessons booked on the new times.",
+      "BOOKED_one": "{{count}} session booked on the new times.",
+      "BOOKED_other": "{{count}} sessions booked on the new times.",
       "CONFLICTS_one": "{{count}} week could not be booked; Nafham Support is on it.",
       "CONFLICTS_other": "{{count}} weeks could not be booked; Nafham Support is on it.",
       "APPROVE": "Approve",
-      "APPROVE_HINT": "Approving moves the booked lessons to the new times.",
+      "APPROVE_HINT": "Approving moves the booked sessions to the new times.",
       "STRIP": "New weekly times proposed: {{times}}, from {{date}}"
     },
     "CHAT": {
@@ -2819,16 +2898,16 @@
       "OPEN_CHAT": "Open the chat",
       "REASON_OPTIONAL": "Reason (optional)",
       "QUICK": {
-        "CANT_MAKE": "Can't make a lesson",
-        "CANCEL": "Cancel the lesson",
+        "CANT_MAKE": "Can't make a session",
+        "CANCEL": "Cancel the session",
         "MOVE": "Propose another time",
-        "PAUSE": "Pause lessons",
+        "PAUSE": "Pause sessions",
         "WEEKLY": "Change weekly times",
         "HANDOFF": "Talk to a person",
-        "PICK_LESSON": "Which lesson?"
+        "PICK_LESSON": "Which session?"
       },
       "PROMPT": {
-        "WHICH_LESSON": "Which lesson?",
+        "WHICH_LESSON": "Which session?",
         "WHAT": "What would you like to do?",
         "MOVE_IT": "Move it",
         "CANCEL_IT": "Cancel it",
@@ -2838,15 +2917,15 @@
         "PICKED": "Picked {{count}} of {{max}}:",
         "NOTE": "A word for the other side (optional)",
         "SEND_MOVE": "Propose these times",
-        "SEND_CANCEL": "Cancel the lesson",
+        "SEND_CANCEL": "Cancel the session",
         "START": "From which day?",
         "FROM_DAY": "From {{day}}",
         "ANOTHER_DAY": "Another day",
         "LENGTH": "For how long?",
         "WEEKS_one": "{{count}} week",
         "WEEKS_other": "{{count}} weeks",
-        "SEND_PAUSE": "Pause the lessons",
-        "LESSON_LENGTH": "Lesson length",
+        "SEND_PAUSE": "Pause the sessions",
+        "LESSON_LENGTH": "Session length",
         "PICK_WEEKLY": "Pick up to {{max}} weekly times",
         "NEXT": "Next",
         "FROM_WHEN": "From when?",
@@ -2861,6 +2940,12 @@
       }
     }
   },
+  "STAFF_VIEW": {
+    "TITLE": "Staff view: you are signed in as {{name}}.",
+    "TEXT": "Anything you do here is recorded as theirs.",
+    "BY": "(opened by {{email}})",
+    "LEAVE": "Sign out"
+  },
   "AUTH_TOAST": {
     "SIGNED_IN": "Signed in successfully",
     "SIGNED_UP": "Account created successfully",
@@ -2869,11 +2954,11 @@
     "SIGN_UP_FAILED": "Sign up failed"
   },
   "MEETING_LINK": {
-    "NO_ROOM": "Zoom couldn't make a room for this lesson. Add your own meeting link here (Google Meet, Zoom or Teams): the Join button then takes you and your student there.",
+    "NO_ROOM": "Zoom couldn't make a room for this session. Add your own meeting link here (Google Meet, Zoom or Teams): the Join button then takes you and your student there.",
     "ADD": "Add meeting link",
     "REPLACE": "Replace meeting link",
     "LABEL": "Meeting link",
-    "HELP": "Google Meet, Zoom or Microsoft Teams link. Your student is told in the lesson chat.",
+    "HELP": "Google Meet, Zoom or Microsoft Teams link. Your student is told in the session chat.",
     "SAVE": "Save link",
     "SAVE_REPLACE": "Replace link",
     "SAVED": "Saved. Both Join buttons now lead to this link and your student was told in the chat.",
@@ -2881,5 +2966,51 @@
     "REPORT": "The link isn't working",
     "REPORTED": "Thanks, your tutor was told the link isn't working. Press Join again in a few minutes; Nafham Support steps in if it isn't fixed.",
     "REPORT_ERROR": "Couldn't send that, please message your tutor in the chat"
+  },
+  "ACTIVATE": {
+    "PANEL_TITLE": "Welcome to Nafham",
+    "PANEL_SUBTITLE": "Your account was set up for you. Confirm your number to start.",
+    "TITLE": "Hi {{name}}, activate your account",
+    "TITLE_PLAIN": "Activate your account",
+    "SUBTITLE": "We will send a 6-digit code on WhatsApp to {{phone}}.",
+    "LOADING": "Loading…",
+    "BAD_LINK": "This activation link is not valid or has expired. Ask Nafham to send a new one.",
+    "ALREADY_ACTIVE": "This account is active already. Sign in with your email and password.",
+    "GO_SIGN_IN": "Go to sign in",
+    "ACTIVATED_TITLE": "Your account is active",
+    "ACTIVATED": "We could not sign you in automatically. Sign in with your email and the password you just chose.",
+    "ACTIVATED_EMAIL": "Your email: {{email}}",
+    "SEND_CODE": "Send me the code on WhatsApp",
+    "SENDING": "Sending…",
+    "CODE_SENT": "We sent a code on WhatsApp to {{phone}}. It works for {{minutes}} minutes.",
+    "CODE_SENT_EARLIER": "We sent a code on WhatsApp to {{phone}}. Type it here, or ask for a new one.",
+    "CODE": "Code from WhatsApp",
+    "PASSWORD": "Choose a password",
+    "CONFIRM": "Type the password again",
+    "ACTIVATE": "Activate my account",
+    "ACTIVATING": "Activating…",
+    "NEW_CODE": "Send a new code",
+    "NEW_CODE_IN": "Send a new code in {{seconds}} s",
+    "CODE_FORMAT": "Type the 6 digits from WhatsApp.",
+    "PASSWORD_SHORT": "The password needs at least 6 characters.",
+    "PASSWORD_MISMATCH": "The two passwords are not the same.",
+    "TRY_AGAIN": "Something went wrong. Please try again.",
+    "LOAD_FAILED": "We could not load this page. Check your connection and try again.",
+    "RETRY": "Try again",
+    "ERRORS": {
+      "ACTIVE": "This account is active already. Sign in with your email and password.",
+      "NO_CODE_NEEDED": "This account needs no code. Choose your password.",
+      "TOO_SOON": "A code was just sent. Wait a minute before asking for another.",
+      "TOO_MANY": "Too many codes in an hour. Try again later.",
+      "UNDELIVERED": "We could not send the code on WhatsApp. Contact Nafham.",
+      "NO_CODE": "Ask for a code first.",
+      "EXPIRED": "The code has expired. Ask for a new one.",
+      "LOCKED": "Too many wrong codes. Ask for a new one.",
+      "WRONG_CODE": "That code is not right. Check it and try again.",
+      "INVALID": "Choose a password of at least 6 characters and type the same one twice.",
+      "NETWORK": "We could not reach Nafham. Check your connection and try again."
+    },
+    "SUBTITLE_EMAIL": "Choose a password for {{email}}, then sign in to see your lessons.",
+    "SET_PASSWORD": "Set my password"
   }
 }

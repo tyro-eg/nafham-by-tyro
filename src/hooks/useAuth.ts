@@ -5,9 +5,10 @@ import { selectCurrentUser } from '../redux/user/user.selectors';
 import { snackActions } from '../assets/utils/toaster';
 import { showSpinner, hideSpinner } from '../assets/utils/utils';
 import { useNavigate } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from '../redux/store';
+import { persistor, useAppDispatch, useAppSelector } from '../redux/store';
 import { setCurrentUser, clearCurrentUser } from '../redux/user/user.slice';
 import { CurrentUser, ApiError, AuthHeaders } from '../assets/types';
+import { clearStaffView, setStaffView } from '../lib/staff-view';
 import { setActiveChildId } from '../lib/family-child';
 import { markFromApp, safeNextPath } from '../lib/from-app';
 import { AUTH_KEYS, clearAuthStorage, saveTokens } from '../lib/auth-storage';
@@ -78,6 +79,8 @@ export function useSignIn() {
 
   return useMutation({
     mutationFn: async (payload: SignInPayload) => {
+      // Someone signing in themselves: no staff banner
+      clearStaffView();
       showSpinner();
       try {
         const {
@@ -129,6 +132,8 @@ export function useSignUp() {
 
   return useMutation({
     mutationFn: async (payload: SignUpPayload) => {
+      // Someone signing in themselves: no staff banner
+      clearStaffView();
       showSpinner();
       try {
         const {
@@ -253,11 +258,16 @@ export function useImpersonate() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (payload: { token: string }) => {
+    mutationFn: async (payload: {
+      token: string;
+      impersonatorEmail?: string | null;
+    }) => {
       showSpinner();
       try {
-        // Clear existing user data
-        localStorage.clear();
+        // Clear existing user data (the language of this browser stays)
+        clearLocalSession();
+        // The staff banner stays up while staff act as this person
+        setStaffView(payload.impersonatorEmail ?? null);
         dispatch(clearCurrentUser());
         queryClient.clear();
 
@@ -276,15 +286,22 @@ export function useImpersonate() {
         return userData;
       } catch (error) {
         // Clear token on error
-        localStorage.clear();
+        clearLocalSession();
+        clearStaffView();
         throw error;
       } finally {
         hideSpinner();
       }
     },
-    onSuccess: (userData) => {
+    onSuccess: async (userData) => {
       dispatch(setCurrentUser(userData));
-      snackActions.success('Impersonation successful');
+      snackActions.success(
+        `Signed in as ${[userData.first_name, userData.last_name].filter(Boolean).join(' ')}`,
+      );
+      // Save the signed-in user to storage before reloading (16 Nov 2026):
+      // the reload came too early, the saved user was still empty, and the
+      // site opened signed out
+      await persistor.flush();
       // A full load, so nothing of the admin's previous state survives and
       // the route that started the exchange is gone for good
       window.location.replace('/dashboard');
@@ -314,7 +331,9 @@ export function useHandoff() {
   return useMutation({
     mutationFn: async (payload: { code: string }) => {
       // Whoever was signed in on this browser before is not who the app sent
+      // (nor is a staff view left behind: the app's own user is arriving)
       clearAuthStorage();
+      clearStaffView();
       setActiveChildId(null);
       dispatch(clearCurrentUser());
       queryClient.clear();

@@ -174,58 +174,6 @@ interface ResetPasswordModalProps {
 
 ### Booking Modals
 
-#### `/mysession-calendar`
-
-**Purpose**: Schedule or reschedule private sessions.
-
-**Features**:
-
-- FullCalendar integration
-- Select multiple consecutive time slots
-- Group slots into session chunks
-- Display unscheduled hours
-- Warning for reserved slots
-- Color-coded slot status (available, reserved, busy)
-- Schedule or reschedule modes
-- Integration with TanStack Query (`useBookPrivateSession` hook)
-
-**Props**:
-
-```typescript
-interface MySessionCalendarProps {
-  rescheduleFlag?: boolean;
-  handleClose: () => void;
-  unscheduledHours: number;
-}
-```
-
-**Usage**:
-
-```tsx
-<Dialog open={isCalendarOpen} onClose={handleClose}>
-  <MySessionCalendar
-    handleClose={handleClose}
-    unscheduledHours={10}
-    rescheduleFlag={false}
-  />
-</Dialog>
-```
-
-**Dependencies**:
-
-- `useBookPrivateSession` hook from `@/hooks/useSessions`
-- `useInstructors` hook from `@/hooks/useInstructors`
-- `parseTimeSlotsIntoCalendarEvents` utility
-- FullCalendar library
-
-**Key Logic**:
-
-- `separateEvents()` - Groups consecutive slots by level
-- `scheduleNow()` - Books grouped slots as private sessions
-- `rescheduleNow()` - TODO: Implement rescheduling logic
-
----
-
 ### Success/Confirmation Modals
 
 #### `/trial-session-success-modal`
@@ -283,42 +231,6 @@ interface CompleteRegisterSuccessModalProps {
   <CompleteRegisterSuccessModal onClose={handleClose} />
 </Dialog>
 ```
-
----
-
-#### `/cancel-session-modal`
-
-**Purpose**: Confirm cancellation or ending of a session.
-
-**Features**:
-
-- Warning icon
-- Confirmation message
-- Yes/No buttons
-- Integration with TanStack Query (`useCancelSession`, `useEndSession` hooks)
-- Supports both "cancel" and "end" actions
-
-**Props**:
-
-```typescript
-interface CancelSessionModalProps {
-  type: 'cancel' | 'end';
-  sessionId: number;
-  handleClose: () => void;
-}
-```
-
-**Usage**:
-
-```tsx
-<Dialog open={isCancelOpen} onClose={handleClose}>
-  <CancelSessionModal type="cancel" sessionId={123} handleClose={handleClose} />
-</Dialog>
-```
-
-**Dependencies**:
-
-- `useCancelSession` and `useEndSession` hooks from `@/hooks/useSessions`
 
 ---
 
@@ -508,9 +420,6 @@ interface ProfileModalProps {
 
 ```
 src/modals/
-├── cancel-session-modal/
-│   ├── cancel-session-modal.component.tsx
-│   └── cancel-session-modal.styles.scss
 ├── complete-register-success-modal/
 │   ├── complete-register-success-modal.component.tsx
 │   └── complete-register-success-modal.styles.scss
@@ -524,9 +433,6 @@ src/modals/
 ├── login-modal/
 │   ├── login-modal.component.tsx
 │   └── login-modal.styles.scss
-├── mysession-calendar/
-│   ├── mysession-calendar.component.tsx
-│   └── mysession-calendar.styles.scss
 ├── profile-modal/
 │   ├── profile-modal.component.tsx
 │   └── profile-modal.styles.scss
@@ -841,7 +747,6 @@ const rtlClass = useRtlClass();
 
 1. **Email Confirmation Modal**: Implement API call for email resend
 2. **Reset Password Modal**: Implement password reset API call
-3. **Reschedule Logic**: Complete `rescheduleNow()` in `mysession-calendar`
 4. **File Naming**: Consider standardizing all files to `.component.tsx`
 5. **Type Safety**: Replace remaining `any` types with proper interfaces
 6. **Commented Code**: Remove commented social login buttons in `register-modal`

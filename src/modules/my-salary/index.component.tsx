@@ -15,7 +15,12 @@ import {
 import { useMySalary } from '../../hooks/useMySalary';
 import { useRtlClass } from '../../assets/utils/utils';
 import { formatHours } from '../dashboard/dashboard.utils';
-import { monthKey, SALARY_CURRENCY, toSalaryReport } from './my-salary.utils';
+import {
+  lateCancelChip,
+  monthKey,
+  SALARY_CURRENCY,
+  toSalaryReport,
+} from './my-salary.utils';
 
 import './my-salary.styles.scss';
 
@@ -282,6 +287,14 @@ const MySalary: FC = () => {
               {t('MY_SALARY.UNPRICED', { count: report.unpricedSessions })}
             </p>
           )}
+          {report.rateLooksWrongSessions > 0 && (
+            <p className="sal-warning">
+              <InfoOutlined aria-hidden="true" />
+              {t('MY_SALARY.RATE_LOOKS_WRONG', {
+                count: report.rateLooksWrongSessions,
+              })}
+            </p>
+          )}
         </section>
 
         {/* ---------- Session details ---------- */}
@@ -296,6 +309,8 @@ const MySalary: FC = () => {
             <ul className="sal-lines">
               {report.lines.map((line) => {
                 const name = line.student_name || '';
+                // Paid although cancelled: the family cancelled late
+                const lateCancel = lateCancelChip(line);
                 const initials = name
                   .split(' ')
                   .filter(Boolean)
@@ -317,6 +332,15 @@ const MySalary: FC = () => {
                         {line.status === 'missed' && (
                           <span className="sal-chip sal-chip--missed">
                             {t('MY_SALARY.STUDENT_MISSED')}
+                          </span>
+                        )}
+                        {lateCancel && (
+                          <span className="sal-chip sal-chip--missed">
+                            {lateCancel.hours === null
+                              ? t(lateCancel.key)
+                              : t(lateCancel.key, {
+                                  hours: formatHours(lateCancel.hours),
+                                })}
                           </span>
                         )}
                       </span>

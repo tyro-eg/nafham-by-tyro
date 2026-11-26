@@ -75,3 +75,27 @@ export function useInfinitePackages(pageSize: number = 10) {
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
 }
+
+/**
+ * Every package of the viewer, all pages (100 a page is the server's most).
+ * Same shape as `usePackages`.
+ */
+export const useAllPackages = (enabled = true) => {
+  return useQuery({
+    queryKey: [...queryKeys.packages.all, 'all-pages'] as const,
+    enabled,
+    queryFn: async () => {
+      const rows: Package[] = [];
+      for (let page = 1; page <= 50; page += 1) {
+        const response = await get('/packages', {
+          params: { per_page: 100, page },
+        });
+        rows.push(...((response.data as PackagesResponse).data ?? []));
+        const totalPages = Number(response.headers?.['total-pages']) || 1;
+        if (page >= totalPages) break;
+      }
+      return { data: rows } as PackagesResponse;
+    },
+    staleTime: 5 * 60 * 1000,
+  });
+};

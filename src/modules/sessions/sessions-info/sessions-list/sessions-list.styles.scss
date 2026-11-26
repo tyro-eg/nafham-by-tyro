@@ -113,8 +113,8 @@ $tl-dot-phone: 2.6rem;
     isolation: isolate;
     display: grid;
     grid-template-columns: $tl-time $tl-dot 1.8rem minmax(0, 1fr) auto 1.8rem;
-    // badges, subject, person, hint, an open move proposal
-    grid-template-rows: 1.4rem auto auto auto auto auto 1.4rem;
+    // badges, subject, person, hint, an open move proposal, the meeting link
+    grid-template-rows: 1.4rem auto auto auto auto auto auto 1.4rem;
     align-items: center;
     gap: 0;
     padding: 0;
@@ -172,7 +172,7 @@ $tl-dot-phone: 2.6rem;
           0,
           1fr
         ) 1.4rem;
-      grid-template-rows: 1.2rem auto auto auto auto auto auto 1.2rem;
+      grid-template-rows: 1.2rem auto auto auto auto auto auto auto 1.2rem;
     }
   }
 
@@ -422,6 +422,19 @@ $tl-dot-phone: 2.6rem;
   .sessions-card__proposal {
     grid-column: 4 / 6;
     grid-row: 6;
+    margin: 1rem 0 0;
+
+    @include respond(phone) {
+      grid-column: 4;
+    }
+  }
+
+  // The tutor's own meeting link, or the student's "the link isn't working",
+  // under everything, full width of the panel (it had no place in the grid
+  // and was squeezed into the time column)
+  .sessions-card__meeting-link {
+    grid-column: 4 / 6;
+    grid-row: 7;
     margin: 1rem 0 0;
 
     @include respond(phone) {

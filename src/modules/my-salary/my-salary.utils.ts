@@ -39,6 +39,13 @@ export interface MySalaryLine {
   amount: number;
   /** False for sessions not paid (yet): missed but unconfirmed, or not closed */
   paid: boolean;
+  /** A session the family cancelled late: the share paid (0.5 or 1) */
+  tutor_paid_fraction?: number;
+  /**
+   * How many hours before the start the family cancelled: null when no
+   * cancel time is on record, negative when it was cancelled after the start
+   */
+  cancel_notice_hours?: number | null;
   flags: string[];
 }
 
@@ -52,6 +59,8 @@ export interface MySalaryResponse {
     hours: number;
     amount: number;
     unpriced: number;
+    /** A rate above any tutor's (imported placeholder): not paid until fixed */
+    rate_looks_wrong?: number;
   };
   groups: {
     grade_subject_id: number;
@@ -82,7 +91,13 @@ export interface SalaryReport {
   hours: number;
   sessions: number;
   amount: number;
+  /** Paid sessions with no hourly rate yet (they add nothing to the total) */
   unpricedSessions: number;
+  /**
+   * Paid sessions whose rate is above any tutor's (an imported placeholder):
+   * they have a rate, a wrong one, and add nothing until it is corrected
+   */
+  rateLooksWrongSessions: number;
   upcomingAmount: number;
   upcomingSessions: number;
   /** Paid hours that have a rate, for the average */
@@ -102,6 +117,7 @@ export const EMPTY_REPORT: SalaryReport = {
   sessions: 0,
   amount: 0,
   unpricedSessions: 0,
+  rateLooksWrongSessions: 0,
   upcomingAmount: 0,
   upcomingSessions: 0,
   pricedHours: 0,
@@ -130,10 +146,42 @@ export const toSalaryReport = (data?: MySalaryResponse): SalaryReport => {
     sessions: data.totals.sessions,
     amount: data.totals.amount,
     unpricedSessions: data.totals.unpriced,
+    rateLooksWrongSessions: data.totals.rate_looks_wrong ?? 0,
     upcomingAmount: data.upcoming.amount,
     upcomingSessions: data.upcoming.sessions,
     pricedHours: lines
       .filter((line) => line.rate !== null)
       .reduce((acc, line) => acc + line.hours, 0),
+  };
+};
+
+/**
+ * The notice of a late cancel as the chip can say it ("cancelled 3 h
+ * before"), or null when there is nothing sensible to say: no cancel time
+ * on record, or cancelled at or after the start.
+ */
+export const lateCancelNotice = (hours?: number | null): number | null =>
+  typeof hours === 'number' && Number.isFinite(hours) && hours > 0
+    ? hours
+    : null;
+
+/**
+ * The chip on a session paid although cancelled (the family cancelled
+ * late): which sentence, and the hours it names when they are known.
+ * Null for every other session.
+ */
+export const lateCancelChip = (
+  line: Pick<
+    MySalaryLine,
+    'status' | 'tutor_paid_fraction' | 'cancel_notice_hours'
+  >,
+): { key: string; hours: number | null } | null => {
+  const share = line.tutor_paid_fraction ?? 0;
+  if (line.status !== 'cancelled' || share <= 0) return null;
+  const hours = lateCancelNotice(line.cancel_notice_hours);
+  const paid = share < 1 ? 'HALF' : 'FULL';
+  return {
+    key: `MY_SALARY.LATE_CANCEL_${paid}${hours === null ? '_PLAIN' : ''}`,
+    hours,
   };
 };

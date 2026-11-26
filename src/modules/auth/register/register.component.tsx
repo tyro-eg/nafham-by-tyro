@@ -1,15 +1,12 @@
-import { FC, useEffect, useMemo, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import {
   Button,
+  IconButton,
+  InputAdornment,
   InputLabel,
   TextField,
-  MenuItem,
-  Select,
-  Divider,
-  ToggleButton,
-  ToggleButtonGroup,
 } from '@mui/material';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -18,56 +15,66 @@ import 'react-phone-input-2/lib/material.css';
 
 import { useSignUp } from '../../../hooks/useAuth';
 import {
-  registerSchema,
-  type RegisterFormData,
+  quickRegisterSchema,
+  type QuickRegisterFormData,
 } from '../../../schemas/authSchemas';
 import { useRtlClass } from '../../../assets/utils/utils';
-import { peekReturnTo } from '../../../lib/return-to';
+import { headedForTrial, peekReturnTo } from '../../../lib/return-to';
 import { trackFunnel } from '../../../lib/funnel';
+import { signUpBody } from './register.utils';
 import {
-  getCountries,
-  getNationalities,
-  PREFERRED_COUNTRIES,
-} from '../../../assets/utils/countries';
-import { FormatQuote, Star } from '@mui/icons-material';
+  CardGiftcardRounded,
+  CheckCircleRounded,
+  FamilyRestroomRounded,
+  PeopleAltRounded,
+  SchoolRounded,
+  Visibility,
+  VisibilityOff,
+} from '@mui/icons-material';
 import logo from '../../../assets/images/logo.png';
-import tutor from '../../../assets/images/newLanding/instructor1-cutout.webp';
+import LanguageSelector from '../../../component/i18next/LanguageSelector';
 
 import '../signin/signin.styles.scss';
 
 import './register.styles.scss';
 
+/**
+ * Sign-up, kept to what is needed to start (26 Nov 2026): a name, a phone,
+ * an email and a password, and for a parent their child's first name. The
+ * country comes from the phone's country; the password is typed once, with
+ * a button to see it; more children and the rest of the profile come later.
+ */
 const Register: FC = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const signUpMutation = useSignUp();
   const rtlClass = useRtlClass();
 
-  const countries = useMemo(() => getCountries(), []);
-  const nationalities = useMemo(() => getNationalities(), []);
-  // Who is signing up: a student with their own account, or a parent
-  // who holds the account for their children
-  const [role, setRole] = useState<'Student' | 'Parent'>('Student');
-  const [child, setChild] = useState({ first_name: '', last_name: '' });
-  const childMissing =
-    role === 'Parent' && (!child.first_name.trim() || !child.last_name.trim());
+  // Who is signing up: a parent who holds the account for their children
+  // (most people, so it comes first), or a student with their own account
+  const [role, setRole] = useState<'Student' | 'Parent'>('Parent');
+  // Sent here from "Book a free trial": say so, and what comes next
+  const [forTrial] = useState(() => headedForTrial());
+  const [childName, setChildName] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  // Errors on fields outside the form library show once they tried to send
+  const [tried, setTried] = useState(false);
+  const childMissing = role === 'Parent' && !childName.trim();
 
   const {
     control,
     handleSubmit,
     setValue,
     formState: { errors, isSubmitting },
-  } = useForm<RegisterFormData>({
-    resolver: zodResolver(registerSchema),
+  } = useForm<QuickRegisterFormData>({
+    resolver: zodResolver(quickRegisterSchema),
     defaultValues: {
       first_name: '',
       last_name: '',
       email: '',
       password: '',
-      password_confirmation: '',
       phone_number: '',
       country_code: 'AE',
-      nationality: 'AE',
     },
   });
 
@@ -77,28 +84,16 @@ const Register: FC = () => {
     trackFunnel('signup_started', { from: 'register', kind: 'register' });
   }, []);
 
-  const onSubmit = async (values: RegisterFormData) => {
+  const onSubmit = async (values: QuickRegisterFormData) => {
+    setTried(true);
+    if (childMissing) return;
     // Read now: once the account exists the route itself moves on and
     // forgets the remembered page
     const returnTo = peekReturnTo();
     try {
-      const { phone_number, ...submitValues } = values;
-      if (childMissing) return;
-      const userData = await signUpMutation.mutateAsync({
-        ...submitValues,
-        phone_number: phone_number.startsWith('+')
-          ? phone_number
-          : `+${phone_number}`,
-        type: role,
-        ...(role === 'Parent'
-          ? {
-              child: {
-                first_name: child.first_name.trim(),
-                last_name: child.last_name.trim(),
-              },
-            }
-          : {}),
-      });
+      const userData = await signUpMutation.mutateAsync(
+        signUpBody(values, role, childName),
+      );
 
       if (userData?.id) {
         navigate(returnTo ?? (role === 'Parent' ? '/family' : '/dashboard'), {
@@ -110,64 +105,110 @@ const Register: FC = () => {
     }
   };
 
+  const whoChoices = [
+    {
+      kind: 'Parent' as const,
+      icon: <FamilyRestroomRounded />,
+      title: t('REGISTER.ROLE.PARENT_TITLE'),
+      line: t('REGISTER.ROLE.PARENT_LINE'),
+    },
+    {
+      kind: 'Student' as const,
+      icon: <SchoolRounded />,
+      title: t('REGISTER.ROLE.STUDENT_TITLE'),
+      line: t('REGISTER.ROLE.STUDENT_LINE'),
+    },
+  ];
+
+  // The same brand panel as sign in: no photo, no quote (19 Nov 2026)
+  const facts = [
+    { icon: <CardGiftcardRounded />, text: t('REGISTER.PANEL.FACT_TRIAL') },
+    { icon: <PeopleAltRounded />, text: t('REGISTER.PANEL.FACT_TUTORS') },
+    { icon: <FamilyRestroomRounded />, text: t('REGISTER.PANEL.FACT_FAMILY') },
+  ];
+
   return (
     <div className="signin register">
-      <aside className="signin__panel" aria-hidden="true">
-        <Link to="/" className="signin__logo">
+      <aside className="signin__panel">
+        <span className="signin__ring signin__ring--a" aria-hidden="true" />
+        <span className="signin__ring signin__ring--b" aria-hidden="true" />
+        <span className="signin__ring signin__ring--c" aria-hidden="true" />
+        <Link to="/" className="signin__logo" aria-label="Nafham">
           <img src={logo} alt="" />
         </Link>
         <div className="signin__panel-copy">
-          <p className="signin__eyebrow">{t('REGISTER.PANEL.EYEBROW')}</p>
-          <h2 className="signin__headline">{t('REGISTER.PANEL.TITLE')}</h2>
+          <h2 className="signin__headline">
+            {t('REGISTER.PANEL.TITLE_START')}{' '}
+            <em>{t('REGISTER.PANEL.TITLE_END')}</em>
+          </h2>
           <p className="signin__sub">{t('REGISTER.PANEL.SUBTITLE')}</p>
-        </div>
-        <figure className="signin__quote">
-          <FormatQuote className="signin__quote-mark" />
-          <blockquote>{t('REGISTER.PANEL.QUOTE')}</blockquote>
-          <figcaption>
-            <span className="signin__stars">
-              {[0, 1, 2, 3, 4].map((i) => (
-                <Star key={i} />
-              ))}
-            </span>
-            {t('REGISTER.PANEL.QUOTE_BY')}
-          </figcaption>
-        </figure>
-        <div className="signin__tutor">
-          <span className="signin__ring" />
-          <img src={tutor} alt="" />
+          <ul className="signin__facts">
+            {facts.map((fact) => (
+              <li key={fact.text}>
+                <span className="signin__fact-icon" aria-hidden="true">
+                  {fact.icon}
+                </span>
+                {fact.text}
+              </li>
+            ))}
+          </ul>
         </div>
       </aside>
 
       <main className="signin__form">
+        <div className="signin__top">
+          <LanguageSelector />
+        </div>
         <div className="signin__form-inner register__inner">
           <div className="register__header">
-            <h1 className="title">{t('REGISTER.MAIN.TITLE')}</h1>
-            <p className="sub-title">{t('REGISTER.MAIN.SUBTITLE')}</p>
+            <h1 className="title">
+              {t(forTrial ? 'REGISTER.TRIAL.TITLE' : 'REGISTER.MAIN.TITLE')}
+            </h1>
+            <p className="sub-title">
+              {t(
+                forTrial ? 'REGISTER.TRIAL.SUBTITLE' : 'REGISTER.MAIN.SUBTITLE',
+              )}
+            </p>
           </div>
           <form
-            onSubmit={handleSubmit(onSubmit)}
+            onSubmit={handleSubmit(onSubmit, () => setTried(true))}
             className={`second-section__form ${rtlClass}`}
+            noValidate
           >
-            <ToggleButtonGroup
-              exclusive
-              fullWidth
-              size="small"
-              value={role}
-              onChange={(_, value) => value && setRole(value)}
+            {/* Who the account is for: two cards, the chosen one filled in
+                and ticked, each saying in a line what it means */}
+            <div
+              className="register__who"
+              role="group"
               aria-label={t('REGISTER.ROLE.LABEL')}
-              sx={{ mb: 2 }}
             >
-              <ToggleButton value="Student">
-                {t('REGISTER.ROLE.STUDENT')}
-              </ToggleButton>
-              <ToggleButton value="Parent">
-                {t('REGISTER.ROLE.PARENT')}
-              </ToggleButton>
-            </ToggleButtonGroup>
-            {role === 'Parent' && (
-              <p className="register__hint">{t('REGISTER.ROLE.PARENT_HINT')}</p>
-            )}
+              {whoChoices.map((choice) => {
+                const chosen = role === choice.kind;
+                return (
+                  <button
+                    key={choice.kind}
+                    type="button"
+                    className={`register__who-card${chosen ? ' is-chosen' : ''}`}
+                    aria-pressed={chosen}
+                    onClick={() => setRole(choice.kind)}
+                  >
+                    <span className="register__who-icon" aria-hidden="true">
+                      {choice.icon}
+                    </span>
+                    <span className="register__who-text">
+                      <strong>{choice.title}</strong>
+                      <small>{choice.line}</small>
+                    </span>
+                    {chosen && (
+                      <CheckCircleRounded
+                        className="register__who-tick"
+                        aria-hidden="true"
+                      />
+                    )}
+                  </button>
+                );
+              })}
+            </div>
 
             <div className="group-inputs auth-field-row">
               <div className="group1 auth-field">
@@ -180,10 +221,12 @@ const Register: FC = () => {
                   render={({ field }) => (
                     <TextField
                       {...field}
+                      id="first_name"
                       variant="outlined"
-                      placeholder={t(
-                        'REGISTER.REGISTER_FIRST_NAME_INPUT_PLACEHOLDER',
-                      )}
+                      autoComplete="given-name"
+                      // Ready to type on a computer; on a phone the keyboard
+                      // would jump up over the page before they have read it
+                      autoFocus={window.innerWidth >= 900}
                       fullWidth
                       error={!!errors.first_name}
                       helperText={errors.first_name?.message}
@@ -201,10 +244,9 @@ const Register: FC = () => {
                   render={({ field }) => (
                     <TextField
                       {...field}
+                      id="last_name"
                       variant="outlined"
-                      placeholder={t(
-                        'REGISTER.REGISTER_LAST_NAME_INPUT_PLACEHOLDER',
-                      )}
+                      autoComplete="family-name"
                       fullWidth
                       error={!!errors.last_name}
                       helperText={errors.last_name?.message}
@@ -213,230 +255,25 @@ const Register: FC = () => {
                 />
               </div>
             </div>
-            <div className="group1 auth-field">
-              <InputLabel htmlFor="email">
-                {t('REGISTER.REGISTER_EMAIL')}
-              </InputLabel>
-              <Controller
-                name="email"
-                control={control}
-                render={({ field }) => (
-                  <TextField
-                    {...field}
-                    type="email"
-                    variant="outlined"
-                    placeholder={t('REGISTER.REGISTER_EMAIL_INPUT_PLACEHOLDER')}
-                    fullWidth
-                    error={!!errors.email}
-                    helperText={errors.email?.message}
-                  />
-                )}
-              />
-            </div>
-
-            <div className="group-inputs auth-field-row">
-              <div className="group1 auth-field">
-                <InputLabel htmlFor="password">
-                  {t('REGISTER.REGISTER_PASSWORD')}
-                </InputLabel>
-                <Controller
-                  name="password"
-                  control={control}
-                  render={({ field }) => (
-                    <TextField
-                      {...field}
-                      type="password"
-                      variant="outlined"
-                      placeholder={t(
-                        'REGISTER.REGISTER_PASSWORD_INPUT_PLACEHOLDER',
-                      )}
-                      fullWidth
-                      error={!!errors.password}
-                      helperText={errors.password?.message}
-                    />
-                  )}
-                />
-              </div>
-              <div className="group1 auth-field">
-                <InputLabel htmlFor="password_confirmation">
-                  {t('REGISTER.REGISTER_PASSWORD_CONFIRM')}
-                </InputLabel>
-                <Controller
-                  name="password_confirmation"
-                  control={control}
-                  render={({ field }) => (
-                    <TextField
-                      {...field}
-                      type="password"
-                      variant="outlined"
-                      placeholder={t(
-                        'REGISTER.REGISTER_PASSWORD_CONFIRM_INPUT_PLACEHOLDER',
-                      )}
-                      fullWidth
-                      error={!!errors.password_confirmation}
-                      helperText={errors.password_confirmation?.message}
-                    />
-                  )}
-                />
-              </div>
-            </div>
-
-            <div className="group-inputs auth-field-row">
-              <div className="group1 auth-field">
-                <InputLabel htmlFor="country_code">
-                  {t('REGISTER.COUNTRY')}
-                </InputLabel>
-                <Controller
-                  name="country_code"
-                  control={control}
-                  render={({ field }) => {
-                    const menuItems = [];
-                    menuItems.push(
-                      <MenuItem key="placeholder" value="" disabled>
-                        {t('REGISTER.SELECT_COUNTRY')}
-                      </MenuItem>,
-                    );
-                    countries.forEach((country, index) => {
-                      menuItems.push(
-                        <MenuItem key={country.code} value={country.code}>
-                          {country.name}
-                        </MenuItem>,
-                      );
-                      if (index === PREFERRED_COUNTRIES.length - 1) {
-                        menuItems.push(<Divider key="divider" />);
-                      }
-                    });
-                    return (
-                      <Select
-                        {...field}
-                        variant="outlined"
-                        fullWidth
-                        error={!!errors.country_code}
-                        displayEmpty
-                        MenuProps={{
-                          PaperProps: {
-                            style: {
-                              maxHeight: 300,
-                              width: 260,
-                            },
-                          },
-                          anchorOrigin: {
-                            vertical: 'bottom',
-                            horizontal: 'left',
-                          },
-                          transformOrigin: {
-                            vertical: 'top',
-                            horizontal: 'left',
-                          },
-                        }}
-                      >
-                        {menuItems}
-                      </Select>
-                    );
-                  }}
-                />
-                {errors.country_code && (
-                  <div className="form-control-danger">
-                    {errors.country_code.message}
-                  </div>
-                )}
-              </div>
-              <div className="group1 auth-field">
-                <InputLabel htmlFor="nationality">
-                  {t('REGISTER.NATIONALITY')}
-                </InputLabel>
-                <Controller
-                  name="nationality"
-                  control={control}
-                  render={({ field }) => {
-                    const menuItems = [];
-                    menuItems.push(
-                      <MenuItem key="placeholder" value="" disabled>
-                        {t('REGISTER.SELECT_NATIONALITY')}
-                      </MenuItem>,
-                    );
-                    nationalities.forEach((nationality, index) => {
-                      menuItems.push(
-                        <MenuItem
-                          key={nationality.code}
-                          value={nationality.code}
-                        >
-                          {nationality.name}
-                        </MenuItem>,
-                      );
-                      if (index === PREFERRED_COUNTRIES.length - 1) {
-                        menuItems.push(<Divider key="divider-nat" />);
-                      }
-                    });
-                    return (
-                      <Select
-                        {...field}
-                        variant="outlined"
-                        fullWidth
-                        error={!!errors.nationality}
-                        displayEmpty
-                        MenuProps={{
-                          PaperProps: {
-                            style: {
-                              maxHeight: 300,
-                              width: 260,
-                            },
-                          },
-                          anchorOrigin: {
-                            vertical: 'bottom',
-                            horizontal: 'left',
-                          },
-                          transformOrigin: {
-                            vertical: 'top',
-                            horizontal: 'left',
-                          },
-                        }}
-                      >
-                        {menuItems}
-                      </Select>
-                    );
-                  }}
-                />
-                {errors.nationality && (
-                  <div className="form-control-danger">
-                    {errors.nationality.message}
-                  </div>
-                )}
-              </div>
-            </div>
 
             {role === 'Parent' && (
-              <div className="group-inputs auth-field-row">
-                <div className="group1 auth-field">
-                  <InputLabel htmlFor="child_first_name">
-                    {t('REGISTER.CHILD.FIRST_NAME')}
-                  </InputLabel>
-                  <TextField
-                    id="child_first_name"
-                    fullWidth
-                    size="small"
-                    value={child.first_name}
-                    onChange={(e) =>
-                      setChild({ ...child, first_name: e.target.value })
-                    }
-                    error={isSubmitting && !child.first_name.trim()}
-                  />
-                </div>
-                <div className="group2 auth-field">
-                  <InputLabel htmlFor="child_last_name">
-                    {t('REGISTER.CHILD.LAST_NAME')}
-                  </InputLabel>
-                  <TextField
-                    id="child_last_name"
-                    fullWidth
-                    size="small"
-                    value={child.last_name}
-                    onChange={(e) =>
-                      setChild({ ...child, last_name: e.target.value })
-                    }
-                    error={isSubmitting && !child.last_name.trim()}
-                  />
-                </div>
+              <div className="group1 auth-field">
+                <InputLabel htmlFor="child_first_name">
+                  {t('REGISTER.QUICK.CHILD_FIRST_NAME')}
+                </InputLabel>
+                <TextField
+                  id="child_first_name"
+                  variant="outlined"
+                  fullWidth
+                  value={childName}
+                  onChange={(e) => setChildName(e.target.value)}
+                  error={tried && childMissing}
+                  helperText={
+                    tried && childMissing
+                      ? t('GENEREL.REQUIRED')
+                      : t('REGISTER.QUICK.CHILD_HINT')
+                  }
+                />
               </div>
             )}
 
@@ -449,14 +286,25 @@ const Register: FC = () => {
                 control={control}
                 render={({ field }) => (
                   <PhoneInput
-                    {...field}
+                    value={field.value}
+                    onBlur={field.onBlur}
                     country="ae"
                     preferredCountries={['ae', 'eg', 'sa']}
                     specialLabel=""
                     inputStyle={{ width: '100%' }}
                     inputClass={errors.phone_number ? 'is-invalid' : ''}
-                    onChange={(phoneNumber: string) => {
-                      setValue('phone_number', phoneNumber);
+                    inputProps={{
+                      id: 'phone_number',
+                      name: 'phone_number',
+                      autoComplete: 'tel',
+                    }}
+                    onChange={(phoneNumber: string, country) => {
+                      field.onChange(phoneNumber);
+                      // The account's country is the phone's country
+                      const code =
+                        (country as { countryCode?: string })?.countryCode ??
+                        'ae';
+                      setValue('country_code', code.toUpperCase());
                     }}
                   />
                 )}
@@ -468,16 +316,84 @@ const Register: FC = () => {
               )}
             </div>
 
+            <div className="group1 auth-field">
+              <InputLabel htmlFor="email">
+                {t('REGISTER.REGISTER_EMAIL')}
+              </InputLabel>
+              <Controller
+                name="email"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    id="email"
+                    type="email"
+                    variant="outlined"
+                    autoComplete="email"
+                    fullWidth
+                    error={!!errors.email}
+                    helperText={errors.email?.message}
+                  />
+                )}
+              />
+            </div>
+
+            <div className="group1 auth-field">
+              <InputLabel htmlFor="password">
+                {t('REGISTER.REGISTER_PASSWORD')}
+              </InputLabel>
+              <Controller
+                name="password"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    id="password"
+                    type={showPassword ? 'text' : 'password'}
+                    variant="outlined"
+                    autoComplete="new-password"
+                    fullWidth
+                    error={!!errors.password}
+                    helperText={
+                      errors.password?.message ??
+                      t('REGISTER.QUICK.PASSWORD_HINT')
+                    }
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            onClick={() => setShowPassword((shown) => !shown)}
+                            edge="end"
+                            aria-label={
+                              showPassword
+                                ? t('LOGIN.HIDE_PASSWORD')
+                                : t('LOGIN.SHOW_PASSWORD')
+                            }
+                          >
+                            {showPassword ? <VisibilityOff /> : <Visibility />}
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
+                )}
+              />
+            </div>
+
             <Button
               variant="contained"
               color="primary"
               size="large"
-              disabled={isSubmitting || childMissing}
+              disabled={isSubmitting}
               type="submit"
               className="btn-custom-style"
               fullWidth
             >
-              {t('REGISTER.REGISTER_SUBMIT_BTN')}
+              {t(
+                forTrial
+                  ? 'REGISTER.TRIAL.SUBMIT'
+                  : 'REGISTER.REGISTER_SUBMIT_BTN',
+              )}
             </Button>
 
             <div className="no-account">
