@@ -68,6 +68,8 @@ interface SidebarLayoutProps {
  * App shell for signed-in users (students and tutors): the left sidebar
  * (right in Arabic) replaces the site header and holds the logo, the
  * role's navigation, the language switch and the account/logout block.
+ * The language switch and the account block are always in view: the menu
+ * scrolls above them when the window is not tall enough for all of it.
  * On small screens a slim top bar with a menu button slides the same
  * sidebar in as a drawer. Visitors get children unchanged.
  */
@@ -362,6 +364,8 @@ const SidebarLayout: FC<SidebarLayoutProps> = ({ children }) => {
     : [];
 
   const items = isTutor ? tutorItems : isParent ? parentItems : studentItems;
+  // Links under the menu: a parent's two starts, a student's tutor search
+  const hasStarts = parentStarts.length > 0 || (!isTutor && !isParent);
   const homeLink = isParent ? '/family' : '/dashboard';
   const accountLink = isTutor
     ? `/profile/${currentUser.id}`
@@ -465,76 +469,88 @@ const SidebarLayout: FC<SidebarLayoutProps> = ({ children }) => {
           </div>
         )}
 
-        <nav className="side-layout__nav" aria-label={t('NAVIGATION.MENU')}>
-          {items.map((item, index) => (
-            <Fragment key={item.to}>
-              {item.group && item.group !== items[index - 1]?.group && (
-                <p className="side-layout__group" aria-hidden="true">
-                  {item.group}
-                </p>
-              )}
-              <NavLink
-                key={item.to}
-                to={item.to}
-                title={collapsed ? item.label : undefined}
-                onClick={() => setDrawerOpen(false)}
-                className={({ isActive }) =>
-                  `side-layout__link${
-                    isActive ? ' side-layout__link--active' : ''
-                  }`
-                }
-              >
-                <span className="side-layout__icon" aria-hidden="true">
-                  {item.icon}
-                </span>
-                <span className="side-layout__label">{item.label}</span>
-                {!!item.badge && item.badge > 0 && (
-                  <span
-                    className="side-layout__badge"
-                    aria-label={
-                      item.badgeLabel ??
-                      t('MESSAGES.UNREAD_COUNT', { count: item.badge })
-                    }
-                  >
-                    {item.badge > 99 ? '99+' : item.badge}
-                  </span>
+        {/* What scrolls when the window is short; the footer stays put */}
+        <div className="side-layout__scroll">
+          <nav className="side-layout__nav" aria-label={t('NAVIGATION.MENU')}>
+            {items.map((item, index) => (
+              <Fragment key={item.to}>
+                {item.group && item.group !== items[index - 1]?.group && (
+                  <p className="side-layout__group" aria-hidden="true">
+                    {item.group}
+                  </p>
                 )}
-              </NavLink>
-            </Fragment>
-          ))}
-        </nav>
+                <NavLink
+                  key={item.to}
+                  to={item.to}
+                  title={collapsed ? item.label : undefined}
+                  onClick={() => setDrawerOpen(false)}
+                  className={({ isActive }) =>
+                    `side-layout__link${
+                      isActive ? ' side-layout__link--active' : ''
+                    }`
+                  }
+                >
+                  <span className="side-layout__icon" aria-hidden="true">
+                    {item.icon}
+                  </span>
+                  <span className="side-layout__label">{item.label}</span>
+                  {!!item.badge && item.badge > 0 && (
+                    <span
+                      className="side-layout__badge"
+                      aria-label={
+                        item.badgeLabel ??
+                        t('MESSAGES.UNREAD_COUNT', { count: item.badge })
+                      }
+                    >
+                      {item.badge > 99 ? '99+' : item.badge}
+                    </span>
+                  )}
+                </NavLink>
+              </Fragment>
+            ))}
+          </nav>
 
-        <div className="side-layout__footer">
-          {parentStarts.map((item) => (
-            <NavLink
-              key={item.to}
-              to={item.to}
-              title={collapsed ? item.label : undefined}
-              onClick={() => setDrawerOpen(false)}
-              className={({ isActive }) =>
-                `side-layout__browse${
-                  isActive ? ' side-layout__browse--active' : ''
-                }`
-              }
-            >
-              {item.icon}
-              <span>{item.label}</span>
-            </NavLink>
-          ))}
-          {!isTutor && !isParent && (
-            <NavLink
-              to="/home"
-              onClick={() => setDrawerOpen(false)}
-              className={({ isActive }) =>
-                `side-layout__browse${
-                  isActive ? ' side-layout__browse--active' : ''
-                }`
-              }
-            >
-              <PersonSearchRounded aria-hidden="true" />
-              {t('NAVIGATION.BROWSE_INSTRUCTORS')}
-            </NavLink>
+          {hasStarts && (
+            <div className="side-layout__starts">
+              {parentStarts.map((item) => (
+                <NavLink
+                  key={item.to}
+                  to={item.to}
+                  title={collapsed ? item.label : undefined}
+                  onClick={() => setDrawerOpen(false)}
+                  className={({ isActive }) =>
+                    `side-layout__browse${
+                      isActive ? ' side-layout__browse--active' : ''
+                    }`
+                  }
+                >
+                  {item.icon}
+                  <span>{item.label}</span>
+                </NavLink>
+              ))}
+              {!isTutor && !isParent && (
+                <NavLink
+                  to="/home"
+                  onClick={() => setDrawerOpen(false)}
+                  className={({ isActive }) =>
+                    `side-layout__browse${
+                      isActive ? ' side-layout__browse--active' : ''
+                    }`
+                  }
+                >
+                  <PersonSearchRounded aria-hidden="true" />
+                  {t('NAVIGATION.BROWSE_INSTRUCTORS')}
+                </NavLink>
+              )}
+            </div>
           )}
+        </div>
+
+        <div
+          className={`side-layout__footer${
+            hasStarts ? ' side-layout__footer--joined' : ''
+          }`}
+        >
           <div className="side-layout__language">
             <LanguageSelector />
           </div>

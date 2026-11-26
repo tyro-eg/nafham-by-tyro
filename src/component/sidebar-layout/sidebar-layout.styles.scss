@@ -171,7 +171,9 @@ $topbar-height: 6.4rem;
     padding: $space-5 $space-4 $space-4;
     background-color: $surface;
     border-inline-end: 1px solid $border;
-    overflow-y: auto;
+    // The menu scrolls inside (see Navigation); the sidebar itself does not,
+    // so the language switch and the account block never leave the screen
+    overflow: hidden;
 
     @include respond(tab-land) {
       position: fixed;
@@ -233,12 +235,37 @@ $topbar-height: 6.4rem;
     }
   }
 
+  &__brand,
+  &__child-switcher {
+    flex: none;
+  }
+
   // ---------- Navigation ----------
+  // The menu takes the room between the brand row and the bottom block and
+  // scrolls when it needs more. On a tall window the links under the menu
+  // (free trial, buy, find a tutor) are pinned with the footer; on a short
+  // one (phones) they scroll with the menu, so the menu keeps its room.
+  &__scroll {
+    display: contents;
+  }
+
   &__nav {
     display: flex;
     flex-direction: column;
     gap: 0.4rem;
-    flex: 1;
+    flex: 1 1 auto;
+    min-height: 0;
+    // A little room around, or the scroll area clips the links' focus ring
+    margin: -0.4rem;
+    padding: 0.4rem;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+
+    > * {
+      flex: none;
+    }
   }
 
   &__link {
@@ -330,12 +357,81 @@ $topbar-height: 6.4rem;
   }
 
   // ---------- Bottom block ----------
+  // Links under the menu, then the language switch and the account: one
+  // block with one line above it
+  &__starts,
   &__footer {
     display: flex;
     flex-direction: column;
+    flex: none;
     gap: $space-3;
     padding-top: $space-4;
     border-top: 1px solid $border;
+  }
+
+  // Straight under the links: no second line, and their gap instead of the
+  // sidebar's
+  &__footer--joined {
+    margin-top: $space-3 - $space-5;
+    padding-top: 0;
+    border-top: 0;
+  }
+
+  @media only screen and (min-width: 75.01em) {
+    &--collapsed &__footer--joined {
+      margin-top: $space-3 - $space-4;
+    }
+  }
+
+  // A short window, or a phone: only the language switch and the account
+  // stay pinned. The links under the menu scroll with it.
+  @media only screen and (max-height: 780px) {
+    &__scroll {
+      display: flex;
+      flex-direction: column;
+      gap: $space-5;
+      flex: 1 1 auto;
+      min-height: 0;
+      margin: -0.4rem;
+      padding: 0.4rem;
+      overflow-x: hidden;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      scrollbar-width: thin;
+    }
+
+    &__nav {
+      flex: none;
+      margin: 0;
+      padding: 0;
+      overflow: visible;
+    }
+
+    &__starts {
+      margin-top: auto;
+      padding-top: 0;
+      border-top: 0;
+    }
+
+    &__footer--joined,
+    &--collapsed &__footer--joined {
+      margin-top: 0;
+      padding-top: $space-4;
+      border-top: 1px solid $border;
+    }
+  }
+
+  // Hardly any height (a phone on its side): nothing can stay pinned, the
+  // whole sidebar scrolls
+  @media only screen and (max-height: 440px) {
+    &__sidebar {
+      overflow-y: auto;
+    }
+
+    &__scroll {
+      flex: none;
+      overflow: visible;
+    }
   }
 
   &__browse {
