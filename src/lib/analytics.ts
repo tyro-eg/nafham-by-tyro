@@ -15,6 +15,8 @@
 
 import ReactGA from 'react-ga4';
 
+import { safePath } from './safe-path';
+
 /**
  * Initialize Google Analytics
  *
@@ -65,9 +67,18 @@ export const initAnalytics = () => {
 export const trackPageView = (path: string, title?: string) => {
   if (!import.meta.env.VITE_ENABLE_ANALYTICS) return;
 
+  // Secrets in the address (the activation link's token) are never sent.
+  // Left alone, GA reads the browser's full address for every hit, so the
+  // cleaned one is given as the page's location too, for this page view and
+  // for whatever GA measures by itself on the page afterwards.
+  const page = safePath(path);
+  const location = `${window.location.origin}${page}`;
+  ReactGA.set({ page_location: location });
+
   ReactGA.send({
     hitType: 'pageview',
-    page: path,
+    page,
+    location,
     title: title || document.title,
   });
 };
