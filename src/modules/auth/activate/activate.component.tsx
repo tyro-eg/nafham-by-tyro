@@ -11,10 +11,12 @@ import { getHomePath } from '../../../assets/utils/home-path';
 import { useRtlClass } from '../../../assets/utils/utils';
 import {
   RESEND_SECONDS,
+  activationFailure,
   codeAskedAt,
   forgetCodeAsked,
   rememberCodeAsked,
   resendWait,
+  type ActivationProblem,
 } from './activate.utils';
 import '../signin/signin.styles.scss';
 import '../../../component/login/login.styles.scss';
@@ -37,13 +39,6 @@ type Info = {
   channel?: 'whatsapp' | 'email';
 };
 
-/** The backend's own words, else a general one. */
-function errorText(err: unknown, fallback: string): string {
-  const data = (err as { response?: { data?: { errors?: string[] } } })
-    ?.response?.data;
-  return data?.errors?.[0] || fallback;
-}
-
 const Activate: FC = () => {
   const { t } = useTranslation();
   const { token = '' } = useParams();
@@ -52,7 +47,11 @@ const Activate: FC = () => {
   const signIn = useSignIn();
 
   const [info, setInfo] = useState<Info | null>(null);
-  const [problem, setProblem] = useState('');
+  // Kept as a key, so the sentence follows the language switch
+  const [problem, setProblem] = useState<ActivationProblem | null>(null);
+  // The first load failed for a reason other than the link: offer it again
+  const [canRetry, setCanRetry] = useState(false);
+  const [attempt, setAttempt] = useState(0);
   // A code asked for before a reload: the code step again, not "Send code"
   const [step, setStep] = useState<'intro' | 'code'>(() =>
     codeAskedAt(token) === null ? 'intro' : 'code',
@@ -68,10 +67,25 @@ const Activate: FC = () => {
   const [wait, setWait] = useState(() => resendWait(codeAskedAt(token)));
 
   useEffect(() => {
+    let stale = false;
+    setProblem(null);
+    setCanRetry(false);
     get(`/activations/${encodeURIComponent(token)}`)
-      .then((res) => setInfo(res.data.data))
-      .catch((err) => setProblem(errorText(err, t('ACTIVATE.BAD_LINK'))));
-  }, [token, t]);
+      .then((res) => {
+        if (!stale) setInfo(res.data.data);
+      })
+      .catch((err) => {
+        if (stale) return;
+        // "Bad link" only when the server says so; a dropped connection is
+        // "could not load, try again"
+        const failure = activationFailure(err, 'load');
+        setProblem(failure.problem);
+        setCanRetry(failure.retry);
+      });
+    return () => {
+      stale = true;
+    };
+  }, [token, attempt]);
 
   // A minute before another code can be asked for
   useEffect(() => {
@@ -80,9 +94,15 @@ const Activate: FC = () => {
     return () => clearTimeout(timer);
   }, [wait]);
 
+  // The server says the account is active: the page offers sign in
+  const showActive = () => {
+    forgetCodeAsked(token);
+    setInfo((known) => (known ? { ...known, state: 'active' } : known));
+  };
+
   const sendCode = async () => {
     setBusy(true);
-    setProblem('');
+    setProblem(null);
     try {
       const res = await post(
         `/activations/${encodeURIComponent(token)}/code`,
@@ -96,7 +116,16 @@ const Activate: FC = () => {
       setStep('code');
       setWait(RESEND_SECONDS);
     } catch (err) {
-      setProblem(errorText(err, t('ACTIVATE.TRY_AGAIN')));
+      const failure = activationFailure(err, 'action');
+      if (failure.code === 'active') return showActive();
+      if (failure.code === 'too_soon') {
+        // A code is on its way or already there (asked from another tab):
+        // show where to type it
+        if (codeAskedAt(token) === null) rememberCodeAsked(token);
+        setStep('code');
+        setWait(resendWait(codeAskedAt(token)) || RESEND_SECONDS);
+      }
+      setProblem(failure.problem);
     } finally {
       setBusy(false);
     }
@@ -105,12 +134,13 @@ const Activate: FC = () => {
   const byEmail = info?.channel === 'email';
 
   const activate = async () => {
-    setProblem('');
+    setProblem(null);
     if (!byEmail && !/^\d{6}$/.test(code.replace(/\D/g, '')))
-      return setProblem(t('ACTIVATE.CODE_FORMAT'));
-    if (password.length < 6) return setProblem(t('ACTIVATE.PASSWORD_SHORT'));
+      return setProblem({ key: 'ACTIVATE.CODE_FORMAT' });
+    if (password.length < 6)
+      return setProblem({ key: 'ACTIVATE.PASSWORD_SHORT' });
     if (password !== confirm)
-      return setProblem(t('ACTIVATE.PASSWORD_MISMATCH'));
+      return setProblem({ key: 'ACTIVATE.PASSWORD_MISMATCH' });
     setBusy(true);
     try {
       const res = await post(`/activations/${encodeURIComponent(token)}`, {
@@ -125,7 +155,9 @@ const Activate: FC = () => {
       });
       navigate(getHomePath(user));
     } catch (err) {
-      setProblem(errorText(err, t('ACTIVATE.TRY_AGAIN')));
+      const failure = activationFailure(err, 'action');
+      if (failure.code === 'active') return showActive();
+      setProblem(failure.problem);
     } finally {
       setBusy(false);
     }
@@ -302,8 +334,21 @@ const Activate: FC = () => {
                 style={{ color: '#c62828' }}
                 data-testid="text-activation-problem"
               >
-                {problem}
+                {'key' in problem ? t(problem.key) : problem.text}
               </p>
+            )}
+
+            {!info && canRetry && (
+              <div className={`login-container__form ${rtlClass}`}>
+                <Button
+                  variant="contained"
+                  className="btn-custom-style"
+                  onClick={() => setAttempt((count) => count + 1)}
+                  data-testid="button-activation-retry"
+                >
+                  {t('ACTIVATE.RETRY')}
+                </Button>
+              </div>
             )}
           </div>
         </div>

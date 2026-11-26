@@ -2974,6 +2974,21 @@
     "PASSWORD_SHORT": "The password needs at least 6 characters.",
     "PASSWORD_MISMATCH": "The two passwords are not the same.",
     "TRY_AGAIN": "Something went wrong. Please try again.",
+    "LOAD_FAILED": "We could not load this page. Check your connection and try again.",
+    "RETRY": "Try again",
+    "ERRORS": {
+      "ACTIVE": "This account is active already. Sign in with your email and password.",
+      "NO_CODE_NEEDED": "This account needs no code. Choose your password.",
+      "TOO_SOON": "A code was just sent. Wait a minute before asking for another.",
+      "TOO_MANY": "Too many codes in an hour. Try again later.",
+      "UNDELIVERED": "We could not send the code on WhatsApp. Contact Nafham.",
+      "NO_CODE": "Ask for a code first.",
+      "EXPIRED": "The code has expired. Ask for a new one.",
+      "LOCKED": "Too many wrong codes. Ask for a new one.",
+      "WRONG_CODE": "That code is not right. Check it and try again.",
+      "INVALID": "Choose a password of at least 6 characters and type the same one twice.",
+      "NETWORK": "We could not reach Nafham. Check your connection and try again."
+    },
     "SUBTITLE_EMAIL": "Choose a password for {{email}}, then sign in to see your lessons.",
     "SET_PASSWORD": "Set my password"
   }
