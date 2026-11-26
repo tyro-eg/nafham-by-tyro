@@ -331,7 +331,9 @@ export function useHandoff() {
   return useMutation({
     mutationFn: async (payload: { code: string }) => {
       // Whoever was signed in on this browser before is not who the app sent
+      // (nor is a staff view left behind: the app's own user is arriving)
       clearAuthStorage();
+      clearStaffView();
       setActiveChildId(null);
       dispatch(clearCurrentUser());
       queryClient.clear();

@@ -6,9 +6,14 @@
  * The server adds the milestones it knows for itself (signed up, trial
  * booked, paid). Reporting never gets in the visitor's way: failures are
  * swallowed and nothing waits for it.
+ *
+ * Nothing is reported while staff view the site as a customer ("open as"):
+ * those steps would be counted as the family's own, and would tie the staff
+ * member's browser to the family's account.
  */
 import { post } from '../assets/utils/api';
 import { AUTH_KEYS } from './auth-storage';
+import { inStaffView } from './staff-view';
 
 /** What a client may report (FunnelEvent::CLIENT_NAMES on the server) */
 export type FunnelStep =
@@ -89,6 +94,11 @@ export const flushFunnel = async (): Promise<void> => {
     timer = null;
   }
   if (queue.length === 0) return;
+  // Staff view began while steps were waiting: they are not the family's
+  if (inStaffView()) {
+    queue = [];
+    return;
+  }
   const events = queue.slice(0, MAX_BATCH);
   queue = queue.slice(MAX_BATCH);
   const anonymous_id = visitorId();
@@ -111,6 +121,7 @@ export const trackFunnel = (
   name: FunnelStep,
   properties: FunnelProperties = {},
 ): void => {
+  if (inStaffView()) return;
   queue.push({ name, properties: clean(properties) });
   if (timer) return;
   timer = setTimeout(() => {
@@ -132,6 +143,8 @@ export const trackFunnelOnce = (
   name: FunnelStep,
   properties: FunnelProperties = {},
 ): void => {
+  // Not marked as counted either: the family's own run still counts
+  if (inStaffView()) return;
   try {
     if (sessionStorage.getItem(ONCE_PREFIX + key)) return;
     sessionStorage.setItem(ONCE_PREFIX + key, '1');
