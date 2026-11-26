@@ -22,7 +22,7 @@ import {
   type RegisterFormData,
 } from '../../../schemas/authSchemas';
 import { useRtlClass } from '../../../assets/utils/utils';
-import { peekReturnTo } from '../../../lib/return-to';
+import { headedForTrial, peekReturnTo } from '../../../lib/return-to';
 import { trackFunnel } from '../../../lib/funnel';
 import {
   getCountries,
@@ -48,9 +48,11 @@ const Register: FC = () => {
 
   const countries = useMemo(() => getCountries(), []);
   const nationalities = useMemo(() => getNationalities(), []);
-  // Who is signing up: a student with their own account, or a parent
-  // who holds the account for their children
-  const [role, setRole] = useState<'Student' | 'Parent'>('Student');
+  // Who is signing up: a parent who holds the account for their children
+  // (most people, so it comes first), or a student with their own account
+  const [role, setRole] = useState<'Student' | 'Parent'>('Parent');
+  // Sent here from "Book a free trial": say so, and what comes next
+  const [forTrial] = useState(() => headedForTrial());
   const [child, setChild] = useState({ first_name: '', last_name: '' });
   const childMissing =
     role === 'Parent' && (!child.first_name.trim() || !child.last_name.trim());
@@ -151,8 +153,14 @@ const Register: FC = () => {
       <main className="signin__form">
         <div className="signin__form-inner register__inner">
           <div className="register__header">
-            <h1 className="title">{t('REGISTER.MAIN.TITLE')}</h1>
-            <p className="sub-title">{t('REGISTER.MAIN.SUBTITLE')}</p>
+            <h1 className="title">
+              {t(forTrial ? 'REGISTER.TRIAL.TITLE' : 'REGISTER.MAIN.TITLE')}
+            </h1>
+            <p className="sub-title">
+              {t(
+                forTrial ? 'REGISTER.TRIAL.SUBTITLE' : 'REGISTER.MAIN.SUBTITLE',
+              )}
+            </p>
           </div>
           <form
             onSubmit={handleSubmit(onSubmit)}
@@ -167,11 +175,11 @@ const Register: FC = () => {
               aria-label={t('REGISTER.ROLE.LABEL')}
               sx={{ mb: 2 }}
             >
-              <ToggleButton value="Student">
-                {t('REGISTER.ROLE.STUDENT')}
-              </ToggleButton>
               <ToggleButton value="Parent">
                 {t('REGISTER.ROLE.PARENT')}
+              </ToggleButton>
+              <ToggleButton value="Student">
+                {t('REGISTER.ROLE.STUDENT')}
               </ToggleButton>
             </ToggleButtonGroup>
             {role === 'Parent' && (

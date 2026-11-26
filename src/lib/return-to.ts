@@ -39,6 +39,10 @@ export const peekReturnTo = (now: number = Date.now()): string | null => {
   }
 };
 
+/** They were on their way to book a free trial when asked for an account */
+export const headedForTrial = (now: number = Date.now()) =>
+  (peekReturnTo(now) ?? '').split('?')[0] === '/trial';
+
 // Signing out swaps the whole layout, so every guarded page is mounted
 // afresh as "signed out" for a moment: without this it would send the person
 // to /login and remember the page they just left for whoever signs in next.

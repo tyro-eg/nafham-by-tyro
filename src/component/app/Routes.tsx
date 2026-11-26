@@ -283,8 +283,19 @@ const RoutesComponent: React.FC<RoutesProps> = ({ currentUser }) => {
             <GuardedRoute element={<EditProfile />} auth={!!currentUser} />
           }
         />
-        {/* The free-trial wizard: visitors register at the last step */}
-        <Route path="/trial" element={<TrialPage />} />
+        {/* The free-trial wizard. A visitor creates their account first
+            (as a parent, unless they say they are the student) and lands
+            back here to pick the subject, the tutor and the time */}
+        <Route
+          path="/trial"
+          element={
+            <GuardedRoute
+              element={<TrialPage />}
+              auth={!!currentUser}
+              signUpFirst
+            />
+          }
+        />
         {/* The buy wizard: a parent, or an adult student, buys a course */}
         <Route
           path="/buy"

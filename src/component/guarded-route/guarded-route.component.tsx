@@ -12,6 +12,12 @@ import {
 interface GuardedRouteProps {
   element: React.ReactElement;
   auth: boolean;
+  /**
+   * For a page new visitors come to (the free trial): a signed-out visitor
+   * is asked to create an account rather than to log in. They can still
+   * switch to logging in from there, and come back here either way.
+   */
+  signUpFirst?: boolean;
 }
 
 /**
@@ -20,7 +26,11 @@ interface GuardedRouteProps {
  * string included, so a buy link from an email still works. Someone signed
  * in without access to the page goes to their own home page.
  */
-const GuardedRoute: React.FC<GuardedRouteProps> = ({ element, auth }) => {
+const GuardedRoute: React.FC<GuardedRouteProps> = ({
+  element,
+  auth,
+  signUpFirst = false,
+}) => {
   const location = useLocation();
   const signedIn = !!useAppSelector(selectCurrentUser);
 
@@ -35,7 +45,7 @@ const GuardedRoute: React.FC<GuardedRouteProps> = ({ element, auth }) => {
   if (signedIn || justSignedOut()) return <Navigate to="/" replace />;
 
   rememberReturnTo(`${location.pathname}${location.search}`);
-  return <Navigate to="/login" replace />;
+  return <Navigate to={signUpFirst ? '/register' : '/login'} replace />;
 };
 
 export default GuardedRoute;

@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   clearReturnTo,
+  headedForTrial,
   isSafePath,
   justSignedOut,
   noteSignOut,
@@ -90,5 +91,31 @@ describe('isSafePath', () => {
     expect(isSafePath('//x')).toBe(false);
     expect(isSafePath('buy')).toBe(false);
     expect(isSafePath(undefined)).toBe(false);
+  });
+});
+
+describe('headedForTrial', () => {
+  beforeEach(() => vi.stubGlobal('sessionStorage', memoryStorage()));
+  afterEach(() => vi.unstubAllGlobals());
+
+  it('is true when the free trial sent them to make an account', () => {
+    rememberReturnTo('/trial', 0);
+    expect(headedForTrial(MINUTE)).toBe(true);
+  });
+
+  it('keeps a tutor or course picked on the way', () => {
+    rememberReturnTo('/trial?tutor=7&course=3', 0);
+    expect(headedForTrial(MINUTE)).toBe(true);
+    expect(peekReturnTo(MINUTE)).toBe('/trial?tutor=7&course=3');
+  });
+
+  it('is false for any other page, for nothing remembered, and once it is old', () => {
+    expect(headedForTrial(0)).toBe(false);
+    rememberReturnTo('/buy?child=1', 0);
+    expect(headedForTrial(MINUTE)).toBe(false);
+    rememberReturnTo('/trial_requests', 0);
+    expect(headedForTrial(MINUTE)).toBe(false);
+    rememberReturnTo('/trial', 0);
+    expect(headedForTrial(31 * MINUTE)).toBe(false);
   });
 });
