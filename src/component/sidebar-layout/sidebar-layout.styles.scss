@@ -385,7 +385,7 @@ $topbar-height: 6.4rem;
 
   // A short window, or a phone: only the language switch and the account
   // stay pinned. The links under the menu scroll with it.
-  @media only screen and (max-height: 780px) {
+  @media only screen and (max-height: 1000px) {
     &__scroll {
       display: flex;
       flex-direction: column;
