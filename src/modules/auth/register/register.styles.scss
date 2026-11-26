@@ -41,6 +41,122 @@
     @include auth-form;
   }
 
+  // Parent or student: two cards side by side. The chosen one is filled
+  // with the brand tint, outlined and ticked, so the two never look alike.
+  &__who {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.2rem;
+    margin-bottom: 2.4rem;
+  }
+
+  &__who-card {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    padding: 1.4rem;
+    font: inherit;
+    color: $text-body;
+    text-align: start;
+    cursor: pointer;
+    background-color: $surface;
+    border: 1px solid $border-strong;
+    border-radius: $radius-md;
+    transition:
+      border-color 0.15s ease,
+      background-color 0.15s ease,
+      box-shadow 0.15s ease;
+
+    &:hover {
+      border-color: $brand-400;
+    }
+
+    &:focus-visible {
+      outline: none;
+      box-shadow: $focus-ring;
+    }
+
+    &.is-chosen {
+      background-color: $brand-50;
+      border-color: $brand-500;
+      // A second pixel of outline without moving what is inside
+      box-shadow: inset 0 0 0 1px $brand-500;
+
+      &:focus-visible {
+        box-shadow:
+          inset 0 0 0 1px $brand-500,
+          $focus-ring;
+      }
+    }
+
+    @include respond(phone) {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.8rem;
+      padding: 1.2rem;
+    }
+  }
+
+  &__who-icon {
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 4rem;
+    height: 4rem;
+    color: $gray-500;
+    background-color: $gray-100;
+    border-radius: $radius-sm;
+    transition:
+      color 0.15s ease,
+      background-color 0.15s ease;
+
+    svg {
+      font-size: 2.4rem;
+    }
+
+    .is-chosen & {
+      color: #ffffff;
+      background-color: $brand-500;
+    }
+  }
+
+  &__who-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    min-width: 0;
+
+    strong {
+      font-size: 1.5rem;
+      font-weight: 600;
+      line-height: 1.3;
+      color: $text-muted;
+    }
+
+    small {
+      font-size: 1.25rem;
+      line-height: 1.4;
+      color: $text-muted;
+    }
+
+    .is-chosen & strong {
+      color: $text-strong;
+    }
+
+    .is-chosen & small {
+      color: $navy-700;
+    }
+  }
+
+  &__who-tick {
+    position: absolute;
+    top: 0.8rem;
+    inset-inline-end: 0.8rem;
+    font-size: 2rem !important;
+    color: $brand-800;
+  }
+
   &__hint {
     margin: -0.5rem 0 1.2rem;
     color: $text-muted;

@@ -7,8 +7,6 @@ import {
   InputAdornment,
   InputLabel,
   TextField,
-  ToggleButton,
-  ToggleButtonGroup,
 } from '@mui/material';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -26,8 +24,10 @@ import { trackFunnel } from '../../../lib/funnel';
 import { signUpBody } from './register.utils';
 import {
   CardGiftcardRounded,
+  CheckCircleRounded,
   FamilyRestroomRounded,
   PeopleAltRounded,
+  SchoolRounded,
   Visibility,
   VisibilityOff,
 } from '@mui/icons-material';
@@ -105,6 +105,21 @@ const Register: FC = () => {
     }
   };
 
+  const whoChoices = [
+    {
+      kind: 'Parent' as const,
+      icon: <FamilyRestroomRounded />,
+      title: t('REGISTER.ROLE.PARENT_TITLE'),
+      line: t('REGISTER.ROLE.PARENT_LINE'),
+    },
+    {
+      kind: 'Student' as const,
+      icon: <SchoolRounded />,
+      title: t('REGISTER.ROLE.STUDENT_TITLE'),
+      line: t('REGISTER.ROLE.STUDENT_LINE'),
+    },
+  ];
+
   // The same brand panel as sign in: no photo, no quote (19 Nov 2026)
   const facts = [
     { icon: <CardGiftcardRounded />, text: t('REGISTER.PANEL.FACT_TRIAL') },
@@ -160,22 +175,40 @@ const Register: FC = () => {
             className={`second-section__form ${rtlClass}`}
             noValidate
           >
-            <ToggleButtonGroup
-              exclusive
-              fullWidth
-              size="small"
-              value={role}
-              onChange={(_, value) => value && setRole(value)}
+            {/* Who the account is for: two cards, the chosen one filled in
+                and ticked, each saying in a line what it means */}
+            <div
+              className="register__who"
+              role="group"
               aria-label={t('REGISTER.ROLE.LABEL')}
-              sx={{ mb: 2 }}
             >
-              <ToggleButton value="Parent">
-                {t('REGISTER.ROLE.PARENT')}
-              </ToggleButton>
-              <ToggleButton value="Student">
-                {t('REGISTER.ROLE.STUDENT')}
-              </ToggleButton>
-            </ToggleButtonGroup>
+              {whoChoices.map((choice) => {
+                const chosen = role === choice.kind;
+                return (
+                  <button
+                    key={choice.kind}
+                    type="button"
+                    className={`register__who-card${chosen ? ' is-chosen' : ''}`}
+                    aria-pressed={chosen}
+                    onClick={() => setRole(choice.kind)}
+                  >
+                    <span className="register__who-icon" aria-hidden="true">
+                      {choice.icon}
+                    </span>
+                    <span className="register__who-text">
+                      <strong>{choice.title}</strong>
+                      <small>{choice.line}</small>
+                    </span>
+                    {chosen && (
+                      <CheckCircleRounded
+                        className="register__who-tick"
+                        aria-hidden="true"
+                      />
+                    )}
+                  </button>
+                );
+              })}
+            </div>
 
             <div className="group-inputs auth-field-row">
               <div className="group1 auth-field">

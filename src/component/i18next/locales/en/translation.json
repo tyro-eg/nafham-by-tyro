@@ -1101,6 +1101,10 @@
       "LABEL": "I am a",
       "STUDENT": "Student",
       "PARENT": "Parent",
+      "PARENT_TITLE": "I'm a parent",
+      "PARENT_LINE": "For my child",
+      "STUDENT_TITLE": "I'm a student",
+      "STUDENT_LINE": "For myself",
       "PARENT_HINT": "You hold the account for your children. Add your first child below; you can add more later."
     },
     "CHILD": {
